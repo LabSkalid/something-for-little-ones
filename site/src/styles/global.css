@@ -129,6 +129,13 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .hero-actions, .download-row, .btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
+.hero-actions .btn {
+  flex: 1 1 10.5rem;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -144,6 +151,13 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .btn:hover { color: white; background: var(--accent-dark); }
 
+.btn:focus-visible,
+.age-choice:focus-visible,
+.theme-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .btn-ghost {
   background: white;
   color: var(--ink);
@@ -158,9 +172,56 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .section-head p { color: var(--muted); margin: 0.3rem 0 0; }
 
-.age-block, #holidays { scroll-margin-top: 5.5rem; }
+.age-block, #ages, #themes, #holidays, .age-shelf { scroll-margin-top: 5.5rem; }
 .age-block { margin: 0 0 1.8rem; }
 .age-block h2 { font-size: 1.35rem; margin: 0 0 0.75rem; }
+
+.age-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.age-choice {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 4.6rem;
+  height: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--yellow);
+  border-radius: 12px;
+  background: white;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.age-choice strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.age-choice span {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.age-choice:hover { background: var(--soft); color: var(--ink); }
+
+.theme-group + .theme-group { margin-top: 1.45rem; }
+
+.theme-group > h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.12rem;
+}
+
+.group-note { margin: 0 0 0.75rem; color: var(--muted); }
 
 .theme-grid, .sheet-grid, .related-grid {
   display: grid;
@@ -188,7 +249,7 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   object-fit: contain;
 }
 
-.theme-card h2, .sheet-card h3, .related-card strong {
+.theme-card h3, .sheet-card h3, .related-card strong {
   font-size: 1.05rem;
   margin: 0;
   color: var(--ink);

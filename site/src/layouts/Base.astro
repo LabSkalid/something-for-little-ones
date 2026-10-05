@@ -7,7 +7,8 @@ import '@fontsource/fredoka/latin-600.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site, absoluteUrl } from '../site';
+import { site, absoluteUrl, pinPng } from '../site';
+import { organizationId, organizationNode } from '../lib/schema';
 
 interface Props {
   title: string;
@@ -19,6 +20,7 @@ interface Props {
   ogHeight?: number;
   type?: 'website' | 'article';
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 const {
@@ -27,16 +29,39 @@ const {
   path = '/',
   ogImage = '/pins/animal-coloring-pages-set.png',
   ogAlt = 'Free printable coloring pages for kids',
-  ogWidth = 1000,
-  ogHeight = 1500,
+  ogWidth = pinPng.width,
+  ogHeight = pinPng.height,
   type = 'website',
   jsonLd,
+  noindex = false,
 } = Astro.props;
 
 const documentTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
 const canonical = absoluteUrl(path);
 const image = absoluteUrl(ogImage);
-const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+function graphNodes(value: Props['jsonLd']) {
+  if (!value) return [];
+  const blocks = Array.isArray(value) ? value : [value];
+  const nodes: Record<string, unknown>[] = [];
+  for (const block of blocks) {
+    const graph = block['@graph'];
+    if (Array.isArray(graph)) {
+      for (const node of graph) {
+        if (node && typeof node === 'object') nodes.push(node as Record<string, unknown>);
+      }
+    } else {
+      const { ['@context']: _context, ...node } = block;
+      nodes.push(node);
+    }
+  }
+  return nodes.filter((node) => node['@id'] !== organizationId);
+}
+
+const jsonLdGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [organizationNode(), ...graphNodes(jsonLd)],
+};
 const ga = import.meta.env.PUBLIC_GA_ID ?? '';
 const pin = import.meta.env.PUBLIC_PINTEREST_TAG ?? '';
 const beacon = import.meta.env.PUBLIC_CF_BEACON ?? '';
@@ -56,7 +81,8 @@ const needsConsent = Boolean(ga || pin || ads);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#1d7ad6" />
+    <meta name="theme-color" content="#ffffff" />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={documentTitle} />
     <meta property="og:description" content={description} />
@@ -71,10 +97,9 @@ const needsConsent = Boolean(ga || pin || ads);
     <meta name="twitter:title" content={documentTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={ogAlt} />
     <meta name="pinterest-rich-pin" content="true" />
-    {blocks.map((block) => (
-      <script type="application/ld+json" set:html={JSON.stringify(block).replaceAll('<', '\\u003c')} />
-    ))}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph).replaceAll('<', '\\u003c')} />
     {beacon && (
       <script
         is:inline

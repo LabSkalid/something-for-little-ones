@@ -34,7 +34,12 @@ const themes = defineCollection({
 });
 
 const sheets = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/sheets' }),
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/sheets',
+    // Filenames repeat across themes (family-car, fire-truck). The page URL uses theme + slug from frontmatter.
+    generateId: ({ entry }) => entry.replace(/\\/g, '/').replace(/\.md$/, ''),
+  }),
   schema: z.object({
     title: z.string(),
     theme: z.string(),

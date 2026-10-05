@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { site } from '../site';
 ---
 
-<Base title="Page not found" description={`That coloring page is not on ${site.name}.`} path="/404/">
+<Base title="Page not found" description={`That coloring page is not on ${site.name}.`} path="/404/" noindex>
   <div class="wrap prose">
     <h1>That page is not here</h1>
     <p>The drawing may have moved. The sets on the home page are the place to start.</p>

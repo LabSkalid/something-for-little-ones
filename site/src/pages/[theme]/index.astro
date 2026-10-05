@@ -5,8 +5,8 @@ import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FaqList from '../../components/FaqList.astro';
 import SheetCard from '../../components/SheetCard.astro';
-import { pinPath, themePath } from '../../lib/paths';
-import { breadcrumbLd, publisher } from '../../lib/schema';
+import { pinPath, sheetPath, themePath } from '../../lib/paths';
+import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
 import { ageBandLabel, ageBands } from '../../lib/ages';
 
@@ -40,29 +40,47 @@ const crumbs = [
 ];
 const updated = theme.data.updatedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 const pin = pinPath(theme.id, theme.data.pins[0]?.id ?? 'set');
+const pageUrl = absoluteUrl(themePath(theme.id));
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Article',
-      headline: theme.data.title,
+      '@type': 'CollectionPage',
+      '@id': `${pageUrl}#collection`,
+      url: pageUrl,
+      name: theme.data.title,
       description: theme.data.description,
-      image: [absoluteUrl(pin)],
+      image: absoluteUrl(pin),
       datePublished: theme.data.pubDate.toISOString(),
       dateModified: theme.data.updatedDate.toISOString(),
-      inLanguage: 'en-US',
-      author: publisher(),
-      publisher: publisher(),
-      mainEntityOfPage: absoluteUrl(themePath(theme.id)),
+      inLanguage: site.locale,
+      isAccessibleForFree: true,
+      author: { '@id': founderId },
+      publisher: publisherRef(),
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: sheets.length,
+        itemListElement: sheets.map((sheet, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: sheet.data.title,
+          url: absoluteUrl(sheetPath(theme.id, sheet.data.slug)),
+        })),
+      },
     },
-    {
-      '@type': 'FAQPage',
-      mainEntity: theme.data.faqs.map((faq) => ({
-        '@type': 'Question',
-        name: faq.question,
-        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-      })),
-    },
+    ...(theme.data.faqs.length > 0
+      ? [
+          {
+            '@type': 'FAQPage',
+            '@id': `${pageUrl}#faq`,
+            mainEntity: theme.data.faqs.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+            })),
+          },
+        ]
+      : []),
     breadcrumbLd(crumbs),
   ],
 };
@@ -83,7 +101,7 @@ const jsonLd = {
       <p class="eyebrow">{seasonal ? 'Seasonal' : ageBandLabel(theme.data.ageBand)}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
-      <p class="date-line">{sheets.length} printable pages · US Letter and A4 · Updated {updated}</p>
+      <p class="date-line">{sheets.length} original drawings, free to print at home on US Letter or A4. Updated {updated}.</p>
       {seasonal ? (
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>

@@ -8,6 +8,12 @@ export const site = {
   locale: 'en-US',
 } as const;
 
+/** Pixel size of every file in /pins. */
+export const pinPng = { width: 1000, height: 1500 } as const;
+
+/** Pixel size of every coloring-page PNG in /print. */
+export const sheetPng = { width: 1000, height: 1310 } as const;
+
 export function absoluteUrl(path: string) {
   return new URL(path, site.url).href;
 }

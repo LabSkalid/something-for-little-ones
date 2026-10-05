@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ThemeCard from '../components/ThemeCard.astro';
 import AdSlot from '../components/AdSlot.astro';
-import { site } from '../site';
-import { ageBands } from '../lib/ages';
+import { absoluteUrl, site } from '../site';
+import { ageBandLabel, ageBands } from '../lib/ages';
 import { pinPath, sheetAssets, themePath } from '../lib/paths';
-import { publisher } from '../lib/schema';
+import { publisherRef, websiteId } from '../lib/schema';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 const sheets = await getCollection('sheets');
@@ -14,8 +14,65 @@ const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
 const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
 const grouped = ageBands.map((band) => ({
   ...band,
+  hint:
+    {
+      '2-3': 'Huge shapes',
+      '3-4': 'Animals, dinosaurs, cars, princesses',
+      '4-5': 'Garden and simple vehicles',
+      '5-6': 'Ocean and dinosaur scenes',
+      '6-8': 'Town and woodland',
+    }[band.id] ?? band.label,
   themes: everyday.filter((theme) => theme.data.ageBand === band.id),
 }));
+
+const subjectGroups: { title: string; note?: string; ids: string[] }[] = [
+  {
+    title: 'Animals',
+    note: 'Ages 2–3, 3–4, and 6–8 are separate sets.',
+    ids: ['first-animal-coloring-pages', 'animal-coloring-pages', 'woodland-animal-coloring-pages'],
+  },
+  {
+    title: 'Dinosaurs',
+    note: 'Ages 3–4 and 5–6 are separate sets.',
+    ids: ['dinosaur-coloring-pages', 'dinosaur-scene-coloring-pages'],
+  },
+  {
+    title: 'Cars and trucks',
+    note: 'Ages 3–4 and 4–5 are separate sets.',
+    ids: ['car-coloring-pages', 'simple-vehicle-coloring-pages'],
+  },
+  {
+    title: 'Princesses',
+    ids: ['princess-coloring-pages'],
+  },
+  {
+    title: 'Garden, ocean, and town',
+    ids: ['garden-coloring-pages', 'ocean-scene-coloring-pages', 'town-scene-coloring-pages'],
+  },
+  {
+    title: 'Big shapes',
+    ids: ['big-shape-coloring-pages'],
+  },
+];
+
+const everydayById = new Map(everyday.map((theme) => [theme.id, theme]));
+const listed = new Set<string>();
+const themeGroups = subjectGroups
+  .map((group) => {
+    const items = group.ids.flatMap((id) => {
+      const theme = everydayById.get(id);
+      if (!theme) return [];
+      listed.add(id);
+      return [theme];
+    });
+    return { title: group.title, note: group.note, themes: items };
+  })
+  .filter((group) => group.themes.length > 0);
+
+const leftover = everyday.filter((theme) => !listed.has(theme.id));
+if (leftover.length > 0) {
+  themeGroups.push({ title: 'More sets', themes: leftover });
+}
 
 function cover(themeId: string) {
   const first = sheets
@@ -31,11 +88,12 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
+      '@id': websiteId,
       name: site.name,
-      url: site.url,
+      url: absoluteUrl('/'),
       description: site.description,
-      inLanguage: 'en-US',
-      publisher: publisher(),
+      inLanguage: site.locale,
+      publisher: publisherRef(),
     },
     {
       '@type': 'ItemList',
@@ -44,7 +102,7 @@ const jsonLd = {
         '@type': 'ListItem',
         position: index + 1,
         name: theme.data.title,
-        url: new URL(themePath(theme.id), site.url).href,
+        url: absoluteUrl(themePath(theme.id)),
       })),
     },
   ],
@@ -63,15 +121,33 @@ const jsonLd = {
     <section class="page-intro">
       <h1>{site.tagline}</h1>
       <p class="lede">
-        Printable line drawings sorted by age, from a few huge shapes to fuller scenes. Pick a set, then download a US Letter or A4 PDF.
+        Printable line drawings sorted by age, from a few huge shapes to fuller scenes. Choose an age or a theme, then download a US Letter or A4 PDF.
       </p>
       <div class="hero-actions">
-        <a class="btn" href="#ages-2-3">Browse by age</a>
+        <a class="btn" href="#ages">Choose by age</a>
+        <a class="btn" href="#themes">Choose by theme</a>
       </div>
     </section>
 
+    <section class="section" id="ages">
+      <div class="section-head">
+        <h2>Choose by age</h2>
+        <p>Five ages. Open one to see the sets drawn for that age.</p>
+      </div>
+      <ul class="age-choices">
+        {grouped.map((band) => (
+          <li>
+            <a class="age-choice" href={`#age-${band.id}`}>
+              <strong>{band.label}</strong>
+              <span>{band.hint}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
     {grouped.map((band) => (
-      <section class="section" id={`ages-${band.id}`}>
+      <section class="section age-shelf" id={`age-${band.id}`}>
         <div class="section-head">
           <h2>{band.label}</h2>
           <p>{band.blurb}</p>
@@ -79,7 +155,6 @@ const jsonLd = {
         <div class="theme-grid">
           {band.themes.map((theme) => {
             const art = cover(theme.id);
-            const eyebrow = band.label;
             return (
               <ThemeCard
                 href={themePath(theme.id)}
@@ -87,7 +162,7 @@ const jsonLd = {
                 image={art.src}
                 imageAlt={art.alt}
                 count={art.count}
-                eyebrow={eyebrow}
+                eyebrow={band.label}
               />
             );
           })}
@@ -98,30 +173,62 @@ const jsonLd = {
     <AdSlot name="top" />
     <section class="section prose">
       <p>
-        The age on a set is a guide for how many lines are on the page. A child who still wants big shapes can stay on an easier shelf. Download the PDF, not a screenshot of this page. The <a href="/how-to-print/">printing guide</a> covers US Letter and A4.
+        The drawings are original to this site and free to print at home. The age on a set is a guide for how many lines are on the page. A child who still wants big shapes can stay on an easier shelf. Download the PDF, not a screenshot of this page. The <a href="/how-to-print/">printing guide</a> covers US Letter and A4.
       </p>
     </section>
 
-    <section class="section" id="holidays">
-      <div class="section-head">
-        <h2>Holidays</h2>
-        <p>Fall, Halloween, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
-      </div>
-      <div class="theme-grid">
-        {holidays.map((theme) => {
-          const art = cover(theme.id);
-          return (
-            <ThemeCard
-              href={themePath(theme.id)}
-              title={theme.data.title}
-              image={art.src}
-              imageAlt={art.alt}
-              count={art.count}
-              eyebrow="Seasonal"
-            />
-          );
-        })}
-      </div>
-    </section>
+    <div id="themes">
+      <section class="section">
+        <div class="section-head">
+          <h2>Choose by theme</h2>
+          <p>
+            Animals, dinosaurs, cars, princesses, and the other sets on the site. Each card is one set. A subject drawn for more than one age stays as separate sets.
+          </p>
+        </div>
+        {themeGroups.map((group) => (
+          <div class="theme-group">
+            <h3>{group.title}</h3>
+            {group.note && <p class="group-note">{group.note}</p>}
+            <div class="theme-grid">
+              {group.themes.map((theme) => {
+                const art = cover(theme.id);
+                return (
+                  <ThemeCard
+                    href={themePath(theme.id)}
+                    title={theme.data.title}
+                    image={art.src}
+                    imageAlt={art.alt}
+                    count={art.count}
+                    eyebrow={ageBandLabel(theme.data.ageBand)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section class="section" id="holidays">
+        <div class="section-head">
+          <h2>Holidays</h2>
+          <p>Fall, Halloween, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
+        </div>
+        <div class="theme-grid">
+          {holidays.map((theme) => {
+            const art = cover(theme.id);
+            return (
+              <ThemeCard
+                href={themePath(theme.id)}
+                title={theme.data.title}
+                image={art.src}
+                imageAlt={art.alt}
+                count={art.count}
+                eyebrow="Seasonal"
+              />
+            );
+          })}
+        </div>
+      </section>
+    </div>
   </div>
 </Base>

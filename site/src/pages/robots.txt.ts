@@ -1,32 +1,24 @@
 import type { APIRoute } from 'astro';
 import { site } from '../site';
 
+const bots = [
+  'Googlebot',
+  'Bingbot',
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'Google-Extended',
+  'PerplexityBot',
+  'ClaudeBot',
+  'anthropic-ai',
+  'Applebot',
+  'Applebot-Extended',
+  'Amazonbot',
+  'CCBot',
+];
+
 export const GET: APIRoute = () => {
-  const body = `User-agent: *
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-Sitemap: ${site.url}/sitemap-index.xml
-`;
+  const groups = ['User-agent: *\nAllow: /', ...bots.map((bot) => `User-agent: ${bot}\nAllow: /`)];
+  const body = `${groups.join('\n\n')}\n\nSitemap: ${site.url}/sitemap-index.xml\n`;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

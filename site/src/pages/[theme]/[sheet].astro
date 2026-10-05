@@ -5,8 +5,9 @@ import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SheetCard from '../../components/SheetCard.astro';
 import { sheetAssets, sheetPath, themePath } from '../../lib/paths';
-import { breadcrumbLd, publisher } from '../../lib/schema';
-import { absoluteUrl } from '../../site';
+import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
+import { absoluteUrl, sheetPng, site } from '../../site';
+import { ageBandLabel } from '../../lib/ages';
 import { difficultyLabel } from '../../lib/difficulty';
 
 export async function getStaticPaths() {
@@ -36,17 +37,37 @@ const crumbs = [
   { name: sheet.data.title, path: sheetPath(theme.id, sheet.data.slug) },
 ];
 const pagePath = sheetPath(theme.id, sheet.data.slug);
+const pageUrl = absoluteUrl(pagePath);
+const imageUrl = absoluteUrl(assets.png);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'ImageObject',
+      '@type': 'VisualArtwork',
+      '@id': `${pageUrl}#artwork`,
       name: sheet.data.title,
       description: sheet.data.description,
-      contentUrl: absoluteUrl(assets.png),
-      caption: sheet.data.alt,
-      author: publisher(),
+      url: pageUrl,
+      image: {
+        '@type': 'ImageObject',
+        contentUrl: imageUrl,
+        url: imageUrl,
+        caption: sheet.data.alt,
+        width: sheetPng.width,
+        height: sheetPng.height,
+      },
+      thumbnailUrl: imageUrl,
+      artform: 'Coloring page',
+      inLanguage: site.locale,
+      isAccessibleForFree: true,
+      author: { '@id': founderId },
+      publisher: publisherRef(),
       copyrightNotice: 'Free for personal and classroom printing. Not for resale.',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
     },
     breadcrumbLd(crumbs),
   ],
@@ -59,8 +80,8 @@ const jsonLd = {
   path={pagePath}
   ogImage={assets.png}
   ogAlt={sheet.data.alt}
-  ogWidth={1000}
-  ogHeight={1250}
+  ogWidth={sheetPng.width}
+  ogHeight={sheetPng.height}
   type="article"
   jsonLd={jsonLd}
 >
@@ -84,10 +105,11 @@ const jsonLd = {
             <a class="btn" href={assets.letter} download={`${sheet.data.title} - US Letter.pdf`}>Download US Letter</a>
             <a class="btn btn-ghost" href={assets.a4} download={`${sheet.data.title} - A4.pdf`}>Download A4</a>
           </div>
-          <p class="date-line">PDF · ages {sheet.data.age} · {difficultyLabel(sheet.data.difficulty).toLowerCase()}</p>
+          <p class="date-line">Free to print at home · US Letter and A4 · {ageBandLabel(sheet.data.age)} · {difficultyLabel(sheet.data.difficulty).toLowerCase()}</p>
           <div class="note">
             <p>{sheet.data.parentNote}</p>
             <Content />
+            <p>The drawing is original to this site.</p>
             <p>More pictures are in the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>.</p>
           </div>
           <p>

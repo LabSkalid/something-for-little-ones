@@ -1,8 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
+import { absoluteUrl } from '../site';
+import { founderId, organizationId } from '../lib/schema';
+
+const jsonLd = {
+  '@type': 'Person',
+  '@id': founderId,
+  name: 'Julia',
+  description: 'A mom of two who makes the free coloring pages on Something for Little Ones.',
+  url: absoluteUrl('/about/'),
+  worksFor: { '@id': organizationId },
+};
 ---
 
-<Base title="About" description="Julia, a mom of two, shares how Something for Little Ones started and the free coloring pages and printables she is putting together." path="/about/">
+<Base title="About" description="Julia, a mom of two, shares how Something for Little Ones started and the free coloring pages and printables she is putting together." path="/about/" jsonLd={jsonLd}>
   <div class="wrap prose">
     <p class="eyebrow">About</p>
     <h1>About Something for Little Ones</h1>

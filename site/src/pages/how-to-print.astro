@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { publisherRef } from '../lib/schema';
 import { site } from '../site';
 
 const steps = [
@@ -13,6 +14,8 @@ const jsonLd = {
   '@type': 'HowTo',
   name: 'How to print a coloring page',
   description: 'Download a US Letter or A4 PDF and print it at actual size for kids to color.',
+  inLanguage: site.locale,
+  publisher: publisherRef(),
   step: steps.map((step, index) => ({
     '@type': 'HowToStep',
     position: index + 1,
