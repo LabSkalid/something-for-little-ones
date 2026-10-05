@@ -34,7 +34,7 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-Free car and truck coloring pages for kids ages 3–4. This set includes a [family car](/car-coloring-pages/family-car/), [pickup](/car-coloring-pages/pickup-truck/), [race car](/car-coloring-pages/race-car/), [fire truck](/car-coloring-pages/fire-truck/), and [dump truck](/car-coloring-pages/dump-truck/). Each one is a side view. Print the whole set or download one page.
+This set includes a [family car](/car-coloring-pages/family-car/), [pickup](/car-coloring-pages/pickup-truck/), [race car](/car-coloring-pages/race-car/), [fire truck](/car-coloring-pages/fire-truck/), and [dump truck](/car-coloring-pages/dump-truck/). Each one is a side view. Print the whole set or download one page.
 
 There are no logos and no movie cars. Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/). Animals are in the [animal coloring pages](/animal-coloring-pages/).
 

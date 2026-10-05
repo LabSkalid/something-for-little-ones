@@ -2,7 +2,7 @@
 title: Fire Truck Coloring Page
 theme: car-coloring-pages
 slug: fire-truck
-description: A fire truck with a ladder, a hose, and large wheels, ready to print and color.
+description: A fire truck coloring page for ages 3–4, with a ladder, a hose, and large wheels.
 alt: Line drawing of a fire truck from the side with a ladder on top
 parentNote: The ladder is a row of rungs rather than a realistic aerial. Wheels, windows, and the hose reel are the other closed shapes. Most children color the body red and then look for something else to do.
 order: 4

@@ -34,7 +34,7 @@ pins:
     subtitle: Easy animals for kids ages 3–4
 ---
 
-Free animal coloring pages for kids ages 3–4. This set includes a [puppy](/animal-coloring-pages/puppy/), [kitten](/animal-coloring-pages/kitten/), [elephant](/animal-coloring-pages/elephant/), [butterfly](/animal-coloring-pages/butterfly/), and [bunny](/animal-coloring-pages/bunny/). Print the whole set or download one page.
+This set includes a [puppy](/animal-coloring-pages/puppy/), [kitten](/animal-coloring-pages/kitten/), [elephant](/animal-coloring-pages/elephant/), [butterfly](/animal-coloring-pages/butterfly/), and [bunny](/animal-coloring-pages/bunny/). Print the whole set or download one page.
 
 The drawings are original to this site. A pony with a ribbon is in the [princess coloring pages](/princess-coloring-pages/). Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/).
 

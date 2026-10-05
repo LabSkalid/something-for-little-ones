@@ -2,7 +2,7 @@
 title: Dump Truck Coloring Page
 theme: car-coloring-pages
 slug: dump-truck
-description: A dump truck with its bed tipped up, on a bold coloring page for kids.
+description: A dump truck coloring page for ages 3–4, with the bed tipped up.
 alt: Line drawing of a dump truck with the bed raised and large wheels
 parentNote: The tipped bed makes a big triangle above the truck, which is easier to color than a flat side view. The rocks in the bed are separate lumps.
 order: 5

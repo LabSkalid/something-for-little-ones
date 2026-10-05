@@ -2,7 +2,7 @@
 title: Fairy-Tale Castle Coloring Page
 theme: princess-coloring-pages
 slug: fairy-tale-castle
-description: A castle with three towers, a door, and simple windows, drawn for kids to color.
+description: A castle coloring page for ages 3–4, three towers, a door, and windows.
 alt: Line drawing of a fairy-tale castle with three towers and a front door
 parentNote: Windows and the door are the small pieces. The towers themselves are big enough for a younger child. There is a flag, and it has no emblem.
 order: 2

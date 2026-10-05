@@ -34,7 +34,7 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-Free princess coloring pages for kids ages 3–4. This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
+This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
 
 These are original drawings, not characters from a movie or a toy line. More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 

@@ -1,6 +1,6 @@
 ---
 title: Dinosaur Coloring Pages
-description: Free dinosaur coloring pages for kids, ready to print. A friendly T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg.
+description: Free dinosaur coloring pages for ages 3–4. A T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg, in US Letter and A4 PDFs.
 tagline: Free dinosaur coloring pages for kids ages 3–4, including a T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg.
 kind: evergreen
 ageBand: "3-4"
@@ -34,7 +34,7 @@ pins:
     subtitle: Cute dinosaurs to print for kids
 ---
 
-Free dinosaur coloring pages for kids ages 3–4. This set includes a [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/), [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), [triceratops](/dinosaur-coloring-pages/triceratops/), [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print the whole set or download one page.
+This set includes a [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/), [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), [triceratops](/dinosaur-coloring-pages/triceratops/), [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print the whole set or download one page.
 
 The faces stay friendly. For animals that are not dinosaurs, use the [animal coloring pages](/animal-coloring-pages/). For trucks, the [car and truck coloring pages](/car-coloring-pages/) are the next set.
 

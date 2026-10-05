@@ -38,7 +38,6 @@ const crumbs = [
   { name: 'Home', path: '/' },
   { name: theme.data.title, path: themePath(theme.id) },
 ];
-const updated = theme.data.updatedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 const pin = pinPath(theme.id, theme.data.pins[0]?.id ?? 'set');
 const pageUrl = absoluteUrl(themePath(theme.id));
 const jsonLd = {
@@ -101,7 +100,7 @@ const jsonLd = {
       <p class="eyebrow">{seasonal ? 'Seasonal' : ageBandLabel(theme.data.ageBand)}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
-      <p class="date-line">{sheets.length} original drawings, free to print at home on US Letter or A4. Updated {updated}.</p>
+      <p class="date-line">{sheets.length} printable pages · US Letter and A4</p>
       {seasonal ? (
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>
