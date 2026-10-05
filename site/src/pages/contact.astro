@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+---
+
+<Base title="Contact" description={`Contact ${site.name} about a download, a print problem, or a coloring set you want next.`} path="/contact/">
+  <div class="wrap prose">
+    <p class="eyebrow">Contact</p>
+    <h1>Write to us</h1>
+    <p>Email <a href={`mailto:${site.email}`}>{site.email}</a>. There is no account and no comment box. That is deliberate: this is a printable library, not a place for children to post.</p>
+    <p>Useful notes include the page you were on, whether you wanted US Letter or A4, and what the printer did. If you want a set that is not here yet, name the theme in a few words. Animals, dinosaurs, cars, princesses, Halloween, and Christmas are already on the table.</p>
+  </div>
+</Base>

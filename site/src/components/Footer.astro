@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import { site } from '../site';
+import { themePath } from '../lib/paths';
+
+const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
+const everyday = themes.filter((theme) => theme.data.kind === 'evergreen');
+const seasonal = themes.filter((theme) => theme.data.kind === 'seasonal');
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="wordmark" href="/">{site.name}</a>
+      <p>{site.tagline}. Print at home on US Letter or A4.</p>
+      <nav class="footer-links" aria-label="Coloring sets">
+        {everyday.map((theme) => <a href={themePath(theme.id)}>{theme.data.title}</a>)}
+        {seasonal.map((theme) => <a href={themePath(theme.id)}>{theme.data.title}</a>)}
+      </nav>
+    </div>
+    <div>
+      <nav class="footer-meta" aria-label="Site">
+        <a href="/how-to-print/">How to print</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
+      <p>Personal and classroom printing is free. Please don't resell the files.</p>
+    </div>
+  </div>
+</footer>

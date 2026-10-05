@@ -1,0 +1,35 @@
+slug: dinosaur-coloring-pages
+title: Dinosaur Coloring Pages
+tagline: More friendly dinosaurs.
+description: Extra dinosaur coloring pages to print.
+kind: evergreen
+order: 2
+accent: "#3F6B45"
+ink: "#1C2B1E"
+keywords:
+  - dinosaur coloring pages
+related:
+  - animal-coloring-pages
+  - car-coloring-pages
+audience: parents of children ages 4 to 8
+style: Cute storybook dinosaurs, thick black outlines, white background, not scary, no text.
+ideas:
+  - slug: pterodactyl
+    title: Pterodactyl Coloring Page
+    prompt: A cute pterodactyl in flight with wide wings and a smiling beak, no sharp teeth
+  - slug: ankylosaurus
+    title: Ankylosaurus Coloring Page
+    prompt: A round ankylosaurus with a club tail and armor bumps, friendly and simple
+  - slug: dinosaur-family
+    title: Dinosaur Family Coloring Page
+    prompt: A large friendly dinosaur walking with one much smaller baby dinosaur
+  - slug: volcano-dinosaur
+    title: Dinosaur and Volcano Coloring Page
+    prompt: A small smiling dinosaur standing in front of a simple cone volcano, lots of open space to color
+pins:
+  - id: set
+    title: Free Dinosaur Coloring Pages
+    subtitle: T-Rex, long-neck, and friends
+  - id: easy
+    title: Easy Dinosaur Coloring Sheets
+    subtitle: Cute dinosaurs to print for kids

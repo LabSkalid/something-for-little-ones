@@ -1,0 +1,35 @@
+slug: princess-coloring-pages
+title: Princess Coloring Pages
+tagline: More storybook pages, still no movie characters.
+description: Extra original princess coloring pages.
+kind: evergreen
+order: 4
+accent: "#8E4D68"
+ink: "#2C1822"
+keywords:
+  - princess coloring pages
+related:
+  - animal-coloring-pages
+  - christmas-coloring-pages
+audience: parents of children ages 4 to 8
+style: Original storybook line art, modest full gown if a person is shown, thick outlines, no famous characters, no text.
+ideas:
+  - slug: tea-party
+    title: Princess Tea Party Coloring Page
+    prompt: A small round table with a teapot, two cups, and a tiny crown on the table, no people required
+  - slug: castle-tower
+    title: Castle Tower Coloring Page
+    prompt: One tall storybook tower with a cone roof, a door, and three windows
+  - slug: garden-gate
+    title: Garden Gate Coloring Page
+    prompt: An open garden gate with simple flowers and a path, thick coloring-book lines
+  - slug: butterfly-crown
+    title: Butterfly and Crown Coloring Page
+    prompt: A butterfly resting on a simple three-point crown, large shapes for young children
+pins:
+  - id: set
+    title: Free Princess Coloring Pages
+    subtitle: Gown, castle, carriage, and pony
+  - id: castle
+    title: Storybook Princess Coloring Sheets
+    subtitle: Easy printables with no movie characters

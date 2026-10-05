@@ -1,0 +1,27 @@
+---
+import { sheetAssets, sheetPath } from '../lib/paths';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  sheet: CollectionEntry<'sheets'>;
+}
+
+const { sheet } = Astro.props;
+const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
+const label = sheet.data.difficulty === 'easy' ? 'Easy lines' : 'A few more details';
+---
+
+<a class="sheet-card" href={sheetPath(sheet.data.theme, sheet.data.slug)}>
+  <img
+    src={assets.png}
+    alt={sheet.data.alt}
+    width="640"
+    height="800"
+    loading="lazy"
+    data-pin-description={`${sheet.data.title}. Free printable coloring page for kids.`}
+  />
+  <div>
+    <h3>{sheet.data.title}</h3>
+    <p class="meta">{label} · ages {sheet.data.age}</p>
+  </div>
+</a>

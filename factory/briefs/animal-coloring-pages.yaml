@@ -1,0 +1,39 @@
+# Новые страницы для уже существующей подборки.
+# Уже нарисованные листы сюда не входят: фабрика их не перезаписывает.
+# Запуск: npm run produce -- briefs/animal-coloring-pages.yaml
+
+slug: animal-coloring-pages
+title: Animal Coloring Pages
+tagline: More animals for the everyday set.
+description: Extra animal coloring pages to print for kids.
+kind: evergreen
+order: 1
+accent: "#C4A15A"
+ink: "#241C18"
+keywords:
+  - animal coloring pages
+related:
+  - dinosaur-coloring-pages
+  - princess-coloring-pages
+audience: parents of children ages 4 to 8
+style: Cute storybook line art, thick black outlines, white background, no shading, no text.
+ideas:
+  - slug: turtle
+    title: Turtle Coloring Page
+    prompt: A friendly turtle from the side with a large patterned shell and a small smile
+  - slug: goldfish
+    title: Goldfish Coloring Page
+    prompt: A round goldfish with big fins and a few bubbles, simple coloring-book shapes
+  - slug: horse
+    title: Horse Coloring Page
+    prompt: A calm horse in profile with a mane and tail, no saddle brand and no rider
+  - slug: lion
+    title: Lion Coloring Page
+    prompt: A seated lion cub with a simple round mane, friendly face, thick outlines
+pins:
+  - id: set
+    title: Free Animal Coloring Pages
+    subtitle: Puppy, kitten, elephant, and more
+  - id: pets
+    title: Cute Pet Coloring Pages to Print
+    subtitle: Easy animals for kids ages 4-8

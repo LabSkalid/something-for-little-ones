@@ -1,0 +1,120 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SheetCard from '../../components/SheetCard.astro';
+import { pinPath, themePath } from '../../lib/paths';
+import { breadcrumbLd, publisher } from '../../lib/schema';
+import { absoluteUrl, site } from '../../site';
+
+export async function getStaticPaths() {
+  const themes = await getCollection('themes');
+  return themes.map((theme) => ({
+    params: { theme: theme.id },
+    props: { theme },
+  }));
+}
+
+const { theme } = Astro.props;
+const { Content } = await render(theme);
+const sheets = (await getCollection('sheets'))
+  .filter((sheet) => sheet.data.theme === theme.id)
+  .sort((a, b) => a.data.order - b.data.order);
+const allThemes = await getCollection('themes');
+const related = theme.data.related
+  .map((id) => allThemes.find((item) => item.id === id))
+  .filter((item) => item !== undefined);
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: theme.data.title, path: themePath(theme.id) },
+];
+const updated = theme.data.updatedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+const pin = pinPath(theme.id, theme.data.pins[0]?.id ?? 'set');
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: theme.data.title,
+      description: theme.data.description,
+      image: [absoluteUrl(pin)],
+      datePublished: theme.data.pubDate.toISOString(),
+      dateModified: theme.data.updatedDate.toISOString(),
+      inLanguage: 'en-US',
+      author: publisher(),
+      publisher: publisher(),
+      mainEntityOfPage: absoluteUrl(themePath(theme.id)),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: theme.data.faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    },
+    breadcrumbLd(crumbs),
+  ],
+};
+---
+
+<Base
+  title={theme.data.title}
+  description={theme.data.description}
+  path={themePath(theme.id)}
+  ogImage={pin}
+  ogAlt={theme.data.tagline}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <div class="wrap with-rail">
+    <article>
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">{theme.data.kind === 'seasonal' ? 'Seasonal set' : 'Everyday set'}</p>
+      <h1>{theme.data.title}</h1>
+      <p class="lede">{theme.data.tagline}</p>
+      <p class="date-line">{sheets.length} printable pages · US Letter and A4 · Updated {updated}</p>
+      <AdSlot name="top" />
+      <div class="prose">
+        <Content />
+      </div>
+      <AdSlot name="article" />
+      <h2>Pages in this set</h2>
+      <div class="sheet-grid">
+        {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
+      </div>
+      <AdSlot name="feed" />
+      <section class="faq">
+        <h2>Questions parents ask</h2>
+        {theme.data.faqs.map((faq) => (
+          <div>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </div>
+        ))}
+      </section>
+      {related.length > 0 && (
+        <section class="section">
+          <h2>More sets to print</h2>
+          <div class="related-grid">
+            {related.map((item) => (
+              <a class="related-card" href={themePath(item.id)}>
+                <strong>{item.data.title}</strong>
+                <span>{item.data.tagline}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </article>
+    <aside class="rail">
+      <div class="tip">
+        <h2>Print tip</h2>
+        <p>Use the US Letter PDF for a standard American printer. Use the A4 PDF when the paper pack says A4. Pick actual size, or fit-to-page if the printer warns you.</p>
+        <a href="/how-to-print/">How to print these pages</a>
+      </div>
+      <AdSlot name="sidebar" />
+    </aside>
+  </div>
+</Base>

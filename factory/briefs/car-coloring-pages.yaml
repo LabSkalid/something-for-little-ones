@@ -1,0 +1,35 @@
+slug: car-coloring-pages
+title: Car and Truck Coloring Pages
+tagline: More vehicles to print.
+description: Extra car and truck coloring pages.
+kind: evergreen
+order: 3
+accent: "#2F5D73"
+ink: "#1B2C36"
+keywords:
+  - truck coloring pages
+related:
+  - dinosaur-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 4 to 8
+style: Side-view vehicles, thick outlines, no logos, no words, white background.
+ideas:
+  - slug: school-bus
+    title: School Bus Coloring Page
+    prompt: A simple side-view school bus with big windows and two wheels, no text
+  - slug: tractor
+    title: Tractor Coloring Page
+    prompt: A friendly farm tractor from the side with one big rear wheel and a smaller front wheel
+  - slug: cement-mixer
+    title: Cement Mixer Coloring Page
+    prompt: A cement mixer truck from the side with a large round drum and two wheels, no logo
+  - slug: taxi
+    title: Taxi Coloring Page
+    prompt: A simple side-view car with a small sign on the roof and round wheels, no letters
+pins:
+  - id: set
+    title: Free Car and Truck Coloring Pages
+    subtitle: Cars, a fire truck, and a dump truck
+  - id: trucks
+    title: Truck Coloring Pages to Print
+    subtitle: Fire truck, dump truck, and pickup

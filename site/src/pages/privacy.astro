@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+---
+
+<Base title="Privacy" description={`How ${site.name} uses analytics, advertising, and Pinterest, and what the site does not collect from children.`} path="/privacy/">
+  <div class="wrap prose">
+    <p class="eyebrow">Privacy</p>
+    <h1>Privacy</h1>
+    <p>{site.name} is a website of free coloring pages for parents and teachers. You can download a PDF without an account. Updated October 5, 2026.</p>
+    <h2>What you do here</h2>
+    <p>Reading a page and downloading a PDF does not require a name, email, or payment. If you email {site.email}, we receive whatever you put in that message and use it to reply.</p>
+    <h2>Analytics</h2>
+    <p>When you allow cookies, the site may load Google Analytics 4 to see which sets are printed and which pages people open. Cloudflare Web Analytics may also run as a cookieless count of visits. Both are used to understand the library, not to build a profile for sale.</p>
+    <h2>Advertising</h2>
+    <p>The pages include spaces for Google ads. When an ad client is connected and you allow cookies, Google and its partners may use cookies to measure and personalize ads. You can refuse that on the banner and still download every PDF. Ad settings are also available at <a href="https://adssettings.google.com">Google's ad settings</a>.</p>
+    <h2>Pinterest</h2>
+    <p>Many visitors arrive from Pinterest. If you allow cookies, a Pinterest tag may record that the visit came from a pin and that a PDF was the next step. Pin images on the site are pictures of the coloring sets, made so a parent can save a collection.</p>
+    <h2>Children</h2>
+    <p>The site is written for adults who print pages for children. It is not a service directed at children under 13. There are no child accounts, no chat, and no place for a child to send personal information. Please don't include a child's name or photo in an email unless you need to, and even then a description of the page is enough.</p>
+    <h2>Choices</h2>
+    <p>The consent banner stores your choice in this browser. Choosing "No thanks" keeps analytics, the Pinterest tag, and ad cookies off. You can clear the saved choice by clearing site data for this domain.</p>
+    <h2>Contact</h2>
+    <p>Questions about this page: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  </div>
+</Base>

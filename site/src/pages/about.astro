@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../site';
+import { themePath } from '../lib/paths';
+
+const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="About" description={`${site.name} is a free coloring library for parents, with everyday themes and holiday sets.`} path="/about/">
+  <div class="wrap prose">
+    <p class="eyebrow">About</p>
+    <h1>A small library of pages to print</h1>
+    <p>{site.name} is for parents, grandparents, and teachers who need a picture on the table in the next five minutes. The site is written for adults. Children color the paper, not the website.</p>
+    <p>The drawings are original to this site. They are storybook animals, dinosaurs, cars, gowns, and holiday objects. They are not movie characters, toy lines, or game heroes, so you can print them without borrowing someone else's cast.</p>
+    <h2>Sets on the table</h2>
+    <ul>
+      {themes.map((theme) => (
+        <li><a href={themePath(theme.id)}>{theme.data.title}</a> — {theme.data.tagline}</li>
+      ))}
+    </ul>
+    <p>Everyday sets stay up all year. Halloween and Christmas are the seasonal shelves. A set page is the main page: several pictures, a short guide, and the files. Each drawing also has its own page so a specific search, such as a fire truck or a puppy, has somewhere to land.</p>
+    <p>Printing is free for home and classroom use. Selling the files or the prints is not allowed. The <a href="/how-to-print/">printing guide</a> explains Letter and A4, and the <a href="/privacy/">privacy page</a> explains analytics and ads.</p>
+  </div>
+</Base>

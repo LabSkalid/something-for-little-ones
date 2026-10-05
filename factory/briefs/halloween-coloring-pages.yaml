@@ -1,0 +1,35 @@
+slug: halloween-coloring-pages
+title: Halloween Coloring Pages
+tagline: More cute Halloween pages, still not scary.
+description: Extra friendly Halloween coloring pages.
+kind: seasonal
+order: 1
+accent: "#D4652F"
+ink: "#2A1B14"
+keywords:
+  - halloween coloring pages
+related:
+  - christmas-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 4 to 8
+style: Cute Halloween line art, not scary, no blood, no monsters, thick outlines, white background, no text.
+ideas:
+  - slug: little-bat
+    title: Little Bat Coloring Page
+    prompt: A cute front-facing bat with round eyes and simple wings, smiling, not frightening
+  - slug: barn-owl
+    title: Owl Coloring Page
+    prompt: A round barn owl on a short branch, large eyes as circles to color
+  - slug: candy-corn
+    title: Candy Corn Coloring Page
+    prompt: Three large candy-corn shapes and a few stars, simple sections to color
+  - slug: pumpkin-patch
+    title: Pumpkin Patch Coloring Page
+    prompt: Three smiling pumpkins of different sizes with leaves, cute and not carved scary
+pins:
+  - id: set
+    title: Free Halloween Coloring Pages
+    subtitle: Cute printables that are not too scary
+  - id: party
+    title: Easy Halloween Coloring Sheets
+    subtitle: Pumpkin, ghost, cat, and candy

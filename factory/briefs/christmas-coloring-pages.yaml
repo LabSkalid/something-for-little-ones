@@ -1,0 +1,35 @@
+slug: christmas-coloring-pages
+title: Christmas Coloring Pages
+tagline: More quiet December pages.
+description: Extra Christmas coloring pages to print.
+kind: seasonal
+order: 2
+accent: "#1F6B4A"
+ink: "#14261C"
+keywords:
+  - christmas coloring pages
+related:
+  - halloween-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 4 to 8
+style: Cozy Christmas line art, thick outlines, no characters from films, no text, white background.
+ideas:
+  - slug: snowman
+    title: Snowman Coloring Page
+    prompt: A three-ball snowman with a scarf, stick arms, and a smile, no words
+  - slug: ornament
+    title: Christmas Ornament Coloring Page
+    prompt: One large round ornament with a cap and a simple pattern of stripes and dots
+  - slug: candy-cane
+    title: Candy Cane Coloring Page
+    prompt: Two large candy canes with bold stripes and a bow, easy shapes
+  - slug: sleigh
+    title: Sleigh Coloring Page
+    prompt: A simple side-view sleigh with curved runners and a few gifts inside, no reindeer team required
+pins:
+  - id: set
+    title: Free Christmas Coloring Pages
+    subtitle: Tree, Santa, reindeer, and more
+  - id: cozy
+    title: Easy Christmas Coloring Sheets
+    subtitle: Printable holiday pages for kids

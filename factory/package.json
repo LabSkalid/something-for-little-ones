@@ -1,0 +1,22 @@
+{
+  "name": "factory",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "tsx src/cli.ts assets",
+    "produce": "tsx src/cli.ts produce",
+    "redraw": "tsx src/cli.ts redraw"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.35.5",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

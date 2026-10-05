@@ -1,0 +1,126 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SheetCard from '../../components/SheetCard.astro';
+import { sheetAssets, sheetPath, themePath } from '../../lib/paths';
+import { breadcrumbLd, publisher } from '../../lib/schema';
+import { absoluteUrl } from '../../site';
+
+export async function getStaticPaths() {
+  const sheets = await getCollection('sheets');
+  return sheets.map((sheet) => ({
+    params: { theme: sheet.data.theme, sheet: sheet.data.slug },
+    props: { sheet },
+  }));
+}
+
+const { sheet } = Astro.props;
+const { Content } = await render(sheet);
+const themes = await getCollection('themes');
+const theme = themes.find((item) => item.id === sheet.data.theme);
+if (!theme) throw new Error(`Missing theme ${sheet.data.theme}`);
+const siblings = (await getCollection('sheets'))
+  .filter((item) => item.data.theme === sheet.data.theme)
+  .sort((a, b) => a.data.order - b.data.order);
+const index = siblings.findIndex((item) => item.data.slug === sheet.data.slug);
+const previous = index > 0 ? siblings[index - 1] : undefined;
+const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+const more = siblings.filter((item) => item.data.slug !== sheet.data.slug);
+const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: theme.data.title, path: themePath(theme.id) },
+  { name: sheet.data.title, path: sheetPath(theme.id, sheet.data.slug) },
+];
+const pagePath = sheetPath(theme.id, sheet.data.slug);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ImageObject',
+      name: sheet.data.title,
+      description: sheet.data.description,
+      contentUrl: absoluteUrl(assets.png),
+      caption: sheet.data.alt,
+      author: publisher(),
+      copyrightNotice: 'Free for personal and classroom printing. Not for resale.',
+    },
+    breadcrumbLd(crumbs),
+  ],
+};
+---
+
+<Base
+  title={sheet.data.title}
+  description={sheet.data.description}
+  path={pagePath}
+  ogImage={assets.png}
+  ogAlt={sheet.data.alt}
+  ogWidth={1000}
+  ogHeight={1250}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <div class="wrap with-rail">
+    <article>
+      <Breadcrumbs items={crumbs} />
+      <h1>{sheet.data.title}</h1>
+      <p class="lede">{sheet.data.description}</p>
+      <div class="sheet-hero">
+        <div class="frame">
+          <img
+            src={assets.png}
+            alt={sheet.data.alt}
+            width="640"
+            height="800"
+            data-pin-description={`${sheet.data.title}. Free printable from ${theme.data.title}.`}
+          />
+        </div>
+        <div>
+          <div class="download-row">
+            <a class="btn" href={assets.letter} download={`${sheet.data.title} - US Letter.pdf`}>Download US Letter</a>
+            <a class="btn btn-ghost" href={assets.a4} download={`${sheet.data.title} - A4.pdf`}>Download A4</a>
+          </div>
+          <p class="date-line">PDF · ages {sheet.data.age} · {sheet.data.difficulty === 'easy' ? 'easy lines' : 'a few more details'}</p>
+          <div class="note">
+            <p>{sheet.data.parentNote}</p>
+            <Content />
+            <p>This page is part of the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>. The set is the better pin and the better place to start if you want more than one picture.</p>
+          </div>
+          <p>
+            {previous && <a href={sheetPath(theme.id, previous.data.slug)}>Previous: {previous.data.title}</a>}
+            {previous && next && ' · '}
+            {next && <a href={sheetPath(theme.id, next.data.slug)}>Next: {next.data.title}</a>}
+          </p>
+        </div>
+      </div>
+      <AdSlot name="article" />
+      <h2>More in this set</h2>
+      <div class="sheet-grid">
+        {more.map((item) => <SheetCard sheet={item} />)}
+      </div>
+      <p><a href={themePath(theme.id)}>All {theme.data.title.toLowerCase()}</a></p>
+      {theme.data.related.length > 0 && (
+        <p>
+          Other sets:{' '}
+          {theme.data.related.flatMap((id, relatedIndex) => {
+            const relatedTheme = themes.find((item) => item.id === id);
+            if (!relatedTheme) return [];
+            const link = <a href={themePath(relatedTheme.id)}>{relatedTheme.data.title}</a>;
+            return relatedIndex === 0 ? [link] : [', ', link];
+          })}
+        </p>
+      )}
+    </article>
+    <aside class="rail">
+      <div class="tip">
+        <h2>Which file?</h2>
+        <p>US Letter is 8.5 by 11 inches. A4 is the taller international sheet. Both files are the same drawing with margins for that paper.</p>
+        <a href="/how-to-print/">Printing guide</a>
+      </div>
+      <AdSlot name="sidebar" />
+    </aside>
+  </div>
+</Base>

@@ -1,0 +1,158 @@
+---
+import '@fontsource/fraunces/latin-600.css';
+import '@fontsource/fraunces/latin-700.css';
+import '@fontsource/nunito-sans/latin-400.css';
+import '@fontsource/nunito-sans/latin-600.css';
+import '@fontsource/nunito-sans/latin-700.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, absoluteUrl } from '../site';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  ogImage?: string;
+  ogAlt?: string;
+  ogWidth?: number;
+  ogHeight?: number;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  path = '/',
+  ogImage = '/pins/animal-coloring-pages-set.png',
+  ogAlt = 'Free printable coloring pages for kids',
+  ogWidth = 1000,
+  ogHeight = 1500,
+  type = 'website',
+  jsonLd,
+} = Astro.props;
+
+const documentTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+const canonical = absoluteUrl(path);
+const image = absoluteUrl(ogImage);
+const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const ga = import.meta.env.PUBLIC_GA_ID ?? '';
+const pin = import.meta.env.PUBLIC_PINTEREST_TAG ?? '';
+const beacon = import.meta.env.PUBLIC_CF_BEACON ?? '';
+const ads = import.meta.env.PUBLIC_ADSENSE_CLIENT ?? '';
+const needsConsent = Boolean(ga || pin || ads);
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{documentTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f3eee6" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta property="og:image:width" content={String(ogWidth)} />
+    <meta property="og:image:height" content={String(ogHeight)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={documentTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="pinterest-rich-pin" content="true" />
+    {blocks.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block).replaceAll('<', '\\u003c')} />
+    ))}
+    {beacon && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: beacon })}
+      />
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <Header />
+    <main id="content">
+      <slot />
+    </main>
+    <Footer />
+    {needsConsent && (
+      <div class="consent" id="consent" hidden>
+        <p>Analytics and ads stay off until you allow them. The coloring pages remain free either way.</p>
+        <div class="btn-row">
+          <button class="accept" type="button" id="consent-accept">Allow</button>
+          <button class="decline" type="button" id="consent-decline">No thanks</button>
+        </div>
+      </div>
+      <script is:inline define:vars={{ ga, pin, ads }}>
+        const key = 'lct-consent';
+        const banner = document.getElementById('consent');
+        function loadTrackers() {
+          if (ga && !document.getElementById('ga4')) {
+            const s = document.createElement('script');
+            s.id = 'ga4';
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga;
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { window.dataLayer.push(arguments); };
+            window.gtag('js', new Date());
+            window.gtag('consent', 'default', {
+              ad_storage: 'granted',
+              analytics_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted',
+            });
+            window.gtag('config', ga);
+          }
+          if (pin && !window.pintrk) {
+            window.pintrk = function () { window.pintrk.queue.push(Array.prototype.slice.call(arguments)); };
+            window.pintrk.queue = [];
+            window.pintrk.version = '3.0';
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://s.pinimg.com/ct/core.js';
+            document.head.appendChild(s);
+            window.pintrk('load', pin);
+            window.pintrk('page');
+          }
+          if (ads && !document.getElementById('adsense')) {
+            const s = document.createElement('script');
+            s.id = 'adsense';
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ads;
+            s.onload = function () {
+              document.querySelectorAll('.adsbygoogle').forEach(function () {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+              });
+            };
+            document.head.appendChild(s);
+          }
+        }
+        function choose(value) {
+          localStorage.setItem(key, value);
+          banner.hidden = true;
+          if (value === 'granted') loadTrackers();
+        }
+        const saved = localStorage.getItem(key);
+        if (saved === 'granted') loadTrackers();
+        else if (saved !== 'denied') banner.hidden = false;
+        document.getElementById('consent-accept').addEventListener('click', function () { choose('granted'); });
+        document.getElementById('consent-decline').addEventListener('click', function () { choose('denied'); });
+      </script>
+    )}
+  </body>
+</html>

@@ -1,0 +1,29 @@
+---
+import { adsEnabled, adSlots, type AdSlotName } from '../lib/ads';
+
+interface Props {
+  name: AdSlotName;
+}
+
+const { name } = Astro.props;
+const client = import.meta.env.PUBLIC_ADSENSE_CLIENT ?? '';
+const slot = adSlots[name];
+const show = adsEnabled();
+---
+
+{show && (
+  <aside class={`ad-slot ${name}`} aria-label="Advertisement">
+    {client && slot ? (
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={client}
+        data-ad-slot={slot}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    ) : (
+      <span>Advertisement</span>
+    )}
+  </aside>
+)}

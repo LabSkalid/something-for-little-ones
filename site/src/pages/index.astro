@@ -1,0 +1,139 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ThemeCard from '../components/ThemeCard.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { site } from '../site';
+import { pinPath, sheetAssets, sheetPath, themePath } from '../lib/paths';
+import { publisher } from '../lib/schema';
+
+const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
+const sheets = await getCollection('sheets');
+const everyday = themes.filter((theme) => theme.data.kind === 'evergreen');
+const seasonal = themes.filter((theme) => theme.data.kind === 'seasonal');
+
+function cover(themeId: string) {
+  const first = sheets
+    .filter((sheet) => sheet.data.theme === themeId)
+    .sort((a, b) => a.data.order - b.data.order)[0];
+  return first
+    ? { src: sheetAssets(themeId, first.data.slug).png, alt: first.data.alt, count: sheets.filter((sheet) => sheet.data.theme === themeId).length }
+    : { src: pinPath(themeId, 'set'), alt: '', count: 0 };
+}
+
+const heroPuppy = sheetAssets('animal-coloring-pages', 'puppy');
+const heroDino = sheetAssets('dinosaur-coloring-pages', 'friendly-trex');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: site.name,
+      url: site.url,
+      description: site.description,
+      inLanguage: 'en-US',
+      publisher: publisher(),
+    },
+    {
+      '@type': 'ItemList',
+      name: 'Coloring page sets',
+      itemListElement: themes.map((theme, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: theme.data.title,
+        url: new URL(themePath(theme.id), site.url).href,
+      })),
+    },
+  ],
+};
+---
+
+<Base
+  title={site.tagline}
+  description={site.description}
+  path="/"
+  ogImage={pinPath('animal-coloring-pages', 'set')}
+  ogAlt="A set of free animal coloring pages to print"
+  jsonLd={jsonLd}
+>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">{site.name}</p>
+        <h1>{site.tagline}</h1>
+        <p class="lede">
+          Free line drawings for an ordinary afternoon: animals, dinosaurs, cars, and princesses, plus Halloween and Christmas when the season turns. Every page downloads as a PDF in US Letter or A4.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#everyday">Browse everyday sets</a>
+          <a class="btn btn-ghost" href={themePath('halloween-coloring-pages')}>Halloween printables</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src={heroPuppy.png} alt="Line drawing of a sitting puppy to color" width="640" height="800" />
+        <img src={heroDino.png} alt="Line drawing of a friendly tyrannosaurus to color" width="640" height="800" />
+      </div>
+    </section>
+
+    <AdSlot name="top" />
+
+    <section class="section" id="everyday">
+      <div class="section-head">
+        <h2>Coloring pages for any day</h2>
+        <p>These sets stay useful after the holiday bins are put away. Each card opens a whole collection, not a single sheet.</p>
+      </div>
+      <div class="theme-grid">
+        {everyday.map((theme) => {
+          const art = cover(theme.id);
+          return (
+            <ThemeCard
+              href={themePath(theme.id)}
+              title={theme.data.title}
+              tagline={theme.data.tagline}
+              image={art.src}
+              imageAlt={art.alt}
+              accent={theme.data.accent}
+              count={art.count}
+              eyebrow="Any day"
+            />
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="section" id="seasonal">
+      <div class="section-head">
+        <h2>Print for the holidays</h2>
+        <p>Halloween is the October set. Christmas is ready when the tree comes out. The everyday pages above stay up all year.</p>
+      </div>
+      <div class="theme-grid">
+        {seasonal.map((theme) => {
+          const art = cover(theme.id);
+          return (
+            <ThemeCard
+              href={themePath(theme.id)}
+              title={theme.data.title}
+              tagline={theme.data.tagline}
+              image={art.src}
+              imageAlt={art.alt}
+              accent={theme.data.accent}
+              count={art.count}
+              eyebrow="Seasonal"
+            />
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="section prose">
+      <h2>Made to print, then color</h2>
+      <p>
+        Download the PDF, not a screenshot of the web page. US Letter matches most home printers in the United States. A4 is there when the paper pack says A4. The <a href="/how-to-print/">printing guide</a> covers scale, crayons, and classroom copies.
+      </p>
+      <p>
+        A set page is the place to start: one theme, several pictures, and a short note for parents. Open a single page when a child already knows they want the puppy, the fire truck, or the pumpkin.
+      </p>
+    </section>
+  </div>
+</Base>
