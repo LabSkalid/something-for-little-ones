@@ -1,25 +1,77 @@
 ---
+import { getCollection } from 'astro:content';
 import { site } from '../site';
+import { ageBands } from '../lib/ages';
+import { themePath } from '../lib/paths';
 
 const year = new Date().getFullYear() || 2026;
+const themes = await getCollection('themes');
+const bandOrder = ageBands.map((band) => band.id);
+
+const byAgeThenOrder = (a: (typeof themes)[number], b: (typeof themes)[number]) => {
+  const age = bandOrder.indexOf(a.data.ageBand) - bandOrder.indexOf(b.data.ageBand);
+  if (age !== 0) return age;
+  return a.data.order - b.data.order;
+};
+
+/** Drop the repeated suffix so the column stays a short vertical list. */
+function themeLabel(title: string) {
+  return title.replace(/ Coloring Pages$/, '');
+}
+
+const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal').sort(byAgeThenOrder);
+const holidays = themes
+  .filter((theme) => theme.data.kind === 'seasonal')
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <footer class="site-footer">
   <div class="wrap">
-    <div class="footer-brand">
-      <p class="footer-name">{site.name}</p>
-      <p class="footer-tagline">Simple things to print, color, and enjoy.</p>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-name">{site.name}</p>
+        <p class="footer-tagline">Simple things to print, color, and enjoy.</p>
+        <a class="footer-email" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+
+      <nav class="footer-col" aria-label="Explore">
+        <p class="footer-heading">Explore</p>
+        <ul>
+          <li><a href="/">Coloring Pages</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/how-to-print/">How to Print</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Themes">
+        <p class="footer-heading">Themes</p>
+        <ul>
+          {
+            everyday.map((theme) => (
+              <li>
+                <a href={themePath(theme.id)}>{themeLabel(theme.data.title)}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Holidays">
+        <p class="footer-heading">Holidays</p>
+        <ul>
+          {
+            holidays.map((theme) => (
+              <li>
+                <a href={themePath(theme.id)}>{themeLabel(theme.data.title)}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
     </div>
-    <nav class="footer-links" aria-label="Browse">
-      <a href="/">Coloring Pages</a>
-      <a href="/#holidays">Seasonal Printables</a>
-    </nav>
-    <nav class="footer-links footer-links-quiet" aria-label="Information">
-      <a href="/about/">About</a>
-      <a href="/how-to-print/">How to Print</a>
-      <a href="/contact/">Contact</a>
-      <a href="/privacy/">Privacy</a>
-    </nav>
+
     <div class="footer-copy">
       <p>© {year} {site.name}. All rights reserved.</p>
       <p>Free for personal and classroom use.</p>
