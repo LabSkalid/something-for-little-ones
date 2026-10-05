@@ -75,16 +75,14 @@ const jsonLd = {
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
       <p class="date-line">{sheets.length} printable pages · US Letter and A4 · Updated {updated}</p>
+      <div class="sheet-grid">
+        {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
+      </div>
       <AdSlot name="top" />
       <div class="prose">
         <Content />
       </div>
       <AdSlot name="article" />
-      <h2>Pages in this set</h2>
-      <div class="sheet-grid">
-        {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
-      </div>
-      <AdSlot name="feed" />
       <section class="faq">
         <h2>Questions parents ask</h2>
         {theme.data.faqs.map((faq) => (

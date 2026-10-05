@@ -1,7 +1,7 @@
 ---
 title: Car and Truck Coloring Pages
 description: Free car and truck coloring pages to print. A family car, pickup, race car, fire truck, and dump truck in US Letter or A4.
-tagline: A family car, a pickup, a race car, a fire truck, and a dump truck, drawn from the side so the wheels are easy to color.
+tagline: Free car and truck coloring pages for kids ages 4–8, including a family car, pickup, race car, fire truck, and dump truck.
 kind: evergreen
 order: 3
 accent: "#2F5D73"
@@ -33,16 +33,8 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-This set is for the child who names every vehicle on the road. There are five side views: a family car, a pickup, a race car, a fire truck, and a dump truck. Side views keep the wheels round and the windows easy to find.
+Free car and truck coloring pages for kids ages 4–8. This set includes a [family car](/car-coloring-pages/family-car/), [pickup](/car-coloring-pages/pickup-truck/), [race car](/car-coloring-pages/race-car/), [fire truck](/car-coloring-pages/fire-truck/), and [dump truck](/car-coloring-pages/dump-truck/). Each one is a side view. Print the whole set or download one page.
 
-Print the [fire truck coloring page](/car-coloring-pages/fire-truck/) when the request is specific. Print the [race car coloring page](/car-coloring-pages/race-car/) for a faster-looking page with a stripe and a spoiler. The family car is the calmest of the five.
+There are no logos and no movie cars. Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/). Animals are in the [animal coloring pages](/animal-coloring-pages/).
 
-## Coloring the parts
-
-Each wheel is a tire plus a hubcap, so it can be two colors. Windows are separate from the body. The fire truck has a ladder along the top. The dump truck's bed is lifted, which makes a large shape that is still obvious.
-
-There are no logos to work around and no city skyline competing with the truck. The vehicle is the page.
-
-If the next request is dinosaurs instead of traffic, the [dinosaur coloring pages](/dinosaur-coloring-pages/) are the matching set for the same age. The [animal coloring pages](/animal-coloring-pages/) are there when the cars are done and someone wants a puppy.
-
-Use the US Letter or A4 PDF, not a print of the browser. Details are in the [printing guide](/how-to-print/).
+Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

@@ -87,7 +87,7 @@ const jsonLd = {
           <div class="note">
             <p>{sheet.data.parentNote}</p>
             <Content />
-            <p>This page is part of the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>. The set is the better pin and the better place to start if you want more than one picture.</p>
+            <p>More pictures are in the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>.</p>
           </div>
           <p>
             {previous && <a href={sheetPath(theme.id, previous.data.slug)}>Previous: {previous.data.title}</a>}

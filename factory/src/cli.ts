@@ -23,6 +23,10 @@ const help = `Фабрика раскрасок.
       Тексты статей остаются. Можно указать одну тему:
       npm run redraw -- animal-coloring-pages
 
+  npm run studio
+      Открыть локальную страницу с кнопками: новые рисунки и перерисовка.
+      То же самое делает файл Open Factory.bat.
+
 Ключ один: factory/.env с OPENROUTER_API_KEY.
 Картинки: OPENROUTER_IMAGE_MODEL (по умолчанию openai/gpt-image-2).
 Текст: OPENROUTER_TEXT_MODEL (по умолчанию google/gemini-2.5-flash).

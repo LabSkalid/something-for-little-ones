@@ -1,7 +1,7 @@
 ---
 title: Dinosaur Coloring Pages
 description: Free dinosaur coloring pages for kids, ready to print. A friendly T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg.
-tagline: Five friendly dinosaurs with thick outlines, from a smiling T-Rex to a hatching egg.
+tagline: Free dinosaur coloring pages for kids ages 4–8, including a T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg.
 kind: evergreen
 order: 2
 accent: "#3F6B45"
@@ -33,14 +33,8 @@ pins:
     subtitle: Cute dinosaurs to print for kids
 ---
 
-Children ask for dinosaurs by name, so this set is built around five they can point at. The [friendly T-Rex coloring page](/dinosaur-coloring-pages/friendly-trex/) is the usual first print. The [stegosaurus coloring page](/dinosaur-coloring-pages/stegosaurus/) is the one with plates to color one by one. The triceratops, the long-neck, and the hatching egg fill out the table.
+Free dinosaur coloring pages for kids ages 4–8. This set includes a [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/), [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), [triceratops](/dinosaur-coloring-pages/triceratops/), [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print the whole set or download one page.
 
-None of them are mid-roar. The idea is a picture a four-year-old can finish, and a seven-year-old can still add spots to.
+The faces stay friendly. For animals that are not dinosaurs, use the [animal coloring pages](/animal-coloring-pages/). For trucks, the [car and truck coloring pages](/car-coloring-pages/) are the next set.
 
-## What to color, besides the dinosaur
-
-Leaves, eggshells, plates, and the frill are all separate shapes. If a child is done with "green dinosaur," those pieces give the page another minute. The hatching egg is the quietest page in the set: one large shell and a small face.
-
-For animals that are still walking around, use the [animal coloring pages](/animal-coloring-pages/). Some children leave the dinosaurs and ask for a truck. The [dump truck coloring page](/car-coloring-pages/dump-truck/) is the closest match in the car set.
-
-Print from the PDF, on US Letter or A4. The [printing guide](/how-to-print/) is the short version of the printer settings.
+Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

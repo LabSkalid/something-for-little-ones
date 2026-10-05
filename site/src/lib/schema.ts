@@ -19,7 +19,7 @@ export function publisher() {
     url: site.url,
     logo: {
       '@type': 'ImageObject',
-      url: absoluteUrl('/favicon.svg'),
+      url: absoluteUrl('/apple-touch-icon.png'),
     },
   };
 }

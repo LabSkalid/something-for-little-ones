@@ -1,7 +1,7 @@
 ---
 title: Halloween Coloring Pages
 description: Free Halloween coloring pages that stay cute, not scary. A pumpkin, ghost, witch hat, candy bag, and black cat to print.
-tagline: Cute Halloween pictures for little kids — a pumpkin, a ghost, a witch hat, candy, and a cat.
+tagline: Free Halloween coloring pages for kids ages 4–8. A pumpkin, ghost, witch hat, candy bag, and black cat. Cute, not scary.
 kind: seasonal
 order: 2
 accent: "#D4652F"
@@ -33,14 +33,8 @@ pins:
     subtitle: Pumpkin, ghost, cat, and candy
 ---
 
-This Halloween set is for children who want pumpkins and candy and do not want a fright. Five pages: a smiling pumpkin, a friendly ghost, a witch hat with a cat, a candy bag, and a black cat on a fence. The lines are thick and the faces are simple.
+Free Halloween coloring pages for kids ages 4–8. This set stays cute: a [pumpkin](/halloween-coloring-pages/jack-o-lantern/), [friendly ghost](/halloween-coloring-pages/friendly-ghost/), [witch hat](/halloween-coloring-pages/witch-hat/), [candy bag](/halloween-coloring-pages/candy-bag/), and [black cat](/halloween-coloring-pages/black-cat/). Print the whole set or download one page.
 
-The [smiling pumpkin coloring page](/halloween-coloring-pages/jack-o-lantern/) is the one to print first. The [friendly ghost coloring page](/halloween-coloring-pages/friendly-ghost/) is the backup if a child is unsure about Halloween and still wants to join in. The candy bag is the party page.
+There are no graveyards and no movie characters. Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
-## Keep it light
-
-There are no graveyards and no snarling mouths. The black cat is seated and round, closer to a pet than to a jump-scare. Color the pumpkin orange or leave it pink. The page does not mind.
-
-If the afternoon is about leaves and apples rather than costumes, the [fall coloring pages](/fall-coloring-pages/) are the quieter set: a maple leaf, an acorn, a scarecrow, apples, and a squirrel. When October is over, the [Christmas coloring pages](/christmas-coloring-pages/) are the next seasonal set: a tree, Santa, a gingerbread house, a reindeer, and a stocking. If you want something with no holiday at all, the [animal coloring pages](/animal-coloring-pages/) stay up all year.
-
-Print the PDF, US Letter or A4. The [printing guide](/how-to-print/) shows the setting that keeps the outlines dark enough to color.
+Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

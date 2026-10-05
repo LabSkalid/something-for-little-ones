@@ -2,23 +2,21 @@
 interface Props {
   href: string;
   title: string;
-  tagline: string;
   image: string;
   imageAlt: string;
-  accent: string;
   count: number;
   eyebrow: string;
 }
 
-const { href, title, tagline, image, imageAlt, accent, count, eyebrow } = Astro.props;
+const { href, title, image, imageAlt, count, eyebrow } = Astro.props;
 ---
 
-<a class="theme-card" href={href} style={`--accent: ${accent}`}>
+<a class="theme-card" href={href}>
   <img src={image} alt={imageAlt} width="640" height="800" loading="lazy" />
   <div>
     <p class="eyebrow">{eyebrow}</p>
     <h2>{title}</h2>
-    <p>{tagline}</p>
-    <p class="meta">{count} free printables</p>
+    <p class="meta">{count} pages</p>
+    <span class="card-action">See all</span>
   </div>
 </a>

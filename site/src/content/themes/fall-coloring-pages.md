@@ -1,7 +1,7 @@
 ---
 title: Fall Coloring Pages
 description: Free fall coloring pages to print for kids. A maple leaf, acorn, scarecrow, apple basket, and squirrel in US Letter or A4.
-tagline: Leaves, apples, and a scarecrow for an autumn afternoon.
+tagline: Free fall coloring pages for kids ages 4–8, including a maple leaf, acorn, scarecrow, apple basket, and squirrel.
 kind: seasonal
 order: 1
 accent: "#C4622D"
@@ -33,14 +33,8 @@ pins:
     subtitle: A leaf, an acorn, and apples
 ---
 
-This fall set is for the weeks when the yard is full of leaves and Halloween is not the whole afternoon. Five pages: a maple leaf, an acorn, a scarecrow, a basket of apples, and a squirrel. The lines are thick, the subjects are single and large, and nothing in the set is meant to startle a younger child.
+Free fall coloring pages for kids ages 4–8. This set includes a [maple leaf](/fall-coloring-pages/maple-leaf/), [acorn](/fall-coloring-pages/acorn/), [scarecrow](/fall-coloring-pages/scarecrow/), [apple basket](/fall-coloring-pages/apple-basket/), and [squirrel](/fall-coloring-pages/squirrel/). Print the whole set or download one page.
 
-The [maple leaf coloring page](/fall-coloring-pages/maple-leaf/) is the one to print first. The veins split the leaf into a few clear sections, so a child can use more than one red. The [acorn coloring page](/fall-coloring-pages/acorn/) is the short project beside it. The [apple basket coloring page](/fall-coloring-pages/apple-basket/) is the one that feels like a kitchen table already.
+This set is harvest and trees, not costumes. Pumpkins and candy are in the [Halloween coloring pages](/halloween-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
-## A quiet autumn, not a costume party
-
-The scarecrow has a hat and a patched shirt, and the face is a simple smile. It is a farm figure, not a Halloween prop. The squirrel is sitting with one acorn, which is enough story for the page without a whole forest to color.
-
-If you want pumpkins, ghosts, and candy, open the [Halloween coloring pages](/halloween-coloring-pages/). Those stay cute on purpose, and they are the party set. Later in the year, the [Christmas coloring pages](/christmas-coloring-pages/) take the same table: a tree, Santa, a gingerbread house, a reindeer, and a stocking.
-
-Print the PDF, US Letter or A4. The [printing guide](/how-to-print/) shows the setting that keeps the outlines dark enough to color.
+Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

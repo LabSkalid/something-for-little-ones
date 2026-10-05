@@ -1,7 +1,7 @@
 ---
 title: Princess Coloring Pages
 description: Free princess coloring pages for kids. An original storybook gown, castle, carriage, pony, and crown — no movie characters.
-tagline: An original storybook princess, a castle, a carriage, a pony, and a crown. No movie cast.
+tagline: Free princess coloring pages for kids ages 4–8. A gown, castle, carriage, pony, and crown. No movie characters.
 kind: evergreen
 order: 4
 accent: "#8E4D68"
@@ -33,14 +33,8 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-These princess coloring pages are storybook drawings made for this site. There is a gown, a castle, a carriage, a pony, and a crown with a wand. There is no film character to match and no logo on the dress.
+Free princess coloring pages for kids ages 4–8. This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
 
-The [storybook princess coloring page](/princess-coloring-pages/storybook-princess/) is the portrait. The [fairy-tale castle coloring page](/princess-coloring-pages/fairy-tale-castle/) is the wide scene, with towers and a door. If you only have time for one extra, add the pony.
+These are original drawings, not characters from a movie or a toy line. More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
-## A set, not a single dress
-
-Children often color the gown and then want "the rest of the story." The carriage and the crown page are that rest. The crown page is also the right one for a preschooler who gets tired of a full figure.
-
-The pony is a horse with a ribbon, not a toy from a show. More animals, including a bunny and a butterfly, are in the [animal coloring pages](/animal-coloring-pages/). In December, the same table can move to the [Christmas coloring pages](/christmas-coloring-pages/) without changing how you print.
-
-Crayons or colored pencils both work. The castle windows are the smallest shapes, so pencils are kinder there. Print the PDF in US Letter or A4, and use the [printing guide](/how-to-print/) if the scale looks off.
+Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

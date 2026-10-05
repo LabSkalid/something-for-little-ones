@@ -254,10 +254,14 @@ export async function produce(briefPath: string, dryRun: boolean) {
     console.log(`страница ${brief.slug}/${idea.slug}`);
   }
   const existingSheets = await fs.readdir(path.join(sheetContentRoot, brief.slug));
-  const known = existingSheets.filter((name) => name.endsWith('.md')).map((name) => {
+  const known = [];
+  for (const name of existingSheets.filter((item) => item.endsWith('.md'))) {
     const slug = name.replace(/\.md$/, '');
-    return { title: slug, slug };
-  });
+    const raw = await fs.readFile(path.join(sheetContentRoot, brief.slug, name), 'utf8');
+    const titleMatch = raw.match(/^title:\s*(.+)$/m);
+    const title = titleMatch ? titleMatch[1].trim().replace(/^"|"$/g, '') : slug;
+    known.push({ title, slug });
+  }
   await ensureTheme(brief, known);
   await buildPins();
   console.log(`Готово. Новых страниц: ${created.length}. Они появятся в подборке после сборки сайта.`);
