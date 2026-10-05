@@ -7,5 +7,5 @@ alt: Line drawing of a fairy-tale castle with three towers and a front door
 parentNote: Windows and the door are the small pieces. The towers themselves are big enough for a younger child. There is a flag, and it has no emblem.
 order: 2
 difficulty: medium
-age: "5-8"
+age: "3-4"
 ---

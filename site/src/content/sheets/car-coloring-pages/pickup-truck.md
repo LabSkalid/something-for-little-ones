@@ -7,5 +7,5 @@ alt: Line drawing of a pickup truck from the side with an open bed
 parentNote: The cab and the bed are separate, so the truck can be two colors without any tiny details. The bed is empty on purpose, which leaves a large space to color.
 order: 2
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

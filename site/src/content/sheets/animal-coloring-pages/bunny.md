@@ -7,5 +7,5 @@ alt: Line drawing of a front-facing bunny with tall ears and a round tail
 parentNote: The ears are the part children usually color first. Inner ears are a second shape, so they can be pink while the rest of the bunny is another color.
 order: 5
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

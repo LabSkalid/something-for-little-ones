@@ -1,0 +1,62 @@
+slug: ocean-scene-coloring-pages
+title: Ocean Scene Coloring Pages
+tagline: Free ocean coloring pages for ages 5–6, with patterns and more regions to finish.
+description: Free ocean coloring pages for ages 5–6. A coral reef, sailboat, octopus, lighthouse, and sea turtle with patterns.
+kind: evergreen
+ageBand: "5-6"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - ocean coloring pages
+  - coloring pages for ages 5-6
+related:
+  - garden-coloring-pages
+  - town-scene-coloring-pages
+audience: parents of children ages 5 to 6
+style: Coloring-book scene with patterns and more regions than a single object. Bold closed black outlines that stay easy to see when printed, not hairline engraving. White background, no shading, no gray, no text.
+ideas:
+  - slug: coral-reef
+    title: Coral Reef Coloring Page
+    prompt: An underwater scene with branching coral, three different fish, and a few seaweed fronds. Many closed regions a child can color separately. No letters, no diver, no submarine.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of branching coral, three fish, and seaweed.
+    description: A coral reef coloring page for ages 5–6, with fish and seaweed to color.
+    parentNote: Pick one fish and finish it before starting the coral. The branches are a repeating shape, so the same two colors can rotate through them.
+  - slug: sailboat
+    title: Sailboat Coloring Page
+    prompt: A sailboat on waves, with two sails, a plain flag that has no symbol, clouds, a sun, and one seagull. The sails may have one simple stripe. No letters, no numbers, no name on the hull.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a sailboat on waves with clouds, a sun, and a seagull.
+    description: A sailboat coloring page for ages 5–6, with waves, sails, and sky.
+    parentNote: The sails and the hull are the big areas. The waves are a stripe pattern, so a child can alternate two blues without planning the whole page first.
+  - slug: patterned-octopus
+    title: Patterned Octopus Coloring Page
+    prompt: A friendly octopus with eight arms. Each arm is divided into large circle spots to color. Add a few bubbles and one small shell. No letters, no pirate, no treasure.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of an octopus with large spots on each arm, plus bubbles and a shell.
+    description: A patterned octopus coloring page for ages 5–6, with spots on every arm.
+    parentNote: The spots are the pattern. Coloring every other spot the same color is enough of a plan. The face can stay a single color.
+  - slug: lighthouse-coast
+    title: Lighthouse Coloring Page
+    prompt: A lighthouse on rocks, with waves, a small rowboat, clouds, and a short path. Windows are simple rectangles. No letters on the lighthouse, no numbers, no people.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a lighthouse on rocks with waves, a rowboat, and clouds.
+    description: A lighthouse coloring page for ages 5–6, with rocks, waves, and a small boat.
+    parentNote: The tower can be stripes of two colors. The rocks and the boat are separate jobs after the stripes are done.
+  - slug: sea-turtle
+    title: Sea Turtle Coloring Page
+    prompt: A sea turtle swimming, its shell divided into large patterned segments, with seaweed and two small fish nearby. No letters, no diver.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a sea turtle with a patterned shell, seaweed, and two small fish.
+    description: A sea turtle coloring page for ages 5–6, with a patterned shell.
+    parentNote: The shell segments are the long part. The body and the two fish are quicker, so they work as a finish line after the shell.
+pins:
+  - id: set
+    title: Ocean Scene Coloring Pages
+    subtitle: Patterns for ages 5–6

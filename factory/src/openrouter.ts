@@ -5,6 +5,8 @@ type ImagePayload = {
   error?: { message?: string };
 };
 
+export type LineDifficulty = 'toddler' | 'easy' | 'medium' | 'detailed';
+
 function requireKey() {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) {
@@ -70,13 +72,35 @@ export async function generateColoringPage(prompt: string) {
   throw new Error('В ответе OpenRouter нет картинки.');
 }
 
-export function coloringPrompt(style: string, subject: string) {
+const layouts: Record<LineDifficulty, string> = {
+  toddler:
+    'One object only, made of very few huge closed shapes. Extra-thick outlines. Almost no small parts and no background scene. Leave lots of white space. A toddler should be able to scribble across each shape.',
+  easy:
+    'One subject, large and centered, with white space around it. Thick closed outlines and a handful of big regions. A young child should be able to color every region with a crayon.',
+  medium:
+    'A simple scene with more separate regions than a single centered object. Include medium-size details a child can color one at a time. Keep outlines thick, closed, and even. Do not fill the background with tiny hairline marks.',
+  detailed:
+    'A fuller scene or a repeating pattern with many separate regions to color. The picture can use more of the page. Outlines stay bold and closed, clearly thick enough to print and color with a crayon, never hairline engraving, never crosshatching, never gray fill.',
+};
+
+export function coloringPrompt(
+  style: string,
+  subject: string,
+  difficulty: LineDifficulty = 'easy',
+  age = '3-4',
+) {
+  const ages = age.replace('-', ' to ');
+  let layout = layouts[difficulty] ?? layouts.easy;
+  if (difficulty === 'detailed' && age.startsWith('6')) {
+    layout +=
+      ' Make this busier than a simple scene: more objects, a repeating pattern, and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.';
+  }
   return [
-    'A finished coloring-book page for children ages 4 to 8, one subject, portrait composition.',
+    `A finished coloring-book page for children ages ${ages}, portrait composition.`,
     `Subject: ${subject}.`,
     style,
     'Draw it the way a coloring book is printed: pure white background, solid black outlines only, even line weight, smooth closed shapes, clean corners, no stray sketch lines.',
-    'The subject is large and centered, with white space around it. A child should be able to color every region with a crayon.',
+    layout,
     'No shading, no gray, no hatching, no gradients, no color, no texture, no paper grain, no shadow, no frame, no border.',
     'No letters, numbers, captions, logos, or watermarks anywhere in the picture. Leave the drawing itself untitled.',
     'Original subject only. Do not imitate a character from a film, series, game, or toy line.',

@@ -9,6 +9,7 @@ const themes = defineCollection({
     description: z.string(),
     tagline: z.string(),
     kind: z.enum(['evergreen', 'seasonal']),
+    ageBand: z.enum(['2-3', '3-4', '4-5', '5-6', '6-8']),
     order: z.number(),
     accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
     ink: z.string().regex(/^#[0-9a-fA-F]{6}$/),
@@ -42,7 +43,7 @@ const sheets = defineCollection({
     alt: z.string(),
     parentNote: z.string(),
     order: z.number(),
-    difficulty: z.enum(['easy', 'medium']),
+    difficulty: z.enum(['toddler', 'easy', 'medium', 'detailed']),
     age: z.string(),
   }),
 });

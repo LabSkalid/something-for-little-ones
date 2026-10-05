@@ -69,7 +69,7 @@ function parseIdeas(text: string) {
     while (used.has(slug)) slug = `${slug}-2`;
     used.add(slug);
     const title = /coloring page/i.test(name) ? name : `${name} Coloring Page`;
-    ideas.push({ slug, title, prompt, difficulty: 'easy', age: '4-8' });
+    ideas.push({ slug, title, prompt, difficulty: 'easy', age: '3-4' });
   }
   return ideas;
 }
@@ -109,7 +109,7 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
   let title = existing?.title ?? '';
   let kind = existing?.kind ?? (body.kind === 'seasonal' ? 'seasonal' : 'evergreen');
   let order = 1;
-  let accent = '#E07A5F';
+  let accent = '#1D7AD6';
   let ink = '#243038';
   let related = ['animal-coloring-pages'];
   if (!existing) {
@@ -129,15 +129,16 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
   const brief = {
     slug,
     title,
-    tagline: `Free ${title.toLowerCase()} for kids ages 4 to 8.`,
+    tagline: `Free ${title.toLowerCase()} for kids ages 3 to 4.`,
     description: `Free ${title.toLowerCase()} to print for kids.`,
     kind,
+    ageBand: '3-4',
     order,
     accent,
     ink,
     keywords: [title.toLowerCase()],
     related: related.filter((item) => item !== slug).slice(0, 2),
-    audience: 'parents of children ages 4 to 8',
+    audience: 'parents of children ages 3 to 4',
     style: 'Cute storybook line art, thick black outlines, white background, no shading, no text, no trademarked characters.',
     ideas,
     pins: [
@@ -165,7 +166,7 @@ const page = `<!doctype html>
   label { display: block; font-weight: 700; margin: 0.9rem 0 0.3rem; }
   input, select, textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #e4e8eb; border-radius: 10px; }
   textarea { min-height: 9rem; }
-  button, .btn { border: 0; border-radius: 10px; background: #e07a5f; color: white; font-weight: 800; padding: 0.65rem 0.9rem; cursor: pointer; }
+  button, .btn { border: 0; border-radius: 10px; background: #1d7ad6; color: white; font-weight: 800; padding: 0.65rem 0.9rem; cursor: pointer; }
   button.quiet, .quiet { background: white; color: #243038; box-shadow: inset 0 0 0 1.5px #e4e8eb; }
   .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
   article { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #e4e8eb; }

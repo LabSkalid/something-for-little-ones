@@ -7,5 +7,5 @@ alt: Line drawing of a fire truck from the side with a ladder on top
 parentNote: The ladder is a row of rungs rather than a realistic aerial. Wheels, windows, and the hose reel are the other closed shapes. Most children color the body red and then look for something else to do.
 order: 4
 difficulty: medium
-age: "5-8"
+age: "3-4"
 ---

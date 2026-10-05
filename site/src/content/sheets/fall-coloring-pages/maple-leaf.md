@@ -7,5 +7,5 @@ alt: Line drawing of a maple leaf with five lobes, simple veins, and a short ste
 parentNote: The five lobes are big enough for a younger child to fill with one red or yellow. The veins are separate lines, so an older child can leave them the color of the paper.
 order: 1
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

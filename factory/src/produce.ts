@@ -36,8 +36,10 @@ const ideaSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
   title: z.string().min(3),
   prompt: z.string().min(8),
-  difficulty: z.enum(['easy', 'medium']).default('easy'),
-  age: z.string().default('4-8'),
+  difficulty: z.enum(['toddler', 'easy', 'medium', 'detailed']).default('easy'),
+  age: z.string().default('3-4'),
+  alt: z.string().optional(),
+  description: z.string().optional(),
   parentNote: z.string().optional(),
 });
 
@@ -47,6 +49,7 @@ const briefSchema = z.object({
   tagline: z.string(),
   description: z.string(),
   kind: z.enum(['evergreen', 'seasonal']),
+  ageBand: z.enum(['2-3', '3-4', '4-5', '5-6', '6-8']).default('3-4'),
   order: z.number().default(1),
   accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   ink: z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#241C18'),
@@ -89,12 +92,18 @@ age: ${yamlQuote(idea.age)}
 `;
 }
 
+function shortAlt(idea: Idea) {
+  const name = idea.title.replace(/\s+coloring page$/i, '').trim();
+  const lower = name.charAt(0).toLowerCase() + name.slice(1);
+  return `Line drawing of ${lower}.`;
+}
+
 async function describeSheet(brief: Brief, idea: Idea) {
   if (idea.parentNote) {
     return {
       parentNote: idea.parentNote,
-      description: `${idea.title} to print for kids.`,
-      alt: `Line drawing of ${idea.prompt}`,
+      description: idea.description ?? `${idea.title} to print for kids.`,
+      alt: idea.alt ?? shortAlt(idea),
     };
   }
   const raw = await chat(
@@ -156,6 +165,7 @@ title: ${yamlQuote(brief.title)}
 description: ${yamlQuote(description)}
 tagline: ${yamlQuote(tagline)}
 kind: ${brief.kind}
+ageBand: ${yamlQuote(brief.ageBand)}
 order: ${brief.order}
 accent: ${yamlQuote(brief.accent)}
 ink: ${yamlQuote(brief.ink)}
@@ -234,7 +244,7 @@ export async function produce(briefPath: string, dryRun: boolean) {
   const created: { title: string; slug: string }[] = [];
   for (const idea of pending) {
     console.log(`рисую ${idea.slug}...`);
-    const raw = await generateColoringPage(coloringPrompt(brief.style, idea.prompt));
+    const raw = await generateColoringPage(coloringPrompt(brief.style, idea.prompt, idea.difficulty, idea.age));
     const print = await stampSite(await fitPortrait(raw));
     const preview = await webPreview(print);
     const dir = path.join(printRoot, brief.slug);

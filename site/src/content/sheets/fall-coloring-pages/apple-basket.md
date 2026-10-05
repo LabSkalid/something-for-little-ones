@@ -7,5 +7,5 @@ alt: Line drawing of a basket filled with apples, plus one apple and a leaf next
 parentNote: Each apple is its own closed shape, so a child can mix red, green, and yellow without the colors running together. The basket weave is the slower part.
 order: 4
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

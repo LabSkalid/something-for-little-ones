@@ -7,6 +7,7 @@ import SheetCard from '../../components/SheetCard.astro';
 import { sheetAssets, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, publisher } from '../../lib/schema';
 import { absoluteUrl } from '../../site';
+import { difficultyLabel } from '../../lib/difficulty';
 
 export async function getStaticPaths() {
   const sheets = await getCollection('sheets');
@@ -83,7 +84,7 @@ const jsonLd = {
             <a class="btn" href={assets.letter} download={`${sheet.data.title} - US Letter.pdf`}>Download US Letter</a>
             <a class="btn btn-ghost" href={assets.a4} download={`${sheet.data.title} - A4.pdf`}>Download A4</a>
           </div>
-          <p class="date-line">PDF · ages {sheet.data.age} · {sheet.data.difficulty === 'easy' ? 'easy lines' : 'a few more details'}</p>
+          <p class="date-line">PDF · ages {sheet.data.age} · {difficultyLabel(sheet.data.difficulty).toLowerCase()}</p>
           <div class="note">
             <p>{sheet.data.parentNote}</p>
             <Content />

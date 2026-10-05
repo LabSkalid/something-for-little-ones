@@ -7,5 +7,5 @@ alt: Line drawing of a standing scarecrow with a floppy hat, patched shirt, stra
 parentNote: The shirt, pants, and hat are separate pieces, so each can be a different color. The straw at the cuffs is a smaller job for a child who has already colored the clothes.
 order: 3
 difficulty: medium
-age: "5-8"
+age: "3-4"
 ---

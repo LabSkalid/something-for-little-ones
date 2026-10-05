@@ -7,5 +7,5 @@ alt: Line drawing of a Christmas tree with ornaments, a star, and presents at th
 parentNote: The tree sections are large. Each ornament is its own circle, which is the part children usually want to color in different colors. The star is an outline, not a filled gold shape.
 order: 1
 difficulty: medium
-age: "4-8"
+age: "3-4"
 ---

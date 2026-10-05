@@ -1,0 +1,62 @@
+slug: town-scene-coloring-pages
+title: Town Scene Coloring Pages
+tagline: Free town coloring pages for ages 6–8, with fuller scenes and patterns that still use bold lines.
+description: Free detailed coloring pages for ages 6–8. A hot air balloon, treehouse, train, greenhouse, and bakery window.
+kind: evergreen
+ageBand: "6-8"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - detailed coloring pages for kids
+  - coloring pages for ages 6-8
+related:
+  - ocean-scene-coloring-pages
+  - garden-coloring-pages
+audience: parents of children ages 6 to 8
+style: A fuller coloring-book scene with many colorable regions and at least one repeating pattern. Outlines are bold and closed, thick enough for a crayon, never hairline engraving or crosshatching. White background, no shading, no gray, no color, no text, no logos.
+ideas:
+  - slug: hot-air-balloon
+    title: Hot Air Balloon Coloring Page
+    prompt: A hot air balloon over rolling hills. The balloon is divided into many patterned panels of stripes, dots, and checks, all closed shapes. A small basket, one house, trees, and clouds. No letters on the balloon.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a patterned hot air balloon over hills, with a basket, a house, and trees.
+    description: A hot air balloon coloring page for ages 6–8, with patterned panels.
+    parentNote: The panels are the pattern. Give stripes one pair of colors and dots another. The hills and the house can wait until the balloon is done.
+  - slug: treehouse
+    title: Treehouse Coloring Page
+    prompt: A treehouse in a large tree, with several windows, a ladder, a railing, clusters of leaves, one bird, and a rope. Many closed regions. No signs, no letters, no people.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a treehouse with windows, a ladder, leaves, a bird, and a rope.
+    description: A treehouse coloring page for ages 6–8, with windows, a ladder, and leaves.
+    parentNote: Color the windows as a set, then the leaves. The ladder is a repeating shape, so two colors alternating on the rungs is a clear plan.
+  - slug: passenger-train
+    title: Passenger Train Coloring Page
+    prompt: A passenger train with several cars, many windows, wheels, and a patterned stripe along the side, beside a platform with flowers and a bench. No station name, no numbers, no letters, no logo.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a passenger train with many windows beside a platform, flowers, and a bench.
+    description: A passenger train coloring page for ages 6–8, with windows and a side stripe.
+    parentNote: The windows can all be one color so the train reads as finished early. The stripe and the flowers are the pattern work after that.
+  - slug: greenhouse
+    title: Greenhouse Coloring Page
+    prompt: A greenhouse with a grid of large glass panes, not tiny ones, rows of potted plants inside, a door, and a path. Repeating pots. No plant labels and no text.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a greenhouse with large glass panes and rows of potted plants.
+    description: A greenhouse coloring page for ages 6–8, with rows of pots and glass panes.
+    parentNote: Each pot is the same job repeated. A child can color one row, stop, and the page still looks intentional.
+  - slug: bakery-window
+    title: Bakery Window Coloring Page
+    prompt: A bakery shop window seen from the street, filled with cakes, loaves, and pies on shelves, under a striped awning. Brick shapes around the window. The awning and the glass have no words, no prices, and no letters.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a bakery window full of cakes and bread under a striped awning, with no writing.
+    description: A bakery window coloring page for ages 6–8, with cakes, bread, and a striped awning.
+    parentNote: Treat each cake as its own small picture. The awning stripes and the bricks are the repeating pattern around them. There is no shop name to color around.
+pins:
+  - id: set
+    title: Town Scene Coloring Pages
+    subtitle: Fuller scenes for ages 6–8

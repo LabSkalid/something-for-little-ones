@@ -1,8 +1,9 @@
 ---
 title: Princess Coloring Pages
 description: Free princess coloring pages for kids. An original storybook gown, castle, carriage, pony, and crown — no movie characters.
-tagline: Free princess coloring pages for kids ages 4–8. A gown, castle, carriage, pony, and crown. No movie characters.
+tagline: Free princess coloring pages for kids ages 3–4. A gown, castle, carriage, pony, and crown. No movie characters.
 kind: evergreen
+ageBand: "3-4"
 order: 4
 accent: "#8E4D68"
 ink: "#2C1822"
@@ -33,8 +34,10 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-Free princess coloring pages for kids ages 4–8. This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
+Free princess coloring pages for kids ages 3–4. This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
 
 These are original drawings, not characters from a movie or a toy line. More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+
+The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

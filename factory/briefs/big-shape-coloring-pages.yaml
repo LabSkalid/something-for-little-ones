@@ -1,0 +1,62 @@
+slug: big-shape-coloring-pages
+title: Big Shape Coloring Pages
+tagline: Free coloring pages for ages 2–3. Five huge shapes for a child who is still scribbling.
+description: Free coloring pages for ages 2–3. A ball, apple, fish, cup, and star made of a few huge shapes.
+kind: evergreen
+ageBand: "2-3"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - coloring pages for toddlers
+  - simple coloring pages ages 2-3
+related:
+  - animal-coloring-pages
+  - garden-coloring-pages
+audience: parents of children ages 2 to 3
+style: Extra-thick black outlines, one object, very few huge closed shapes, almost no small parts, lots of white space. Coloring book for toddlers. No shading, no text, no background scene.
+ideas:
+  - slug: big-ball
+    title: Big Ball Coloring Page
+    prompt: One large round ball centered on the page, with a single wide curved stripe across it. Only the ball and the stripe. No floor, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one large ball with a single wide stripe.
+    description: A big ball coloring page for ages 2–3, with one huge shape to color.
+    parentNote: This is one ball and one stripe. Any color that covers the shape counts, even if it goes past the line.
+  - slug: whole-apple
+    title: Whole Apple Coloring Page
+    prompt: One large apple filling most of the page, with a short thick stem and one simple leaf. No basket, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one large apple with a short stem and a single leaf.
+    description: A whole apple coloring page for ages 2–3, drawn as one huge fruit.
+    parentNote: The apple is one big area. The leaf can be a second color if the child wants another job, or the same color if they do not.
+  - slug: simple-fish
+    title: Simple Fish Coloring Page
+    prompt: One large fish from the side, made of a big oval body, one tail, one fin, and one round eye. No bubbles, no water, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one large fish with a tail, one fin, and a round eye.
+    description: A simple fish coloring page for ages 2–3, with a few huge shapes.
+    parentNote: The body is the main job. The tail and the fin are the only extra pieces, so the page stays short.
+  - slug: drinking-cup
+    title: Drinking Cup Coloring Page
+    prompt: One large drinking cup seen from the side, with a thick handle. The cup is one big shape. No straw, no table, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one large cup with a thick handle.
+    description: A drinking cup coloring page for ages 2–3, one big cup and a handle.
+    parentNote: Color the cup first. The handle is a separate loop if the child wants a second color.
+  - slug: big-star
+    title: Big Star Coloring Page
+    prompt: One large five-pointed star centered on the page. The star is a single thick outline with no face and no inner lines. No background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one large five-pointed star.
+    description: A big star coloring page for ages 2–3, a single huge star.
+    parentNote: There is nothing inside the star to finish. One color across the whole shape is a complete page.
+pins:
+  - id: set
+    title: Big Shape Coloring Pages
+    subtitle: Huge shapes for ages 2–3

@@ -1,0 +1,62 @@
+slug: garden-coloring-pages
+title: Garden Coloring Pages
+tagline: Free garden coloring pages for ages 4–5, with a few more parts than a single big shape.
+description: Free garden coloring pages for ages 4–5. A watering can, birdhouse, vegetable basket, rain boots, and garden gate.
+kind: evergreen
+ageBand: "4-5"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - garden coloring pages
+  - coloring pages for ages 4-5
+related:
+  - big-shape-coloring-pages
+  - ocean-scene-coloring-pages
+audience: parents of children ages 4 to 5
+style: Simple outdoor coloring-book scene with thick closed black outlines and several medium-size regions. White background, no shading, no text, no tiny background details.
+ideas:
+  - slug: watering-can
+    title: Watering Can Coloring Page
+    prompt: A watering can with a spout and a handle, standing next to two simple flowers with a few leaves. Several separate regions to color. No words, no garden shed.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a watering can beside two flowers.
+    description: A watering can coloring page for ages 4–5, with two flowers beside it.
+    parentNote: The can, the spout, and each flower are separate colors. The leaves are the smaller job after the big shapes are done.
+  - slug: birdhouse
+    title: Birdhouse Coloring Page
+    prompt: A birdhouse on a plain wooden post, one bird perched on the roof, and a few large leaves around it. The entrance is an empty circle outline, not filled black. No wood-grain texture, no shading, no words.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a birdhouse on a post with one bird and a few leaves.
+    description: A birdhouse coloring page for ages 4–5, with a bird on the roof.
+    parentNote: Color the house and the post first. The bird and the leaves are the extra pieces for a child who is still interested.
+  - slug: vegetable-basket
+    title: Vegetable Basket Coloring Page
+    prompt: A basket holding a carrot with leaves, a round tomato, and a pea pod. The basket weave is a few wide bands, not a tiny grid. No words, no price tag.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a basket holding a carrot, a tomato, and a pea pod.
+    description: A vegetable basket coloring page for ages 4–5, with three vegetables.
+    parentNote: Each vegetable can be its own color. The basket bands are wide on purpose so they are not a fiddly weave.
+  - slug: rain-boots
+    title: Rain Boots Coloring Page
+    prompt: A pair of rain boots standing side by side, a small puddle, and one flower beside them. Medium regions and thick outlines. No words, no raincoat.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a pair of rain boots, a puddle, and one flower.
+    description: A rain boots coloring page for ages 4–5, with a puddle and one flower.
+    parentNote: The two boots are the main shapes. The puddle and the flower give a second and third color without adding a whole scene.
+  - slug: garden-gate
+    title: Garden Gate Coloring Page
+    prompt: A garden gate with two posts, a few vines, and two flower pots at the base. A simple scene, not a full yard. No words, no house number, no fence stretching across the page.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a garden gate with vines and two flower pots.
+    description: A garden gate coloring page for ages 4–5, with vines and two pots.
+    parentNote: The gate is the large shape. The pots and the vine leaves are the parts to color after the posts are done.
+pins:
+  - id: set
+    title: Garden Coloring Pages
+    subtitle: Simple scenes for ages 4–5

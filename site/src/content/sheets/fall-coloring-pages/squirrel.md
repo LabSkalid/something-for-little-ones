@@ -7,5 +7,5 @@ alt: Line drawing of a sitting squirrel holding an acorn, with a large curled ta
 parentNote: The body is one large area and the tail is another, so two browns are enough. The acorn in its paws is a small extra piece.
 order: 5
 difficulty: medium
-age: "4-8"
+age: "3-4"
 ---

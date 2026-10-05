@@ -7,5 +7,5 @@ alt: Line drawing of a three-point crown, a wand topped with a star, and small s
 parentNote: This is the shortest page in the princess set. A preschooler can finish the crown and the wand without a full figure. The stars are optional.
 order: 5
 difficulty: easy
-age: "4-7"
+age: "3-4"
 ---

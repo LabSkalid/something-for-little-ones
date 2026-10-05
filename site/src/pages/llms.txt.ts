@@ -4,8 +4,10 @@ import { absoluteUrl, site } from '../site';
 import { themePath } from '../lib/paths';
 
 export const GET: APIRoute = async () => {
+  const bandOrder = ['2-3', '3-4', '4-5', '5-6', '6-8'];
   const themes = (await getCollection('themes')).sort((a, b) => {
-    if (a.data.kind !== b.data.kind) return a.data.kind === 'evergreen' ? -1 : 1;
+    const age = bandOrder.indexOf(a.data.ageBand) - bandOrder.indexOf(b.data.ageBand);
+    if (age !== 0) return age;
     return a.data.order - b.data.order;
   });
   const lines = [

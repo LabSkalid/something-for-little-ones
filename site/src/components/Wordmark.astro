@@ -1,0 +1,19 @@
+---
+const text = 'Something for Little Ones';
+const colors = ['#1d7ad6', '#2e9a45', '#c9a227'];
+let colorIndex = 0;
+const parts = [...text].map((char) => {
+  if (char === ' ') return { char, color: '' };
+  const color = colors[colorIndex % colors.length];
+  colorIndex += 1;
+  return { char, color };
+});
+---
+
+<a class="wordmark" href="/" aria-label="Something for Little Ones">
+  {
+    parts.map((part) =>
+      part.color ? <span aria-hidden="true" style={`color: ${part.color}`}>{part.char}</span> : ' ',
+    )
+  }
+</a>

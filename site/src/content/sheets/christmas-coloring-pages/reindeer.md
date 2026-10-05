@@ -7,5 +7,5 @@ alt: Line drawing of a reindeer face with branching antlers and a round nose
 parentNote: The nose is a circle to color, usually red, and the antlers are the interesting part for an older child. The face itself is one big shape for a younger child.
 order: 4
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

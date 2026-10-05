@@ -7,6 +7,7 @@ import SheetCard from '../../components/SheetCard.astro';
 import { pinPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, publisher } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
+import { ageBandLabel } from '../../lib/ages';
 
 export async function getStaticPaths() {
   const themes = await getCollection('themes');
@@ -71,7 +72,7 @@ const jsonLd = {
   <div class="wrap with-rail">
     <article>
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">{theme.data.kind === 'seasonal' ? 'Seasonal set' : 'Everyday set'}</p>
+      <p class="eyebrow">{ageBandLabel(theme.data.ageBand)}{theme.data.kind === 'seasonal' ? ' · Seasonal' : ''}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
       <p class="date-line">{sheets.length} printable pages · US Letter and A4 · Updated {updated}</p>

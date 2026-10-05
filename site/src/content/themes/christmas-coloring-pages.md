@@ -1,8 +1,9 @@
 ---
 title: Christmas Coloring Pages
 description: Free Christmas coloring pages to print at home. A tree, Santa, gingerbread house, reindeer, and stocking in US Letter or A4.
-tagline: Free Christmas coloring pages for kids ages 4–8, including a tree, Santa, gingerbread house, reindeer, and stocking.
+tagline: Free Christmas coloring pages for kids ages 3–4, including a tree, Santa, gingerbread house, reindeer, and stocking.
 kind: seasonal
+ageBand: "3-4"
 order: 3
 accent: "#1F6B4A"
 ink: "#14261C"
@@ -33,8 +34,10 @@ pins:
     subtitle: Printable holiday pages for kids
 ---
 
-Free Christmas coloring pages for kids ages 4–8. This set includes a [tree](/christmas-coloring-pages/christmas-tree/), [Santa](/christmas-coloring-pages/santa-claus/), [gingerbread house](/christmas-coloring-pages/gingerbread-house/), [reindeer](/christmas-coloring-pages/reindeer/), and [stocking](/christmas-coloring-pages/christmas-stocking/). Print the whole set or download one page.
+Free Christmas coloring pages for kids ages 3–4. This set includes a [tree](/christmas-coloring-pages/christmas-tree/), [Santa](/christmas-coloring-pages/santa-claus/), [gingerbread house](/christmas-coloring-pages/gingerbread-house/), [reindeer](/christmas-coloring-pages/reindeer/), and [stocking](/christmas-coloring-pages/christmas-stocking/). Print the whole set or download one page.
 
 None of the pages use a movie character. Fall pages are in the [fall coloring pages](/fall-coloring-pages/). Halloween pages are in the [Halloween coloring pages](/halloween-coloring-pages/). Everyday animals are in the [animal coloring pages](/animal-coloring-pages/).
+
+The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

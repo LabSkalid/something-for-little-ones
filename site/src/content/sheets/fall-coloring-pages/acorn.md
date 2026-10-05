@@ -7,5 +7,5 @@ alt: Line drawing of an acorn with a scaled cap and an oak leaf beside it
 parentNote: The nut is one large space, which is easy to fill. The cap is made of small scales, so it can stay a second brown if a child wants more to do.
 order: 2
 difficulty: easy
-age: "4-8"
+age: "3-4"
 ---

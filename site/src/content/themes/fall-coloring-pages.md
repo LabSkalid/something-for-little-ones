@@ -1,8 +1,9 @@
 ---
 title: Fall Coloring Pages
 description: Free fall coloring pages to print for kids. A maple leaf, acorn, scarecrow, apple basket, and squirrel in US Letter or A4.
-tagline: Free fall coloring pages for kids ages 4–8, including a maple leaf, acorn, scarecrow, apple basket, and squirrel.
+tagline: Free fall coloring pages for kids ages 3–4, including a maple leaf, acorn, scarecrow, apple basket, and squirrel.
 kind: seasonal
+ageBand: "3-4"
 order: 1
 accent: "#C4622D"
 ink: "#2C2118"
@@ -33,8 +34,10 @@ pins:
     subtitle: A leaf, an acorn, and apples
 ---
 
-Free fall coloring pages for kids ages 4–8. This set includes a [maple leaf](/fall-coloring-pages/maple-leaf/), [acorn](/fall-coloring-pages/acorn/), [scarecrow](/fall-coloring-pages/scarecrow/), [apple basket](/fall-coloring-pages/apple-basket/), and [squirrel](/fall-coloring-pages/squirrel/). Print the whole set or download one page.
+Free fall coloring pages for kids ages 3–4. This set includes a [maple leaf](/fall-coloring-pages/maple-leaf/), [acorn](/fall-coloring-pages/acorn/), [scarecrow](/fall-coloring-pages/scarecrow/), [apple basket](/fall-coloring-pages/apple-basket/), and [squirrel](/fall-coloring-pages/squirrel/). Print the whole set or download one page.
 
 This set is harvest and trees, not costumes. Pumpkins and candy are in the [Halloween coloring pages](/halloween-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+
+The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

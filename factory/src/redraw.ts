@@ -4,7 +4,7 @@ import { parse } from 'yaml';
 import { readSite } from './brand.ts';
 import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
-import { coloringPrompt, generateColoringPage } from './openrouter.ts';
+import { coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
 import { loadEnv } from './env.ts';
 import { briefsRoot, printRoot, sheetContentRoot } from './paths.ts';
@@ -12,7 +12,14 @@ import { briefsRoot, printRoot, sheetContentRoot } from './paths.ts';
 function frontmatter(raw: string) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) throw new Error('В странице нет шапки.');
-  return parse(match[1]) as { title?: string; slug?: string; alt?: string; description?: string };
+  return parse(match[1]) as {
+    title?: string;
+    slug?: string;
+    alt?: string;
+    description?: string;
+    difficulty?: LineDifficulty;
+    age?: string;
+  };
 }
 
 export async function redraw(themeFilter?: string) {
@@ -41,7 +48,9 @@ export async function redraw(themeFilter?: string) {
       const title = sheet.title || slug;
       const subject = sheet.alt || sheet.description || title;
       console.log(`рисую ${theme.name}/${slug}...`);
-      const raw = await generateColoringPage(coloringPrompt(style, subject));
+      const raw = await generateColoringPage(
+        coloringPrompt(style, subject, sheet.difficulty ?? 'easy', sheet.age ?? '3-4'),
+      );
       const print = await stampSite(await fitPortrait(raw));
       const preview = await webPreview(print);
       const out = path.join(printRoot, theme.name);

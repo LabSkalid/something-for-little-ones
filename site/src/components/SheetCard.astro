@@ -1,5 +1,6 @@
 ---
 import { sheetAssets, sheetPath } from '../lib/paths';
+import { difficultyLabel } from '../lib/difficulty';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 
 const { sheet } = Astro.props;
 const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
-const label = sheet.data.difficulty === 'easy' ? 'Easy lines' : 'A few more details';
+const label = difficultyLabel(sheet.data.difficulty);
 ---
 
 <a class="sheet-card" href={sheetPath(sheet.data.theme, sheet.data.slug)}>
