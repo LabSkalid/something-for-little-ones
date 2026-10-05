@@ -24,6 +24,19 @@ export default defineConfig({
       },
     }),
     {
+      name: 'sitemap-xml',
+      hooks: {
+        'astro:build:done': async ({ dir }) => {
+          const names = await fs.readdir(dir);
+          const parts = names.filter((name) => /^sitemap-\d+\.xml$/.test(name)).sort();
+          if (parts.length !== 1) {
+            throw new Error(`sitemap.xml needs one generated urlset, found ${parts.join(', ') || 'none'}`);
+          }
+          await fs.copyFile(new URL(parts[0], dir), new URL('sitemap.xml', dir));
+        },
+      },
+    },
+    {
       name: 'ads-txt',
       hooks: {
         'astro:build:done': async ({ dir }) => {
