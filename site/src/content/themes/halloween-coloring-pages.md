@@ -3,12 +3,12 @@ title: Halloween Coloring Pages
 description: Free Halloween coloring pages that stay cute, not scary. A pumpkin, ghost, witch hat, candy bag, and black cat to print.
 tagline: Cute Halloween pictures for little kids — a pumpkin, a ghost, a witch hat, candy, and a cat.
 kind: seasonal
-order: 1
+order: 2
 accent: "#D4652F"
 ink: "#2A1B14"
 related:
+  - fall-coloring-pages
   - christmas-coloring-pages
-  - animal-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-05
 keywords:
@@ -41,6 +41,6 @@ The [smiling pumpkin coloring page](/halloween-coloring-pages/jack-o-lantern/) i
 
 There are no graveyards and no snarling mouths. The black cat is seated and round, closer to a pet than to a jump-scare. Color the pumpkin orange or leave it pink. The page does not mind.
 
-When October is over, the [Christmas coloring pages](/christmas-coloring-pages/) are the next seasonal set: a tree, Santa, a gingerbread house, a reindeer, and a stocking. If you want something with no holiday at all, the [animal coloring pages](/animal-coloring-pages/) stay up all year.
+If the afternoon is about leaves and apples rather than costumes, the [fall coloring pages](/fall-coloring-pages/) are the quieter set: a maple leaf, an acorn, a scarecrow, apples, and a squirrel. When October is over, the [Christmas coloring pages](/christmas-coloring-pages/) are the next seasonal set: a tree, Santa, a gingerbread house, a reindeer, and a stocking. If you want something with no holiday at all, the [animal coloring pages](/animal-coloring-pages/) stay up all year.
 
 Print the PDF, US Letter or A4. The [printing guide](/how-to-print/) shows the setting that keeps the outlines dark enough to color.

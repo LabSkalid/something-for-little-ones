@@ -3,12 +3,12 @@ title: Christmas Coloring Pages
 description: Free Christmas coloring pages to print at home. A tree, Santa, gingerbread house, reindeer, and stocking in US Letter or A4.
 tagline: A tree, Santa, a gingerbread house, a reindeer, and a stocking — quiet pages for December.
 kind: seasonal
-order: 2
+order: 3
 accent: "#1F6B4A"
 ink: "#14261C"
 related:
+  - fall-coloring-pages
   - halloween-coloring-pages
-  - animal-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-05
 keywords:
@@ -41,6 +41,6 @@ The [Christmas tree coloring page](/christmas-coloring-pages/christmas-tree/) ha
 
 The reindeer's nose is a circle you color, not a sticker. The gingerbread house uses icing as outlines, so the roof, the door, and the candies are separate. None of the pages include lyrics, logos, or a character from a film.
 
-If you still have pumpkin crayons out, the [Halloween coloring pages](/halloween-coloring-pages/) are the other seasonal set. For a day that is not a holiday, go back to the [animal coloring pages](/animal-coloring-pages/).
+If the leaves are still the main event, the [fall coloring pages](/fall-coloring-pages/) are the harvest set: a maple leaf, an acorn, a scarecrow, apples, and a squirrel. If you still have pumpkin crayons out, the [Halloween coloring pages](/halloween-coloring-pages/) are the costume set. For a day that is not a holiday, go back to the [animal coloring pages](/animal-coloring-pages/).
 
 Download US Letter or A4 from the picture you want. The [printing guide](/how-to-print/) is there if the printer tries to shrink the page.
