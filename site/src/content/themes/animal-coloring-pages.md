@@ -1,7 +1,7 @@
 ---
 title: Animal Coloring Pages
-description: Free animal coloring pages to print for kids. A puppy, kitten, elephant, butterfly, and bunny in US Letter and A4 PDFs.
-tagline: Free animal coloring pages for kids ages 3–4, including a puppy, kitten, elephant, butterfly, and bunny.
+description: Animal coloring pages with thick lines, for about ages 3 to 4. A puppy, a kitten, an elephant, a butterfly, and a bunny.
+tagline: A puppy, a kitten, an elephant, a butterfly, and a bunny. Thick lines, for about ages 3 to 4.
 kind: evergreen
 ageBand: "3-4"
 order: 1
@@ -22,7 +22,7 @@ faqs:
   - question: Are these real animal species pages or cartoon pets?
     answer: They are simple storybook animals, not a field guide. The elephant has a trunk and big ears. The butterfly has four wings with closed sections to color. Nothing is trying to be a mascot from a show.
   - question: Which file should I print?
-    answer: Download the US Letter PDF for a standard American printer. Download the A4 PDF if your paper pack says A4. The drawing is the same.
+    answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?
     answer: Yes. Personal and classroom printing is free. Print the PDF rather than the web page, and please don't resell the files.
 pins:
@@ -34,10 +34,8 @@ pins:
     subtitle: Easy animals for kids ages 3–4
 ---
 
-This set includes a [puppy](/animal-coloring-pages/puppy/), [kitten](/animal-coloring-pages/kitten/), [elephant](/animal-coloring-pages/elephant/), [butterfly](/animal-coloring-pages/butterfly/), and [bunny](/animal-coloring-pages/bunny/). Print the whole set or download one page.
+Five animals in this pile: a [puppy](/animal-coloring-pages/puppy/), a [kitten](/animal-coloring-pages/kitten/), an [elephant](/animal-coloring-pages/elephant/), a [butterfly](/animal-coloring-pages/butterfly/), and a [bunny](/animal-coloring-pages/bunny/). Print the one they pointed at, or the whole pile.
 
-The drawings are original to this site. A pony with a ribbon is in the [princess coloring pages](/princess-coloring-pages/). Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/).
+I drew these. A pony with a ribbon is with the [princess coloring pages](/princess-coloring-pages/). Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
+The lines are thick and the spaces are big, so this is for about ages 3 to 4. If your child is still scribbling, try the [big shape coloring pages](/big-shape-coloring-pages/). If they want more to color, the older sets are on the home page.

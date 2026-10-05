@@ -36,7 +36,7 @@ export const GET: APIRoute = async () => {
 
   const lines = [
     `# ${site.name}`,
-    `> Original line drawings for parents in the United States, free to print at home. ${site.description}`,
+    `> Coloring pages to print at home. ${site.description}`,
     '',
     'Individual sheet URLs live under each collection, at /{collection}/{sheet}/. This file is generated from the theme and sheet collections when the site is built.',
     '',
@@ -50,11 +50,11 @@ export const GET: APIRoute = async () => {
     ...holidays.flatMap(collectionBlock),
     '',
     '## Printing',
-    `- [How to print](${absoluteUrl('/how-to-print/')}): US Letter and A4 PDFs, scale, and supplies.`,
+    `- [How to print](${absoluteUrl('/how-to-print/')}): letter paper or A4, actual size, and what to do if the lines look faint.`,
     `- [About](${absoluteUrl('/about/')}): Julia, a mom of two, makes the drawings on this site.`,
     `- Contact: ${site.email}`,
     '',
-    'Drawings are original to this site. They are free for personal and classroom printing and are not for resale. The pages do not use trademarked characters.',
+    "I drew these. Print them at home or in a classroom. Please don't resell the files. No trademarked characters.",
     '',
   ];
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

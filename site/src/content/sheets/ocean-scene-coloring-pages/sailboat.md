@@ -2,9 +2,9 @@
 title: "Sailboat Coloring Page"
 theme: ocean-scene-coloring-pages
 slug: sailboat
-description: "A sailboat coloring page for ages 5–6, with waves, sails, and sky."
+description: "A sailboat with waves, sails, and sky. A good first ocean page. For about ages 5 to 6."
 alt: "Line drawing of a sailboat on waves with clouds, a sun, and a seagull."
-parentNote: "The sails and the hull are the big areas. The waves are a stripe pattern, so a child can alternate two blues without planning the whole page first."
+parentNote: "The sails and the hull are the big areas. The waves are stripes, so two blues taking turns is enough."
 order: 2
 difficulty: detailed
 age: "5-6"

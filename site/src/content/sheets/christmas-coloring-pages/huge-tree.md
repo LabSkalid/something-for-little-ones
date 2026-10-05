@@ -2,7 +2,7 @@
 title: "Huge Tree Coloring Page"
 theme: christmas-coloring-pages
 slug: huge-tree
-description: "A huge tree coloring page for ages 2–3, three big sections and three ornaments."
+description: "Three big tree sections and three ornaments. Each triangle can be the same green. For about ages 2 to 3."
 alt: "Line drawing of one huge Christmas tree with three ornaments."
 parentNote: "Each triangle can be the same green. The three ornaments are the only extra shapes."
 order: 6

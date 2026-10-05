@@ -7,8 +7,6 @@ import SheetCard from '../../components/SheetCard.astro';
 import { sheetAssets, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, sheetPng, site } from '../../site';
-import { ageBandLabel } from '../../lib/ages';
-import { difficultyLabel } from '../../lib/difficulty';
 
 export async function getStaticPaths() {
   const sheets = await getCollection('sheets');
@@ -97,7 +95,7 @@ const jsonLd = {
             alt={sheet.data.alt}
             width="640"
             height="800"
-            data-pin-description={`${sheet.data.title}. Free printable from ${theme.data.title}.`}
+            data-pin-description={`${sheet.data.title}. ${sheet.data.description}`}
           />
         </div>
         <div>
@@ -105,16 +103,14 @@ const jsonLd = {
             <a class="btn" href={assets.letter} download={`${sheet.data.title} - US Letter.pdf`}>Download US Letter</a>
             <a class="btn btn-ghost" href={assets.a4} download={`${sheet.data.title} - A4.pdf`}>Download A4</a>
           </div>
-          <p class="date-line">Free to print at home · US Letter and A4 · {ageBandLabel(sheet.data.age)} · {difficultyLabel(sheet.data.difficulty).toLowerCase()}</p>
           <div class="note">
             <p>{sheet.data.parentNote}</p>
             <Content />
-            <p>The drawing is original to this site.</p>
-            <p>More pictures are in the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>.</p>
+            <p>The rest of this set is in the <a href={themePath(theme.id)}>{theme.data.title.toLowerCase()}</a>.</p>
           </div>
           <p>
             {previous && <a href={sheetPath(theme.id, previous.data.slug)}>Previous: {previous.data.title}</a>}
-            {previous && next && ' · '}
+            {previous && next && ' / '}
             {next && <a href={sheetPath(theme.id, next.data.slug)}>Next: {next.data.title}</a>}
           </p>
         </div>

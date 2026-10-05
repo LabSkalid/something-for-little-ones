@@ -30,21 +30,21 @@ const subjectChoices: { id: string; title: string; hint: string; note?: string; 
     id: 'animals',
     title: 'Animals',
     hint: 'Ages 2–3, 3–4, and 6–8',
-    note: 'Three separate sets. Open one to see that set below.',
+    note: 'Three ages. Open one and those pictures show up below.',
     ids: ['first-animal-coloring-pages', 'animal-coloring-pages', 'woodland-animal-coloring-pages'],
   },
   {
     id: 'dinosaurs',
     title: 'Dinosaurs',
     hint: 'Ages 3–4 and 5–6',
-    note: 'Two separate sets. Open one to see that set below.',
+    note: 'Two ages. Open one and those pictures show up below.',
     ids: ['dinosaur-coloring-pages', 'dinosaur-scene-coloring-pages'],
   },
   {
     id: 'cars',
     title: 'Cars and trucks',
     hint: 'Ages 3–4 and 4–5',
-    note: 'Two separate sets. Open one to see that set below.',
+    note: 'Two ages. Open one and those pictures show up below.',
     ids: ['car-coloring-pages', 'simple-vehicle-coloring-pages'],
   },
   {
@@ -135,14 +135,14 @@ const jsonLd = {
   description={site.description}
   path="/"
   ogImage={pinPath('animal-coloring-pages', 'set')}
-  ogAlt="A set of free animal coloring pages to print"
+  ogAlt="Animal coloring pages, starting with a puppy"
   jsonLd={jsonLd}
 >
   <div class="wrap">
     <section class="page-intro">
       <h1>{site.tagline}</h1>
       <p class="lede">
-        Printable line drawings sorted by age, from a few huge shapes to fuller scenes. Choose an age or a theme, then download a US Letter or A4 PDF.
+        I sort these by how many lines are on the page. Little kids get a few huge shapes. Older kids get a fuller picture.
       </p>
       <div class="hero-actions">
         <a class="btn" href="#ages">Choose by age</a>
@@ -152,8 +152,8 @@ const jsonLd = {
 
     <section class="section" id="ages">
       <div class="section-head">
-        <h2>Choose by age</h2>
-        <p>Five ages. Open one to see the sets drawn for that age.</p>
+        <h2>By age</h2>
+        <p>Open an age. The pictures for that age are below.</p>
       </div>
       <ul class="age-choices">
         {grouped.map((band) => (
@@ -169,8 +169,8 @@ const jsonLd = {
 
     <section class="section" id="themes">
       <div class="section-head">
-        <h2>Choose by theme</h2>
-        <p>Animals, dinosaurs, cars, princesses, garden, ocean, town, and holidays. A subject drawn for more than one age opens only those sets.</p>
+        <h2>By theme</h2>
+        <p>Animals, dinosaurs, cars, princesses, a garden, the ocean, a town, and the holidays. If I drew the same subject for more than one age, those are separate piles.</p>
       </div>
       <ul class="age-choices">
         {themeChoices.map((choice) => (
@@ -239,14 +239,14 @@ const jsonLd = {
     <AdSlot name="top" />
     <section class="section prose">
       <p>
-        The drawings are original to this site and free to print at home. The age on a set is a guide for how many lines are on the page. A child who still wants big shapes can stay on an easier shelf. Download the PDF, not a screenshot of this page. The <a href="/how-to-print/">printing guide</a> covers US Letter and A4.
+        I drew these, and you can print them at home or for a class. The age is about how many lines are on the page. If your child still wants big shapes, use an easier set. Download the PDF, not a screenshot of this page. I made the files for letter paper. There's an A4 file too if that's what you have. <a href="/how-to-print/">How to print</a> covers the printer settings.
       </p>
     </section>
 
     <section class="section" id="holidays">
       <div class="section-head">
         <h2>Holidays</h2>
-        <p>Fall, Halloween, Thanksgiving, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
+        <p>Fall, Halloween, Thanksgiving, and Christmas. Open a holiday, then pick an age.</p>
       </div>
       <div class="theme-grid">
         {holidayTiles.map(({ theme }) => {
@@ -259,7 +259,7 @@ const jsonLd = {
               image={art.src}
               imageAlt={art.alt}
               count={art.count}
-              eyebrow="Seasonal"
+              eyebrow="Holiday"
             />
           );
         })}

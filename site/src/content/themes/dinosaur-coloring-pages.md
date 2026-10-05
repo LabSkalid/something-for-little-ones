@@ -1,7 +1,7 @@
 ---
 title: Dinosaur Coloring Pages
-description: Free dinosaur coloring pages for ages 3–4. A T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg, in US Letter and A4 PDFs.
-tagline: Free dinosaur coloring pages for kids ages 3–4, including a T-Rex, long-neck, triceratops, stegosaurus, and a hatching egg.
+description: Dinosaur coloring pages for about ages 3 to 4. A smiling T-Rex, a long-neck, a triceratops, a stegosaurus, and a hatching egg.
+tagline: A smiling T-Rex, a long-neck, a triceratops, a stegosaurus, and a hatching egg. Thick lines, for about ages 3 to 4.
 kind: evergreen
 ageBand: "3-4"
 order: 2
@@ -24,7 +24,7 @@ faqs:
   - question: Do the names on the site match the pictures?
     answer: Yes. The triceratops has a frill and three horns. The stegosaurus has plates along its back. The pages do not try to be a museum diagram, so some toes and spots are there to color, not to pass a science quiz.
   - question: Can I print them for a birthday table?
-    answer: Yes. Print the US Letter PDF, set out crayons, and use them as a quiet activity before cake. Classroom copies are free too.
+    answer: Yes. Print the letter PDF, set out crayons, and use them as a quiet activity before cake. Classroom copies are free too. There's an A4 file if that's your paper.
 pins:
   - id: set
     title: Free Dinosaur Coloring Pages
@@ -34,10 +34,8 @@ pins:
     subtitle: Cute dinosaurs to print for kids
 ---
 
-This set includes a [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/), [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), [triceratops](/dinosaur-coloring-pages/triceratops/), [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print the whole set or download one page.
+The one they usually ask for is the [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/). There's also a [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), a [triceratops](/dinosaur-coloring-pages/triceratops/), a [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print one, or the whole pile.
 
-The faces stay friendly. For animals that are not dinosaurs, use the [animal coloring pages](/animal-coloring-pages/). For trucks, the [car and truck coloring pages](/car-coloring-pages/) are the next set.
+The faces stay friendly. Animals that aren't dinosaurs are in the [animal coloring pages](/animal-coloring-pages/). Trucks are in the [car and truck coloring pages](/car-coloring-pages/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
+Thick lines and big spaces, for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). Older sets are on the home page.

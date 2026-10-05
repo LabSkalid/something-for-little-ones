@@ -1,7 +1,7 @@
 ---
 title: Woodland Animal Coloring Pages
-description: Free woodland animal coloring pages for ages 6–8. A fox, owl, deer, hedgehog, and squirrel in a simple scene, in US Letter and A4 PDFs.
-tagline: Free woodland coloring pages for ages 6–8, with patterns and a simple background.
+description: Woodland animal coloring pages for about ages 6 to 8. A fox, an owl, a deer, a hedgehog, and a squirrel, each in a simple scene.
+tagline: A fox, an owl, a deer, a hedgehog, and a squirrel. A pattern and a simple background. For about ages 6 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 2
@@ -32,12 +32,10 @@ pins:
     subtitle: Patterned woodland scenes for ages 6–8
 ---
 
-These woodland pages are for about ages 6 to 8. Each picture is an animal in a simple scene, with smaller regions and a pattern. The lines stay thick enough to color. They are not another town scene.
+These woodland pages are for about ages 6 to 8. Each picture is an animal, a pattern, and a few trees or leaves. The lines stay thick enough to color. This is the woods, not a town.
 
-The set includes a [fox](/woodland-animal-coloring-pages/woodland-fox/), an [owl](/woodland-animal-coloring-pages/woodland-owl/), a [deer](/woodland-animal-coloring-pages/woodland-deer/), a [hedgehog](/woodland-animal-coloring-pages/woodland-hedgehog/), and a [squirrel](/woodland-animal-coloring-pages/woodland-squirrel/). Start with the fox or the deer if you want a pattern with a clear edge. Leave the hedgehog for a longer sitting.
+There's a [fox](/woodland-animal-coloring-pages/woodland-fox/), an [owl](/woodland-animal-coloring-pages/woodland-owl/), a [deer](/woodland-animal-coloring-pages/woodland-deer/), a [hedgehog](/woodland-animal-coloring-pages/woodland-hedgehog/), and a [squirrel](/woodland-animal-coloring-pages/woodland-squirrel/). Start with the fox or the deer if you want a pattern with a clear edge. Leave the hedgehog for a longer sitting.
 
-The other ages 6–8 set is the [town scene coloring pages](/town-scene-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [animal coloring pages](/animal-coloring-pages/) on the ages 3–4 shelf are the simple ones.
+The other ages 6–8 set is the [town scene coloring pages](/town-scene-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [animal coloring pages](/animal-coloring-pages/) for ages 3–4 are the simple ones.
 
 Color one kind of thing first, such as the tail stripes or the spots, then the trees. The picture looks finished in stages.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

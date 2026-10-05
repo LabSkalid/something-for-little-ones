@@ -2,9 +2,9 @@
 title: "Huge Acorn Coloring Page"
 theme: fall-coloring-pages
 slug: huge-acorn
-description: "A huge acorn coloring page for ages 2–3, a cap and a nut."
+description: "One huge acorn: a cap and a nut. Two colors. For about ages 2 to 3."
 alt: "Line drawing of one huge acorn with a cap and a nut."
-parentNote: "The nut and the cap are the two colors. There is nothing else on the page to finish."
+parentNote: "The nut and the cap are the two colors. That is the whole page."
 order: 8
 difficulty: toddler
 age: "2-3"

@@ -1,6 +1,6 @@
 ---
 import { sheetAssets, sheetPath } from '../lib/paths';
-import { difficultyLabel } from '../lib/difficulty';
+import { ageBandLabel } from '../lib/ages';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 
 const { sheet } = Astro.props;
 const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
-const label = difficultyLabel(sheet.data.difficulty);
 ---
 
 <a class="sheet-card" href={sheetPath(sheet.data.theme, sheet.data.slug)}>
@@ -19,11 +18,11 @@ const label = difficultyLabel(sheet.data.difficulty);
     width="640"
     height="800"
     loading="lazy"
-    data-pin-description={`${sheet.data.title}. Free printable coloring page for kids.`}
+    data-pin-description={`${sheet.data.title}. ${sheet.data.description}`}
   />
   <div>
     <h3>{sheet.data.title}</h3>
-    <p class="meta">{label} · ages {sheet.data.age}</p>
+    <p class="meta">{ageBandLabel(sheet.data.age)}</p>
     <span class="card-action">Print</span>
   </div>
 </a>

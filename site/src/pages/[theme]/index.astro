@@ -97,10 +97,9 @@ const jsonLd = {
   <div class="wrap with-rail">
     <article>
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">{seasonal ? 'Seasonal' : ageBandLabel(theme.data.ageBand)}</p>
+      <p class="eyebrow">{seasonal ? 'Holiday' : ageBandLabel(theme.data.ageBand)}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
-      <p class="date-line">{sheets.length} printable pages · US Letter and A4</p>
       {seasonal ? (
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>
@@ -137,7 +136,7 @@ const jsonLd = {
     <aside class="rail">
       <div class="tip">
         <h2>Print tip</h2>
-        <p>Use the US Letter PDF for a standard American printer. Use the A4 PDF when the paper pack says A4. Pick actual size, or fit-to-page if the printer warns you.</p>
+        <p>I made these for letter paper. There's an A4 file too if that's what you have. On the printer, pick actual size, or fit-to-page if it warns you.</p>
         <a href="/how-to-print/">How to print these pages</a>
       </div>
       <AdSlot name="sidebar" />

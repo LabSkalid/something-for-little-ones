@@ -7,7 +7,7 @@ export const ageBands = [
   {
     id: '3-4',
     label: 'Ages 3–4',
-    blurb: 'Thick outlines and big areas, with a few smaller parts. Animals, dinosaurs, cars, and princesses live here.',
+    blurb: 'Thick outlines and big areas, with a few smaller parts. Animals, dinosaurs, cars, and princesses are in this group.',
   },
   {
     id: '4-5',

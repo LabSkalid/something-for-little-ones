@@ -1,7 +1,7 @@
 ---
 title: Car and Truck Coloring Pages
-description: Free car and truck coloring pages to print. A family car, pickup, race car, fire truck, and dump truck in US Letter or A4.
-tagline: Free car and truck coloring pages for kids ages 3–4, including a family car, pickup, race car, fire truck, and dump truck.
+description: Car and truck coloring pages for about ages 3 to 4. A family car, a pickup, a race car, a fire truck, and a dump truck. No logos.
+tagline: A family car, a pickup, a race car, a fire truck, and a dump truck. Side views, no logos. For about ages 3 to 4.
 kind: evergreen
 ageBand: "3-4"
 order: 3
@@ -24,7 +24,7 @@ faqs:
   - question: What age are the car coloring pages for?
     answer: About 3 to 4. Wheels are large circles, which helps a child who is learning to fill an area. Windows and stripes are there for a child who wants a few smaller parts on the same page.
   - question: Will these fit a birthday activity?
-    answer: Yes. The race car is the page most people pick for a party bag. Print the US Letter PDF and leave the crayons in a cup.
+    answer: Yes. The race car is the one most people tuck into a party bag. Print the letter PDF and leave the crayons in a cup. Use the A4 file if that's your paper.
 pins:
   - id: set
     title: Free Car and Truck Coloring Pages
@@ -34,10 +34,8 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-This set includes a [family car](/car-coloring-pages/family-car/), [pickup](/car-coloring-pages/pickup-truck/), [race car](/car-coloring-pages/race-car/), [fire truck](/car-coloring-pages/fire-truck/), and [dump truck](/car-coloring-pages/dump-truck/). Each one is a side view. Print the whole set or download one page.
+All side views: a [family car](/car-coloring-pages/family-car/), a [pickup](/car-coloring-pages/pickup-truck/), a [race car](/car-coloring-pages/race-car/), a [fire truck](/car-coloring-pages/fire-truck/), and a [dump truck](/car-coloring-pages/dump-truck/). No logos and no movie cars. Print one, or the pile.
 
-There are no logos and no movie cars. Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/). Animals are in the [animal coloring pages](/animal-coloring-pages/).
+Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/). Animals are in the [animal coloring pages](/animal-coloring-pages/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
+Thick lines, for about ages 3 to 4. Still scribbling? Start with the [big shape coloring pages](/big-shape-coloring-pages/). Older sets are on the home page.

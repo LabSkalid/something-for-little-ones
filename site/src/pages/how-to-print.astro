@@ -4,8 +4,8 @@ import { publisherRef } from '../lib/schema';
 import { site } from '../site';
 
 const steps = [
-  { name: 'Open the set', text: 'Start on a collection page if you want several pictures. Open one drawing if your child already picked a favorite.' },
-  { name: 'Download the PDF', text: 'Choose US Letter for a standard American home printer, 8.5 by 11 inches. Choose A4 if the paper pack says A4.' },
+  { name: 'Open the set', text: 'Open a set if you want several pictures. Open one drawing if your child already picked a favorite.' },
+  { name: 'Download the PDF', text: 'I made these for letter paper, 8.5 by 11 inches. Choose A4 if the paper pack says A4.' },
   { name: 'Print at actual size', text: 'In the print dialog, choose actual size or 100%. If the printer warns that the page does not fit, switch to fit-to-page. Do not print the browser window.' },
   { name: 'Color', text: 'Crayons and colored pencils stay inside the lines on ordinary copy paper. Markers look brighter and bleed more; cardstock helps if you use them.' },
 ];
@@ -13,7 +13,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
   name: 'How to print a coloring page',
-  description: 'Download a US Letter or A4 PDF and print it at actual size for kids to color.',
+  description: 'Download the PDF and print it at actual size. Letter paper, or A4 if that is what you have.',
   inLanguage: site.locale,
   publisher: publisherRef(),
   step: steps.map((step, index) => ({
@@ -25,7 +25,7 @@ const jsonLd = {
 };
 ---
 
-<Base title="How to print coloring pages" description="How to download and print free coloring pages on US Letter or A4 paper, with crayon and classroom tips." path="/how-to-print/" jsonLd={jsonLd}>
+<Base title="How to print coloring pages" description="How to download a coloring page and print it at actual size on letter paper or A4." path="/how-to-print/" jsonLd={jsonLd}>
   <div class="wrap prose">
     <p class="eyebrow">Printing guide</p>
     <h1>How to print these coloring pages</h1>
@@ -39,7 +39,7 @@ const jsonLd = {
     <h2>Letter or A4</h2>
     <p>Most kitchens in the United States have US Letter paper. A4 is slightly taller and a little narrower. Each drawing is saved twice so the same picture sits properly on either sheet. If you are not sure, letter is the right first try on a printer bought in the US.</p>
     <h2>In a classroom</h2>
-    <p>Teachers and caregivers can print a class set for free. Print the PDF once and copy it, or print the copies straight from the file. Please don't upload the PDF to a shop or sell the printed pages.</p>
+    <p>You can print a class set for free. Print the PDF once and copy it, or print the copies straight from the file. Please don't upload the PDF to a shop or sell the printed pages.</p>
     <h2>If the lines look faint</h2>
     <p>Choose black-and-white or the printer's "text" setting if a draft mode washes the lines out. The drawing is black ink on white, so color printing is not required.</p>
     <p>Questions about a file: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>

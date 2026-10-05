@@ -4,7 +4,7 @@ export const site = {
   url: 'https://somethingforlittleones.com',
   email: 'hello@somethingforlittleones.com',
   description:
-    'Free coloring pages to print, sorted by age from 2 to 8. Huge shapes for ages 2–3, simple sets for ages 3–4, and fuller scenes through age 8. US Letter and A4 PDFs.',
+    'Coloring pages to print at home, sorted by how many lines are on the page. Huge shapes for little kids, and fuller pictures up through about age 8.',
   locale: 'en-US',
 } as const;
 

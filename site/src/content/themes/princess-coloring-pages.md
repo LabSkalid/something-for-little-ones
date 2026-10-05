@@ -1,7 +1,7 @@
 ---
 title: Princess Coloring Pages
-description: Free princess coloring pages for kids. An original storybook gown, castle, carriage, pony, and crown — no movie characters.
-tagline: Free princess coloring pages for kids ages 3–4. A gown, castle, carriage, pony, and crown. No movie characters.
+description: Princess coloring pages for about ages 3 to 4. A gown, a castle, a carriage, a pony, and a crown. Not from a movie.
+tagline: A gown, a castle, a carriage, a pony, and a crown. Not a movie character. Thick lines, for about ages 3 to 4.
 kind: evergreen
 ageBand: "3-4"
 order: 4
@@ -22,7 +22,7 @@ faqs:
   - question: What should a younger child start with?
     answer: The crown and wand page has the fewest lines. The pony and the gown are the next step. The castle has more windows, so it suits a child who wants to stay with one page longer.
   - question: Are the dresses appropriate for little kids?
-    answer: Yes. The dress is a full gown with sleeves, drawn for coloring, not as a costume catalog. The face is a simple smile.
+    answer: The dress is a full gown with sleeves, drawn so a child can color it. The face is a simple smile.
   - question: Can I print these for a party?
     answer: Yes. Home and classroom printing is free. The carriage and the crown page are the usual extras beside the gown.
 pins:
@@ -34,10 +34,8 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-This set includes a [storybook princess](/princess-coloring-pages/storybook-princess/), [castle](/princess-coloring-pages/fairy-tale-castle/), [carriage](/princess-coloring-pages/royal-carriage/), [pony](/princess-coloring-pages/pony-with-ribbon/), and [crown](/princess-coloring-pages/crown-and-wand/). Print the whole set or download one page.
+None of these come from a movie or a toy line. There's a [storybook princess](/princess-coloring-pages/storybook-princess/), a [castle](/princess-coloring-pages/fairy-tale-castle/), a [carriage](/princess-coloring-pages/royal-carriage/), a [pony](/princess-coloring-pages/pony-with-ribbon/), and a [crown and wand](/princess-coloring-pages/crown-and-wand/). Print the gown, or the whole pile.
 
-These are original drawings, not characters from a movie or a toy line. More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas is in the [Christmas coloring pages](/christmas-coloring-pages/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
+Thick lines, for about ages 3 to 4. If they're still scribbling, the [big shape coloring pages](/big-shape-coloring-pages/) are simpler. Older sets are on the home page.

@@ -1,7 +1,7 @@
 ---
 title: Town Scene Coloring Pages
-description: Free detailed coloring pages for ages 6–8. A hot air balloon, treehouse, train, greenhouse, and bakery window in US Letter and A4 PDFs.
-tagline: Free town coloring pages for ages 6–8, with fuller scenes and patterns that still use bold lines.
+description: Town coloring pages for about ages 6 to 8. A hot air balloon, a treehouse, a train, a greenhouse, and a bakery window. Fuller scenes, still bold lines.
+tagline: A hot air balloon, a treehouse, a train, a greenhouse, and a bakery window. Fuller scenes, and the lines stay bold. For about ages 6 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 1
@@ -32,12 +32,10 @@ pins:
     subtitle: Fuller scenes for ages 6–8
 ---
 
-These town pages are for about ages 6 to 8. They are the fullest drawings on the site: more objects, more windows, and a repeating pattern somewhere on the page. The lines stay thick enough to color. They are not fine pen sketches.
+These town pages are for about ages 6 to 8. They're the fullest drawings on the site: more objects, more windows, and a repeating pattern somewhere on the page. The lines stay thick enough to color. Not fine pen sketches.
 
-The set includes a [hot air balloon](/town-scene-coloring-pages/hot-air-balloon/), a [treehouse](/town-scene-coloring-pages/treehouse/), a [passenger train](/town-scene-coloring-pages/passenger-train/), a [greenhouse](/town-scene-coloring-pages/greenhouse/), and a [bakery window](/town-scene-coloring-pages/bakery-window/). Start with the balloon if you want a pattern with a clear edge. Leave the bakery window for a day when there is time to color each cake.
+There's a [hot air balloon](/town-scene-coloring-pages/hot-air-balloon/), a [treehouse](/town-scene-coloring-pages/treehouse/), a [passenger train](/town-scene-coloring-pages/passenger-train/), a [greenhouse](/town-scene-coloring-pages/greenhouse/), and a [bakery window](/town-scene-coloring-pages/bakery-window/). Start with the balloon if you want a pattern with a clear edge. Leave the bakery window for a day when there's time to color each cake.
 
 The other ages 6–8 set is the [woodland animal coloring pages](/woodland-animal-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [garden coloring pages](/garden-coloring-pages/) are ages 4–5, with fewer parts. Ages 2–3 and 3–4 are on the home page if a younger child is coloring at the same table.
 
-A useful way through a busy page is to color one kind of thing first: all the windows, then the leaves, then the balloon panels. The picture looks finished in stages, which matters more than using every crayon in the box.
-
-Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
+On a busy page, color one kind of thing first: all the windows, then the leaves, then the balloon panels. The picture looks finished in stages. You don't need every crayon in the box.

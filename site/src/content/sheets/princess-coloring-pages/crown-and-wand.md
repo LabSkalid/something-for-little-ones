@@ -2,7 +2,7 @@
 title: Crown and Wand Coloring Page
 theme: princess-coloring-pages
 slug: crown-and-wand
-description: A crown and wand coloring page for ages 3–4, a crown, a star wand, and a few stars.
+description: "A crown, a star wand, and a few stars. The short page in the princess pile. For about ages 3 to 4."
 alt: Line drawing of a three-point crown, a wand topped with a star, and small stars
 parentNote: This is the shortest page in the princess set. A preschooler can finish the crown and the wand without a full figure. The stars are optional.
 order: 5
