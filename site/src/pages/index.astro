@@ -101,7 +101,7 @@ function cover(themeId: string) {
     .sort((a, b) => a.data.order - b.data.order)[0];
   return first
     ? { src: sheetAssets(themeId, first.data.slug).png, alt: first.data.alt, count: sheets.filter((sheet) => sheet.data.theme === themeId).length }
-    : { src: pinPath(themeId, 'set'), alt: '', count: 0 };
+    : { src: pinPath(themeId, 'collection-1'), alt: '', count: 0 };
 }
 
 const jsonLd = {
@@ -134,7 +134,7 @@ const jsonLd = {
   title={site.tagline}
   description={site.description}
   path="/"
-  ogImage={pinPath('animal-coloring-pages', 'set')}
+  ogImage={pinPath('animal-coloring-pages', 'collection-1')}
   ogAlt="Animal coloring pages, starting with a puppy"
   jsonLd={jsonLd}
 >

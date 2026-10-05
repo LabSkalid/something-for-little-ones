@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import { parse, stringify } from 'yaml';
+import { buildPins } from './build-assets.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
@@ -177,7 +178,7 @@ const page = `<!doctype html>
 </style>
 <main>
   <h1>Фабрика</h1>
-  <p>Новые рисунки и перерисовка уже готовых листов. Сайт при этом должен быть открыт локально, чтобы увидеть результат. Ключ берётся из factory/.env.</p>
+  <p>Новые рисунки и перерисовка уже готовых листов вызывают модель и берут ключ из factory/.env. Пины собираются отдельно из готовых картинок и модель не вызывают.</p>
   <section id="themes"></section>
   <h2>Новые рисунки</h2>
   <label for="theme">Подборка</label>
@@ -192,6 +193,7 @@ const page = `<!doctype html>
   <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
   <div class="row">
     <button id="create" type="button">Нарисовать новые</button>
+    <button id="pins-all" class="quiet" type="button">Собрать все пины</button>
     <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
   </div>
   <h2>Ход работы</h2>
@@ -207,7 +209,10 @@ const page = `<!doctype html>
     themesEl.innerHTML = themes.map((theme) => \`
       <article>
         <div><h2>\${theme.title}</h2><p>\${theme.count} листов</p></div>
-        <button class="quiet" type="button" data-redraw="\${theme.slug}">Перерисовать</button>
+        <div class="row">
+          <button class="quiet" type="button" data-pins="\${theme.slug}">Пины</button>
+          <button class="quiet" type="button" data-redraw="\${theme.slug}">Перерисовать</button>
+        </div>
       </article>\`).join('');
     const current = themeSelect.value;
     themeSelect.innerHTML = '<option value="">Новая подборка</option>' + themes.map((theme) => \`<option value="\${theme.slug}">\${theme.title}</option>\`).join('');
@@ -225,10 +230,21 @@ const page = `<!doctype html>
   });
 
   themesEl.addEventListener('click', async (event) => {
+    const pins = event.target.closest('[data-pins]');
+    if (pins) {
+      if (!confirm('Собрать пины этой подборки из готовых рисунков? Модель не вызывается.')) return;
+      await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: pins.dataset.pins }) });
+      return;
+    }
     const button = event.target.closest('[data-redraw]');
     if (!button) return;
-    if (!confirm('Перерисовать все листы этой подборки? Тексты останутся, картинки заменятся.')) return;
+    if (!confirm('Перерисовать все листы этой подборки? Тексты останутся, картинки заменятся. Это платный запрос к модели.')) return;
     await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
+  });
+
+  document.querySelector('#pins-all').addEventListener('click', async () => {
+    if (!confirm('Собрать пины всех подборок из готовых рисунков? Модель не вызывается.')) return;
+    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
   });
 
   document.querySelector('#redraw-all').addEventListener('click', async () => {
@@ -284,6 +300,11 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && url.pathname === '/') return send(res, 200, page, 'text/html');
     if (req.method === 'GET' && url.pathname === '/api/themes') return send(res, 200, await listThemes());
     if (req.method === 'GET' && url.pathname === '/api/job') return send(res, 200, job);
+    if (req.method === 'POST' && url.pathname === '/api/pins') {
+      const body = await readBody(req);
+      startJob(body.theme ? `Пины ${body.theme}` : 'Пины всех подборок', () => buildPins(body.theme || undefined));
+      return send(res, 202, { ok: true });
+    }
     if (req.method === 'POST' && url.pathname === '/api/redraw') {
       const body = await readBody(req);
       startJob(body.theme ? `Перерисовка ${body.theme}` : 'Перерисовка всех листов', () => redraw(body.theme || undefined));

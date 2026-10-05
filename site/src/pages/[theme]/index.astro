@@ -38,7 +38,7 @@ const crumbs = [
   { name: 'Home', path: '/' },
   { name: theme.data.title, path: themePath(theme.id) },
 ];
-const pin = pinPath(theme.id, theme.data.pins[0]?.id ?? 'set');
+const pin = pinPath(theme.id, 'collection-1');
 const pageUrl = absoluteUrl(themePath(theme.id));
 const jsonLd = {
   '@context': 'https://schema.org',

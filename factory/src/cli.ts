@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { buildAssets } from './build-assets.ts';
+import { buildAssets, buildPins } from './build-assets.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { factoryRoot } from './paths.ts';
@@ -10,6 +10,12 @@ const help = `Фабрика раскрасок.
 
   npm run assets
       Собрать PNG, PDF и пины подборок из factory/art.
+
+  npm run pins
+      Собрать пины всех подборок из уже готовых PNG в site/public/print.
+      Модель не вызывается. Рабочая папка: factory.
+      Одна подборка:
+      npm run pins -- halloween-coloring-pages
 
   npm run produce -- briefs/animal-coloring-pages.yaml
       По заданию дорисовать новые страницы и положить их на сайт.
@@ -36,6 +42,11 @@ const help = `Фабрика раскрасок.
 async function main() {
   if (command === 'assets') {
     await buildAssets();
+    return;
+  }
+  if (command === 'pins') {
+    const theme = rest.find((arg) => !arg.startsWith('--'));
+    await buildPins(theme);
     return;
   }
   if (command === 'redraw') {

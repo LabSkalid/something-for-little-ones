@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "assets": "tsx src/cli.ts assets",
+    "pins": "tsx src/cli.ts pins",
     "produce": "tsx src/cli.ts produce",
     "redraw": "tsx src/cli.ts redraw",
     "studio": "tsx src/studio.ts"
