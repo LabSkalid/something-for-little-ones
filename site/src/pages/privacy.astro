@@ -3,22 +3,30 @@ import Base from '../layouts/Base.astro';
 import { site } from '../site';
 ---
 
-<Base title="Privacy" description={`How ${site.name} handles analytics, ads, and email. Nothing here asks a child for personal information.`} path="/privacy/">
+<Base title="Privacy Policy" description="This page explains what information may be collected when you visit the site and how it is used." path="/privacy/">
   <div class="wrap prose">
-    <p class="eyebrow">Privacy</p>
-    <h1>Privacy</h1>
-    <p>This site is free. You can download a PDF without an account. These are coloring pages for a parent or a teacher to print.</p>
-    <h2>What you do here</h2>
-    <p>Reading a page and downloading a PDF does not ask for a name, an email, or a payment. If you email {site.email}, I get whatever you write, and I use it to write back.</p>
-    <h2>Analytics</h2>
-    <p>Google Analytics counts visits, so I can see which sets get printed and which pages get opened. Cloudflare may count visits too. I use those counts to see how the site is used. I don't sell a profile of you.</p>
-    <h2>Advertising</h2>
-    <p>The pages have spaces for Google ads. Google ads may show when the ad account is connected. The coloring pages stay free. You can control the ads you see at <a href="https://adssettings.google.com">Google's ad settings</a>.</p>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: October 5, 2026</p>
+    <p>Something for Little Ones is a small website offering free printable coloring pages, activities, and other resources.</p>
+    <p>This page explains what information may be collected when you visit the site and how it is used.</p>
+    <h2>Information you provide</h2>
+    <p>You can browse and download our printables without creating an account or providing personal information.</p>
+    <p>If you contact us by email, we receive the information you choose to include in your message and use it to respond to you.</p>
+    <h2>Website analytics</h2>
+    <p>We may use analytics services such as Google Analytics to understand how people use the website, such as which pages are visited and which resources are downloaded.</p>
+    <p>Analytics services may collect information such as your approximate location, device type, browser, and pages you visit. We use this information to understand site traffic and improve the website.</p>
+    <h2>Cookies and advertising</h2>
+    <p>The website may use cookies and similar technologies provided by third-party services.</p>
+    <p>If advertising is added to the website in the future, this Privacy Policy will be updated to explain the advertising services and the information they may collect or use.</p>
     <h2>Pinterest</h2>
-    <p>A lot of people arrive from Pinterest. If the Pinterest tag is on, Pinterest may measure visits that came from a pin. The pin pictures are the coloring sets, so you can save a pile of pages.</p>
-    <h2>Children</h2>
-    <p>I wrote this for adults who print pages for children. It is not a service directed at children under 13. There are no child accounts, no chat, and no place for a child to send personal information. Please don't put a child's name or photo in an email unless you need to. A description of the page is enough.</p>
+    <p>We may use Pinterest tools to understand traffic coming from Pinterest and to measure how our content performs on the platform.</p>
+    <p>Pinterest may collect information about visits to this website in accordance with its own privacy policy.</p>
+    <h2>Third-party websites</h2>
+    <p>Our website may contain links to third-party websites. We are not responsible for the privacy practices of those websites.</p>
+    <h2>Changes to this policy</h2>
+    <p>This Privacy Policy may be updated as Something for Little Ones grows or as new services are added to the website.</p>
     <h2>Contact</h2>
-    <p>Questions about this page: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p>If you have questions about this Privacy Policy, you can contact us at:</p>
+    <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
   </div>
 </Base>

@@ -1,61 +1,28 @@
 ---
-import { getCollection } from 'astro:content';
-import Wordmark from './Wordmark.astro';
-import { ageBands } from '../lib/ages';
-import { themePath } from '../lib/paths';
+import { site } from '../site';
 
-const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
-const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
-const bands = ageBands.map((band) => ({
-  ...band,
-  themes: themes.filter((theme) => theme.data.kind !== 'seasonal' && theme.data.ageBand === band.id),
-}));
-const columns = [
-  bands.filter((band) => band.id === '2-3' || band.id === '3-4'),
-  bands.filter((band) => band.id === '4-5' || band.id === '5-6' || band.id === '6-8'),
-];
+const year = new Date().getFullYear() || 2026;
 ---
 
 <footer class="site-footer">
-  <div class="crayon-rule" aria-hidden="true">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
   <div class="wrap">
-    <div class="footer-layout">
-      <div class="footer-brand">
-        <Wordmark />
-        <p>Coloring pages to print at home. Pick an age, then download the PDF.</p>
-      </div>
-      {columns.map((column) => (
-        <div class="footer-col">
-          {column.map((band) => (
-            <div>
-              <h2>{band.label}</h2>
-              {band.themes.map((theme) => (
-                <a href={themePath(theme.id)}>{theme.data.title}</a>
-              ))}
-            </div>
-          ))}
-        </div>
-      ))}
-      <nav class="footer-col" aria-label="Holidays">
-        <h2>Holidays</h2>
-        {holidays.map((theme) => (
-          <a href={themePath(theme.id)}>{theme.data.title}</a>
-        ))}
-      </nav>
-      <nav class="footer-col" aria-label="Site">
-        <h2>On this site</h2>
-        <a href="/how-to-print/">How to print</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <a href="/privacy/">Privacy</a>
-      </nav>
+    <div class="footer-brand">
+      <p class="footer-name">{site.name}</p>
+      <p class="footer-tagline">Simple things to print, color, and enjoy.</p>
     </div>
-    <div class="footer-bottom">
-      <p>Personal and classroom printing is free. Please don't resell the files.</p>
+    <nav class="footer-links" aria-label="Browse">
+      <a href="/">Coloring Pages</a>
+      <a href="/#holidays">Seasonal Printables</a>
+    </nav>
+    <nav class="footer-links footer-links-quiet" aria-label="Information">
+      <a href="/about/">About</a>
+      <a href="/how-to-print/">How to Print</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+    <div class="footer-copy">
+      <p>© {year} {site.name}. All rights reserved.</p>
+      <p>Free for personal and classroom use.</p>
     </div>
   </div>
 </footer>
