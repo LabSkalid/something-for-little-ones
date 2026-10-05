@@ -8,6 +8,7 @@ order: 1
 accent: "#1D7AD6"
 ink: "#241C18"
 related:
+  - dinosaur-scene-coloring-pages
   - garden-coloring-pages
   - town-scene-coloring-pages
 pubDate: 2026-10-05
@@ -35,7 +36,7 @@ These ocean pages are for about ages 5 to 6. A child who can stay with one pictu
 
 The set includes a [coral reef](/ocean-scene-coloring-pages/coral-reef/), a [sailboat](/ocean-scene-coloring-pages/sailboat/), a [patterned octopus](/ocean-scene-coloring-pages/patterned-octopus/), a [lighthouse](/ocean-scene-coloring-pages/lighthouse-coast/), and a [sea turtle](/ocean-scene-coloring-pages/sea-turtle/). The sailboat is the clearest starting page. The reef and the octopus are the ones to save for a quiet afternoon.
 
-This is a step up from the [garden coloring pages](/garden-coloring-pages/) for ages 4–5. The [town scene coloring pages](/town-scene-coloring-pages/) are the next shelf, for ages 6–8, with fuller scenes. If the patterns are too much, the ages 3–4 [animal coloring pages](/animal-coloring-pages/) are the simple ones.
+This is a step up from the [garden coloring pages](/garden-coloring-pages/) for ages 4–5. The other ages 5–6 set is the [dinosaur scene coloring pages](/dinosaur-scene-coloring-pages/). The [town scene coloring pages](/town-scene-coloring-pages/) are the next shelf, for ages 6–8, with fuller scenes. If the patterns are too much, the ages 3–4 [animal coloring pages](/animal-coloring-pages/) are the simple ones.
 
 Pick a repeating part and give it one color, such as every other shell spot or every wave. That is easier than inventing a new color for each tiny shape.
 

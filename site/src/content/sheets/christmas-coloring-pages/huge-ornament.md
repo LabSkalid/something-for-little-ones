@@ -1,0 +1,11 @@
+---
+title: "Huge Ornament Coloring Page"
+theme: christmas-coloring-pages
+slug: huge-ornament
+description: "A huge ornament coloring page for ages 2–3, one bauble and a stripe."
+alt: "Line drawing of one huge round ornament with a cap and one stripe."
+parentNote: "The ornament is one big circle. The stripe can be a second color or the same color."
+order: 7
+difficulty: toddler
+age: "2-3"
+---

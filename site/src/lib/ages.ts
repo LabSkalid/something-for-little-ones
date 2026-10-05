@@ -7,12 +7,12 @@ export const ageBands = [
   {
     id: '3-4',
     label: 'Ages 3–4',
-    blurb: 'Thick outlines and big areas, with a few smaller parts. Animals, dinosaurs, cars, princesses, and the holiday sets live here.',
+    blurb: 'Thick outlines and big areas, with a few smaller parts. Animals, dinosaurs, cars, and princesses live here.',
   },
   {
     id: '4-5',
     label: 'Ages 4–5',
-    blurb: 'A simple scene with more separate regions, for a child who wants the picture to look finished.',
+    blurb: 'Chunky pictures with more parts than a toddler page. A garden scene or one big vehicle.',
   },
   {
     id: '5-6',

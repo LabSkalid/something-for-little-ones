@@ -8,6 +8,7 @@ order: 1
 accent: "#1D7AD6"
 ink: "#241C18"
 related:
+  - woodland-animal-coloring-pages
   - ocean-scene-coloring-pages
   - garden-coloring-pages
 pubDate: 2026-10-05
@@ -35,7 +36,7 @@ These town pages are for about ages 6 to 8. They are the fullest drawings on the
 
 The set includes a [hot air balloon](/town-scene-coloring-pages/hot-air-balloon/), a [treehouse](/town-scene-coloring-pages/treehouse/), a [passenger train](/town-scene-coloring-pages/passenger-train/), a [greenhouse](/town-scene-coloring-pages/greenhouse/), and a [bakery window](/town-scene-coloring-pages/bakery-window/). Start with the balloon if you want a pattern with a clear edge. Leave the bakery window for a day when there is time to color each cake.
 
-The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [garden coloring pages](/garden-coloring-pages/) are ages 4–5, with fewer parts. Ages 2–3 and 3–4 are on the home page if a younger child is coloring at the same table.
+The other ages 6–8 set is the [woodland animal coloring pages](/woodland-animal-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [garden coloring pages](/garden-coloring-pages/) are ages 4–5, with fewer parts. Ages 2–3 and 3–4 are on the home page if a younger child is coloring at the same table.
 
 A useful way through a busy page is to color one kind of thing first: all the windows, then the leaves, then the balloon panels. The picture looks finished in stages, which matters more than using every crayon in the box.
 

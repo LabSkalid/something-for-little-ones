@@ -8,6 +8,7 @@ order: 1
 accent: "#1D7AD6"
 ink: "#241C18"
 related:
+  - simple-vehicle-coloring-pages
   - big-shape-coloring-pages
   - ocean-scene-coloring-pages
   - animal-coloring-pages
@@ -34,7 +35,7 @@ pins:
 
 These garden pages are for about ages 4 to 5. The pictures are still bold line art, but each one is a small scene instead of one centered animal or truck.
 
-The set includes a [watering can](/garden-coloring-pages/watering-can/), a [birdhouse](/garden-coloring-pages/birdhouse/), a [vegetable basket](/garden-coloring-pages/vegetable-basket/), [rain boots](/garden-coloring-pages/rain-boots/), and a [garden gate](/garden-coloring-pages/garden-gate/). The boots and the watering can are the shorter jobs. The gate has more leaves and pots.
+The set includes a [watering can](/garden-coloring-pages/watering-can/), a [birdhouse](/garden-coloring-pages/birdhouse/), a [vegetable basket](/garden-coloring-pages/vegetable-basket/), [rain boots](/garden-coloring-pages/rain-boots/), and a [garden gate](/garden-coloring-pages/garden-gate/). The boots and the watering can are the shorter jobs. The gate has more leaves and pots. The other ages 4–5 set is the [simple vehicle coloring pages](/simple-vehicle-coloring-pages/): a car, a train engine, a boat, a tractor, and a fire truck.
 
 If a child is still scribbling, go back to the [big shape coloring pages](/big-shape-coloring-pages/) for ages 2–3, or the [animal coloring pages](/animal-coloring-pages/) on the ages 3–4 shelf. If this set is finished in a few minutes and they want patterns, try the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6.
 

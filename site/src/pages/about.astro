@@ -14,14 +14,14 @@ const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.d
     <p>{site.name} is for parents, grandparents, and teachers who need a picture on the table in the next five minutes. The site is written for adults. Children color the paper, not the website.</p>
     <p>The drawings are original to this site. They are storybook animals, dinosaurs, cars, gowns, holiday objects, and a few scenes. They are not movie characters, toy lines, or game heroes, so you can print them without borrowing someone else's cast.</p>
     <h2>Sorted by age</h2>
-    <p>The age on a set describes the lines, not a grade. Ages 2–3 are a few huge shapes. Ages 3–4 are the simple shelf: animals, dinosaurs, cars, princesses, fall, Halloween, and Christmas. Ages 4–5 are a simple scene. Ages 5–6 add patterns. Ages 6–8 are fuller scenes that still use bold lines a crayon can follow. If the hand is not ready for the number on the label, print the easier set.</p>
+    <p>The age on a set describes the lines, not a grade. Ages 2–3 are a few huge shapes. Ages 3–4 are the simple shelf: animals, dinosaurs, cars, and princesses. Ages 4–5 are a garden scene or one chunky vehicle. Ages 5–6 add patterns. Ages 6–8 are fuller scenes that still use bold lines a crayon can follow. If the hand is not ready for the number on the label, print the easier set.</p>
     <h2>Sets on the table</h2>
     <ul>
       {themes.map((theme) => (
         <li><a href={themePath(theme.id)}>{theme.data.title}</a> — {theme.data.tagline}</li>
       ))}
     </ul>
-    <p>A set page is the main page: several pictures, a short guide, and the files. Each drawing also has its own page so a specific search, such as a fire truck or a puppy, has somewhere to land. Fall, Halloween, and Christmas stay in the ages 3–4 shelf because those drawings are the simple ones.</p>
+    <p>A set page is the main page: several pictures, a short guide, and the files. Each drawing also has its own page so a specific search, such as a fire truck or a puppy, has somewhere to land. Fall, Halloween, and Christmas are their own section. Each holiday page is split by age, from one huge shape at 2–3 to a fuller scene at 6–8. The original thick-line holiday drawings are the ages 3–4 group.</p>
     <p>Printing is free for home and classroom use. Selling the files or the prints is not allowed. The <a href="/how-to-print/">printing guide</a> explains Letter and A4, and the <a href="/privacy/">privacy page</a> explains analytics and ads.</p>
   </div>
 </Base>

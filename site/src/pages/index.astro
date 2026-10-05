@@ -10,9 +10,11 @@ import { publisher } from '../lib/schema';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 const sheets = await getCollection('sheets');
+const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
+const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
 const grouped = ageBands.map((band) => ({
   ...band,
-  themes: themes.filter((theme) => theme.data.ageBand === band.id),
+  themes: everyday.filter((theme) => theme.data.ageBand === band.id),
 }));
 
 function cover(themeId: string) {
@@ -77,7 +79,7 @@ const jsonLd = {
         <div class="theme-grid">
           {band.themes.map((theme) => {
             const art = cover(theme.id);
-            const eyebrow = theme.data.kind === 'seasonal' ? `${band.label} · Seasonal` : band.label;
+            const eyebrow = band.label;
             return (
               <ThemeCard
                 href={themePath(theme.id)}
@@ -98,6 +100,28 @@ const jsonLd = {
       <p>
         The age on a set is a guide for how many lines are on the page. A child who still wants big shapes can stay on an easier shelf. Download the PDF, not a screenshot of this page. The <a href="/how-to-print/">printing guide</a> covers US Letter and A4.
       </p>
+    </section>
+
+    <section class="section" id="holidays">
+      <div class="section-head">
+        <h2>Holidays</h2>
+        <p>Fall, Halloween, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
+      </div>
+      <div class="theme-grid">
+        {holidays.map((theme) => {
+          const art = cover(theme.id);
+          return (
+            <ThemeCard
+              href={themePath(theme.id)}
+              title={theme.data.title}
+              image={art.src}
+              imageAlt={art.alt}
+              count={art.count}
+              eyebrow="Seasonal"
+            />
+          );
+        })}
+      </div>
     </section>
   </div>
 </Base>

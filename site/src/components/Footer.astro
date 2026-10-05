@@ -5,9 +5,10 @@ import { ageBands } from '../lib/ages';
 import { themePath } from '../lib/paths';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
+const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
 const bands = ageBands.map((band) => ({
   ...band,
-  themes: themes.filter((theme) => theme.data.ageBand === band.id),
+  themes: themes.filter((theme) => theme.data.kind !== 'seasonal' && theme.data.ageBand === band.id),
 }));
 const columns = [
   bands.filter((band) => band.id === '2-3' || band.id === '3-4'),
@@ -39,6 +40,12 @@ const columns = [
           ))}
         </div>
       ))}
+      <nav class="footer-col" aria-label="Holidays">
+        <h2>Holidays</h2>
+        {holidays.map((theme) => (
+          <a href={themePath(theme.id)}>{theme.data.title}</a>
+        ))}
+      </nav>
       <nav class="footer-col" aria-label="Site">
         <h2>On this site</h2>
         <a href="/how-to-print/">How to print</a>

@@ -1,0 +1,64 @@
+slug: simple-vehicle-coloring-pages
+title: Simple Vehicle Coloring Pages
+tagline: Free vehicle coloring pages for ages 4–5, with chunky shapes and a few more parts.
+description: Free vehicle coloring pages for ages 4–5. A family car, train engine, boat, tractor, and fire truck.
+kind: evergreen
+ageBand: "4-5"
+order: 2
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - vehicle coloring pages
+  - coloring pages for ages 4-5
+  - fire truck coloring page
+related:
+  - garden-coloring-pages
+  - car-coloring-pages
+  - ocean-scene-coloring-pages
+audience: parents of children ages 4 to 5
+style: One large vehicle, thick closed black outlines, several big regions, still chunky. White background, no shading, no gray, no street scene, no letters, no numbers, no logos, no license plates. Windows and headlights are empty outlines, never solid black.
+ideas:
+  - slug: family-car
+    title: Family Car Coloring Page
+    prompt: One family car from the side, large on the page. Separate closed regions for the body, two doors, the windows, two wheels with hubcaps, headlights, and a bumper. Thick chunky outlines. No road, no background, no letters, no logo, no license plate. Windows are empty outlines, not filled black.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a chunky family car with doors, windows, and wheels.
+    description: A family car coloring page for ages 4–5, with doors and windows to color.
+    parentNote: The body is the large area. Each window and each wheel can be its own color after the body is done.
+  - slug: train-engine
+    title: Train Engine Coloring Page
+    prompt: One train engine from the side, large and chunky. A cab, one window, a smokestack, three big wheels, a cowcatcher, and a headlamp, each a closed shape. Thick outlines. No extra train cars, no long track scene, no numbers, no letters. The window is an empty outline, not filled black.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of one chunky train engine with three big wheels.
+    description: A train engine coloring page for ages 4–5, one engine and big wheels.
+    parentNote: Color the engine body first. The wheels are the repeating part, so the same color can go on all three.
+  - slug: little-boat
+    title: Boat Coloring Page
+    prompt: One boat from the side with a hull, a cabin, one window, a short mast, and a plain triangular sail with no symbol. Thick outlines and a few big regions. A simple water line only, not a wave scene. No people, no name on the hull, no text. The window is an empty outline.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a boat with a hull, a cabin, and one sail.
+    description: A boat coloring page for ages 4–5, a hull, a cabin, and a sail.
+    parentNote: The hull and the sail are the two big jobs. The cabin window is a small extra, not a whole scene.
+  - slug: farm-tractor
+    title: Tractor Coloring Page
+    prompt: One farm tractor from the side. A huge rear wheel, a smaller front wheel, a seat, a steering wheel, an exhaust pipe, and a simple body, each a closed shape. Thick outlines. No brand name, no field, no driver, no text.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a tractor with one huge rear wheel and a smaller front wheel.
+    description: A tractor coloring page for ages 4–5, with a huge rear wheel.
+    parentNote: The big rear wheel is the part children usually start with. The body and the seat are the next two colors.
+  - slug: fire-truck
+    title: Fire Truck Coloring Page
+    prompt: One fire truck from the side. A cab, a long body, a ladder on top, two wheels, windows, and a hose reel, each a closed shape. Thick chunky outlines. No department name, no numbers, no letters, no street. Windows are empty outlines, not filled black.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a fire truck with a cab, a ladder, and a hose reel.
+    description: A fire truck coloring page for ages 4–5, with a ladder and a hose.
+    parentNote: The truck body is one large color. The ladder and the wheels are the parts to do if there is still time.
+pins:
+  - id: set
+    title: Simple Vehicle Coloring Pages
+    subtitle: Chunky vehicles for ages 4–5

@@ -1,31 +1,121 @@
+# Новые листы по возрастам. Уже нарисованные страницы 3–4 фабрика не перезаписывает.
+# Старые неиспользованные идеи (snowman без возраста, ornament, candy cane, sleigh) заменены этими листами.
+
 slug: christmas-coloring-pages
 title: Christmas Coloring Pages
-tagline: More quiet December pages.
-description: Extra Christmas coloring pages to print.
+tagline: Christmas coloring pages for every age, from one huge ornament to a fuller scene.
+description: Free Christmas coloring pages to print. Pick ages 2–3, 3–4, 4–5, 5–6, or 6–8.
 kind: seasonal
-order: 2
+ageBand: "3-4"
+order: 3
 accent: "#1F6B4A"
 ink: "#14261C"
 keywords:
   - christmas coloring pages
+  - santa coloring page
+  - christmas tree coloring page
 related:
+  - fall-coloring-pages
   - halloween-coloring-pages
-  - animal-coloring-pages
-audience: parents of children ages 3 to 4
-style: Cozy Christmas line art, thick outlines, no characters from films, no text, white background.
+audience: parents choosing a Christmas coloring page by age
+style: Cozy Christmas coloring-book line art. General December pictures, not a film character and not a nativity scene. White background, solid black outlines only, no shading, no gray, no color, no text, no logos. Eyes are open circles, never solid black. Match the layout note for this age.
 ideas:
+  - slug: huge-tree
+    title: Huge Tree Coloring Page
+    prompt: One huge Christmas tree made of three stacked triangle sections and a short trunk, with three round ornaments. Extra-thick outlines. No background, no tiny lights, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge Christmas tree with three ornaments.
+    description: A huge tree coloring page for ages 2–3, three big sections and three ornaments.
+    parentNote: Each triangle can be the same green. The three ornaments are the only extra shapes.
+  - slug: huge-ornament
+    title: Huge Ornament Coloring Page
+    prompt: One huge round ornament with a cap and one wide stripe. Extra-thick outlines. No tree, no background, no text, no tiny dots.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge round ornament with a cap and one stripe.
+    description: A huge ornament coloring page for ages 2–3, one bauble and a stripe.
+    parentNote: The ornament is one big circle. The stripe can be a second color or the same color.
+  - slug: huge-present
+    title: Huge Present Coloring Page
+    prompt: One huge gift box with a lid and a wide ribbon that crosses in the middle, plus a simple bow. Extra-thick outlines. No tiny dot pattern, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge gift with a wide ribbon and a bow.
+    description: A huge present coloring page for ages 2–3, one box and a ribbon.
+    parentNote: The box is the main shape. The ribbon is a second color if the child wants one.
+  - slug: striped-mitten
+    title: Mitten Coloring Page
+    prompt: One mitten with a cuff, a thumb, and one large snowflake on the front. The snowflake is a few thick closed shapes, not hairline lines. No second mitten, no background scene, no text.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of one mitten with a cuff and a large snowflake.
+    description: A mitten coloring page for ages 4–5, with a cuff and a snowflake.
+    parentNote: The mitten is the large area. The snowflake is a few thick pieces, not a lace pattern.
   - slug: snowman
     title: Snowman Coloring Page
-    prompt: A three-ball snowman with a scarf, stick arms, and a smile, no words
-  - slug: ornament
-    title: Christmas Ornament Coloring Page
-    prompt: One large round ornament with a cap and a simple pattern of stripes and dots
-  - slug: candy-cane
-    title: Candy Cane Coloring Page
-    prompt: Two large candy canes with bold stripes and a bow, easy shapes
-  - slug: sleigh
+    prompt: One snowman of three large balls, a hat, a scarf, stick arms, and a smile. A few big regions. No background village, no text. Eyes and buttons are open circles, not filled black.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a snowman with a hat, a scarf, and stick arms.
+    description: A snowman coloring page for ages 4–5, three balls, a hat, and a scarf.
+    parentNote: Each ball can be left white or lightly colored. The hat and the scarf are the parts that need a color.
+  - slug: gift-sleigh
     title: Sleigh Coloring Page
-    prompt: A simple side-view sleigh with curved runners and a few gifts inside, no reindeer team required
+    prompt: One sleigh from the side with curved runners and two wrapped gifts inside. Thick outlines. No reindeer, no text, no tiny dot pattern on the gifts. Each gift has one wide ribbon.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a sleigh with two wrapped gifts inside.
+    description: A sleigh coloring page for ages 4–5, with two gifts and curved runners.
+    parentNote: The sleigh body is the large shape. The two gifts are the extra colors.
+  - slug: fireplace
+    title: Fireplace Coloring Page
+    prompt: A small scene with a fireplace, two stockings with no letters, a small Christmas tree in the corner with a few ornaments, and a rug. Bold outlines. No text, no people.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of a fireplace, two stockings, a small tree, and a rug.
+    description: A fireplace coloring page for ages 5–6, with stockings and a small tree.
+    parentNote: The two stockings and the ornaments are the repeating parts. The fireplace can be one color after those.
+  - slug: window-wreath
+    title: Window Wreath Coloring Page
+    prompt: A small scene with a window of four panes, a round wreath with a bow, a candle on the sill, and a few large snow circles. Bold outlines. No text, no letters in the snow. Window panes are empty outlines, not filled black.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of a window, a wreath with a bow, a candle, and snow circles.
+    description: A window wreath coloring page for ages 5–6, with a candle and snow.
+    parentNote: The wreath is the main shape. The bow, the candle, and the snow circles are the smaller jobs.
+  - slug: reindeer-and-tree
+    title: Reindeer and Tree Coloring Page
+    prompt: A small scene with one friendly reindeer beside a small Christmas tree with several ornaments, and a few snow circles. Bold outlines. No sleigh team, no text. The eye is an open circle, not filled black.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of one reindeer beside a small Christmas tree.
+    description: A reindeer and tree coloring page for ages 5–6, one reindeer and ornaments.
+    parentNote: The reindeer is the large animal. The ornaments are the pattern on the tree.
+  - slug: living-room
+    title: Living Room Coloring Page
+    prompt: A fuller cozy living room with a Christmas tree covered in ornaments that use simple stripe and dot patterns, wrapped gifts with bold stripes, a patterned rug, a window, and a chair. Bold crayon-thick outlines, not hairline. No text, no logos, no people. The window is an empty outline, not solid black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a living room with a patterned tree, gifts, a rug, and a chair.
+    description: A living room coloring page for ages 6–8, a tree, gifts, and a rug.
+    parentNote: The ornaments and the rug are the patterns. Color one kind of ornament all the way around the tree before starting the gifts.
+  - slug: snowy-village
+    title: Snowy Village Coloring Page
+    prompt: A fuller snowy village scene with three simple houses, a Christmas tree in the square, a path, and large patterned snowflakes. Bold crayon-thick outlines, not hairline. No shop names, no signs, no text. Windows are empty outlines, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a snowy village with three houses, a tree, and large snowflakes.
+    description: A snowy village coloring page for ages 6–8, houses, a tree, and snowflakes.
+    parentNote: The snowflakes are the pattern. The houses can share two colors so the page does not need a new color for every wall.
+  - slug: winter-woods
+    title: Winter Woods Coloring Page
+    prompt: A fuller winter woods scene with a deer, several trees with bold snow shapes on the branches, and large patterned snowflakes. Bold crayon-thick outlines, not hairline. No text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a deer in winter woods with snowy trees and large snowflakes.
+    description: A winter woods coloring page for ages 6–8, a deer, trees, and snowflakes.
+    parentNote: The snow shapes on the branches are the repeating part. The deer is the animal to color once the trees are started.
 pins:
   - id: set
     title: Free Christmas Coloring Pages

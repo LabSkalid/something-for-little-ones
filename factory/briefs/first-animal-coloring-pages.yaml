@@ -1,0 +1,63 @@
+slug: first-animal-coloring-pages
+title: First Animal Coloring Pages
+tagline: Free animal coloring pages for ages 2–3, each one a few huge shapes.
+description: Free animal coloring pages for ages 2–3. A puppy, bird, butterfly, cat, and turtle made of a few huge shapes.
+kind: evergreen
+ageBand: "2-3"
+order: 2
+accent: "#C47A3A"
+ink: "#241C18"
+keywords:
+  - animal coloring pages for toddlers
+  - simple animal coloring pages
+  - coloring pages for ages 2-3
+related:
+  - big-shape-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 2 to 3
+style: Extra-thick black outlines, one animal, very few huge closed shapes, almost no small parts, lots of white space. Eyes are open circles to color, never solid black. No shading, no text, no background scene, no whiskers, no tiny spots.
+ideas:
+  - slug: round-puppy
+    title: Puppy Coloring Page
+    prompt: One puppy made of a few huge shapes. A round head, an oval body, two floppy ears, a thick tail, and two open-circle eyes. Extra-thick outlines. No spots, no grass, no collar tag, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one puppy made of a few huge shapes.
+    description: A puppy coloring page for ages 2–3, with a few huge shapes to color.
+    parentNote: The body and the head are the main job. The ears and the tail are the only extra pieces, so the page stays short.
+  - slug: simple-bird
+    title: Bird Coloring Page
+    prompt: One bird from the side made of a few huge shapes. A round body, one wing, a tail, a beak, and one eye that is only an open ring with white inside. No pupil, no solid black dot, no filled hole. Extra-thick outlines. No branch, no sky, no feathers drawn as lines, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one bird made of a few huge shapes.
+    description: A bird coloring page for ages 2–3, one body, a wing, and a tail.
+    parentNote: Color the body first. The wing and the tail can be a second color if the child is still interested.
+  - slug: simple-butterfly
+    title: Butterfly Coloring Page
+    prompt: One butterfly seen from above, made of four huge wing shapes, a thick body, and two open-circle eyes. Extra-thick outlines. No tiny spots, no flowers, no antenna lines, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one butterfly with four huge wings.
+    description: A butterfly coloring page for ages 2–3, four huge wings and a body.
+    parentNote: Each wing is one big area. Matching wings can be the same color, or all four can be one color.
+  - slug: sitting-cat
+    title: Cat Coloring Page
+    prompt: One sitting cat made of a few huge shapes. A round head, an oval body, two pointed ears, a thick curled tail, and two open-circle eyes. Extra-thick outlines. No whiskers, no stripes, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one sitting cat made of a few huge shapes.
+    description: A cat coloring page for ages 2–3, a few huge shapes and no stripes.
+    parentNote: The body is one big area. The ears and the tail are small enough to skip if the child is done.
+  - slug: round-turtle
+    title: Turtle Coloring Page
+    prompt: One turtle made of a few huge shapes. A big oval shell, a head, four short legs, and a small tail. The shell is one shape, not a pattern of plates. Extra-thick outlines. One open-circle eye. No background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one turtle with a single huge shell.
+    description: A turtle coloring page for ages 2–3, one huge shell and a few legs.
+    parentNote: The shell is the page. The head and the legs are there if the child wants another color, not a second project.
+pins:
+  - id: set
+    title: First Animal Coloring Pages
+    subtitle: Huge animal shapes for ages 2–3

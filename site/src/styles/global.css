@@ -158,6 +158,10 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .section-head p { color: var(--muted); margin: 0.3rem 0 0; }
 
+.age-block, #holidays { scroll-margin-top: 5.5rem; }
+.age-block { margin: 0 0 1.8rem; }
+.age-block h2 { font-size: 1.35rem; margin: 0 0 0.75rem; }
+
 .theme-grid, .sheet-grid, .related-grid {
   display: grid;
   gap: 1.25rem 1rem;
@@ -232,11 +236,6 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 .tip h2 { font-size: 1.15rem; }
 
 .tip a { font-weight: 800; }
-
-.faq { margin-top: 1.8rem; }
-.faq h2 { font-size: 1.35rem; }
-.faq h3 { font-size: 1.05rem; margin: 1rem 0 0.2rem; }
-.faq p { margin: 0; color: #314047; }
 
 .ad-slot {
   display: grid;
@@ -349,7 +348,7 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 @media (min-width: 800px) {
   .sheet-hero { grid-template-columns: minmax(0, 440px) 1fr; align-items: start; }
-  .footer-layout { grid-template-columns: 1.4fr repeat(3, 1fr); }
+  .footer-layout { grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr)); }
 }
 
 @media (min-width: 1040px) {

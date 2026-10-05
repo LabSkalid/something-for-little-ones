@@ -3,11 +3,12 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqList from '../../components/FaqList.astro';
 import SheetCard from '../../components/SheetCard.astro';
 import { pinPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, publisher } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
-import { ageBandLabel } from '../../lib/ages';
+import { ageBandLabel, ageBands } from '../../lib/ages';
 
 export async function getStaticPaths() {
   const themes = await getCollection('themes');
@@ -22,6 +23,13 @@ const { Content } = await render(theme);
 const sheets = (await getCollection('sheets'))
   .filter((sheet) => sheet.data.theme === theme.id)
   .sort((a, b) => a.data.order - b.data.order);
+const seasonal = theme.data.kind === 'seasonal';
+const ageGroups = ageBands
+  .map((band) => ({
+    ...band,
+    sheets: sheets.filter((sheet) => sheet.data.age === band.id),
+  }))
+  .filter((band) => band.sheets.length > 0);
 const allThemes = await getCollection('themes');
 const related = theme.data.related
   .map((id) => allThemes.find((item) => item.id === id))
@@ -72,27 +80,29 @@ const jsonLd = {
   <div class="wrap with-rail">
     <article>
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">{ageBandLabel(theme.data.ageBand)}{theme.data.kind === 'seasonal' ? ' · Seasonal' : ''}</p>
+      <p class="eyebrow">{seasonal ? 'Seasonal' : ageBandLabel(theme.data.ageBand)}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
       <p class="date-line">{sheets.length} printable pages · US Letter and A4 · Updated {updated}</p>
-      <div class="sheet-grid">
-        {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
-      </div>
+      {seasonal ? (
+        ageGroups.map((band) => (
+          <section class="age-block" id={`ages-${band.id}`}>
+            <h2>{band.label}</h2>
+            <div class="sheet-grid">
+              {band.sheets.map((sheet) => <SheetCard sheet={sheet} />)}
+            </div>
+          </section>
+        ))
+      ) : (
+        <div class="sheet-grid">
+          {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
+        </div>
+      )}
       <AdSlot name="top" />
       <div class="prose">
         <Content />
       </div>
       <AdSlot name="article" />
-      <section class="faq">
-        <h2>Questions parents ask</h2>
-        {theme.data.faqs.map((faq) => (
-          <div>
-            <h3>{faq.question}</h3>
-            <p>{faq.answer}</p>
-          </div>
-        ))}
-      </section>
       {related.length > 0 && (
         <section class="section">
           <h2>More sets to print</h2>
@@ -116,4 +126,5 @@ const jsonLd = {
       <AdSlot name="sidebar" />
     </aside>
   </div>
+  <FaqList items={theme.data.faqs} />
 </Base>

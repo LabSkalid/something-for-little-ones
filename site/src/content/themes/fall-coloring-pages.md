@@ -1,7 +1,7 @@
 ---
 title: Fall Coloring Pages
-description: Free fall coloring pages to print for kids. A maple leaf, acorn, scarecrow, apple basket, and squirrel in US Letter or A4.
-tagline: Free fall coloring pages for kids ages 3–4, including a maple leaf, acorn, scarecrow, apple basket, and squirrel.
+description: Free fall coloring pages to print. Choose ages 2–3, 3–4, 4–5, 5–6, or 6–8, from one huge leaf to a fuller autumn scene.
+tagline: Free fall coloring pages for every age, from one huge leaf to a fuller autumn scene.
 kind: seasonal
 ageBand: "3-4"
 order: 1
@@ -17,14 +17,14 @@ keywords:
   - autumn coloring pages
   - leaf coloring page
 faqs:
+  - question: How do I pick an age?
+    answer: Match the lines, not the birthday. Ages 2–3 are one huge object. Ages 3–4 are the original thick-line set. Ages 4–5 add a few parts. Ages 5–6 are a small scene. Ages 6–8 are a fuller scene that still uses bold lines.
   - question: Are these the same as the Halloween pages?
-    answer: No. This set is harvest and trees, not costumes. The scarecrow is smiling, and there is no ghost, witch, or candy. The Halloween set is the one to open for a party.
+    answer: No. This set is harvest and trees, not costumes. Pumpkins here are whole or sitting in a scene, not a party costume. The Halloween set is the one to open for a party.
   - question: Which page should we print first?
-    answer: The maple leaf is the simplest. The acorn and the apple basket are next. Save the scarecrow for a child who wants more pieces to color.
+    answer: For a short sitting, use the huge leaf or the ages 3–4 maple leaf. The sunflower and the leaf pile are the next step. Save the orchard path and the barn for a longer afternoon.
   - question: What paper size are the files?
     answer: Every picture has a US Letter PDF and an A4 PDF. Letter is the usual choice for a home printer in the United States.
-  - question: Can we use these after October?
-    answer: Yes. Leaves and apples still make sense in November. When the tree comes out, move to the Christmas set. The everyday animals, dinosaurs, cars, and princesses stay up all year.
 pins:
   - id: set
     title: Free Fall Coloring Pages
@@ -34,10 +34,18 @@ pins:
     subtitle: A leaf, an acorn, and apples
 ---
 
-Free fall coloring pages for kids ages 3–4. This set includes a [maple leaf](/fall-coloring-pages/maple-leaf/), [acorn](/fall-coloring-pages/acorn/), [scarecrow](/fall-coloring-pages/scarecrow/), [apple basket](/fall-coloring-pages/apple-basket/), and [squirrel](/fall-coloring-pages/squirrel/). Print the whole set or download one page.
+Fall pages are grouped by age on this page. Pick the band that matches how long your child will sit.
 
-This set is harvest and trees, not costumes. Pumpkins and candy are in the [Halloween coloring pages](/halloween-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+[Ages 2–3](#ages-2-3) are one huge object: a [leaf](/fall-coloring-pages/huge-leaf/), an [apple](/fall-coloring-pages/huge-apple/), and an [acorn](/fall-coloring-pages/huge-acorn/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
+[Ages 3–4](#ages-3-4) are the original thick-line set: a [maple leaf](/fall-coloring-pages/maple-leaf/), an [acorn](/fall-coloring-pages/acorn/), a [scarecrow](/fall-coloring-pages/scarecrow/), an [apple basket](/fall-coloring-pages/apple-basket/), and a [squirrel](/fall-coloring-pages/squirrel/).
+
+[Ages 4–5](#ages-4-5) are one object with a few parts: a [sunflower](/fall-coloring-pages/sunflower/), a [leaf pile](/fall-coloring-pages/leaf-pile/), and a [pumpkin pie](/fall-coloring-pages/pumpkin-pie/).
+
+[Ages 5–6](#ages-5-6) are a small scene: an [apple tree](/fall-coloring-pages/apple-tree/), [porch mums](/fall-coloring-pages/porch-mums/), and a [hay wagon](/fall-coloring-pages/hay-wagon/).
+
+[Ages 6–8](#ages-6-8) are a fuller scene: an [orchard path](/fall-coloring-pages/orchard-path/), an [autumn barn](/fall-coloring-pages/autumn-barn/), and a [forest floor](/fall-coloring-pages/forest-floor/).
+
+This set is harvest and trees, not costumes. Party pumpkins are in the [Halloween coloring pages](/halloween-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

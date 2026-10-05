@@ -1,8 +1,11 @@
+# Новые листы по возрастам. Уже нарисованные страницы 3–4 фабрика не перезаписывает.
+
 slug: fall-coloring-pages
 title: Fall Coloring Pages
-tagline: Leaves, apples, and a scarecrow for an autumn afternoon.
-description: Free fall coloring pages to print for kids. A maple leaf, acorn, scarecrow, apple basket, and squirrel.
+tagline: Fall coloring pages for every age, from one huge leaf to a fuller autumn scene.
+description: Free fall coloring pages to print. Pick ages 2–3, 3–4, 4–5, 5–6, or 6–8.
 kind: seasonal
+ageBand: "3-4"
 order: 1
 accent: "#C4622D"
 ink: "#2C2118"
@@ -13,34 +16,105 @@ keywords:
 related:
   - halloween-coloring-pages
   - christmas-coloring-pages
-audience: parents of children ages 3 to 4
-style: Gentle autumn line art, thick black outlines, white background, no shading, no text, no scary faces, no Halloween costumes.
+audience: parents choosing a fall coloring page by age
+style: Gentle autumn coloring-book line art. White background, solid black outlines only, no shading, no gray, no color, no text, no scary faces, no Halloween costumes. Eyes are open circles, never solid black. Match the layout note for this age.
 ideas:
-  - slug: maple-leaf
-    title: Maple Leaf Coloring Page
-    prompt: One large maple leaf seen from the front, five clear lobes, a few simple veins, and a short stem
-    difficulty: easy
-    age: "3-4"
-  - slug: acorn
-    title: Acorn Coloring Page
-    prompt: One large acorn with a textured cap and a small oak leaf beside it
-    difficulty: easy
-    age: "3-4"
-  - slug: scarecrow
-    title: Scarecrow Coloring Page
-    prompt: A friendly standing scarecrow with a floppy hat, a patched shirt, straw cuffs, and a simple smile
+  - slug: huge-leaf
+    title: Huge Leaf Coloring Page
+    prompt: One huge maple leaf filling most of the page. Five simple lobes and a short stem. At most two vein lines. Extra-thick outlines. No other leaves, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge maple leaf with a short stem.
+    description: A huge leaf coloring page for ages 2–3, one leaf and a stem.
+    parentNote: The leaf is one big area. The stem can be a second color, or the same color if the child is finished.
+  - slug: huge-apple
+    title: Huge Apple Coloring Page
+    prompt: One huge apple with a short thick stem and one simple leaf. Extra-thick outlines. No basket, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge apple with a stem and a single leaf.
+    description: A huge apple coloring page for ages 2–3, one apple to color.
+    parentNote: Cover the apple first. The leaf is the only extra piece.
+  - slug: huge-acorn
+    title: Huge Acorn Coloring Page
+    prompt: One huge acorn. The cap and the nut are two big shapes, plus a short stem. Extra-thick outlines. No oak tree, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge acorn with a cap and a nut.
+    description: A huge acorn coloring page for ages 2–3, a cap and a nut.
+    parentNote: The nut and the cap are the two colors. There is nothing else on the page to finish.
+  - slug: sunflower
+    title: Sunflower Coloring Page
+    prompt: One sunflower with a thick stem, two leaves, and a round center split into a few big seed sections. Petals are large closed shapes. No garden behind it, no text.
     difficulty: medium
-    age: "3-4"
-  - slug: apple-basket
-    title: Apple Basket Coloring Page
-    prompt: A woven basket filled with round apples, one apple sitting beside the basket, and a single leaf
-    difficulty: easy
-    age: "3-4"
-  - slug: squirrel
-    title: Squirrel Coloring Page
-    prompt: A sitting squirrel holding one acorn, with a large curled bushy tail and a friendly face
+    age: "4-5"
+    alt: Line drawing of one sunflower with a stem, two leaves, and large petals.
+    description: A sunflower coloring page for ages 4–5, with petals and a stem.
+    parentNote: The petals can all be one color. The center and the leaves are the other two jobs.
+  - slug: leaf-pile
+    title: Leaf Pile Coloring Page
+    prompt: Three large autumn leaves overlapping, each with a few lobes, and one short twig. A handful of big regions. No yard scene, no text.
     difficulty: medium
-    age: "3-4"
+    age: "4-5"
+    alt: Line drawing of three large overlapping autumn leaves and a twig.
+    description: A leaf pile coloring page for ages 4–5, three big leaves.
+    parentNote: Each leaf can be its own color. The overlap is still a thick outline, not a tiny gap to color.
+  - slug: pumpkin-pie
+    title: Pumpkin Pie Coloring Page
+    prompt: One slice of pie on a plate, with a thick crust, a filling, and three simple leaves beside the plate. A few big closed shapes. No table scene, no words, no tiny lattice strips.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of one slice of pie on a plate with three leaves.
+    description: A pumpkin pie coloring page for ages 4–5, a slice and three leaves.
+    parentNote: The filling is the large area. The crust and the leaves are the smaller pieces.
+  - slug: apple-tree
+    title: Apple Tree Coloring Page
+    prompt: A small autumn scene with one apple tree, several apples on the branches, two apples on the grass, a basket, and a short fence. Bold outlines. No words, no people.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of an apple tree, a basket, and a short fence.
+    description: An apple tree coloring page for ages 5–6, with a basket and a fence.
+    parentNote: The apples are the repeating part. Color those first, then the tree and the basket.
+  - slug: porch-mums
+    title: Porch Mums Coloring Page
+    prompt: A small porch scene with three steps, two pots of flowers, a round wreath on a door, and a plain doormat with no letters or pattern of words. Bold outlines. No house number, no text.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of porch steps, two flower pots, and a wreath on a door.
+    description: A porch mums coloring page for ages 5–6, steps, pots, and a wreath.
+    parentNote: The two pots are the main color job. The wreath and the steps can share the leftover crayons.
+  - slug: hay-wagon
+    title: Hay Wagon Coloring Page
+    prompt: A small scene with a wagon filled with hay, one pumpkin beside it, a few falling leaves, and a short fence. Bold outlines. No horse, no words, no people.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of a hay wagon, a pumpkin, leaves, and a short fence.
+    description: A hay wagon coloring page for ages 5–6, with a pumpkin beside it.
+    parentNote: The wagon and the hay are the large areas. The pumpkin and the leaves are the extra pieces.
+  - slug: orchard-path
+    title: Orchard Path Coloring Page
+    prompt: A fuller autumn scene with a winding path, two apple trees, baskets, a fence, and leaves that have a simple repeating vein pattern. Many closed regions. Bold crayon-thick outlines, not hairline. No shading, no text, no people.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of an orchard path with two apple trees, baskets, and a fence.
+    description: An orchard path coloring page for ages 6–8, with trees and baskets.
+    parentNote: Color the apples first so the page looks started. The path and the fence can wait.
+  - slug: autumn-barn
+    title: Autumn Barn Coloring Page
+    prompt: A fuller scene with a barn, windows and a door as empty outlines, hay bales, a fence, a quilt with a simple star pattern hanging on the fence, and trees. Bold crayon-thick outlines, not hairline. No signs, no text, no solid black windows.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a barn, hay bales, trees, and a patterned quilt on a fence.
+    description: An autumn barn coloring page for ages 6–8, with a quilt pattern.
+    parentNote: The quilt stars are the pattern. The barn is the large shape after the stars are done.
+  - slug: forest-floor
+    title: Forest Floor Coloring Page
+    prompt: A fuller forest-floor scene with a stump, mushrooms with big spots, overlapping leaves with a simple vein pattern, acorns, and one friendly squirrel. Bold crayon-thick outlines, not hairline. No text. The squirrel eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a forest floor with a stump, spotted mushrooms, leaves, and a squirrel.
+    description: A forest floor coloring page for ages 6–8, mushrooms, leaves, and a squirrel.
+    parentNote: The mushroom spots and the leaves are the pattern. The squirrel is the animal to save for last if time runs out.
 pins:
   - id: set
     title: Free Fall Coloring Pages

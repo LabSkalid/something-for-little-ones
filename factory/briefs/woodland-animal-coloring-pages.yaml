@@ -1,0 +1,64 @@
+slug: woodland-animal-coloring-pages
+title: Woodland Animal Coloring Pages
+tagline: Free woodland coloring pages for ages 6–8, with patterns and a simple background.
+description: Free woodland animal coloring pages for ages 6–8. A fox, owl, deer, hedgehog, and squirrel in a simple scene.
+kind: evergreen
+ageBand: "6-8"
+order: 2
+accent: "#2E6B4F"
+ink: "#241C18"
+keywords:
+  - woodland animal coloring pages
+  - fox coloring page
+  - coloring pages for ages 6-8
+related:
+  - town-scene-coloring-pages
+  - ocean-scene-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 6 to 8
+style: A woodland animal in a simple scene, with smaller regions and a repeating pattern. Outlines stay bold and closed, thick enough for a crayon, never hairline fur or crosshatching. White background, no shading, no gray, no color, no text. Eyes are open circles to color, never solid black.
+ideas:
+  - slug: woodland-fox
+    title: Woodland Fox Coloring Page
+    prompt: A fox sitting in a simple woodland scene. The tail has several bold stripe regions, and the face has clear closed areas. The background is a few trees, mushrooms with big spots, and leaves. Bold crayon-friendly outlines, not hairline. No text. Eyes are open circles, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a fox in the woods, with tail stripes, trees, and spotted mushrooms.
+    description: A woodland fox coloring page for ages 6–8, with tail stripes and a simple forest.
+    parentNote: The tail stripes are the pattern to start with. The trees and mushrooms are the background, and they can use the leftover colors.
+  - slug: woodland-owl
+    title: Woodland Owl Coloring Page
+    prompt: An owl on a branch in a simple scene. Wing feathers are bold separate regions, not fine lines. A moon, a few leaves, and one tree trunk. Bold outlines thick enough to crayon. Eyes are open circles with a smaller circle inside, not solid black. No text.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of an owl on a branch, with bold feather shapes, a moon, and a tree.
+    description: A woodland owl coloring page for ages 6–8, with feather regions to color.
+    parentNote: Color one wing's feather shapes before the other so the pattern stays even. The moon is one large shape at the end.
+  - slug: woodland-deer
+    title: Woodland Deer Coloring Page
+    prompt: A deer standing among a few trees. The coat has large closed spots. The background is simple trunks, leaves, and a few flowers. Bold outlines thick enough to crayon, not hairline. No text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a spotted deer among a few trees and flowers.
+    description: A woodland deer coloring page for ages 6–8, with spots and a few trees.
+    parentNote: The spots are the repeating part. Give them one color, then use a second color for the coat around them.
+  - slug: woodland-hedgehog
+    title: Woodland Hedgehog Coloring Page
+    prompt: A hedgehog among leaves. The spines are thick separate closed shapes a child can color one by one, not hairline fur. A few mushrooms and a log in a simple background. Bold outlines. No text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a hedgehog with thick spine shapes, leaves, mushrooms, and a log.
+    description: A woodland hedgehog coloring page for ages 6–8, with thick spines to color.
+    parentNote: The spines are many small regions, but each one is still a closed shape. Two colors alternating through them is enough.
+  - slug: woodland-squirrel
+    title: Woodland Squirrel Coloring Page
+    prompt: A squirrel on a branch holding an acorn, with a large tail made of bold closed sections. A few leaves and one tree trunk behind it. Bold outlines, not hairline fur. No text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a squirrel on a branch, with a patterned tail, leaves, and a tree trunk.
+    description: A woodland squirrel coloring page for ages 6–8, with a patterned tail.
+    parentNote: The tail sections are the pattern. The acorn and the leaves are the smaller pieces after the tail is done.
+pins:
+  - id: set
+    title: Woodland Animal Coloring Pages
+    subtitle: Patterned woodland scenes for ages 6–8

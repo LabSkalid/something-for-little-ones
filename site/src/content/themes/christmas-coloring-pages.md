@@ -1,7 +1,7 @@
 ---
 title: Christmas Coloring Pages
-description: Free Christmas coloring pages to print at home. A tree, Santa, gingerbread house, reindeer, and stocking in US Letter or A4.
-tagline: Free Christmas coloring pages for kids ages 3–4, including a tree, Santa, gingerbread house, reindeer, and stocking.
+description: Free Christmas coloring pages to print at home. Choose ages 2–3, 3–4, 4–5, 5–6, or 6–8, from one huge ornament to a fuller room.
+tagline: Free Christmas coloring pages for every age, from one huge ornament to a fuller scene.
 kind: seasonal
 ageBand: "3-4"
 order: 3
@@ -18,11 +18,11 @@ keywords:
   - christmas tree coloring page
 faqs:
   - question: Are these religious Christmas pages or general holiday pictures?
-    answer: "This set is the general December pile: a tree, Santa, a gingerbread house, a reindeer, and a stocking. It does not include a nativity scene."
+    answer: This set is the general December pile. Trees, gifts, a snowman, a reindeer, and Santa in the ages 3–4 group. It does not include a nativity scene.
+  - question: How do I pick an age?
+    answer: Ages 2–3 are one huge tree, ornament, or present. Ages 3–4 are the original thick-line set. Ages 4–5 add a few parts. Ages 5–6 are a small scene. Ages 6–8 are a fuller scene with a pattern.
   - question: Which page works for a younger child?
-    answer: The stocking and the reindeer face are the simplest. The tree has more ornaments. The gingerbread house has the most small candies.
-  - question: Can I print them before December?
-    answer: Yes. The files are ready whenever you want a quiet afternoon. Halloween has its own set if you are still in October.
+    answer: Use the huge ornament or the huge present. The ages 3–4 stocking is the next step up. The living room and the village take a longer sitting.
   - question: What do I download?
     answer: Each picture is a PDF in US Letter and in A4. Print the PDF at actual size. Home and classroom copies are free.
 pins:
@@ -34,10 +34,18 @@ pins:
     subtitle: Printable holiday pages for kids
 ---
 
-Free Christmas coloring pages for kids ages 3–4. This set includes a [tree](/christmas-coloring-pages/christmas-tree/), [Santa](/christmas-coloring-pages/santa-claus/), [gingerbread house](/christmas-coloring-pages/gingerbread-house/), [reindeer](/christmas-coloring-pages/reindeer/), and [stocking](/christmas-coloring-pages/christmas-stocking/). Print the whole set or download one page.
+Christmas pages are grouped by age on this page. None of them use a movie character.
 
-None of the pages use a movie character. Fall pages are in the [fall coloring pages](/fall-coloring-pages/). Halloween pages are in the [Halloween coloring pages](/halloween-coloring-pages/). Everyday animals are in the [animal coloring pages](/animal-coloring-pages/).
+[Ages 2–3](#ages-2-3) are one huge object: a [tree](/christmas-coloring-pages/huge-tree/), an [ornament](/christmas-coloring-pages/huge-ornament/), and a [present](/christmas-coloring-pages/huge-present/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
+[Ages 3–4](#ages-3-4) are the original thick-line set: a [tree](/christmas-coloring-pages/christmas-tree/), [Santa](/christmas-coloring-pages/santa-claus/), a [gingerbread house](/christmas-coloring-pages/gingerbread-house/), a [reindeer](/christmas-coloring-pages/reindeer/), and a [stocking](/christmas-coloring-pages/christmas-stocking/).
+
+[Ages 4–5](#ages-4-5) are one object with a few parts: a [mitten](/christmas-coloring-pages/striped-mitten/), a [snowman](/christmas-coloring-pages/snowman/), and a [sleigh](/christmas-coloring-pages/gift-sleigh/).
+
+[Ages 5–6](#ages-5-6) are a small scene: a [fireplace](/christmas-coloring-pages/fireplace/), a [window wreath](/christmas-coloring-pages/window-wreath/), and a [reindeer and tree](/christmas-coloring-pages/reindeer-and-tree/).
+
+[Ages 6–8](#ages-6-8) are a fuller scene: a [living room](/christmas-coloring-pages/living-room/), a [snowy village](/christmas-coloring-pages/snowy-village/), and [winter woods](/christmas-coloring-pages/winter-woods/).
+
+Fall pages are in the [fall coloring pages](/fall-coloring-pages/). Halloween pages are in the [Halloween coloring pages](/halloween-coloring-pages/).
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

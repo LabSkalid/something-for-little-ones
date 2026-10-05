@@ -8,6 +8,7 @@ order: 1
 accent: "#1D7AD6"
 ink: "#241C18"
 related:
+  - first-animal-coloring-pages
   - animal-coloring-pages
   - garden-coloring-pages
 pubDate: 2026-10-05
@@ -33,7 +34,7 @@ pins:
 
 These pages are for about ages 2 to 3. Each drawing is one object made of a few huge shapes, so a child who holds the crayon in a fist can still finish the page.
 
-The set is a [ball](/big-shape-coloring-pages/big-ball/), an [apple](/big-shape-coloring-pages/whole-apple/), a [fish](/big-shape-coloring-pages/simple-fish/), a [cup](/big-shape-coloring-pages/drinking-cup/), and a [star](/big-shape-coloring-pages/big-star/). Print one sheet. Five pages on the table at once is a lot at this age.
+The set is a [ball](/big-shape-coloring-pages/big-ball/), an [apple](/big-shape-coloring-pages/whole-apple/), a [fish](/big-shape-coloring-pages/simple-fish/), a [cup](/big-shape-coloring-pages/drinking-cup/), and a [star](/big-shape-coloring-pages/big-star/). Print one sheet. Five pages on the table at once is a lot at this age. The other ages 2–3 set is the [first animal coloring pages](/first-animal-coloring-pages/): a puppy, a bird, a butterfly, a cat, and a turtle, still a few huge shapes.
 
 Staying inside the line is not the goal yet. If the color goes over the edge, the picture still reads as a ball or an apple. When a child starts filling the shape on purpose and asks for smaller parts, move to the ages 3–4 sets, such as the [animal coloring pages](/animal-coloring-pages/).
 

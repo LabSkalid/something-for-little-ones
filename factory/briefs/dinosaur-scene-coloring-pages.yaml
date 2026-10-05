@@ -1,0 +1,64 @@
+slug: dinosaur-scene-coloring-pages
+title: Dinosaur Scene Coloring Pages
+tagline: Free dinosaur coloring pages for ages 5–6, with more parts and a little pattern.
+description: Free dinosaur coloring pages for ages 5–6. A spotted T-rex, long-neck, triceratops, stegosaurus, and flying reptile.
+kind: evergreen
+ageBand: "5-6"
+order: 2
+accent: "#3F6B45"
+ink: "#241C18"
+keywords:
+  - dinosaur coloring pages
+  - coloring pages for ages 5-6
+  - t-rex coloring page
+related:
+  - ocean-scene-coloring-pages
+  - dinosaur-coloring-pages
+  - town-scene-coloring-pages
+audience: parents of children ages 5 to 6
+style: Friendly storybook dinosaurs with bold closed black outlines, more regions than a single centered animal, and a little pattern of large spots or plates. White background, no shading, no gray, no hairline scales, no scary teeth, no blood. Eyes are open circles to color, never solid black. No text.
+ideas:
+  - slug: spotted-trex
+    title: Spotted T-Rex Coloring Page
+    prompt: A friendly standing tyrannosaurus with a round smile, tiny arms, and a thick tail. The body has large closed spots to color, not tiny scales. A few simple plants at the feet. Bold outlines. No sharp teeth, no blood, no text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a friendly spotted tyrannosaurus with plants at its feet.
+    description: A spotted T-rex coloring page for ages 5–6, with large spots to color.
+    parentNote: The spots are the pattern. Use two colors and alternate them, then color the body around them.
+  - slug: long-neck
+    title: Long-Neck Dinosaur Coloring Page
+    prompt: A friendly long-neck dinosaur with a long tail, four sturdy legs, and large closed patches along the neck. A few simple leaves beside it. Bold outlines, more regions than one plain animal. Not a monster. No text. The eye is an open circle.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a long-neck dinosaur with patches along its neck.
+    description: A long-neck dinosaur coloring page for ages 5–6, with neck patches.
+    parentNote: The neck patches are the repeating part. The legs and the leaves can wait until the neck is done.
+  - slug: frilled-triceratops
+    title: Patterned Triceratops Coloring Page
+    prompt: A friendly triceratops with a frill divided into large closed sections, three horns, and a few big spots on the body. A simple ground line and one plant. Bold outlines. No sharp-teeth poster, no text. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a triceratops with a frill split into large sections.
+    description: A triceratops coloring page for ages 5–6, with a patterned frill.
+    parentNote: Each section of the frill can be its own color. The horns are a small job after the frill.
+  - slug: plated-stegosaurus
+    title: Patterned Stegosaurus Coloring Page
+    prompt: A friendly stegosaurus with a row of large plates, each plate a separate closed shape, and a spiked tail. A few simple plants. Bold outlines. No tiny scales, no text. The eye is an open circle.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a stegosaurus with a row of large plates.
+    description: A stegosaurus coloring page for ages 5–6, with plates to color one by one.
+    parentNote: The plates are the pattern. Alternate two colors down the row, then color the body.
+  - slug: flying-reptile
+    title: Flying Reptile Coloring Page
+    prompt: A friendly flying reptile with wide wings divided into a few large panels, a smiling beak, and a crest. A simple cloud and the top of one tree. Bold outlines. No teeth, no text, not a film creature. The eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "5-6"
+    alt: Line drawing of a friendly flying reptile with wings split into panels.
+    description: A flying reptile coloring page for ages 5–6, with wing panels to color.
+    parentNote: The wing panels are the main pattern. The cloud and the tree top are the background, and they can stay white.
+pins:
+  - id: set
+    title: Dinosaur Scene Coloring Pages
+    subtitle: Patterned dinosaurs for ages 5–6

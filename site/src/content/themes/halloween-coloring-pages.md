@@ -1,7 +1,7 @@
 ---
 title: Halloween Coloring Pages
-description: Free Halloween coloring pages that stay cute, not scary. A pumpkin, ghost, witch hat, candy bag, and black cat to print.
-tagline: Free Halloween coloring pages for kids ages 3–4. A pumpkin, ghost, witch hat, candy bag, and black cat. Cute, not scary.
+description: Free Halloween coloring pages that stay cute, not scary. Choose ages 2–3, 3–4, 4–5, 5–6, or 6–8.
+tagline: Free cute Halloween coloring pages for every age. Pick a huge pumpkin or a fuller porch scene.
 kind: seasonal
 ageBand: "3-4"
 order: 2
@@ -17,14 +17,14 @@ keywords:
   - pumpkin coloring page
   - cute halloween coloring sheets
 faqs:
-  - question: Are these Halloween pages too scary for preschool?
-    answer: They are drawn to stay cute. The ghost is smiling, the cat is sitting, and the pumpkin grin is a simple curve. There is no blood, no monster close-up, and no dark scene.
+  - question: Are these Halloween pages too scary?
+    answer: They are drawn to stay cute. Smiles are simple curves. There is no blood, no graveyard, and no monster close-up. The ages 2–3 pages are one object, so there is no dark scene at all.
+  - question: How do I pick an age?
+    answer: Ages 2–3 are one huge pumpkin, ghost, or bat. Ages 3–4 are the original thick-line set. Ages 4–5 add a few parts. Ages 5–6 are a small scene. Ages 6–8 are a fuller scene with a pattern.
   - question: What should we print for a party?
-    answer: The pumpkin and the candy bag cover a party table. Add the ghost if you want a third page that still reads as friendly.
+    answer: The ages 3–4 pumpkin and candy bag cover a party table. Add the huge pumpkin if a younger child is coloring too.
   - question: What paper size are the files?
     answer: Every picture has a US Letter PDF and an A4 PDF. Letter is the usual choice for a home printer in the United States.
-  - question: Can we still use the other sets in October?
-    answer: Yes. Animals, dinosaurs, cars, and princesses stay on the home page all year. Halloween is the seasonal shelf beside them.
 pins:
   - id: set
     title: Free Halloween Coloring Pages
@@ -34,10 +34,18 @@ pins:
     subtitle: Pumpkin, ghost, cat, and candy
 ---
 
-Free Halloween coloring pages for kids ages 3–4. This set stays cute: a [pumpkin](/halloween-coloring-pages/jack-o-lantern/), [friendly ghost](/halloween-coloring-pages/friendly-ghost/), [witch hat](/halloween-coloring-pages/witch-hat/), [candy bag](/halloween-coloring-pages/candy-bag/), and [black cat](/halloween-coloring-pages/black-cat/). Print the whole set or download one page.
+Halloween pages are grouped by age on this page. The drawings stay cute. There is no graveyard and no movie character.
 
-There are no graveyards and no movie characters. Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+[Ages 2–3](#ages-2-3) are one huge object: a [pumpkin](/halloween-coloring-pages/huge-pumpkin/), a [ghost](/halloween-coloring-pages/huge-ghost/), and a [bat](/halloween-coloring-pages/huge-bat/).
 
-The lines are thick and the areas are large, so this set is for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). When a child wants more to color, the home page lists the older sets.
+[Ages 3–4](#ages-3-4) are the original thick-line set: a [smiling pumpkin](/halloween-coloring-pages/jack-o-lantern/), a [friendly ghost](/halloween-coloring-pages/friendly-ghost/), a [witch hat](/halloween-coloring-pages/witch-hat/), a [candy bag](/halloween-coloring-pages/candy-bag/), and a [black cat](/halloween-coloring-pages/black-cat/).
+
+[Ages 4–5](#ages-4-5) are one object with a few parts: a [candy apple](/halloween-coloring-pages/candy-apple/), a [cauldron](/halloween-coloring-pages/little-cauldron/), and an [owl in a hat](/halloween-coloring-pages/halloween-owl/).
+
+[Ages 5–6](#ages-5-6) are a small scene: a [pumpkin porch](/halloween-coloring-pages/pumpkin-porch/), [moon and bats](/halloween-coloring-pages/moon-bats/), and a [pumpkin path](/halloween-coloring-pages/pumpkin-path/).
+
+[Ages 6–8](#ages-6-8) are a fuller scene: a [patterned porch](/halloween-coloring-pages/patterned-porch/), a [night garden](/halloween-coloring-pages/night-garden/), and a [cookie table](/halloween-coloring-pages/cookie-table/).
+
+Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.
