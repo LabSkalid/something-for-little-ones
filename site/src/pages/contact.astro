@@ -3,11 +3,15 @@ import Base from '../layouts/Base.astro';
 import { site } from '../site';
 ---
 
-<Base title="Contact" description={`Contact ${site.name} about a download, a print problem, or a coloring set you want next.`} path="/contact/">
+<Base title="Get in Touch" description="Email Julia with a question about a printable, something that isn't working, or an idea you'd like to see on Something for Little Ones." path="/contact/">
   <div class="wrap prose">
     <p class="eyebrow">Contact</p>
-    <h1>Write to us</h1>
-    <p>Email <a href={`mailto:${site.email}`}>{site.email}</a>. There is no account and no comment box. That is deliberate: this is a printable library, not a place for children to post.</p>
-    <p>Useful notes include the page you were on, whether you wanted US Letter or A4, and what the printer did. If you want a set that is not here yet, name the theme and the age. Ages 2–3 are huge shapes. Ages 3–4 are animals, dinosaurs, cars, and princesses. Ages 4–5 are a garden or a chunky vehicle. Ages 5–6 are ocean scenes or patterned dinosaurs. Ages 6–8 are town scenes or woodland animals. Fall, Halloween, and Christmas each have a page split by those same ages.</p>
+    <h1>Get in Touch</h1>
+    <p>Have a question about a printable, found something that isn't working, or have an idea for something you'd like to see here?</p>
+    <p>I'd love to hear from you.</p>
+    <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <p>If you're writing about a particular coloring page or printable, feel free to include the page name or link so I can find it quickly.</p>
+    <p>Thanks for stopping by!</p>
+    <p>Julia</p>
   </div>
 </Base>

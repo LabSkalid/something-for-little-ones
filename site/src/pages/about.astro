@@ -1,27 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-import { site } from '../site';
-import { themePath } from '../lib/paths';
-
-const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Base title="About" description={`${site.name} is a free coloring library for parents. Pages are sorted by age, from a few huge shapes at 2–3 to fuller scenes at 6–8.`} path="/about/">
+<Base title="About" description="Julia, a mom of two, shares how Something for Little Ones started and the free coloring pages and printables she is putting together." path="/about/">
   <div class="wrap prose">
     <p class="eyebrow">About</p>
-    <h1>A small library of pages to print</h1>
-    <p>{site.name} is for parents, grandparents, and teachers who need a picture on the table in the next five minutes. The site is written for adults. Children color the paper, not the website.</p>
-    <p>The drawings are original to this site. They are storybook animals, dinosaurs, cars, gowns, holiday objects, and a few scenes. They are not movie characters, toy lines, or game heroes, so you can print them without borrowing someone else's cast.</p>
-    <h2>Sorted by age</h2>
-    <p>The age on a set describes the lines, not a grade. Ages 2–3 are a few huge shapes. Ages 3–4 are the simple shelf: animals, dinosaurs, cars, and princesses. Ages 4–5 are a garden scene or one chunky vehicle. Ages 5–6 add patterns. Ages 6–8 are fuller scenes that still use bold lines a crayon can follow. If the hand is not ready for the number on the label, print the easier set.</p>
-    <h2>Sets on the table</h2>
-    <ul>
-      {themes.map((theme) => (
-        <li><a href={themePath(theme.id)}>{theme.data.title}</a> — {theme.data.tagline}</li>
-      ))}
-    </ul>
-    <p>A set page is the main page: several pictures, a short guide, and the files. Each drawing also has its own page so a specific search, such as a fire truck or a puppy, has somewhere to land. Fall, Halloween, and Christmas are their own section. Each holiday page is split by age, from one huge shape at 2–3 to a fuller scene at 6–8. The original thick-line holiday drawings are the ages 3–4 group.</p>
-    <p>Printing is free for home and classroom use. Selling the files or the prints is not allowed. The <a href="/how-to-print/">printing guide</a> explains Letter and A4, and the <a href="/privacy/">privacy page</a> explains analytics and ads.</p>
+    <h1>About Something for Little Ones</h1>
+    <p>Hi, I'm Julia.</p>
+    <p>I'm a mom of two, and Something for Little Ones started because I kept finding myself at the kitchen table looking for something to print.</p>
+    <p>A coloring page for a rainy afternoon. Something to take along on a road trip. A little activity to keep the kids busy while dinner was getting made.</p>
+    <p>So I started making my own.</p>
+    <p>This site is where I'm putting them all together — free coloring pages, printable activities, games, and whatever else I end up making.</p>
+    <p>Some are very simple. Some have a few more details. Some are seasonal, and some are just things my kids happen to like.</p>
+    <p>I'm adding new pages as I make them, so this little library will keep growing.</p>
+    <p>Thanks for stopping by!</p>
+    <p>Julia</p>
   </div>
 </Base>
