@@ -263,6 +263,6 @@ export async function produce(briefPath: string, dryRun: boolean) {
     known.push({ title, slug });
   }
   await ensureTheme(brief, known);
-  await buildPins();
-  console.log(`Готово. Новых страниц: ${created.length}. Они появятся в подборке после сборки сайта.`);
+  await buildPins(brief.slug);
+  console.log(`Готово. Новых страниц: ${created.length}. Пин обновлён только у этой подборки.`);
 }

@@ -20,7 +20,7 @@ const help = `Фабрика раскрасок.
 
   npm run redraw
       Заново нарисовать уже опубликованные листы через OpenRouter.
-      Тексты статей остаются. Можно указать одну тему:
+      Тексты и пины не меняются. Можно указать одну тему:
       npm run redraw -- animal-coloring-pages
 
   npm run studio

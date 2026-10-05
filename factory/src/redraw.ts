@@ -6,7 +6,6 @@ import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
 import { coloringPrompt, generateColoringPage } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
-import { buildPins } from './build-assets.ts';
 import { loadEnv } from './env.ts';
 import { briefsRoot, printRoot, sheetContentRoot } from './paths.ts';
 
@@ -54,6 +53,5 @@ export async function redraw(themeFilter?: string) {
       console.log(`обновлён рисунок ${theme.name}/${slug}`);
     }
   }
-  await buildPins();
-  console.log(`Готово. Перерисовано страниц: ${count}. Тексты статей не менялись.`);
+  console.log(`Готово. Перерисовано страниц: ${count}. Пины не менялись.`);
 }

@@ -89,11 +89,12 @@ export async function buildSheetAssets() {
   }
 }
 
-export async function buildPins() {
+export async function buildPins(onlyTheme?: string) {
   await fs.mkdir(pinRoot, { recursive: true });
   const themes = await fs.readdir(themeContentRoot);
   for (const file of themes.filter((name) => name.endsWith('.md'))) {
     const themeId = file.replace(/\.md$/, '');
+    if (onlyTheme && themeId !== onlyTheme) continue;
     const data = readFrontmatter(await fs.readFile(path.join(themeContentRoot, file), 'utf8')) as ThemeData;
     const sheetDir = path.join(sheetContentRoot, themeId);
     let sheetFiles: string[] = [];
