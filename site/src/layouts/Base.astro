@@ -66,7 +66,6 @@ const ga = import.meta.env.PUBLIC_GA_ID ?? '';
 const pin = import.meta.env.PUBLIC_PINTEREST_TAG ?? '';
 const beacon = import.meta.env.PUBLIC_CF_BEACON ?? '';
 const ads = import.meta.env.PUBLIC_ADSENSE_CLIENT ?? '';
-const needsConsent = Boolean(ga || pin || ads);
 ---
 
 <!doctype html>
@@ -116,70 +115,51 @@ const needsConsent = Boolean(ga || pin || ads);
       <slot />
     </main>
     <Footer />
-    {needsConsent && (
-      <div class="consent" id="consent" hidden>
-        <p>Analytics and ads stay off until you allow them. The coloring pages remain free either way.</p>
-        <div class="btn-row">
-          <button class="accept" type="button" id="consent-accept">Allow</button>
-          <button class="decline" type="button" id="consent-decline">No thanks</button>
-        </div>
-      </div>
-      <script is:inline define:vars={{ ga, pin, ads }}>
-        const key = 'lct-consent';
-        const banner = document.getElementById('consent');
-        function loadTrackers() {
-          if (ga && !document.getElementById('ga4')) {
-            const s = document.createElement('script');
-            s.id = 'ga4';
-            s.async = true;
-            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga;
-            document.head.appendChild(s);
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function () { window.dataLayer.push(arguments); };
-            window.gtag('js', new Date());
-            window.gtag('consent', 'default', {
-              ad_storage: 'granted',
-              analytics_storage: 'granted',
-              ad_user_data: 'granted',
-              ad_personalization: 'granted',
+    {ga && (
+      <script is:inline define:vars={{ ga }}>
+        if (!document.getElementById('ga4')) {
+          const s = document.createElement('script');
+          s.id = 'ga4';
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', ga);
+        }
+      </script>
+    )}
+    {pin && (
+      <script is:inline define:vars={{ pin }}>
+        if (!window.pintrk) {
+          window.pintrk = function () { window.pintrk.queue.push(Array.prototype.slice.call(arguments)); };
+          window.pintrk.queue = [];
+          window.pintrk.version = '3.0';
+          const s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://s.pinimg.com/ct/core.js';
+          document.head.appendChild(s);
+          window.pintrk('load', pin);
+          window.pintrk('page');
+        }
+      </script>
+    )}
+    {ads && (
+      <script is:inline define:vars={{ ads }}>
+        if (!document.getElementById('adsense')) {
+          const s = document.createElement('script');
+          s.id = 'adsense';
+          s.async = true;
+          s.crossOrigin = 'anonymous';
+          s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ads;
+          s.onload = function () {
+            document.querySelectorAll('.adsbygoogle').forEach(function () {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
             });
-            window.gtag('config', ga);
-          }
-          if (pin && !window.pintrk) {
-            window.pintrk = function () { window.pintrk.queue.push(Array.prototype.slice.call(arguments)); };
-            window.pintrk.queue = [];
-            window.pintrk.version = '3.0';
-            const s = document.createElement('script');
-            s.async = true;
-            s.src = 'https://s.pinimg.com/ct/core.js';
-            document.head.appendChild(s);
-            window.pintrk('load', pin);
-            window.pintrk('page');
-          }
-          if (ads && !document.getElementById('adsense')) {
-            const s = document.createElement('script');
-            s.id = 'adsense';
-            s.async = true;
-            s.crossOrigin = 'anonymous';
-            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ads;
-            s.onload = function () {
-              document.querySelectorAll('.adsbygoogle').forEach(function () {
-                (window.adsbygoogle = window.adsbygoogle || []).push({});
-              });
-            };
-            document.head.appendChild(s);
-          }
+          };
+          document.head.appendChild(s);
         }
-        function choose(value) {
-          localStorage.setItem(key, value);
-          banner.hidden = true;
-          if (value === 'granted') loadTrackers();
-        }
-        const saved = localStorage.getItem(key);
-        if (saved === 'granted') loadTrackers();
-        else if (saved !== 'denied') banner.hidden = false;
-        document.getElementById('consent-accept').addEventListener('click', function () { choose('granted'); });
-        document.getElementById('consent-decline').addEventListener('click', function () { choose('denied'); });
       </script>
     )}
   </body>
