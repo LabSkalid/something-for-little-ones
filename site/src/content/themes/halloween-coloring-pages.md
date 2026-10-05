@@ -9,6 +9,7 @@ accent: "#D4652F"
 ink: "#2A1B14"
 related:
   - fall-coloring-pages
+  - thanksgiving-coloring-pages
   - christmas-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-05
@@ -46,6 +47,6 @@ Halloween pages are grouped by age on this page. The drawings stay cute. There i
 
 [Ages 6–8](#ages-6-8) are a fuller scene: a [patterned porch](/halloween-coloring-pages/patterned-porch/), a [night garden](/halloween-coloring-pages/night-garden/), and a [cookie table](/halloween-coloring-pages/cookie-table/).
 
-Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
+Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). The late-November dinner is in the [Thanksgiving coloring pages](/thanksgiving-coloring-pages/). December pages are in the [Christmas coloring pages](/christmas-coloring-pages/).
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

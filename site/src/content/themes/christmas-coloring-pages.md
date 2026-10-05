@@ -4,12 +4,13 @@ description: Free Christmas coloring pages to print at home. Choose ages 2–3, 
 tagline: Free Christmas coloring pages for every age, from one huge ornament to a fuller scene.
 kind: seasonal
 ageBand: "3-4"
-order: 3
+order: 4
 accent: "#1F6B4A"
 ink: "#14261C"
 related:
   - fall-coloring-pages
   - halloween-coloring-pages
+  - thanksgiving-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-05
 keywords:
@@ -46,6 +47,6 @@ Christmas pages are grouped by age on this page. None of them use a movie charac
 
 [Ages 6–8](#ages-6-8) are a fuller scene: a [living room](/christmas-coloring-pages/living-room/), a [snowy village](/christmas-coloring-pages/snowy-village/), and [winter woods](/christmas-coloring-pages/winter-woods/).
 
-Fall pages are in the [fall coloring pages](/fall-coloring-pages/). Halloween pages are in the [Halloween coloring pages](/halloween-coloring-pages/).
+Fall pages are in the [fall coloring pages](/fall-coloring-pages/). Halloween pages are in the [Halloween coloring pages](/halloween-coloring-pages/). The late-November dinner is in the [Thanksgiving coloring pages](/thanksgiving-coloring-pages/).
 
 Every picture has a US Letter PDF and an A4 PDF. The [printing guide](/how-to-print/) covers the printer setting.

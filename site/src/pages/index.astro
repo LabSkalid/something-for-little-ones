@@ -25,54 +25,75 @@ const grouped = ageBands.map((band) => ({
   themes: everyday.filter((theme) => theme.data.ageBand === band.id),
 }));
 
-const subjectGroups: { title: string; note?: string; ids: string[] }[] = [
+const subjectChoices: { id: string; title: string; hint: string; note?: string; ids: string[] }[] = [
   {
+    id: 'animals',
     title: 'Animals',
-    note: 'Ages 2–3, 3–4, and 6–8 are separate sets.',
+    hint: 'Ages 2–3, 3–4, and 6–8',
+    note: 'Three separate sets. Open one to see that set below.',
     ids: ['first-animal-coloring-pages', 'animal-coloring-pages', 'woodland-animal-coloring-pages'],
   },
   {
+    id: 'dinosaurs',
     title: 'Dinosaurs',
-    note: 'Ages 3–4 and 5–6 are separate sets.',
+    hint: 'Ages 3–4 and 5–6',
+    note: 'Two separate sets. Open one to see that set below.',
     ids: ['dinosaur-coloring-pages', 'dinosaur-scene-coloring-pages'],
   },
   {
+    id: 'cars',
     title: 'Cars and trucks',
-    note: 'Ages 3–4 and 4–5 are separate sets.',
+    hint: 'Ages 3–4 and 4–5',
+    note: 'Two separate sets. Open one to see that set below.',
     ids: ['car-coloring-pages', 'simple-vehicle-coloring-pages'],
   },
   {
+    id: 'princesses',
     title: 'Princesses',
+    hint: 'Ages 3–4',
     ids: ['princess-coloring-pages'],
   },
   {
-    title: 'Garden, ocean, and town',
-    ids: ['garden-coloring-pages', 'ocean-scene-coloring-pages', 'town-scene-coloring-pages'],
+    id: 'garden',
+    title: 'Garden',
+    hint: 'Ages 4–5',
+    ids: ['garden-coloring-pages'],
   },
   {
-    title: 'Big shapes',
-    ids: ['big-shape-coloring-pages'],
+    id: 'ocean',
+    title: 'Ocean',
+    hint: 'Ages 5–6',
+    ids: ['ocean-scene-coloring-pages'],
+  },
+  {
+    id: 'town',
+    title: 'Town',
+    hint: 'Ages 6–8',
+    ids: ['town-scene-coloring-pages'],
   },
 ];
 
 const everydayById = new Map(everyday.map((theme) => [theme.id, theme]));
-const listed = new Set<string>();
-const themeGroups = subjectGroups
-  .map((group) => {
-    const items = group.ids.flatMap((id) => {
+const themeChoices = subjectChoices
+  .map((choice) => ({
+    ...choice,
+    themes: choice.ids.flatMap((id) => {
       const theme = everydayById.get(id);
-      if (!theme) return [];
-      listed.add(id);
-      return [theme];
-    });
-    return { title: group.title, note: group.note, themes: items };
-  })
-  .filter((group) => group.themes.length > 0);
-
-const leftover = everyday.filter((theme) => !listed.has(theme.id));
-if (leftover.length > 0) {
-  themeGroups.push({ title: 'More sets', themes: leftover });
-}
+      return theme ? [theme] : [];
+    }),
+  }))
+  .filter((choice) => choice.themes.length > 0);
+const themePanels = themeChoices.filter((choice) => choice.themes.length > 1);
+const holidayNames: Record<string, string> = {
+  'fall-coloring-pages': 'Fall',
+  'halloween-coloring-pages': 'Halloween',
+  'thanksgiving-coloring-pages': 'Thanksgiving',
+  'christmas-coloring-pages': 'Christmas',
+};
+const holidayTiles = ['fall-coloring-pages', 'halloween-coloring-pages', 'thanksgiving-coloring-pages', 'christmas-coloring-pages'].flatMap((id) => {
+  const theme = holidays.find((item) => item.id === id);
+  return theme ? [{ theme, title: holidayNames[id] ?? theme.data.title }] : [];
+});
 
 function cover(themeId: string) {
   const first = sheets
@@ -146,6 +167,50 @@ const jsonLd = {
       </ul>
     </section>
 
+    <section class="section" id="themes">
+      <div class="section-head">
+        <h2>Choose by theme</h2>
+        <p>Animals, dinosaurs, cars, princesses, garden, ocean, town, and holidays. A subject drawn for more than one age opens only those sets.</p>
+      </div>
+      <ul class="age-choices">
+        {themeChoices.map((choice) => (
+          <li>
+            <a class="age-choice" href={choice.themes.length > 1 ? `#theme-${choice.id}` : `#${choice.themes[0].id}`}>
+              <strong>{choice.title}</strong>
+              <span>{choice.hint}</span>
+            </a>
+          </li>
+        ))}
+        {holidayTiles.map(({ theme, title }) => (
+          <li>
+            <a class="age-choice" href={`#${theme.id}`}>
+              <strong>{title}</strong>
+              <span>Holiday</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {themePanels.map((choice) => (
+      <section class="section theme-panel" id={`theme-${choice.id}`}>
+        <div class="section-head">
+          <h2>{choice.title}</h2>
+          {choice.note && <p>{choice.note}</p>}
+        </div>
+        <ul class="age-choices">
+          {choice.themes.map((theme) => (
+            <li>
+              <a class="age-choice" href={`#${theme.id}`}>
+                <strong>{ageBandLabel(theme.data.ageBand)}</strong>
+                <span>{theme.data.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
     {grouped.map((band) => (
       <section class="section age-shelf" id={`age-${band.id}`}>
         <div class="section-head">
@@ -157,6 +222,7 @@ const jsonLd = {
             const art = cover(theme.id);
             return (
               <ThemeCard
+                id={theme.id}
                 href={themePath(theme.id)}
                 title={theme.data.title}
                 image={art.src}
@@ -177,58 +243,27 @@ const jsonLd = {
       </p>
     </section>
 
-    <div id="themes">
-      <section class="section">
-        <div class="section-head">
-          <h2>Choose by theme</h2>
-          <p>
-            Animals, dinosaurs, cars, princesses, and the other sets on the site. Each card is one set. A subject drawn for more than one age stays as separate sets.
-          </p>
-        </div>
-        {themeGroups.map((group) => (
-          <div class="theme-group">
-            <h3>{group.title}</h3>
-            {group.note && <p class="group-note">{group.note}</p>}
-            <div class="theme-grid">
-              {group.themes.map((theme) => {
-                const art = cover(theme.id);
-                return (
-                  <ThemeCard
-                    href={themePath(theme.id)}
-                    title={theme.data.title}
-                    image={art.src}
-                    imageAlt={art.alt}
-                    count={art.count}
-                    eyebrow={ageBandLabel(theme.data.ageBand)}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <section class="section" id="holidays">
-        <div class="section-head">
-          <h2>Holidays</h2>
-          <p>Fall, Halloween, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
-        </div>
-        <div class="theme-grid">
-          {holidays.map((theme) => {
-            const art = cover(theme.id);
-            return (
-              <ThemeCard
-                href={themePath(theme.id)}
-                title={theme.data.title}
-                image={art.src}
-                imageAlt={art.alt}
-                count={art.count}
-                eyebrow="Seasonal"
-              />
-            );
-          })}
-        </div>
-      </section>
-    </div>
+    <section class="section" id="holidays">
+      <div class="section-head">
+        <h2>Holidays</h2>
+        <p>Fall, Halloween, Thanksgiving, and Christmas. Open a holiday, then pick an age from 2–3 through 6–8.</p>
+      </div>
+      <div class="theme-grid">
+        {holidayTiles.map(({ theme }) => {
+          const art = cover(theme.id);
+          return (
+            <ThemeCard
+              id={theme.id}
+              href={themePath(theme.id)}
+              title={theme.data.title}
+              image={art.src}
+              imageAlt={art.alt}
+              count={art.count}
+              eyebrow="Seasonal"
+            />
+          );
+        })}
+      </div>
+    </section>
   </div>
 </Base>

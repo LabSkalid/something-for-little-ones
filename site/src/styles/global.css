@@ -172,7 +172,7 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .section-head p { color: var(--muted); margin: 0.3rem 0 0; }
 
-.age-block, #ages, #themes, #holidays, .age-shelf { scroll-margin-top: 5.5rem; }
+.age-block, #ages, #themes, #holidays, .age-shelf, .theme-panel, .theme-card { scroll-margin-top: 5.5rem; }
 .age-block { margin: 0 0 1.8rem; }
 .age-block h2 { font-size: 1.35rem; margin: 0 0 0.75rem; }
 
@@ -214,14 +214,19 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .age-choice:hover { background: var(--soft); color: var(--ink); }
 
-.theme-group + .theme-group { margin-top: 1.45rem; }
-
-.theme-group > h3 {
-  margin: 0 0 0.2rem;
-  font-size: 1.12rem;
+.section.theme-panel {
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 
-.group-note { margin: 0 0 0.75rem; color: var(--muted); }
+.section.theme-panel:target {
+  height: auto;
+  margin: 1.6rem 0 2.2rem;
+  overflow: visible;
+  visibility: visible;
+}
 
 .theme-grid, .sheet-grid, .related-grid {
   display: grid;

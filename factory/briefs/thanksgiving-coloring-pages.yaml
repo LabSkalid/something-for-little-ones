@@ -1,0 +1,165 @@
+# Thanksgiving. Тема уже написана в site, ensureTheme её не перезаписывает.
+# Листов ещё нет: produce рисует все идеи ниже.
+
+slug: thanksgiving-coloring-pages
+title: Thanksgiving Coloring Pages
+tagline: Thanksgiving coloring pages for every age, from one huge turkey to a fuller feast.
+description: Free Thanksgiving coloring pages to print. Pick ages 2–3, 3–4, 4–5, 5–6, or 6–8.
+kind: seasonal
+ageBand: "3-4"
+order: 3
+accent: "#A33B24"
+ink: "#2A1814"
+keywords:
+  - thanksgiving coloring pages
+  - turkey coloring page
+  - pumpkin pie coloring page
+related:
+  - fall-coloring-pages
+  - christmas-coloring-pages
+audience: parents choosing a Thanksgiving coloring page by age
+style: Gentle Thanksgiving coloring-book line art about food and the harvest. White background, solid black outlines only, no shading, no gray, no color, no text, no people, no costumes, no pilgrim hats, no Native American clothing, no film or toy characters. Eyes are open circles, never solid black. Match the layout note for this age.
+ideas:
+  - slug: friendly-turkey
+    title: Friendly Turkey Coloring Page
+    prompt: One plump friendly turkey facing forward. A round body, a fan of about six large tail feathers as big closed shapes, a small beak, two simple feet, and one open-circle eye. Thick outlines. No hat, no clothes, no background, no text.
+    difficulty: easy
+    age: "3-4"
+    alt: Line drawing of a friendly turkey with a fan of large tail feathers.
+    description: A friendly turkey coloring page for ages 3–4, one turkey to color.
+    parentNote: The body is the large area. Each tail feather can be its own color, or all one color if the child is finished.
+  - slug: pumpkin-pie
+    title: Pumpkin Pie Coloring Page
+    prompt: One whole pumpkin pie in a round dish. The top is a few large crust wedges, not a tiny lattice. One simple leaf beside the dish. Thick outlines. No table, no words, no background.
+    difficulty: easy
+    age: "3-4"
+    alt: Line drawing of a whole pie in a dish with one leaf beside it.
+    description: A pumpkin pie coloring page for ages 3–4, a whole pie and a leaf.
+    parentNote: The filling wedges are the main color job. The dish and the leaf can share a second color.
+  - slug: ear-of-corn
+    title: Ear of Corn Coloring Page
+    prompt: One large ear of corn with two husk leaves peeled back. Kernels are a few big rows of closed shapes, not tiny dots. Thick outlines. No field, no background, no text.
+    difficulty: easy
+    age: "3-4"
+    alt: Line drawing of an ear of corn with two husk leaves peeled back.
+    description: An ear of corn coloring page for ages 3–4, a cob and two leaves.
+    parentNote: The cob is one color. The two husk leaves are the other job.
+  - slug: cornucopia
+    title: Cornucopia Coloring Page
+    prompt: One cornucopia horn with a pumpkin, an apple, and an ear of corn spilling out. Each food is a large closed shape. Thick outlines. No people, no background scene, no text.
+    difficulty: easy
+    age: "3-4"
+    alt: Line drawing of a cornucopia with a pumpkin, an apple, and an ear of corn.
+    description: A cornucopia coloring page for ages 3–4, a horn and three foods.
+    parentNote: Color the three foods first. The horn is the large shape left at the end.
+  - slug: harvest-basket
+    title: Harvest Basket Coloring Page
+    prompt: One woven basket holding a pumpkin, two apples, and one leaf. The weave is a few thick bands, not a fine grid. Thick outlines. No background, no text.
+    difficulty: easy
+    age: "3-4"
+    alt: Line drawing of a basket holding a pumpkin, two apples, and a leaf.
+    description: A harvest basket coloring page for ages 3–4, a basket of food.
+    parentNote: The pumpkin and the apples are the colors to pick first. The basket bands can stay one color.
+  - slug: huge-turkey
+    title: Huge Turkey Coloring Page
+    prompt: One huge turkey made of a round body and three enormous tail feathers. A short beak and two thick feet. Extra-thick outlines. No hat, no clothes, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge turkey with three large tail feathers.
+    description: A huge turkey coloring page for ages 2–3, one turkey to scribble.
+    parentNote: The body is one big area. The three feathers can be the same color.
+  - slug: huge-pie
+    title: Huge Pie Coloring Page
+    prompt: One huge round pie. The crust and the filling are two big shapes, plus a short rim on the dish. Extra-thick outlines. No slice cut out, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge pie with a crust and a filling.
+    description: A huge pie coloring page for ages 2–3, one pie to color.
+    parentNote: The filling is the large area. The crust is the only extra piece.
+  - slug: huge-corn
+    title: Huge Corn Coloring Page
+    prompt: One huge ear of corn. The cob and one husk leaf are two big shapes. Extra-thick outlines. No kernels as tiny dots, no field, no background, no text.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge ear of corn with a husk leaf.
+    description: A huge corn coloring page for ages 2–3, a cob and a leaf.
+    parentNote: The cob and the leaf are the two colors. There is nothing else on the page to finish.
+  - slug: wheat-sheaf
+    title: Wheat Sheaf Coloring Page
+    prompt: One bundle of wheat tied with a thick ribbon. Stalks are a handful of large closed shapes with big grain heads, not fine hairlines. No field, no people, no text.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a wheat bundle tied with a ribbon.
+    description: A wheat sheaf coloring page for ages 4–5, stalks and a ribbon.
+    parentNote: The ribbon is the small piece. The grain heads can all be one color.
+  - slug: cranberry-bowl
+    title: Cranberry Bowl Coloring Page
+    prompt: One bowl heaped with large cranberries. Berries are big closed circles, about ten of them, not tiny seeds. A few simple leaves beside the bowl. No table scene, no text.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a bowl of large cranberries with a few leaves.
+    description: A cranberry bowl coloring page for ages 4–5, a bowl and leaves.
+    parentNote: Each berry is its own circle. The bowl is the large shape underneath.
+  - slug: mashed-potatoes
+    title: Mashed Potatoes Coloring Page
+    prompt: One bowl of mashed potatoes with a thick spoon and one pat of butter on top. A few big lumps in the potatoes. No table scene, no words, no tiny garnish.
+    difficulty: medium
+    age: "4-5"
+    alt: Line drawing of a bowl of mashed potatoes with a spoon and butter.
+    description: A mashed potatoes coloring page for ages 4–5, a bowl and a spoon.
+    parentNote: The potatoes are the large area. The spoon and the butter are the smaller pieces.
+  - slug: dinner-table
+    title: Dinner Table Coloring Page
+    prompt: A small dinner scene with a table, a turkey on a platter, a whole pie, and a bowl. Three place settings drawn as empty plates only. Bold outlines. No people, no figures in chairs, no words, no napkins with letters.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of a dinner table with a turkey, a pie, and empty plates.
+    description: A dinner table coloring page for ages 5–6, a turkey, a pie, and plates.
+    parentNote: The turkey and the pie are the foods to color first. The plates can share one color.
+  - slug: turkey-and-leaves
+    title: Turkey and Leaves Coloring Page
+    prompt: A small scene with one friendly turkey standing among three large autumn leaves and one ear of corn. Bold outlines. No hat, no clothes, no people, no text. The turkey eye is an open circle.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of a turkey among three large leaves and an ear of corn.
+    description: A turkey and leaves coloring page for ages 5–6, a turkey and corn.
+    parentNote: The leaves can each be a different color. The turkey is the animal to save if time runs out.
+  - slug: harvest-porch
+    title: Harvest Porch Coloring Page
+    prompt: A small porch scene with three steps, a basket of apples, an ear of corn, a sheaf of wheat, and a plain doormat with no letters or pattern of words. Bold outlines. No house number, no people, no text.
+    difficulty: medium
+    age: "5-6"
+    alt: Line drawing of porch steps, a basket of apples, corn, and wheat.
+    description: A harvest porch coloring page for ages 5–6, steps, a basket, and wheat.
+    parentNote: The basket and the wheat are the main color job. The steps can stay one color.
+  - slug: feast-table
+    title: Feast Table Coloring Page
+    prompt: A fuller feast scene with a table, a patterned tablecloth of large simple diamonds, a turkey on a platter, a pie, a bowl of potatoes, a bowl of cranberries, an ear of corn, and wheat in a vase. Many closed regions. Bold crayon-thick outlines, not hairline. No people, no shading, no text, no letters on the cloth.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a feast table with a turkey, pie, bowls, corn, and wheat.
+    description: A feast table coloring page for ages 6–8, a patterned cloth and a meal.
+    parentNote: The diamond cloth is the pattern. Color the turkey and the pie first so the page looks started.
+  - slug: patterned-cornucopia
+    title: Patterned Cornucopia Coloring Page
+    prompt: A fuller harvest still life with a large cornucopia, a woven basket with a simple repeating weave, wheat, corn, apples, a pumpkin, and leaves that have a simple vein pattern. Many closed regions. Bold crayon-thick outlines, not hairline. No people, no text, no shading.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a cornucopia, a woven basket, wheat, corn, and leaves.
+    description: A patterned cornucopia coloring page for ages 6–8, a basket and harvest foods.
+    parentNote: The basket weave and the leaf veins are the pattern. The pumpkin and the apples are the easy large shapes.
+  - slug: harvest-path
+    title: Harvest Path Coloring Page
+    prompt: A fuller outdoor harvest scene with a short path, corn stalks, a wheat bundle, a basket, a pumpkin, a friendly turkey, and leaves with a simple vein pattern. Many closed regions. Bold crayon-thick outlines, not hairline. No people, no house, no text. The turkey eye is an open circle, not filled black.
+    difficulty: detailed
+    age: "6-8"
+    alt: Line drawing of a harvest path with corn, wheat, a basket, and a turkey.
+    description: A harvest path coloring page for ages 6–8, corn, wheat, and a turkey.
+    parentNote: The leaf veins and the wheat heads are the pattern. The turkey and the pumpkin can wait until the path is started.
+pins:
+  - id: set
+    title: Free Thanksgiving Coloring Pages
+    subtitle: Turkey, pie, and harvest
+  - id: feast
+    title: Easy Thanksgiving Coloring Sheets
+    subtitle: A turkey, corn, and pie
