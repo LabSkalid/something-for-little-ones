@@ -104,6 +104,10 @@ function cover(themeId: string) {
     : { src: pinPath(themeId, 'collection-1'), alt: '', count: 0 };
 }
 
+const pageTitle = 'Free printable coloring pages for kids';
+const pageIntro =
+  'Looking for something simple to print and color? Something for Little Ones has free coloring pages for toddlers, preschoolers, and older kids, with easy pictures, animals, dinosaurs, vehicles, princesses, nature scenes, and holiday coloring pages.';
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -112,7 +116,7 @@ const jsonLd = {
       '@id': websiteId,
       name: site.name,
       url: absoluteUrl('/'),
-      description: site.description,
+      description: pageIntro,
       inLanguage: site.locale,
       publisher: publisherRef(),
     },
@@ -131,8 +135,8 @@ const jsonLd = {
 ---
 
 <Base
-  title={site.tagline}
-  description={site.description}
+  title={pageTitle}
+  description={pageIntro}
   path="/"
   ogImage={pinPath('animal-coloring-pages', 'collection-1')}
   ogAlt="Animal coloring pages, starting with a puppy"
@@ -140,9 +144,10 @@ const jsonLd = {
 >
   <div class="wrap">
     <section class="page-intro">
-      <h1>{site.tagline}</h1>
+      <h1>{pageTitle}</h1>
+      <p class="lede">{pageIntro}</p>
       <p class="lede">
-        I sort these by how many lines are on the page. Little kids get a few huge shapes. Older kids get a fuller picture.
+        Choose pages by age or by theme, then download and print the PDF at home. The sets range from big, simple shapes for ages 2–3 to fuller scenes and patterns for ages 6–8.
       </p>
       <div class="hero-actions">
         <a class="btn" href="#ages">Choose by age</a>
@@ -152,8 +157,10 @@ const jsonLd = {
 
     <section class="section" id="ages">
       <div class="section-head">
-        <h2>By age</h2>
-        <p>Open an age. The pictures for that age are below.</p>
+        <h2>Choose coloring pages by age</h2>
+        <p>
+          Younger children usually need larger shapes and fewer details. Older kids can enjoy pictures with more parts, patterns, and scenes. The age groups here are based on the amount of detail on the page, so you can choose what feels right for your child.
+        </p>
       </div>
       <ul class="age-choices">
         {grouped.map((band) => (
@@ -169,8 +176,10 @@ const jsonLd = {
 
     <section class="section" id="themes">
       <div class="section-head">
-        <h2>By theme</h2>
-        <p>Animals, dinosaurs, cars, princesses, a garden, the ocean, a town, and the holidays. If I drew the same subject for more than one age, those are separate piles.</p>
+        <h2>Find a coloring page by theme</h2>
+        <p>
+          Pick a favorite subject, from animals and dinosaurs to cars, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, and Christmas.
+        </p>
       </div>
       <ul class="age-choices">
         {themeChoices.map((choice) => (
@@ -237,10 +246,16 @@ const jsonLd = {
     ))}
 
     <AdSlot name="top" />
-    <section class="section prose">
-      <p>
-        I drew these, and you can print them at home or for a class. The age is about how many lines are on the page. If your child still wants big shapes, use an easier set. Download the PDF, not a screenshot of this page. I made the files for letter paper. There's an A4 file too if that's what you have. <a href="/how-to-print/">How to print</a> covers the printer settings.
-      </p>
+    <section class="section">
+      <div class="section-head">
+        <h2>Simple coloring pages to print at home</h2>
+        <p>
+          I make these coloring pages for families who want something easy to print and use without a lot of preparation. Some pages are deliberately very simple for toddlers, while others have more details for children who enjoy spending longer with a picture.
+        </p>
+        <p>
+          Every set includes printable PDF pages you can use at home or in the classroom. Choose a theme or an age group, download a set, and print the pages you need.
+        </p>
+      </div>
     </section>
 
     <section class="section" id="holidays">
@@ -263,6 +278,15 @@ const jsonLd = {
             />
           );
         })}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Printing the pages</h2>
+        <p>
+          I drew these, and you can print them at home or for a class. The files are made for US Letter paper, with an A4 version available too. Download the PDF rather than a screenshot of the page. <a href="/how-to-print/">How to print</a> covers the printer settings.
+        </p>
       </div>
     </section>
   </div>
