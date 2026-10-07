@@ -8,7 +8,7 @@ import SheetCard from '../../components/SheetCard.astro';
 import { pinPath, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
-import { ageBandLabel, ageBands } from '../../lib/ages';
+import { ageBandLabel, ageBands, ageSpanLabel } from '../../lib/ages';
 
 export async function getStaticPaths() {
   const themes = await getCollection('themes');
@@ -32,6 +32,11 @@ const ageGroups = ageBands
   .filter((band) => band.sheets.length > 0);
 const multiAge = ageGroups.length > 1;
 const groupedByAge = seasonal || multiAge;
+const themeEyebrow = seasonal
+  ? 'Holiday'
+  : multiAge
+    ? ageSpanLabel(sheets.map((sheet) => sheet.data.age))
+    : ageBandLabel(theme.data.ageBand);
 const allThemes = await getCollection('themes');
 const related = theme.data.related
   .map((id) => allThemes.find((item) => item.id === id))
@@ -99,7 +104,7 @@ const jsonLd = {
   <div class="wrap with-rail">
     <article>
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">{seasonal ? 'Holiday' : multiAge ? 'All ages' : ageBandLabel(theme.data.ageBand)}</p>
+      <p class="eyebrow">{themeEyebrow}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
       {groupedByAge ? (

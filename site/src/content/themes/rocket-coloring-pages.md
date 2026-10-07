@@ -1,7 +1,7 @@
 ---
 title: Rocket Coloring Pages
-description: Rocket coloring pages, sorted by how much is on the page. A thick rocket for little kids, and a fuller sky for older kids.
-tagline: One rocket on each page. Thick lines for little kids, and a fuller sky if they'll sit longer.
+description: Rocket coloring pages, sorted by how much is on the page. A huge simple rocket for little kids, and a fuller sky for older kids.
+tagline: One rocket on each page. Huge simple rockets for little kids, and a fuller sky if they'll sit longer.
 kind: evergreen
 ageBand: "4-5"
 order: 3
@@ -19,9 +19,9 @@ keywords:
   - rocket coloring page for kids
 faqs:
   - question: How do I pick an age?
-    answer: Ages 2–3 are the simplest rockets, with thick lines and almost nothing else on the page. Ages 3–4 add a cloud or a second window. Ages 4–5 add a few stars. Ages 5–6 add more of the sky. Ages 6–8 are a fuller scene, with a planet or a launch.
+    answer: Ages 2–3 are three huge simple rockets with thick lines and almost nothing else on the page. Ages 3–4 add fins, a flame, or a cloud. Ages 4–5 add stars or rivets. Ages 5–6 add more of the sky. Ages 6–8 are a fuller scene, with a planet or a launch.
   - question: Are the ages 2–3 rockets as simple as a big shape?
-    answer: No. They are the simplest rockets in this set, and each one is still a whole rocket, with fins and a flame. A child who is still scribbling across the page may do better with a ball or an apple from the big shape coloring pages.
+    answer: Yes. Each ages 2–3 page is one huge rocket with a window, drawn like the big shape pages. No stars, planets, or launch smoke. A child who is still scribbling can finish one quickly.
   - question: Are there words or numbers on the rockets?
     answer: No. Windows, fins, stars, and flames are there to color. There is no name on the rocket.
   - question: What do I download?
@@ -34,14 +34,14 @@ pins:
 
 Rocket pages are grouped by how much is on the page. Each one is a single rocket.
 
-[Ages 2–3](#ages-2-3) is the simplest of this set. It is still a whole rocket, not one giant circle. There's a rocket with [two round windows](/rocket-coloring-pages/two-round-windows/), a [round window](/rocket-coloring-pages/round-window/), [tall fins](/rocket-coloring-pages/tall-fins/), a [little porthole](/rocket-coloring-pages/little-porthole/), and a [few small sparks](/rocket-coloring-pages/spark-rocket/).
+[Ages 2–3](#ages-2-3) is three huge simple rockets, close to a big shape page: a [huge rocket](/rocket-coloring-pages/huge-rocket/), a [chunky rocket](/rocket-coloring-pages/chunky-rocket/), and a [capsule rocket](/rocket-coloring-pages/capsule-rocket/).
 
-[Ages 3–4](#ages-3-4) keeps one rocket and adds a little around it: a [cloud](/rocket-coloring-pages/cloud-rocket/), [stripes](/rocket-coloring-pages/striped-rocket/), an [antenna](/rocket-coloring-pages/antenna-rocket/), [two windows](/rocket-coloring-pages/two-windows/), and a [tilted rocket](/rocket-coloring-pages/tilted-rocket/).
+[Ages 3–4](#ages-3-4) keeps one rocket and adds a little around it: [two round windows](/rocket-coloring-pages/two-round-windows/), a [round window](/rocket-coloring-pages/round-window/), a [cloud](/rocket-coloring-pages/cloud-rocket/), a [tilted rocket](/rocket-coloring-pages/tilted-rocket/), and [stripes](/rocket-coloring-pages/striped-rocket/).
 
-[Ages 4–5](#ages-4-5) is still one rocket, with a few stars or windows: [two stars](/rocket-coloring-pages/two-stars/), [rivets](/rocket-coloring-pages/rivet-rocket/), a [starry rocket](/rocket-coloring-pages/starry-rocket/), [little clouds](/rocket-coloring-pages/little-clouds/), and [stars on the windows](/rocket-coloring-pages/star-windows/).
+[Ages 4–5](#ages-4-5) is still one rocket, with sparks, stars, or windows: [sparks](/rocket-coloring-pages/spark-rocket/), an [antenna](/rocket-coloring-pages/antenna-rocket/), [two windows](/rocket-coloring-pages/two-windows/), [two stars](/rocket-coloring-pages/two-stars/), [rivets](/rocket-coloring-pages/rivet-rocket/), a [starry rocket](/rocket-coloring-pages/starry-rocket/), and [little clouds](/rocket-coloring-pages/little-clouds/).
 
-[Ages 5–6](#ages-5-6) has more of the sky, and you can still see the rocket: a [sketch launch](/rocket-coloring-pages/sketch-launch/), [rivets and stars](/rocket-coloring-pages/rivet-stars/), a [ringed planet](/rocket-coloring-pages/ringed-planet/), a [cloudy sky](/rocket-coloring-pages/cloudy-sky/), a [tilted rocket](/rocket-coloring-pages/tilted-stars/), and a [speedy rocket](/rocket-coloring-pages/speedy-planet/).
+[Ages 5–6](#ages-5-6) has more of the sky, and you can still see the rocket: a [little porthole](/rocket-coloring-pages/little-porthole/), [tall fins](/rocket-coloring-pages/tall-fins/), [stars on the windows](/rocket-coloring-pages/star-windows/), a [sketch launch](/rocket-coloring-pages/sketch-launch/), a [ringed planet](/rocket-coloring-pages/ringed-planet/), a [speedy rocket](/rocket-coloring-pages/speedy-planet/), a [tilted rocket](/rocket-coloring-pages/tilted-stars/), and [rivets and stars](/rocket-coloring-pages/rivet-stars/).
 
-[Ages 6–8](#ages-6-8) is the longer sitting: a [moon launch](/rocket-coloring-pages/moon-launch/), a [shuttle](/rocket-coloring-pages/shuttle-launch/), a [ringed sky](/rocket-coloring-pages/ringed-sky/), [meteors](/rocket-coloring-pages/meteor-launch/), a [flying rocket](/rocket-coloring-pages/flying-rocket/), and a [big planet](/rocket-coloring-pages/big-planet/).
+[Ages 6–8](#ages-6-8) is the longer sitting: a [cloudy sky](/rocket-coloring-pages/cloudy-sky/), a [flying rocket](/rocket-coloring-pages/flying-rocket/), a [ringed sky](/rocket-coloring-pages/ringed-sky/), [meteors](/rocket-coloring-pages/meteor-launch/), a [big planet](/rocket-coloring-pages/big-planet/), a [moon launch](/rocket-coloring-pages/moon-launch/), and a [shuttle](/rocket-coloring-pages/shuttle-launch/).
 
 If a younger child is still scribbling, start with the [big shape coloring pages](/big-shape-coloring-pages/). Cars and trucks are in the [car coloring pages](/car-coloring-pages/) and the [simple vehicle coloring pages](/simple-vehicle-coloring-pages/).

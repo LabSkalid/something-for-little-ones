@@ -1,0 +1,47 @@
+slug: rocket-coloring-pages
+title: Rocket Coloring Pages
+tagline: Rocket coloring pages sorted by how much is on the page.
+description: Rocket coloring pages for ages 2–8, from one huge simple rocket to fuller space scenes.
+kind: evergreen
+ageBand: "4-5"
+order: 3
+accent: "#3C4F8C"
+ink: "#1C2438"
+keywords:
+  - rocket coloring pages
+  - space coloring pages
+related:
+  - big-shape-coloring-pages
+  - simple-vehicle-coloring-pages
+  - car-coloring-pages
+audience: parents of children ages 2 to 8
+style: Extra-thick black outlines like a huge pumpkin coloring page for toddlers. One object only. Very few huge closed shapes. Lots of white space. Pure white background. Solid black line art only. No shading, no hatching, no gray, no text, no background scene.
+ideas:
+  - slug: huge-rocket
+    title: Huge Rocket Coloring Page
+    prompt: One huge upright rocket filling most of the page, like a toddler big-shape page. The rocket is a single thick bullet body with a simple pointed nose and one large round window. No fins drawn as separate panels, no flame, no exhaust, no smoke, no stars, no planets, no rivets, no antenna, no hatching. Only the rocket body, nose, and one window. Extra-thick outlines.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one huge rocket with a pointed nose and one round window.
+    description: One huge rocket with a pointed nose and one round window. For about ages 2 to 3.
+    parentNote: The body is one big shape. The window can be a second color, or the same color if the child wants one job.
+  - slug: chunky-rocket
+    title: Chunky Rocket Coloring Page
+    prompt: One huge chunky rocket centered on the page for toddlers. Thick short rocket body, wide pointed nose cone as one simple triangle on top, and one big circle window. Two tiny triangle fins that are part of the silhouette only, no inner fin lines. No flame, no smoke, no stars, no planets, no rivets, no hatching. Extra-thick outlines, lots of white space.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one chunky rocket with a wide nose and one window.
+    description: One chunky rocket with a wide nose and one window. For about ages 2 to 3.
+    parentNote: Color the whole rocket first. The nose cone can be a second color if the child wants another shape.
+  - slug: capsule-rocket
+    title: Capsule Rocket Coloring Page
+    prompt: One huge capsule-style rocket for toddlers. Tall rounded capsule body with a blunt rounded top, one large round window, and a simple flat base. No pointed tip spike, no fins, no flame, no smoke, no stars, no planets, no rivets, no hatching, no antenna. Extra-thick black outlines on pure white. Almost as simple as a big oval with a circle.
+    difficulty: toddler
+    age: "2-3"
+    alt: Line drawing of one capsule rocket with one round window.
+    description: One capsule rocket with one round window. For about ages 2 to 3.
+    parentNote: This is mostly one big oval. The window is the only small piece.
+pins:
+  - id: set
+    title: Free Rocket Coloring Pages
+    subtitle: One rocket, sorted by age

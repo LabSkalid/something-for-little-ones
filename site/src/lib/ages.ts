@@ -31,3 +31,13 @@ export type AgeBandId = (typeof ageBands)[number]['id'];
 export function ageBandLabel(id: string) {
   return ageBands.find((band) => band.id === id)?.label ?? `Ages ${id}`;
 }
+
+/** Label for a theme whose sheets span more than one age band, e.g. "Ages 2–8". */
+export function ageSpanLabel(ages: Iterable<string>) {
+  const present = ageBands.map((band) => band.id).filter((id) => new Set(ages).has(id));
+  if (present.length === 0) return 'All ages';
+  if (present.length === 1) return ageBandLabel(present[0]);
+  const first = present[0].split('-')[0];
+  const last = present[present.length - 1].split('-').at(-1);
+  return `Ages ${first}–${last}`;
+}

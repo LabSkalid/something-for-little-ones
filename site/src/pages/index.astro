@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import ThemeCard from '../components/ThemeCard.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { absoluteUrl, site } from '../site';
-import { ageBandLabel, ageBands } from '../lib/ages';
+import { ageBandLabel, ageBands, ageSpanLabel } from '../lib/ages';
 import { pinPath, sheetAssets, themePath } from '../lib/paths';
 import { publisherRef, websiteId } from '../lib/schema';
 
@@ -12,9 +12,15 @@ const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.d
 const sheets = await getCollection('sheets');
 const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
 const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
-const spansAges = (themeId: string) =>
-  new Set(sheets.filter((sheet) => sheet.data.theme === themeId).map((sheet) => sheet.data.age)).size > 1;
-const multiAgeEveryday = everyday.filter((theme) => spansAges(theme.id));
+const sheetAges = (themeId: string) =>
+  sheets.filter((sheet) => sheet.data.theme === themeId).map((sheet) => sheet.data.age);
+const spansAges = (themeId: string) => new Set(sheetAges(themeId)).size > 1;
+const multiAgeEveryday = everyday
+  .filter((theme) => spansAges(theme.id))
+  .map((theme) => ({
+    theme,
+    eyebrow: ageSpanLabel(sheetAges(theme.id)),
+  }));
 const grouped = ageBands.map((band) => ({
   ...band,
   hint:
@@ -53,7 +59,7 @@ const subjectChoices: { id: string; title: string; hint: string; note?: string; 
   {
     id: 'rockets',
     title: 'Rockets',
-    hint: 'Ages 2–3 through 6–8',
+    hint: 'Ages 2–8',
     ids: ['rocket-coloring-pages'],
   },
   {
@@ -230,27 +236,6 @@ const jsonLd = {
       </section>
     ))}
 
-    {multiAgeEveryday.length > 0 && (
-      <section class="section">
-        <div class="theme-grid">
-          {multiAgeEveryday.map((theme) => {
-            const art = cover(theme.id);
-            return (
-              <ThemeCard
-                id={theme.id}
-                href={themePath(theme.id)}
-                title={theme.data.title}
-                image={art.src}
-                imageAlt={art.alt}
-                count={art.count}
-                eyebrow="All ages"
-              />
-            );
-          })}
-        </div>
-      </section>
-    )}
-
     {grouped.map((band) => (
       <section class="section age-shelf" id={`age-${band.id}`}>
         <div class="section-head">
@@ -275,6 +260,27 @@ const jsonLd = {
         </div>
       </section>
     ))}
+
+    {multiAgeEveryday.length > 0 && (
+      <section class="section">
+        <div class="theme-grid">
+          {multiAgeEveryday.map(({ theme, eyebrow }) => {
+            const art = cover(theme.id);
+            return (
+              <ThemeCard
+                id={theme.id}
+                href={themePath(theme.id)}
+                title={theme.data.title}
+                image={art.src}
+                imageAlt={art.alt}
+                count={art.count}
+                eyebrow={eyebrow}
+              />
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     <AdSlot name="top" />
     <section class="section">
