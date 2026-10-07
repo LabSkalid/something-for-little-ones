@@ -12,6 +12,9 @@ const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.d
 const sheets = await getCollection('sheets');
 const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
 const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
+const spansAges = (themeId: string) =>
+  new Set(sheets.filter((sheet) => sheet.data.theme === themeId).map((sheet) => sheet.data.age)).size > 1;
+const multiAgeEveryday = everyday.filter((theme) => spansAges(theme.id));
 const grouped = ageBands.map((band) => ({
   ...band,
   hint:
@@ -22,7 +25,7 @@ const grouped = ageBands.map((band) => ({
       '5-6': 'Ocean and dinosaur scenes',
       '6-8': 'Town and woodland',
     }[band.id] ?? band.label,
-  themes: everyday.filter((theme) => theme.data.ageBand === band.id),
+  themes: everyday.filter((theme) => theme.data.ageBand === band.id && !spansAges(theme.id)),
 }));
 
 const subjectChoices: { id: string; title: string; hint: string; note?: string; ids: string[] }[] = [
@@ -46,6 +49,12 @@ const subjectChoices: { id: string; title: string; hint: string; note?: string; 
     hint: 'Ages 3–4 and 4–5',
     note: 'Two ages. Open one and those pictures show up below.',
     ids: ['car-coloring-pages', 'simple-vehicle-coloring-pages'],
+  },
+  {
+    id: 'rockets',
+    title: 'Rockets',
+    hint: 'Ages 2–3 through 6–8',
+    ids: ['rocket-coloring-pages'],
   },
   {
     id: 'princesses',
@@ -179,7 +188,7 @@ const jsonLd = {
       <div class="section-head">
         <h2>Find a coloring page by theme</h2>
         <p>
-          Pick a favorite subject, from animals and dinosaurs to cars, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, Christmas, and Christian Christmas.
+          Pick a favorite subject, from animals and dinosaurs to cars, rockets, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, Christmas, and Christian Christmas.
         </p>
       </div>
       <ul class="age-choices">
@@ -220,6 +229,27 @@ const jsonLd = {
         </ul>
       </section>
     ))}
+
+    {multiAgeEveryday.length > 0 && (
+      <section class="section">
+        <div class="theme-grid">
+          {multiAgeEveryday.map((theme) => {
+            const art = cover(theme.id);
+            return (
+              <ThemeCard
+                id={theme.id}
+                href={themePath(theme.id)}
+                title={theme.data.title}
+                image={art.src}
+                imageAlt={art.alt}
+                count={art.count}
+                eyebrow="All ages"
+              />
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     {grouped.map((band) => (
       <section class="section age-shelf" id={`age-${band.id}`}>

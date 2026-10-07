@@ -30,6 +30,8 @@ const ageGroups = ageBands
     sheets: sheets.filter((sheet) => sheet.data.age === band.id),
   }))
   .filter((band) => band.sheets.length > 0);
+const multiAge = ageGroups.length > 1;
+const groupedByAge = seasonal || multiAge;
 const allThemes = await getCollection('themes');
 const related = theme.data.related
   .map((id) => allThemes.find((item) => item.id === id))
@@ -97,10 +99,10 @@ const jsonLd = {
   <div class="wrap with-rail">
     <article>
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">{seasonal ? 'Holiday' : ageBandLabel(theme.data.ageBand)}</p>
+      <p class="eyebrow">{seasonal ? 'Holiday' : multiAge ? 'All ages' : ageBandLabel(theme.data.ageBand)}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
-      {seasonal ? (
+      {groupedByAge ? (
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>
             <h2>{band.label}</h2>
