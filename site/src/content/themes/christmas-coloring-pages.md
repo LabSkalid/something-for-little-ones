@@ -42,7 +42,7 @@ Christmas pages are grouped by age. None of them use a movie character.
 
 [Ages 3–4](#ages-3-4) has thick lines: a [tree](/christmas-coloring-pages/christmas-tree/), [Santa](/christmas-coloring-pages/santa-claus/), a [gingerbread house](/christmas-coloring-pages/gingerbread-house/), a [reindeer](/christmas-coloring-pages/reindeer/), and a [stocking](/christmas-coloring-pages/christmas-stocking/).
 
-[Ages 4–5](#ages-4-5) adds a few parts: a [mitten](/christmas-coloring-pages/striped-mitten/), a [snowman](/christmas-coloring-pages/snowman/), and a [sleigh](/christmas-coloring-pages/gift-sleigh/). A few more December pictures are in this group too: cocoa, gifts, and animals by a fire.
+[Ages 4–5](#ages-4-5) adds a few parts: a [mitten](/christmas-coloring-pages/striped-mitten/), a [snowman](/christmas-coloring-pages/snowman/), and a [sleigh](/christmas-coloring-pages/gift-sleigh/). More December pictures are in this group too: cocoa, gifts, animals, and little houses.
 
 [Ages 5–6](#ages-5-6) is a small scene: a [fireplace](/christmas-coloring-pages/fireplace/), a [window wreath](/christmas-coloring-pages/window-wreath/), and a [reindeer and tree](/christmas-coloring-pages/reindeer-and-tree/).
 
