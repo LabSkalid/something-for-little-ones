@@ -89,8 +89,9 @@ const holidayNames: Record<string, string> = {
   'halloween-coloring-pages': 'Halloween',
   'thanksgiving-coloring-pages': 'Thanksgiving',
   'christmas-coloring-pages': 'Christmas',
+  'christian-christmas-coloring-pages': 'Christian Christmas',
 };
-const holidayTiles = ['fall-coloring-pages', 'halloween-coloring-pages', 'thanksgiving-coloring-pages', 'christmas-coloring-pages'].flatMap((id) => {
+const holidayTiles = ['fall-coloring-pages', 'halloween-coloring-pages', 'thanksgiving-coloring-pages', 'christmas-coloring-pages', 'christian-christmas-coloring-pages'].flatMap((id) => {
   const theme = holidays.find((item) => item.id === id);
   return theme ? [{ theme, title: holidayNames[id] ?? theme.data.title }] : [];
 });
@@ -178,7 +179,7 @@ const jsonLd = {
       <div class="section-head">
         <h2>Find a coloring page by theme</h2>
         <p>
-          Pick a favorite subject, from animals and dinosaurs to cars, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, and Christmas.
+          Pick a favorite subject, from animals and dinosaurs to cars, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, Christmas, and Christian Christmas.
         </p>
       </div>
       <ul class="age-choices">
@@ -261,7 +262,7 @@ const jsonLd = {
     <section class="section" id="holidays">
       <div class="section-head">
         <h2>Holidays</h2>
-        <p>Fall, Halloween, Thanksgiving, and Christmas. Open a holiday, then pick an age.</p>
+        <p>Fall, Halloween, Thanksgiving, Christmas, and Christian Christmas. Open a holiday, then pick an age.</p>
       </div>
       <div class="theme-grid">
         {holidayTiles.map(({ theme }) => {
