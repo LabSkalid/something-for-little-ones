@@ -120,39 +120,60 @@ function csvField(value: string) {
   return value;
 }
 
-function parseCsvLine(line: string): string[] {
-  const out: string[] = [];
+/** Parse a whole CSV (supports quoted fields with newlines). */
+function parseCsv(raw: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
   let cur = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
     if (inQuotes) {
-      if (ch === '"' && line[i + 1] === '"') {
+      if (ch === '"' && raw[i + 1] === '"') {
         cur += '"';
         i += 1;
       } else if (ch === '"') inQuotes = false;
       else cur += ch;
-    } else if (ch === '"') inQuotes = true;
-    else if (ch === ',') {
-      out.push(cur);
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ',') {
+      row.push(cur);
       cur = '';
-    } else cur += ch;
+    } else if (ch === '\n') {
+      row.push(cur);
+      cur = '';
+      if (row.some((cell) => cell.length)) rows.push(row);
+      row = [];
+    } else if (ch !== '\r') {
+      cur += ch;
+    }
   }
-  out.push(cur);
-  return out;
+  if (cur.length || row.length) {
+    row.push(cur);
+    if (row.some((cell) => cell.length)) rows.push(row);
+  }
+  return rows;
 }
 
+function hasPinCopy(row: Pick<PinRow, 'pinTitle' | 'pinDescription'>) {
+  return Boolean(row.pinTitle?.trim() && row.pinDescription?.trim());
+}
+
+/** Split selected pages into bundles of up to 4. Walks through the list in order. */
 function collectionSets<T>(pages: T[], maxGroups = 2): T[][] {
   if (pages.length < 3) return [];
   const groups: T[][] = [];
-  const firstSize = Math.min(4, pages.length);
-  groups.push(pages.slice(0, firstSize));
-  if (maxGroups >= 2 && pages.length >= 6) {
-    const start = pages.length >= 8 ? 4 : Math.max(0, pages.length - 4);
-    const second = pages.slice(start, start + 4);
-    if (second.length >= 3) groups.push(second);
+  let start = 0;
+  while (start < pages.length && groups.length < maxGroups) {
+    const remaining = pages.length - start;
+    if (remaining < 3) break;
+    const size = Math.min(4, remaining);
+    // Prefer not to leave a dangling 1–2 pages: if 5 left, take 3 then stop next loop; if 6–7 take 4.
+    const take = remaining === 5 ? 3 : size;
+    groups.push(pages.slice(start, start + take));
+    start += take;
   }
-  return groups.slice(0, maxGroups);
+  return groups;
 }
 
 async function writeManifest(rows: PinRow[]) {
@@ -179,10 +200,8 @@ async function readManifest() {
   try {
     const raw = await fs.readFile(path.join(pinRoot, 'pins.csv'), 'utf8');
     const rows: PinRow[] = [];
-    for (const line of raw.split(/\r?\n/).slice(1)) {
-      if (!line.trim()) continue;
-      const parts = parseCsvLine(line);
-      if (parts.length < 4) continue;
+    for (const parts of parseCsv(raw).slice(1)) {
+      if (parts.length < 4 || !parts[0]) continue;
       rows.push({
         filename: parts[0],
         type: parts[1] === 'collection' ? 'collection' : 'single',
@@ -239,7 +258,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const mode: PinMode = options.mode ?? 'both';
   const onlyTheme = options.theme || undefined;
   const selected = new Set((options.slugs ?? []).filter(Boolean));
-  const collectionCount = Math.max(1, Math.min(4, options.collectionCount ?? 2));
+  const collectionCount = Math.max(1, Math.min(40, options.collectionCount ?? 2));
   const removeOld = Boolean(options.removeOld);
   const writeCopy = Boolean(options.writeCopy);
   const keywords = (options.keywords ?? '').trim();
@@ -377,18 +396,38 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     }
   }
 
-  if (writeCopy && copyInputs.length) {
-    console.log(`pin copy: ${copyInputs.length} texts via cheap text model`);
+  // Keep paid/written Pinterest copy when only the pin image is rebuilt.
+  const previous = await readManifest();
+  const previousByName = new Map(previous.map((row) => [row.filename, row]));
+  let keptCopy = 0;
+  for (const row of rows) {
+    const old = previousByName.get(row.filename);
+    if (!old || !hasPinCopy(old)) continue;
+    row.pinTitle = old.pinTitle;
+    row.pinDescription = old.pinDescription;
+    row.keywords = old.keywords || keywords || row.keywords;
+    keptCopy += 1;
+  }
+  if (keptCopy) console.log(`pin copy kept: ${keptCopy} existing texts`);
+
+  const needCopy = copyInputs.filter((item) => {
+    const row = rows.find((r) => r.filename === item.filename);
+    return row ? !hasPinCopy(row) : true;
+  });
+
+  if (writeCopy && needCopy.length) {
+    console.log(`pin copy: ${needCopy.length} new texts via cheap text model (skipping ones that already exist)`);
     try {
       // Chunk to keep prompts small.
       const chunkSize = 12;
       const copyMap = new Map<string, { pinTitle: string; pinDescription: string }>();
-      for (let i = 0; i < copyInputs.length; i += chunkSize) {
-        const chunk = copyInputs.slice(i, i + chunkSize);
+      for (let i = 0; i < needCopy.length; i += chunkSize) {
+        const chunk = needCopy.slice(i, i + chunkSize);
         const part = await writePinterestCopy(chunk, keywords);
         for (const [filename, value] of part) copyMap.set(filename, value);
       }
       for (const row of rows) {
+        if (hasPinCopy(row)) continue;
         const copy = copyMap.get(row.filename);
         if (!copy) continue;
         row.pinTitle = copy.pinTitle;
@@ -401,11 +440,12 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
       console.log(`pin copy failed: ${message}`);
       console.log('Картинки пинов уже сохранены. Текст можно дописать позже.');
     }
+  } else if (writeCopy && !needCopy.length) {
+    console.log('pin copy: nothing new to write, all rebuilt pins already have text');
   }
 
   let manifest: PinRow[];
   if (onlyTheme) {
-    const previous = await readManifest();
     const kept = previous.filter((row) => {
       if (!row.filename.startsWith(`${onlyTheme}-`)) return true;
       const isCollection = /-collection-\d+\.png$/i.test(row.filename);
@@ -416,9 +456,9 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     });
     manifest = [...kept, ...rows];
   } else if (mode === 'both' && !selected.size) {
+    // Full rebuild still keeps any previous copy for matching filenames above.
     manifest = rows;
   } else {
-    const previous = await readManifest();
     const rebuilt = new Set(rows.map((row) => row.filename));
     manifest = [...previous.filter((row) => !rebuilt.has(row.filename)), ...rows];
   }

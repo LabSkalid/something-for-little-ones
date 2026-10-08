@@ -215,16 +215,25 @@
   <label for="pin-count">Сколько бандлов</label>
   <select id="pin-count">
     <option value="1">1</option>
-    <option value="2" selected>2</option>
+    <option value="2">2</option>
     <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6" selected>6</option>
+    <option value="8">8</option>
+    <option value="10">10</option>
+    <option value="12">12</option>
+    <option value="16">16</option>
+    <option value="20">20</option>
   </select>
+  <p class="hint">Каждый бандл — до 4 отмеченных листов по порядку. Сколько получится, зависит от числа галочек: 12 листов ≈ до 3 бандлов, 24 ≈ до 6.</p>
 
   <label for="pin-keywords">Ключевики для Pinterest (через запятую)</label>
   <input id="pin-keywords" placeholder="thanksgiving coloring pages, turkey printable, free fall coloring">
 
   <label class="check" style="margin-top:0.8rem">
-    <input id="pin-copy" type="checkbox" checked>
-    Написать заголовок и описание для Pinterest (дешёвый текст, не рисование)
+    <input id="pin-copy" type="checkbox">
+    Написать заголовок и описание только для новых пинов без текста (старые описания не трогает)
   </label>
   <label class="check">
     <input id="pin-remove" type="checkbox">

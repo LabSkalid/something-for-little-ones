@@ -144,15 +144,15 @@ export async function renderPin(options: {
   const titleSize = titleLines.length > 1 ? 40 : 46;
   const titleLineH = titleSize + 10;
   const brandSize = 36;
-  const labelSize = 22;
+  const labelSize = 34;
 
   const marginX = 32;
   const maxArtW = PIN_W - marginX * 2;
   const brandH = 44;
   const gapBrand = 16;
   const gapTitle = 28;
-  const gapLabel = 26;
-  const labelH = 28;
+  const gapLabel = 30;
+  const labelH = 42;
   const titleH = titleLines.length * titleLineH;
   const textChrome = brandH + gapBrand + titleH + gapTitle + gapLabel + labelH;
   const maxArtH = PIN_H - 72 - textChrome;
@@ -187,7 +187,7 @@ export async function renderPin(options: {
   ${wordmarkSvg(options.brand, brandBaseline, brandSize, wordmark?.family ?? 'Fredoka')}
   ${title}
   <image href="${href}" x="${artX}" y="${artY}" width="${artW}" height="${artH}" preserveAspectRatio="xMidYMid meet"/>
-  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="700" fill="${xml(options.accent)}" letter-spacing="2.4">FREE PRINTABLE</text>
+  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="800" fill="${xml(options.accent)}" letter-spacing="1.6">FREE PRINTABLE</text>
 </svg>`;
 
   return rasterize(svg);
@@ -233,14 +233,14 @@ export async function renderCollectionPin(options: {
   const titleSize = titleLines.length > 1 ? 38 : 44;
   const titleLineH = titleSize + 8;
   const brandSize = 32;
-  const labelSize = 22;
+  const labelSize = 34;
   const wordmark = wordmarkFontFile();
   const marginX = 40;
   const gap = 28;
   const brandH = 40;
   const gapBrand = 12;
   const gapTitle = 20;
-  const gapLabel = 20;
+  const gapLabel = 28;
 
   let y = 34;
   const brandBaseline = y + brandSize;
@@ -248,31 +248,50 @@ export async function renderCollectionPin(options: {
   const titleBaselines = titleLines.map((_, index) => y + titleSize + index * titleLineH);
   y += titleLines.length * titleLineH + gapTitle;
   const artTop = y;
-  const labelBaseline = PIN_H - 42;
-  const artBottom = labelBaseline - gapLabel - 6;
+  const labelBaseline = PIN_H - 52;
+  const artBottom = labelBaseline - gapLabel - 8;
   const artW = PIN_W - marginX * 2;
   const artH = artBottom - artTop;
+  // Pack a tight grid sized to the drawings, then center the whole block
+  // so rows don't stretch apart to fill the pin height.
+  const maxRatio = Math.max(...arts.map((art) => art.ih / Math.max(1, art.iw)), 1);
   const cells: { x: number; y: number; w: number; h: number }[] = [];
   if (count === 4) {
     const cellW = (artW - gap) / 2;
-    const cellH = (artH - gap) / 2;
+    const idealCellH = cellW * maxRatio;
+    const cellH = Math.min(idealCellH, (artH - gap) / 2);
+    const gridH = cellH * 2 + gap;
+    const gridW = cellW * 2 + gap;
+    const originX = marginX + (artW - gridW) / 2;
+    const originY = artTop + (artH - gridH) / 2;
     for (let row = 0; row < 2; row += 1) {
       for (let col = 0; col < 2; col += 1) {
         cells.push({
-          x: marginX + col * (cellW + gap),
-          y: artTop + row * (cellH + gap),
+          x: originX + col * (cellW + gap),
+          y: originY + row * (cellH + gap),
           w: cellW,
           h: cellH,
         });
       }
     }
   } else {
-    const topH = Math.round((artH - gap) * 0.56);
-    const bottomH = artH - gap - topH;
-    const cellW = (artW - gap) / 2;
-    cells.push({ x: marginX, y: artTop, w: artW, h: topH });
-    cells.push({ x: marginX, y: artTop + topH + gap, w: cellW, h: bottomH });
-    cells.push({ x: marginX + cellW + gap, y: artTop + topH + gap, w: cellW, h: bottomH });
+    const bottomCellW = (artW - gap) / 2;
+    const topCellW = artW;
+    const idealTopH = topCellW * maxRatio;
+    const idealBottomH = bottomCellW * maxRatio;
+    const scale = Math.min(1, artH / (idealTopH + gap + idealBottomH));
+    const topH = idealTopH * scale;
+    const bottomH = idealBottomH * scale;
+    const gridH = topH + gap + bottomH;
+    const originY = artTop + (artH - gridH) / 2;
+    cells.push({ x: marginX, y: originY, w: topCellW, h: topH });
+    cells.push({ x: marginX, y: originY + topH + gap, w: bottomCellW, h: bottomH });
+    cells.push({
+      x: marginX + bottomCellW + gap,
+      y: originY + topH + gap,
+      w: bottomCellW,
+      h: bottomH,
+    });
   }
 
   const title = titleBaselines
@@ -295,7 +314,7 @@ export async function renderCollectionPin(options: {
   ${wordmarkSvg(options.brand, brandBaseline, brandSize, wordmark?.family ?? 'Fredoka')}
   ${title}
   ${drawings}
-  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="700" fill="${xml(options.accent)}" letter-spacing="2.2">FREE PRINTABLES</text>
+  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="800" fill="${xml(options.accent)}" letter-spacing="1.4">FREE PRINTABLES</text>
 </svg>`;
   return rasterize(svg);
 }
