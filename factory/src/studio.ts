@@ -2,21 +2,35 @@ import { exec } from 'node:child_process';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
 import { buildPins } from './build-assets.ts';
+import { loadEnv } from './env.ts';
+import {
+  type AgeBand,
+  type DraftSheet,
+  commitImport,
+  nameDraftWithVision,
+  scanImportFolder,
+} from './import-stock.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
 
+loadEnv();
+
 const port = 4317;
+const uiPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'studio-ui.html');
 
 type Job = {
   running: boolean;
   log: string[];
   error: string;
+  drafts: DraftSheet[] | null;
+  lastTheme: string;
 };
 
-const job: Job = { running: false, log: [], error: '' };
+const job: Job = { running: false, log: [], error: '', drafts: null, lastTheme: '' };
 
 function frontmatter(raw: string) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -76,10 +90,7 @@ function parseIdeas(text: string) {
 }
 
 function startJob(label: string, task: () => Promise<void>) {
-  if (job.running) {
-    const error = new Error('Уже выполняется другая задача. Дождитесь окончания.');
-    throw error;
-  }
+  if (job.running) throw new Error('Уже выполняется другая задача. Дождитесь окончания.');
   job.running = true;
   job.error = '';
   job.log = [label];
@@ -97,7 +108,7 @@ function startJob(label: string, task: () => Promise<void>) {
     .finally(() => {
       console.log = original;
       job.running = false;
-      job.log.push(job.error ? 'Остановлено из-за ошибки.' : 'Готово. Обновите сайт в браузере.');
+      job.log.push(job.error ? 'Остановлено из-за ошибки.' : 'Готово. Обновите сайт в браузере или соберите сайт заново.');
     });
 }
 
@@ -142,9 +153,7 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
     audience: 'parents of children ages 3 to 4',
     style: 'Cute storybook line art, thick black outlines, white background, no shading, no text, no trademarked characters.',
     ideas,
-    pins: [
-      { id: 'set', title: `Free ${title}`, subtitle: 'Printable coloring pages' },
-    ],
+    pins: [{ id: 'set', title: `Free ${title}`, subtitle: 'Printable coloring pages' }],
   };
   const cache = path.join(factoryRoot, '.cache');
   await fs.mkdir(cache, { recursive: true });
@@ -153,132 +162,6 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
   await fs.mkdir(briefsRoot, { recursive: true });
   startJob(`Новые рисунки: ${ideas.map((idea) => idea.slug).join(', ')}`, () => produce(briefPath, false));
 }
-
-const page = `<!doctype html>
-<html lang="ru">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Фабрика</title>
-<style>
-  body { margin: 0; font: 16px/1.45 "Segoe UI", sans-serif; color: #243038; background: #fff; }
-  main { width: min(760px, calc(100% - 2rem)); margin: 1.5rem auto 3rem; }
-  h1 { font-size: 1.7rem; margin: 0 0 0.3rem; }
-  p { color: #5c676e; }
-  label { display: block; font-weight: 700; margin: 0.9rem 0 0.3rem; }
-  input, select, textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #e4e8eb; border-radius: 10px; }
-  textarea { min-height: 9rem; }
-  button, .btn { border: 0; border-radius: 10px; background: #1d7ad6; color: white; font-weight: 800; padding: 0.65rem 0.9rem; cursor: pointer; }
-  button.quiet, .quiet { background: white; color: #243038; box-shadow: inset 0 0 0 1.5px #e4e8eb; }
-  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
-  article { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #e4e8eb; }
-  article h2 { font-size: 1rem; margin: 0; }
-  article p { margin: 0.15rem 0 0; }
-  pre { white-space: pre-wrap; background: #f6f7f8; border-radius: 10px; padding: 0.8rem; min-height: 6rem; }
-  .hidden { display: none; }
-</style>
-<main>
-  <h1>Фабрика</h1>
-  <p>Новые рисунки и перерисовка уже готовых листов вызывают модель и берут ключ из factory/.env. Пины собираются отдельно из готовых картинок и модель не вызывают.</p>
-  <section id="themes"></section>
-  <h2>Новые рисунки</h2>
-  <label for="theme">Подборка</label>
-  <select id="theme"></select>
-  <div id="new-fields" class="hidden">
-    <label for="title">Название новой подборки</label>
-    <input id="title" placeholder="Ocean Coloring Pages">
-    <label for="kind">Тип</label>
-    <select id="kind"><option value="evergreen">На любой день</option><option value="seasonal">Сезонная</option></select>
-  </div>
-  <label for="ideas">Рисунки, каждый с новой строки</label>
-  <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
-  <div class="row">
-    <button id="create" type="button">Нарисовать новые</button>
-    <button id="pins-all" class="quiet" type="button">Собрать все пины</button>
-    <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
-  </div>
-  <h2>Ход работы</h2>
-  <pre id="log">Пока ничего не запущено.</pre>
-</main>
-<script>
-  const themesEl = document.querySelector('#themes');
-  const themeSelect = document.querySelector('#theme');
-  const newFields = document.querySelector('#new-fields');
-  const logEl = document.querySelector('#log');
-
-  function paintThemes(themes) {
-    themesEl.innerHTML = themes.map((theme) => \`
-      <article>
-        <div><h2>\${theme.title}</h2><p>\${theme.count} листов</p></div>
-        <div class="row">
-          <button class="quiet" type="button" data-pins="\${theme.slug}">Пины</button>
-          <button class="quiet" type="button" data-redraw="\${theme.slug}">Перерисовать</button>
-        </div>
-      </article>\`).join('');
-    const current = themeSelect.value;
-    themeSelect.innerHTML = '<option value="">Новая подборка</option>' + themes.map((theme) => \`<option value="\${theme.slug}">\${theme.title}</option>\`).join('');
-    themeSelect.value = current;
-    newFields.classList.toggle('hidden', themeSelect.value !== '');
-  }
-
-  async function loadThemes() {
-    const themes = await fetch('/api/themes').then((res) => res.json());
-    paintThemes(themes);
-  }
-
-  themeSelect.addEventListener('change', () => {
-    newFields.classList.toggle('hidden', themeSelect.value !== '');
-  });
-
-  themesEl.addEventListener('click', async (event) => {
-    const pins = event.target.closest('[data-pins]');
-    if (pins) {
-      if (!confirm('Собрать пины этой подборки из готовых рисунков? Модель не вызывается.')) return;
-      await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: pins.dataset.pins }) });
-      return;
-    }
-    const button = event.target.closest('[data-redraw]');
-    if (!button) return;
-    if (!confirm('Перерисовать все листы этой подборки? Тексты останутся, картинки заменятся. Это платный запрос к модели.')) return;
-    await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
-  });
-
-  document.querySelector('#pins-all').addEventListener('click', async () => {
-    if (!confirm('Собрать пины всех подборок из готовых рисунков? Модель не вызывается.')) return;
-    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-  });
-
-  document.querySelector('#redraw-all').addEventListener('click', async () => {
-    if (!confirm('Перерисовать все листы всех подборок? Это платный запрос к модели.')) return;
-    await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-  });
-
-  document.querySelector('#create').addEventListener('click', async () => {
-    const response = await fetch('/api/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        theme: themeSelect.value,
-        title: document.querySelector('#title').value,
-        kind: document.querySelector('#kind').value,
-        ideas: document.querySelector('#ideas').value,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) logEl.textContent = data.error || 'Не получилось запустить.';
-  });
-
-  let wasRunning = false;
-  async function poll() {
-    const data = await fetch('/api/job').then((res) => res.json());
-    if (data.log?.length) logEl.textContent = data.log.join('\\n');
-    if (wasRunning && !data.running) loadThemes();
-    wasRunning = Boolean(data.running);
-  }
-
-  loadThemes();
-  setInterval(poll, 2000);
-</script>
-`;
 
 function send(res: http.ServerResponse, status: number, body: unknown, type = 'application/json') {
   const payload = type === 'application/json' ? JSON.stringify(body) : String(body);
@@ -291,28 +174,111 @@ async function readBody(req: http.IncomingMessage) {
   for await (const chunk of req) chunks.push(Buffer.from(chunk));
   const raw = Buffer.concat(chunks).toString('utf8');
   if (!raw) return {};
-  return JSON.parse(raw) as Record<string, string>;
+  return JSON.parse(raw) as Record<string, unknown>;
+}
+
+function asDraftSheets(value: unknown): DraftSheet[] {
+  if (!Array.isArray(value)) return [];
+  return value as DraftSheet[];
 }
 
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? '/', 'http://127.0.0.1');
-    if (req.method === 'GET' && url.pathname === '/') return send(res, 200, page, 'text/html');
+    if (req.method === 'GET' && url.pathname === '/') {
+      return send(res, 200, await fs.readFile(uiPath, 'utf8'), 'text/html');
+    }
     if (req.method === 'GET' && url.pathname === '/api/themes') return send(res, 200, await listThemes());
-    if (req.method === 'GET' && url.pathname === '/api/job') return send(res, 200, job);
+    if (req.method === 'GET' && url.pathname === '/api/job') {
+      return send(res, 200, {
+        running: job.running,
+        log: job.log,
+        error: job.error,
+        drafts: job.drafts,
+        lastTheme: job.lastTheme,
+      });
+    }
+    if (req.method === 'GET' && url.pathname === '/api/import/thumb') {
+      const id = url.searchParams.get('id') ?? '';
+      if (!/^imp-[\w-]+$/.test(id)) return send(res, 404, { error: 'Нет превью' });
+      const file = path.join(factoryRoot, '.cache', 'import-thumbs', `${id}.jpg`);
+      try {
+        const bytes = await fs.readFile(file);
+        res.writeHead(200, { 'Content-Type': 'image/jpeg', 'Cache-Control': 'no-store' });
+        res.end(bytes);
+        return;
+      } catch {
+        return send(res, 404, { error: 'Нет превью' });
+      }
+    }
+    if (req.method === 'POST' && url.pathname === '/api/import/scan') {
+      const body = await readBody(req);
+      const folder = String(body.folder ?? '').trim();
+      if (!folder) throw new Error('Укажите папку с картинками.');
+      const sheets = await scanImportFolder(folder, (String(body.defaultAge ?? '3-4') as AgeBand) || '3-4');
+      job.drafts = sheets;
+      return send(res, 200, { sheets });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/import/name') {
+      const body = await readBody(req);
+      const sheets = asDraftSheets(body.sheets);
+      if (!sheets.length) throw new Error('Нет листов для именования.');
+      startJob(`Называю по картинке: ${sheets.length}`, async () => {
+        const named: DraftSheet[] = [];
+        for (const [index, sheet] of sheets.entries()) {
+          console.log(`vision ${index + 1}/${sheets.length}: ${path.basename(sheet.file)}`);
+          try {
+            named.push(await nameDraftWithVision(sheet));
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.log(`не назвался: ${message}`);
+            named.push(sheet);
+          }
+        }
+        const byId = new Map(named.map((sheet) => [sheet.id, sheet]));
+        job.drafts = (job.drafts ?? sheets).map((sheet) => byId.get(sheet.id) ?? sheet);
+        console.log('Названия обновлены. Проверьте таблицу и нажмите «Залить на сайт».');
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/import/commit') {
+      const body = await readBody(req);
+      const sheets = asDraftSheets(body.sheets);
+      startJob('Импорт стока на сайт', async () => {
+        const result = await commitImport({
+          theme: String(body.theme ?? ''),
+          title: body.title ? String(body.title) : undefined,
+          kind: body.kind === 'seasonal' ? 'seasonal' : 'evergreen',
+          ageBand: (String(body.ageBand ?? '3-4') as AgeBand) || '3-4',
+          sheets,
+        });
+        job.lastTheme = result.theme;
+        console.log(`Готово: ${result.published.length} листов в ${result.theme}`);
+        console.log('Новая тема сама появится в футере. На главной праздники и лишние темы подхватываются автоматически.');
+        console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Рисовать и пины».');
+      });
+      return send(res, 202, { ok: true });
+    }
     if (req.method === 'POST' && url.pathname === '/api/pins') {
       const body = await readBody(req);
-      startJob(body.theme ? `Пины ${body.theme}` : 'Пины всех подборок', () => buildPins(body.theme || undefined));
+      const theme = body.theme ? String(body.theme) : undefined;
+      startJob(theme ? `Пины ${theme}` : 'Пины всех подборок', () => buildPins(theme));
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/redraw') {
       const body = await readBody(req);
-      startJob(body.theme ? `Перерисовка ${body.theme}` : 'Перерисовка всех листов', () => redraw(body.theme || undefined));
+      const theme = body.theme ? String(body.theme) : undefined;
+      startJob(theme ? `Перерисовка ${theme}` : 'Перерисовка всех листов', () => redraw(theme));
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/create') {
       const body = await readBody(req);
-      await createPages(body);
+      await createPages({
+        theme: body.theme ? String(body.theme) : undefined,
+        title: body.title ? String(body.title) : undefined,
+        kind: body.kind ? String(body.kind) : undefined,
+        ideas: body.ideas ? String(body.ideas) : undefined,
+      });
       return send(res, 202, { ok: true });
     }
     send(res, 404, { error: 'Не найдено' });

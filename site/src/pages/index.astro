@@ -88,8 +88,32 @@ const subjectChoices: { id: string; title: string; hint: string; note?: string; 
   },
 ];
 
+const holidayNames: Record<string, string> = {
+  'fall-coloring-pages': 'Fall',
+  'halloween-coloring-pages': 'Halloween',
+  'thanksgiving-coloring-pages': 'Thanksgiving',
+  'christmas-coloring-pages': 'Christmas',
+  'christian-christmas-coloring-pages': 'Christian Christmas',
+};
+const shortThemeTitle = (title: string) => title.replace(/ Coloring Pages$/i, '');
+const holidayTiles = holidays
+  .slice()
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((theme) => ({
+    theme,
+    title: holidayNames[theme.id] ?? shortThemeTitle(theme.data.title),
+  }));
+const claimedThemeIds = new Set(subjectChoices.flatMap((choice) => choice.ids));
+const extraThemeChoices = everyday
+  .filter((theme) => !claimedThemeIds.has(theme.id))
+  .map((theme) => ({
+    id: theme.id,
+    title: shortThemeTitle(theme.data.title),
+    hint: spansAges(theme.id) ? ageSpanLabel(sheetAges(theme.id)) : ageBandLabel(theme.data.ageBand),
+    ids: [theme.id],
+  }));
 const everydayById = new Map(everyday.map((theme) => [theme.id, theme]));
-const themeChoices = subjectChoices
+const themeChoices = [...subjectChoices, ...extraThemeChoices]
   .map((choice) => ({
     ...choice,
     themes: choice.ids.flatMap((id) => {
@@ -99,17 +123,6 @@ const themeChoices = subjectChoices
   }))
   .filter((choice) => choice.themes.length > 0);
 const themePanels = themeChoices.filter((choice) => choice.themes.length > 1);
-const holidayNames: Record<string, string> = {
-  'fall-coloring-pages': 'Fall',
-  'halloween-coloring-pages': 'Halloween',
-  'thanksgiving-coloring-pages': 'Thanksgiving',
-  'christmas-coloring-pages': 'Christmas',
-  'christian-christmas-coloring-pages': 'Christian Christmas',
-};
-const holidayTiles = ['fall-coloring-pages', 'halloween-coloring-pages', 'thanksgiving-coloring-pages', 'christmas-coloring-pages', 'christian-christmas-coloring-pages'].flatMap((id) => {
-  const theme = holidays.find((item) => item.id === id);
-  return theme ? [{ theme, title: holidayNames[id] ?? theme.data.title }] : [];
-});
 
 function cover(themeId: string) {
   const first = sheets

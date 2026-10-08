@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фабрика</title>
+<style>
+  :root {
+    --ink: #243038;
+    --muted: #5c676e;
+    --line: #e4e8eb;
+    --soft: #f3f8fc;
+    --blue: #1d7ad6;
+    --blue-dark: #1564b5;
+  }
+  body { margin: 0; font: 16px/1.45 "Segoe UI", sans-serif; color: var(--ink); background: #fff; }
+  main { width: min(980px, calc(100% - 2rem)); margin: 1.25rem auto 3rem; }
+  h1 { font-size: 1.7rem; margin: 0 0 0.25rem; }
+  h2 { font-size: 1.2rem; margin: 1.4rem 0 0.4rem; }
+  p { color: var(--muted); }
+  .lede { margin: 0 0 1rem; }
+  .tabs { display: flex; gap: 0.4rem; margin: 1rem 0 1.2rem; flex-wrap: wrap; }
+  .tab {
+    border: 0; border-radius: 999px; padding: 0.45rem 0.9rem; font: inherit; font-weight: 700;
+    background: var(--soft); color: var(--ink); cursor: pointer;
+  }
+  .tab.active { background: var(--blue); color: #fff; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  label { display: block; font-weight: 700; margin: 0.85rem 0 0.3rem; }
+  input, select, textarea {
+    width: 100%; box-sizing: border-box; font: inherit; padding: 0.55rem 0.7rem;
+    border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  }
+  textarea { min-height: 8.5rem; }
+  .hint { font-size: 0.92rem; color: var(--muted); margin: 0.25rem 0 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; align-items: center; }
+  button, .btn {
+    border: 0; border-radius: 10px; background: var(--blue); color: white; font-weight: 800;
+    padding: 0.65rem 0.9rem; cursor: pointer; font: inherit;
+  }
+  button:hover { background: var(--blue-dark); }
+  button.quiet { background: white; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+  button:disabled { opacity: 0.55; cursor: wait; }
+  article {
+    display: flex; justify-content: space-between; gap: 1rem; align-items: center;
+    padding: 0.75rem 0; border-bottom: 1px solid var(--line);
+  }
+  article h3 { font-size: 1rem; margin: 0; }
+  article p { margin: 0.15rem 0 0; }
+  pre {
+    white-space: pre-wrap; background: #f6f7f8; border-radius: 10px; padding: 0.8rem;
+    min-height: 6rem; font-size: 0.92rem;
+  }
+  .hidden { display: none !important; }
+  .grid { display: grid; gap: 0.8rem; }
+  .card {
+    display: grid; grid-template-columns: 110px 1fr; gap: 0.8rem; padding: 0.75rem;
+    border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .card img {
+    width: 110px; height: 140px; object-fit: contain; background: var(--soft);
+    border-radius: 8px;
+  }
+  .card .fields { display: grid; gap: 0.35rem; }
+  .card .fields label { margin: 0; font-size: 0.85rem; }
+  .card .top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; }
+  .check { display: flex; align-items: center; gap: 0.4rem; font-weight: 700; }
+  .check input { width: auto; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  @media (max-width: 720px) {
+    .card { grid-template-columns: 1fr; }
+    .two { grid-template-columns: 1fr; }
+  }
+  .note {
+    background: var(--soft); border-radius: 12px; padding: 0.8rem 1rem; margin: 0.6rem 0 0;
+  }
+</style>
+<main>
+  <h1>Фабрика</h1>
+  <p class="lede">Две вкладки: сток без перерисовки, и отдельный лист для новых картинок и пинов. Запуск с кнопки Open Factory.bat.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" type="button" data-tab="import">Сток → сайт</button>
+    <button class="tab" type="button" data-tab="draw">Рисовать и пины</button>
+  </div>
+
+  <section id="panel-import" class="panel active">
+    <p>Кладёт PNG/SVG на сайт: превью, Letter PDF, A4 PDF и текст листа. OpenRouter нужен только для кнопки «Назвать по картинке».</p>
+    <div class="note">
+      Удобная раскладка папок: <code>2-3</code>, <code>3-4</code>, <code>4-5</code>, <code>5-6</code>, <code>6-8</code>.
+      Если папок нет — возраст берётся из поля ниже.
+    </div>
+
+    <label for="folder">Папка с картинками</label>
+    <input id="folder" placeholder="D:\COLORING\Winter">
+    <p class="hint">Полный путь к папке на этом компьютере.</p>
+
+    <div class="two">
+      <div>
+        <label for="import-theme">Подборка на сайте</label>
+        <select id="import-theme"></select>
+      </div>
+      <div>
+        <label for="default-age">Возраст, если папок нет</label>
+        <select id="default-age">
+          <option value="2-3">2–3</option>
+          <option value="3-4" selected>3–4</option>
+          <option value="4-5">4–5</option>
+          <option value="5-6">5–6</option>
+          <option value="6-8">6–8</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="import-new-fields" class="hidden">
+      <label for="import-title">Название новой подборки</label>
+      <input id="import-title" placeholder="Winter Coloring Pages">
+      <div class="two">
+        <div>
+          <label for="import-kind">Тип</label>
+          <select id="import-kind">
+            <option value="seasonal">Сезон / праздник</option>
+            <option value="evergreen">На любой день</option>
+          </select>
+        </div>
+        <div>
+          <label for="import-ageband">Основной возраст темы</label>
+          <select id="import-ageband">
+            <option value="2-3">2–3</option>
+            <option value="3-4" selected>3–4</option>
+            <option value="4-5">4–5</option>
+            <option value="5-6">5–6</option>
+            <option value="6-8">6–8</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="scan" type="button">Открыть папку</button>
+      <button id="name-vision" class="quiet" type="button">Назвать по картинке</button>
+      <button id="commit-import" type="button">Залить на сайт</button>
+      <button id="pins-after" class="quiet" type="button">Пины этой темы</button>
+    </div>
+    <p class="hint">«Назвать по картинке» — дешёвый vision-запрос. «Залить на сайт» модель не вызывает.</p>
+
+    <div id="drafts" class="grid" style="margin-top:1rem"></div>
+  </section>
+
+  <section id="panel-draw" class="panel">
+    <p>Новые рисунки и перерисовка вызывают платную модель картинок. Пины собираются из готовых PNG и модель не вызывают.</p>
+    <section id="themes"></section>
+    <h2>Новые рисунки</h2>
+    <label for="theme">Подборка</label>
+    <select id="theme"></select>
+    <div id="new-fields" class="hidden">
+      <label for="title">Название новой подборки</label>
+      <input id="title" placeholder="Ocean Coloring Pages">
+      <label for="kind">Тип</label>
+      <select id="kind">
+        <option value="evergreen">На любой день</option>
+        <option value="seasonal">Сезонная</option>
+      </select>
+    </div>
+    <label for="ideas">Рисунки, каждый с новой строки</label>
+    <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
+    <div class="row">
+      <button id="create" type="button">Нарисовать новые</button>
+      <button id="pins-all" class="quiet" type="button">Собрать все пины</button>
+      <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
+    </div>
+  </section>
+
+  <h2>Ход работы</h2>
+  <pre id="log">Пока ничего не запущено.</pre>
+</main>
+<script>
+  const draftsEl = document.querySelector('#drafts');
+  const themesEl = document.querySelector('#themes');
+  const themeSelect = document.querySelector('#theme');
+  const importTheme = document.querySelector('#import-theme');
+  const newFields = document.querySelector('#new-fields');
+  const importNewFields = document.querySelector('#import-new-fields');
+  const logEl = document.querySelector('#log');
+  let drafts = [];
+  let lastTheme = '';
+
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((item) => item.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach((item) => item.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector('#panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  function esc(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function paintThemes(themes) {
+    themesEl.innerHTML = themes.map((theme) => `
+      <article>
+        <div><h3>${esc(theme.title)}</h3><p>${theme.count} листов · ${esc(theme.kind)}</p></div>
+        <div class="row">
+          <button class="quiet" type="button" data-pins="${esc(theme.slug)}">Пины</button>
+          <button class="quiet" type="button" data-redraw="${esc(theme.slug)}">Перерисовать</button>
+        </div>
+      </article>`).join('');
+
+    const current = themeSelect.value;
+    const importCurrent = importTheme.value;
+    const options = '<option value="">Новая подборка</option>' +
+      themes.map((theme) => `<option value="${esc(theme.slug)}">${esc(theme.title)}</option>`).join('');
+    themeSelect.innerHTML = options;
+    importTheme.innerHTML = '<option value="__new__">Новая подборка</option>' +
+      themes.map((theme) => `<option value="${esc(theme.slug)}">${esc(theme.title)}</option>`).join('');
+    themeSelect.value = current;
+    importTheme.value = importCurrent || '__new__';
+    newFields.classList.toggle('hidden', themeSelect.value !== '');
+    importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
+  }
+
+  function readDraftsFromDom() {
+    return drafts.map((draft) => {
+      const card = draftsEl.querySelector(`[data-id="${draft.id}"]`);
+      if (!card) return draft;
+      return {
+        ...draft,
+        include: card.querySelector('[data-field="include"]').checked,
+        age: card.querySelector('[data-field="age"]').value,
+        slug: card.querySelector('[data-field="slug"]').value.trim(),
+        title: card.querySelector('[data-field="title"]').value.trim(),
+        description: card.querySelector('[data-field="description"]').value.trim(),
+        alt: card.querySelector('[data-field="alt"]').value.trim(),
+        parentNote: card.querySelector('[data-field="parentNote"]').value.trim(),
+      };
+    });
+  }
+
+  function paintDrafts(list) {
+    drafts = list;
+    draftsEl.innerHTML = list.map((draft) => `
+      <div class="card" data-id="${esc(draft.id)}">
+        <img src="/api/import/thumb?id=${encodeURIComponent(draft.id)}" alt="">
+        <div class="fields">
+          <div class="top">
+            <label class="check"><input data-field="include" type="checkbox" ${draft.include ? 'checked' : ''}> Взять</label>
+            <select data-field="age">
+              ${['2-3','3-4','4-5','5-6','6-8'].map((age) =>
+                `<option value="${age}" ${draft.age === age ? 'selected' : ''}>${age}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <label>slug</label>
+          <input data-field="slug" value="${esc(draft.slug)}">
+          <label>title</label>
+          <input data-field="title" value="${esc(draft.title)}">
+          <label>description</label>
+          <input data-field="description" value="${esc(draft.description)}">
+          <label>alt</label>
+          <input data-field="alt" value="${esc(draft.alt)}">
+          <label>parentNote</label>
+          <input data-field="parentNote" value="${esc(draft.parentNote)}">
+          <p class="hint">${esc(draft.file)}</p>
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadThemes() {
+    const themes = await fetch('/api/themes').then((res) => res.json());
+    paintThemes(themes);
+  }
+
+  themeSelect.addEventListener('change', () => {
+    newFields.classList.toggle('hidden', themeSelect.value !== '');
+  });
+  importTheme.addEventListener('change', () => {
+    importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
+  });
+
+  themesEl.addEventListener('click', async (event) => {
+    const pins = event.target.closest('[data-pins]');
+    if (pins) {
+      if (!confirm('Собрать пины этой подборки из готовых рисунков? Модель не вызывается.')) return;
+      lastTheme = pins.dataset.pins;
+      await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: pins.dataset.pins }) });
+      return;
+    }
+    const button = event.target.closest('[data-redraw]');
+    if (!button) return;
+    if (!confirm('Перерисовать все листы этой подборки? Это платный запрос к модели картинок.')) return;
+    await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
+  });
+
+  document.querySelector('#pins-all').addEventListener('click', async () => {
+    if (!confirm('Собрать пины всех подборок из готовых рисунков? Модель не вызывается.')) return;
+    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+  });
+
+  document.querySelector('#redraw-all').addEventListener('click', async () => {
+    if (!confirm('Перерисовать все листы всех подборок? Это платный запрос к модели.')) return;
+    await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+  });
+
+  document.querySelector('#create').addEventListener('click', async () => {
+    const response = await fetch('/api/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme: themeSelect.value,
+        title: document.querySelector('#title').value,
+        kind: document.querySelector('#kind').value,
+        ideas: document.querySelector('#ideas').value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) logEl.textContent = data.error || 'Не получилось запустить.';
+  });
+
+  document.querySelector('#scan').addEventListener('click', async () => {
+    const response = await fetch('/api/import/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        folder: document.querySelector('#folder').value,
+        defaultAge: document.querySelector('#default-age').value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось открыть папку.';
+      return;
+    }
+    paintDrafts(data.sheets || []);
+    logEl.textContent = `Найдено листов: ${(data.sheets || []).length}. Проверьте названия или нажмите «Назвать по картинке».`;
+  });
+
+  document.querySelector('#name-vision').addEventListener('click', async () => {
+    const sheets = readDraftsFromDom().filter((sheet) => sheet.include);
+    if (!sheets.length) {
+      logEl.textContent = 'Сначала откройте папку и отметьте листы.';
+      return;
+    }
+    if (!confirm(`Назвать ${sheets.length} картинок через vision? Это дешёвый текстовый запрос, не перерисовка.`)) return;
+    const response = await fetch('/api/import/name', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sheets }),
+    });
+    const data = await response.json();
+    if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить именование.';
+  });
+
+  document.querySelector('#commit-import').addEventListener('click', async () => {
+    const sheets = readDraftsFromDom();
+    if (!sheets.some((sheet) => sheet.include)) {
+      logEl.textContent = 'Отметьте хотя бы один лист.';
+      return;
+    }
+    if (!confirm('Залить отмеченные листы на сайт? Модель картинок не вызывается.')) return;
+    const response = await fetch('/api/import/commit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme: importTheme.value,
+        title: document.querySelector('#import-title').value,
+        kind: document.querySelector('#import-kind').value,
+        ageBand: document.querySelector('#import-ageband').value,
+        sheets,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить импорт.';
+  });
+
+  document.querySelector('#pins-after').addEventListener('click', async () => {
+    const theme = lastTheme || (importTheme.value !== '__new__' ? importTheme.value : '');
+    if (!theme) {
+      logEl.textContent = 'Сначала залейте тему или выберите существующую подборку.';
+      return;
+    }
+    if (!confirm('Собрать пины этой подборки из готовых рисунков?')) return;
+    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme }) });
+  });
+
+  let wasRunning = false;
+  async function poll() {
+    const data = await fetch('/api/job').then((res) => res.json());
+    if (data.log?.length) logEl.textContent = data.log.join('\n');
+    if (data.drafts) paintDrafts(data.drafts);
+    if (data.lastTheme) lastTheme = data.lastTheme;
+    if (wasRunning && !data.running) loadThemes();
+    wasRunning = Boolean(data.running);
+  }
+
+  loadThemes();
+  setInterval(poll, 1500);
+</script>
+</html>

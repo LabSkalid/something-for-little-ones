@@ -30,12 +30,15 @@ const help = `Фабрика раскрасок.
       npm run redraw -- animal-coloring-pages
 
   npm run studio
-      Открыть локальную страницу с кнопками: новые рисунки и перерисовка.
-      То же самое делает файл Open Factory.bat.
+      Открыть локальную страницу с двумя вкладками:
+      сток PNG/SVG на сайт, и отдельно рисование/пины.
+      Удобнее запускать файлом Open Factory.bat (без npm run).
 
 Ключ один: factory/.env с OPENROUTER_API_KEY.
 Картинки: OPENROUTER_IMAGE_MODEL (по умолчанию openai/gpt-image-2).
 Текст: OPENROUTER_TEXT_MODEL (по умолчанию google/gemini-2.5-flash).
+Vision для названий стока: OPENROUTER_VISION_MODEL
+(по умолчанию тот же текстовый).
 Адрес внизу листа берётся из site/src/site.ts.
 `;
 

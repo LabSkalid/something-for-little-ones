@@ -49,6 +49,34 @@ export async function chat(system: string, user: string) {
   return content;
 }
 
+/** Cheap vision/text call. Looks at an image; does not redraw it. */
+export async function visionChat(system: string, user: string, imagePng: Buffer, mime = 'image/png') {
+  const model =
+    process.env.OPENROUTER_VISION_MODEL ||
+    process.env.OPENROUTER_TEXT_MODEL ||
+    'google/gemini-2.5-flash';
+  const json = (await post('chat/completions', {
+    model,
+    temperature: 0.3,
+    messages: [
+      { role: 'system', content: system },
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: user },
+          {
+            type: 'image_url',
+            image_url: { url: `data:${mime};base64,${imagePng.toString('base64')}` },
+          },
+        ],
+      },
+    ],
+  })) as { choices?: { message?: { content?: string } }[] };
+  const content = json.choices?.[0]?.message?.content?.trim();
+  if (!content) throw new Error('Vision-модель вернула пустой ответ.');
+  return content;
+}
+
 export async function generateColoringPage(prompt: string) {
   const model = process.env.OPENROUTER_IMAGE_MODEL || 'openai/gpt-image-2';
   const quality = process.env.OPENROUTER_IMAGE_QUALITY || 'medium';
