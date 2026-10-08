@@ -180,6 +180,15 @@
         <option value="seasonal">Сезонная</option>
       </select>
     </div>
+    <label for="draw-age">Возраст этих рисунков</label>
+    <select id="draw-age">
+      <option value="2-3">2–3 · огромные простые фигуры</option>
+      <option value="3-4" selected>3–4 · толстые линии</option>
+      <option value="4-5">4–5 · чуть больше деталей</option>
+      <option value="5-6">5–6 · небольшая сцена</option>
+      <option value="6-8">6–8 · более плотная картинка</option>
+    </select>
+    <p class="hint">От возраста зависит и промпт модели, и поле age у листа на сайте.</p>
     <label for="ideas">Рисунки, каждый с новой строки</label>
     <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
     <div class="row">
@@ -448,6 +457,7 @@
           theme: themeSelect.value,
           title: document.querySelector('#title').value,
           kind: document.querySelector('#kind').value,
+          age: document.querySelector('#draw-age').value,
           ideas,
         }),
       });
@@ -456,7 +466,8 @@
         logEl.textContent = data.error || 'Не получилось запустить.';
         return;
       }
-      logEl.textContent = 'Рисование запущено. Ниже появится ход работы. Пины после этого сами не собираются — их можно сделать кнопкой «Пины».';
+      const age = document.querySelector('#draw-age').value;
+      logEl.textContent = `Рисование запущено для возраста ${age}. Ниже появится ход работы. Пины сами не собираются — их можно сделать кнопкой «Пины».`;
     } catch (error) {
       logEl.textContent = 'Фабрика не отвечает. Закройте старое окно и снова откройте Open Factory.bat.\n' + String(error?.message || error);
     }

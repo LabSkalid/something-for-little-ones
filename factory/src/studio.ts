@@ -70,7 +70,17 @@ async function listThemes() {
   return themes;
 }
 
-function parseIdeas(text: string) {
+const ageDifficulty: Record<string, 'toddler' | 'easy' | 'medium' | 'detailed'> = {
+  '2-3': 'toddler',
+  '3-4': 'easy',
+  '4-5': 'medium',
+  '5-6': 'medium',
+  '6-8': 'detailed',
+};
+
+function parseIdeas(text: string, age = '3-4') {
+  const band = ageDifficulty[age] ? age : '3-4';
+  const difficulty = ageDifficulty[band];
   const used = new Set<string>();
   const ideas = [];
   for (const rawLine of text.split(/\r?\n/)) {
@@ -81,12 +91,16 @@ function parseIdeas(text: string) {
     let prompt = (splitAt === -1 ? line : line.slice(splitAt + 1)).trim() || name;
     // produce() requires prompt length >= 8
     if (prompt.length < 8) prompt = `a simple ${prompt} coloring page drawing`;
+    if (band === '2-3') {
+      prompt = `${prompt}. One huge simple shape only, extra-thick outlines, almost no small parts, toddler coloring page`;
+    }
     let slug = slugify(name.replace(/coloring page/i, ''));
     if (!slug) continue;
+    if (band === '2-3' && !slug.startsWith('huge-')) slug = `huge-${slug}`;
     while (used.has(slug)) slug = `${slug}-2`;
     used.add(slug);
     const title = /coloring page/i.test(name) ? name : `${name} Coloring Page`;
-    ideas.push({ slug, title, prompt, difficulty: 'easy', age: '3-4' });
+    ideas.push({ slug, title, prompt, difficulty, age: band });
   }
   return ideas;
 }
@@ -114,8 +128,15 @@ function startJob(label: string, task: () => Promise<void>) {
     });
 }
 
-async function createPages(body: { theme?: string; title?: string; kind?: string; ideas?: string }) {
-  const ideas = parseIdeas(body.ideas ?? '');
+async function createPages(body: {
+  theme?: string;
+  title?: string;
+  kind?: string;
+  ideas?: string;
+  age?: string;
+}) {
+  const age = ageDifficulty[body.age ?? ''] ? String(body.age) : '3-4';
+  const ideas = parseIdeas(body.ideas ?? '', age);
   if (!ideas.length) throw new Error('Добавьте хотя бы один рисунок, каждый с новой строки.');
   const themes = await listThemes();
   const existing = themes.find((theme) => theme.slug === body.theme);
@@ -126,6 +147,7 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
   let accent = '#1D7AD6';
   let ink = '#243038';
   let related = ['animal-coloring-pages'];
+  let ageBand = age;
   if (!existing) {
     title = (body.title ?? '').trim();
     if (title.length < 3) throw new Error('Напишите название новой подборки.');
@@ -138,22 +160,27 @@ async function createPages(body: { theme?: string; title?: string; kind?: string
     order = Number(data.order ?? 1);
     accent = String(data.accent ?? accent);
     ink = String(data.ink ?? ink);
+    ageBand = String(data.ageBand ?? age);
     if (Array.isArray(data.related) && data.related.length) related = data.related.map(String);
   }
+  const agesLabel = age.replace('-', ' to ');
   const brief = {
     slug,
     title,
-    tagline: `Free ${title.toLowerCase()} for kids ages 3 to 4.`,
+    tagline: `Free ${title.toLowerCase()} for kids ages ${agesLabel}.`,
     description: `Free ${title.toLowerCase()} to print for kids.`,
     kind,
-    ageBand: '3-4',
+    ageBand,
     order,
     accent,
     ink,
     keywords: [title.toLowerCase()],
     related: related.filter((item) => item !== slug).slice(0, 2),
-    audience: 'parents of children ages 3 to 4',
-    style: 'Cute storybook line art, thick black outlines, white background, no shading, no text, no trademarked characters.',
+    audience: `parents of children ages ${agesLabel}`,
+    style:
+      age === '2-3'
+        ? 'Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.'
+        : 'Cute storybook line art, thick black outlines, white background, no shading, no text, no trademarked characters.',
     ideas,
     pins: [{ id: 'set', title: `Free ${title}`, subtitle: 'Printable coloring pages' }],
   };
@@ -303,6 +330,7 @@ const server = http.createServer(async (req, res) => {
         title: body.title ? String(body.title) : undefined,
         kind: body.kind ? String(body.kind) : undefined,
         ideas: body.ideas ? String(body.ideas) : undefined,
+        age: body.age ? String(body.age) : undefined,
       });
       return send(res, 202, { ok: true });
     }
