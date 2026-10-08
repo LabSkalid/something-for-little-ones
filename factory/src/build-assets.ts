@@ -41,6 +41,8 @@ export type PinBuildOptions = {
   removeOld?: boolean;
   writeCopy?: boolean;
   keywords?: string;
+  /** Rounded frames around tiles in collection pins. Default on. */
+  framed?: boolean;
 };
 
 type PinRow = {
@@ -261,6 +263,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const collectionCount = Math.max(1, Math.min(40, options.collectionCount ?? 2));
   const removeOld = Boolean(options.removeOld);
   const writeCopy = Boolean(options.writeCopy);
+  const framed = options.framed !== false;
   const keywords = (options.keywords ?? '').trim();
 
   await fs.mkdir(pinRoot, { recursive: true });
@@ -361,6 +364,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
           accent,
           brand: site.name,
           images: group.map((page) => page.image),
+          framed,
         });
         await fs.writeFile(path.join(pinRoot, filename), png);
         keep.add(filename);

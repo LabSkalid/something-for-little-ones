@@ -10,6 +10,7 @@ import {
   type AgeBand,
   type DraftSheet,
   commitImport,
+  matchDraftsToTheme,
   nameDraftWithVision,
   scanImportFolder,
 } from './import-stock.ts';
@@ -110,11 +111,18 @@ function startJob(label: string, task: () => Promise<void>) {
   job.running = true;
   job.error = '';
   job.log = [label];
-  const original = console.log;
-  console.log = (...args: unknown[]) => {
+  const originalLog = console.log;
+  const originalError = console.error;
+  const push = (...args: unknown[]) => {
     const line = args.map((item) => String(item)).join(' ');
     job.log.push(line);
-    original(line);
+    originalLog(line);
+  };
+  console.log = push;
+  console.error = (...args: unknown[]) => {
+    const line = args.map((item) => String(item)).join(' ');
+    job.log.push(line);
+    originalError(line);
   };
   void task()
     .catch((error: unknown) => {
@@ -122,7 +130,8 @@ function startJob(label: string, task: () => Promise<void>) {
       job.log.push(job.error);
     })
     .finally(() => {
-      console.log = original;
+      console.log = originalLog;
+      console.error = originalError;
       job.running = false;
       job.log.push(job.error ? 'Остановлено из-за ошибки.' : 'Готово. Обновите сайт в браузере или соберите сайт заново.');
     });
@@ -244,9 +253,24 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const folder = String(body.folder ?? '').trim();
       if (!folder) throw new Error('Укажите папку с картинками.');
-      const sheets = await scanImportFolder(folder, (String(body.defaultAge ?? '3-4') as AgeBand) || '3-4');
+      let sheets = await scanImportFolder(folder, (String(body.defaultAge ?? '3-4') as AgeBand) || '3-4');
+      const theme = String(body.theme ?? '').trim();
+      let matched = 0;
+      let siteSheets: { slug: string; title: string; age: string }[] = [];
+      if (theme && theme !== '__new__') {
+        const imagesOnly = Boolean(body.imagesOnly);
+        console.log(`Открыл папку, сопоставляю с ${theme}${imagesOnly ? ' (только картинки)' : ''}…`);
+        const result = await matchDraftsToTheme(theme, sheets, { imagesOnly });
+        sheets = result.drafts;
+        matched = result.matched;
+        siteSheets = result.siteSheets.map((sheet) => ({
+          slug: sheet.slug,
+          title: sheet.title,
+          age: sheet.age,
+        }));
+      }
       job.drafts = sheets;
-      return send(res, 200, { sheets });
+      return send(res, 200, { sheets, matched, siteSheets });
     }
     if (req.method === 'POST' && url.pathname === '/api/import/name') {
       const body = await readBody(req);
@@ -273,18 +297,24 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && url.pathname === '/api/import/commit') {
       const body = await readBody(req);
       const sheets = asDraftSheets(body.sheets);
-      startJob('Импорт стока на сайт', async () => {
+      const imagesOnly = Boolean(body.imagesOnly);
+      startJob(imagesOnly ? 'Обновляю только картинки' : 'Импорт стока на сайт', async () => {
         const result = await commitImport({
           theme: String(body.theme ?? ''),
           title: body.title ? String(body.title) : undefined,
           kind: body.kind === 'seasonal' ? 'seasonal' : 'evergreen',
           ageBand: (String(body.ageBand ?? '3-4') as AgeBand) || '3-4',
           sheets,
+          imagesOnly,
         });
         job.lastTheme = result.theme;
-        console.log(`Готово: ${result.published.length} листов в ${result.theme}`);
-        console.log('Новая тема сама появится в футере. На главной праздники и лишние темы подхватываются автоматически.');
-        console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Рисовать и пины».');
+        if (imagesOnly) {
+          console.log(`Готово: обновлены картинки у ${result.published.length} листов в ${result.theme}`);
+        } else {
+          console.log(`Готово: ${result.published.length} листов в ${result.theme}`);
+          console.log('Новая тема сама появится в футере. На главной праздники и лишние темы подхватываются автоматически.');
+          console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Рисовать и пины».');
+        }
       });
       return send(res, 202, { ok: true });
     }
@@ -306,14 +336,18 @@ const server = http.createServer(async (req, res) => {
         slugs,
         collectionCount: body.collectionCount ? Number(body.collectionCount) : 2,
         removeOld: Boolean(body.removeOld),
-        writeCopy: body.writeCopy !== false,
+        writeCopy: Boolean(body.writeCopy),
+        framed: body.framed !== false,
         keywords: body.keywords ? String(body.keywords) : '',
       };
       const label = [
         theme ? `Пины ${theme}` : 'Пины всех подборок',
         mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
         options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
-      ].join(', ');
+        mode !== 'single' ? (options.framed !== false ? 'с рамками' : 'без рамок') : '',
+      ]
+        .filter(Boolean)
+        .join(', ');
       startJob(label, () => buildPins(options));
       return send(res, 202, { ok: true });
     }

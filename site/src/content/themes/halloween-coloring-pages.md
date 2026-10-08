@@ -12,7 +12,7 @@ related:
   - thanksgiving-coloring-pages
   - christmas-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-10-08
 keywords:
   - halloween coloring pages
   - pumpkin coloring page
@@ -35,16 +35,16 @@ pins:
     subtitle: Pumpkin, ghost, cat, and candy
 ---
 
-Halloween pages are grouped by age. No graveyard, and no movie character.
+These pages are grouped by age. Pick the group that matches how long your child will sit.
 
-[Ages 2–3](#ages-2-3) is one huge shape: a [pumpkin](/halloween-coloring-pages/huge-pumpkin/), a [ghost](/halloween-coloring-pages/huge-ghost/), or a [bat](/halloween-coloring-pages/huge-bat/).
+[Ages 2–3](#ages-2-3) includes [huge pumpkin](/halloween-coloring-pages/huge-pumpkin/), [huge ghost](/halloween-coloring-pages/huge-ghost/), [huge bat](/halloween-coloring-pages/huge-bat/).
 
-[Ages 3–4](#ages-3-4) has thick lines: a [smiling pumpkin](/halloween-coloring-pages/jack-o-lantern/), a [friendly ghost](/halloween-coloring-pages/friendly-ghost/), a [witch hat](/halloween-coloring-pages/witch-hat/), a [candy bag](/halloween-coloring-pages/candy-bag/), and a [black cat](/halloween-coloring-pages/black-cat/).
+[Ages 3–4](#ages-3-4) includes [smiling pumpkin](/halloween-coloring-pages/jack-o-lantern/), [friendly ghost](/halloween-coloring-pages/friendly-ghost/), [witch hat](/halloween-coloring-pages/witch-hat/), [halloween candy bag](/halloween-coloring-pages/candy-bag/), [black cat](/halloween-coloring-pages/black-cat/).
 
-[Ages 4–5](#ages-4-5) adds a few parts: a [candy apple](/halloween-coloring-pages/candy-apple/), a [cauldron](/halloween-coloring-pages/little-cauldron/), and an [owl in a hat](/halloween-coloring-pages/halloween-owl/).
+[Ages 4–5](#ages-4-5) includes [candy apple](/halloween-coloring-pages/candy-apple/), [cauldron](/halloween-coloring-pages/little-cauldron/), [owl and hat](/halloween-coloring-pages/halloween-owl/).
 
-[Ages 5–6](#ages-5-6) is a small scene: a [pumpkin porch](/halloween-coloring-pages/pumpkin-porch/), [moon and bats](/halloween-coloring-pages/moon-bats/), and a [pumpkin path](/halloween-coloring-pages/pumpkin-path/).
+[Ages 5–6](#ages-5-6) includes [pumpkin porch](/halloween-coloring-pages/pumpkin-porch/), [moon and bats](/halloween-coloring-pages/moon-bats/), [pumpkin path](/halloween-coloring-pages/pumpkin-path/), [halloween jack-o'-lantern](/halloween-coloring-pages/halloween-jack-o-lantern/), [pumpkin and scarecrow field](/halloween-coloring-pages/pumpkin-scarecrow-field/), [welcome pumpkins](/halloween-coloring-pages/welcome-pumpkins/).
 
-[Ages 6–8](#ages-6-8) is the longer one, with a pattern: a [patterned porch](/halloween-coloring-pages/patterned-porch/), a [night garden](/halloween-coloring-pages/night-garden/), and a [cookie table](/halloween-coloring-pages/cookie-table/).
+[Ages 6–8](#ages-6-8) includes [patterned porch](/halloween-coloring-pages/patterned-porch/), [night garden](/halloween-coloring-pages/night-garden/), [cookie table](/halloween-coloring-pages/cookie-table/), [jack-o'-lantern and candles](/halloween-coloring-pages/jack-o-lantern-candles/), [jack-o'-lantern and candles](/halloween-coloring-pages/jack-o-lantern-candles-2/).
 
-Leaves and apples are in the [fall coloring pages](/fall-coloring-pages/). The late-November dinner is in the [Thanksgiving coloring pages](/thanksgiving-coloring-pages/). December is in the [Christmas coloring pages](/christmas-coloring-pages/).
+Download the PDF, not a screenshot of this page.

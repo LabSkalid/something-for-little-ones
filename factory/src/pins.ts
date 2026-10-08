@@ -225,9 +225,12 @@ export async function renderCollectionPin(options: {
   accent: string;
   brand: string;
   images: Buffer[];
+  /** Soft rounded frame around each tile — helps older, busier pages read as a grid. */
+  framed?: boolean;
 }) {
   const count = options.images.length >= 4 ? 4 : 3;
   if (options.images.length < 3) throw new Error('A collection pin needs 3 or 4 drawings');
+  const framed = options.framed !== false;
   const arts = await preparedArts(options.images.slice(0, count));
   const titleLines = wrap(options.title, 34);
   const titleSize = titleLines.length > 1 ? 38 : 44;
@@ -236,7 +239,7 @@ export async function renderCollectionPin(options: {
   const labelSize = 34;
   const wordmark = wordmarkFontFile();
   const marginX = 40;
-  const gap = 28;
+  const gap = framed ? 22 : 28;
   const brandH = 40;
   const gapBrand = 12;
   const gapTitle = 20;
@@ -300,11 +303,27 @@ export async function renderCollectionPin(options: {
         `<text x="500" y="${baseline}" text-anchor="middle" font-family="Segoe UI" font-size="${titleSize}" font-weight="700" fill="#1A1A1A">${xml(titleLines[index])}</text>`,
     )
     .join('');
+  const inset = framed ? 16 : 0;
+  const radius = 22;
+  const stroke = 4;
   const drawings = arts
     .map((art, index) => {
       const cell = cells[index];
-      const box = fitBox(art.iw, art.ih, cell.w, cell.h, cell.x, cell.y);
-      return `<image href="${art.href}" x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" preserveAspectRatio="xMidYMid meet"/>`;
+      const inner = {
+        x: cell.x + inset,
+        y: cell.y + inset,
+        w: cell.w - inset * 2,
+        h: cell.h - inset * 2,
+      };
+      const box = fitBox(art.iw, art.ih, inner.w, inner.h, inner.x, inner.y);
+      const chrome = framed
+        ? [
+            `<rect x="${cell.x}" y="${cell.y}" width="${cell.w}" height="${cell.h}" rx="${radius}" ry="${radius}" fill="#FAFBFC"/>`,
+            `<rect x="${cell.x + stroke / 2}" y="${cell.y + stroke / 2}" width="${cell.w - stroke}" height="${cell.h - stroke}" rx="${radius - 2}" ry="${radius - 2}" fill="none" stroke="${xml(options.accent)}" stroke-width="${stroke}"/>`,
+          ].join('\n')
+        : '';
+      return `${chrome}
+<image href="${art.href}" x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" preserveAspectRatio="xMidYMid meet"/>`;
     })
     .join('\n');
 

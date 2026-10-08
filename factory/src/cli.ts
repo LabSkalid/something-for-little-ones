@@ -63,6 +63,7 @@ async function main() {
       writeCopy: rest.includes('--copy'),
       keywords,
       removeOld: rest.includes('--remove-old'),
+      framed: !rest.includes('--no-frames'),
       collectionCount: Number(rest.find((arg) => arg.startsWith('--count='))?.slice('--count='.length) ?? 2) || 2,
     });
     return;

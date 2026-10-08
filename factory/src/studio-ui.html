@@ -154,13 +154,23 @@
       </div>
     </div>
 
+    <label class="check" style="margin-top:0.8rem">
+      <input id="images-only" type="checkbox">
+      Только картинки — обновить PNG/PDF, не трогать названия, описания и текст темы
+    </label>
+
     <div class="row">
       <button id="scan" type="button">Открыть папку</button>
       <button id="name-vision" class="quiet" type="button">Назвать по картинке</button>
       <button id="commit-import" type="button">Залить на сайт</button>
       <button id="pins-after" class="quiet" type="button">Пины этой темы</button>
     </div>
-    <p class="hint">«Назвать по картинке» — дешёвый vision-запрос. «Залить на сайт» модель не вызывает.</p>
+    <div class="row" style="margin-top:0.4rem">
+      <button id="drafts-check-matched" class="quiet" type="button">Отметить сопоставленные</button>
+      <button id="drafts-check-all" class="quiet" type="button">Отметить все</button>
+      <button id="drafts-check-none" class="quiet" type="button">Снять все</button>
+    </div>
+    <p class="hint">Порядок для переделки: подборка Winter → галочка «Только картинки» → «Открыть папку» → дождаться «Сопоставлено» → «Залить». Имена на диске D могут отличаться.</p>
 
     <div id="drafts" class="grid" style="margin-top:1rem"></div>
   </section>
@@ -232,8 +242,12 @@
   <input id="pin-keywords" placeholder="thanksgiving coloring pages, turkey printable, free fall coloring">
 
   <label class="check" style="margin-top:0.8rem">
+    <input id="pin-framed" type="checkbox" checked>
+    Рамки вокруг картинок в бандле (удобно для 4–8 лет; для 2–3 можно снять)
+  </label>
+  <label class="check">
     <input id="pin-copy" type="checkbox">
-    Написать заголовок и описание только для новых пинов без текста (старые описания не трогает)
+    Написать заголовок и описание только для новых пинов без текста (старые в pins.csv не затирает)
   </label>
   <label class="check">
     <input id="pin-remove" type="checkbox">
@@ -268,6 +282,7 @@
   const pinSheetsEl = document.querySelector('#pin-sheets');
   const pinSheetsWrap = document.querySelector('#pin-sheets-wrap');
   let drafts = [];
+  let siteSheets = [];
   let lastTheme = '';
   let pinTargetTheme = '';
 
@@ -310,6 +325,7 @@
         slugs,
         collectionCount: Number(document.querySelector('#pin-count').value || 2),
         writeCopy: document.querySelector('#pin-copy').checked,
+        framed: document.querySelector('#pin-framed').checked,
         removeOld: document.querySelector('#pin-remove').checked,
         keywords: document.querySelector('#pin-keywords').value,
       }),
@@ -359,20 +375,54 @@
   }
 
   function readDraftsFromDom() {
+    const imagesOnly = document.querySelector('#images-only')?.checked;
     return drafts.map((draft) => {
-      const card = draftsEl.querySelector(`[data-id="${draft.id}"]`);
+      const card = draftsEl.querySelector(`[data-id="${CSS.escape(draft.id)}"]`);
       if (!card) return draft;
+      const siteSelect = card.querySelector('[data-field="site-sheet"]');
+      const siteSlug = siteSelect?.value?.trim() || '';
+      const site = siteSheets.find((item) => item.slug === siteSlug);
+      const checked = Boolean(card.querySelector('[data-field="include"]')?.checked);
+      // In images-only mode a chosen site sheet counts as selected even if the box was cleared.
+      const include = checked || Boolean(imagesOnly && site);
       return {
         ...draft,
-        include: card.querySelector('[data-field="include"]').checked,
-        age: card.querySelector('[data-field="age"]').value,
-        slug: card.querySelector('[data-field="slug"]').value.trim(),
-        title: card.querySelector('[data-field="title"]').value.trim(),
+        include,
+        age: site?.age || card.querySelector('[data-field="age"]').value,
+        slug: siteSlug || card.querySelector('[data-field="slug"]').value.trim(),
+        title: site?.title || card.querySelector('[data-field="title"]').value.trim(),
         description: card.querySelector('[data-field="description"]').value.trim(),
         alt: card.querySelector('[data-field="alt"]').value.trim(),
         parentNote: card.querySelector('[data-field="parentNote"]').value.trim(),
       };
     });
+  }
+
+  function markDraftIncludes(mode) {
+    const known = new Set(siteSheets.map((sheet) => sheet.slug));
+    draftsEl.querySelectorAll('.card').forEach((card) => {
+      const box = card.querySelector('[data-field="include"]');
+      const siteSelect = card.querySelector('[data-field="site-sheet"]');
+      const slug = (siteSelect?.value || card.querySelector('[data-field="slug"]')?.value || '').trim();
+      if (!box) return;
+      if (mode === 'all') box.checked = true;
+      else if (mode === 'none') box.checked = false;
+      else box.checked = Boolean(slug && known.has(slug));
+    });
+  }
+
+  function siteSheetOptions(selectedSlug) {
+    if (!siteSheets.length) return '';
+    const known = new Set(siteSheets.map((sheet) => sheet.slug));
+    const matched = known.has(selectedSlug);
+    return `
+      <label>Лист на сайте</label>
+      <select data-field="site-sheet">
+        <option value="" ${matched ? '' : 'selected'}>— не сопоставлено —</option>
+        ${siteSheets.map((sheet) =>
+          `<option value="${esc(sheet.slug)}" ${sheet.slug === selectedSlug ? 'selected' : ''}>${esc(sheet.age)} · ${esc(sheet.title)} (${esc(sheet.slug)})</option>`
+        ).join('')}
+      </select>`;
   }
 
   function paintDrafts(list) {
@@ -389,6 +439,7 @@
               ).join('')}
             </select>
           </div>
+          ${siteSheetOptions(draft.slug)}
           <label>slug</label>
           <input data-field="slug" value="${esc(draft.slug)}">
           <label>title</label>
@@ -402,6 +453,19 @@
           <p class="hint">${esc(draft.file)}</p>
         </div>
       </div>`).join('');
+
+    draftsEl.querySelectorAll('[data-field="site-sheet"]').forEach((select) => {
+      select.addEventListener('change', () => {
+        const card = select.closest('.card');
+        const slug = select.value;
+        const sheet = siteSheets.find((item) => item.slug === slug);
+        if (!card || !sheet) return;
+        card.querySelector('[data-field="slug"]').value = sheet.slug;
+        card.querySelector('[data-field="title"]').value = sheet.title;
+        card.querySelector('[data-field="age"]').value = sheet.age;
+        card.querySelector('[data-field="include"]').checked = true;
+      });
+    });
   }
 
   async function loadThemes() {
@@ -489,6 +553,8 @@
       body: JSON.stringify({
         folder: document.querySelector('#folder').value,
         defaultAge: document.querySelector('#default-age').value,
+        theme: importTheme.value,
+        imagesOnly: document.querySelector('#images-only').checked,
       }),
     });
     const data = await response.json();
@@ -496,8 +562,22 @@
       logEl.textContent = data.error || 'Не удалось открыть папку.';
       return;
     }
+    siteSheets = data.siteSheets || [];
     paintDrafts(data.sheets || []);
-    logEl.textContent = `Найдено листов: ${(data.sheets || []).length}. Проверьте названия или нажмите «Назвать по картинке».`;
+    const imagesOnly = document.querySelector('#images-only').checked;
+    if (imagesOnly || siteSheets.length) markDraftIncludes('matched');
+    const total = (data.sheets || []).length;
+    const matched = Number(data.matched || 0);
+    if (imagesOnly || siteSheets.length) {
+      logEl.textContent =
+        `Найдено файлов: ${total}. Сопоставлено с сайтом: ${matched}.` +
+        (matched < total
+          ? ` Остальные выберите вручную в списке «Лист на сайте» (или оставьте выключенными).`
+          : ` Можно заливать.`) +
+        (imagesOnly ? ' Режим: только картинки.' : '');
+    } else {
+      logEl.textContent = `Найдено листов: ${total}. Проверьте названия или нажмите «Назвать по картинке».`;
+    }
   });
 
   document.querySelector('#name-vision').addEventListener('click', async () => {
@@ -516,13 +596,34 @@
     if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить именование.';
   });
 
+  document.querySelector('#drafts-check-matched')?.addEventListener('click', () => markDraftIncludes('matched'));
+  document.querySelector('#drafts-check-all')?.addEventListener('click', () => markDraftIncludes('all'));
+  document.querySelector('#drafts-check-none')?.addEventListener('click', () => markDraftIncludes('none'));
+
   document.querySelector('#commit-import').addEventListener('click', async () => {
-    const sheets = readDraftsFromDom();
-    if (!sheets.some((sheet) => sheet.include)) {
-      logEl.textContent = 'Отметьте хотя бы один лист.';
+    const imagesOnly = document.querySelector('#images-only').checked;
+    if (!drafts.length) {
+      logEl.textContent =
+        'Сначала нажмите «Открыть папку» — под полем должны появиться карточки с картинками. Путь в поле сам по себе ничего не заливает.';
       return;
     }
-    if (!confirm('Залить отмеченные листы на сайт? Модель картинок не вызывается.')) return;
+    if (imagesOnly) markDraftIncludes('matched');
+    const sheets = readDraftsFromDom();
+    const ready = sheets.filter((sheet) => sheet.include);
+    if (!ready.length) {
+      logEl.textContent = imagesOnly
+        ? 'Карточки есть, но ни одна не сопоставлена с сайтом. Нажмите «Открыть папку» ещё раз при выбранной подборке Winter и галочке «Только картинки», дождитесь строки «Сопоставлено: N», затем «Отметить сопоставленные» и «Залить».'
+        : 'Отметьте хотя бы один лист галочкой «Взять» (или кнопку «Отметить все»).';
+      return;
+    }
+    if (imagesOnly && (importTheme.value === '__new__' || !importTheme.value)) {
+      logEl.textContent = 'Для «только картинки» выберите существующую подборку, не «Новая».';
+      return;
+    }
+    const ok = imagesOnly
+      ? confirm('Обновить только картинки (PNG/PDF)? Названия, описания и текст темы не изменятся.')
+      : confirm('Залить отмеченные листы на сайт? Модель картинок не вызывается. Названия и тексты листов будут записаны заново.');
+    if (!ok) return;
     const response = await fetch('/api/import/commit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -532,10 +633,17 @@
         kind: document.querySelector('#import-kind').value,
         ageBand: document.querySelector('#import-ageband').value,
         sheets,
+        imagesOnly,
       }),
     });
     const data = await response.json();
-    if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить импорт.';
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить импорт.';
+      return;
+    }
+    logEl.textContent = imagesOnly
+      ? 'Заливка запущена: обновляю PNG/PDF по одному. В логе появятся строки images-only 1/N… Это может занять несколько минут.'
+      : 'Импорт запущен. Следите за логом ниже.';
   });
 
   document.querySelector('#pins-after').addEventListener('click', async () => {
