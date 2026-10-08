@@ -7,7 +7,6 @@ import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
 import { chat, coloringPrompt, generateColoringPage } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
-import { buildPins } from './build-assets.ts';
 import { loadEnv } from './env.ts';
 import { printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
 
@@ -218,7 +217,13 @@ async function nextOrder(theme: string) {
 
 export async function produce(briefPath: string, dryRun: boolean) {
   loadEnv();
-  const brief = briefSchema.parse(parse(await fs.readFile(briefPath, 'utf8')));
+  let brief: Brief;
+  try {
+    brief = briefSchema.parse(parse(await fs.readFile(briefPath, 'utf8')));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Задание рисования собрано неправильно: ${message}`);
+  }
   for (const idea of brief.ideas) assertOriginal(`${idea.title} ${idea.prompt}`);
   const pending: Idea[] = [];
   for (const idea of brief.ideas) {
@@ -273,6 +278,8 @@ export async function produce(briefPath: string, dryRun: boolean) {
     known.push({ title, slug });
   }
   await ensureTheme(brief, known);
-  await buildPins(brief.slug);
-  console.log(`Готово. Новых страниц: ${created.length}. Пин обновлён только у этой подборки.`);
+  // Do not auto-build every pin for the theme here. Pin generation is intentional
+  // from the studio (bundles / singles / copy) and can be slow on large sets.
+  console.log(`Готово. Новых страниц: ${created.length}.`);
+  console.log('Пины сами не собирала — нажмите «Пины» в фабрике, если они нужны.');
 }

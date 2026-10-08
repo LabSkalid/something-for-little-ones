@@ -74,6 +74,24 @@
   .note {
     background: var(--soft); border-radius: 12px; padding: 0.8rem 1rem; margin: 0.6rem 0 0;
   }
+  dialog {
+    border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem 1.1rem;
+    width: min(560px, calc(100% - 2rem)); color: var(--ink);
+  }
+  dialog::backdrop { background: rgba(36, 48, 56, 0.35); }
+  dialog h2 { margin: 0 0 0.4rem; font-size: 1.15rem; }
+  .sheet-list {
+    max-height: 220px; overflow: auto; border: 1px solid var(--line);
+    border-radius: 10px; padding: 0.45rem 0.6rem; background: #fff;
+  }
+  .sheet-list label {
+    display: flex; gap: 0.45rem; align-items: baseline; font-weight: 500;
+    margin: 0.25rem 0; font-size: 0.95rem;
+  }
+  .sheet-list input { width: auto; }
+  .modes { display: grid; gap: 0.35rem; margin-top: 0.4rem; }
+  .modes label { font-weight: 600; display: flex; gap: 0.45rem; align-items: center; margin: 0; }
+  .modes input { width: auto; }
 </style>
 <main>
   <h1>Фабрика</h1>
@@ -148,7 +166,7 @@
   </section>
 
   <section id="panel-draw" class="panel">
-    <p>Новые рисунки и перерисовка вызывают платную модель картинок. Пины собираются из готовых PNG и модель не вызывают.</p>
+    <p>Новые рисунки и перерисовка вызывают платную модель картинок. Сами картинки пинов бесплатные. Текст для Pinterest — дешёвая текстовая модель, только если включите галочку.</p>
     <section id="themes"></section>
     <h2>Новые рисунки</h2>
     <label for="theme">Подборка</label>
@@ -174,6 +192,52 @@
   <h2>Ход работы</h2>
   <pre id="log">Пока ничего не запущено.</pre>
 </main>
+
+<dialog id="pin-dialog">
+  <h2>Собрать пины</h2>
+  <p id="pin-dialog-theme" class="hint">Тема не выбрана</p>
+
+  <div class="modes">
+    <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы (по 3–4 картинки)</label>
+    <label><input type="radio" name="pin-mode" value="single"> Только отдельные пины</label>
+    <label><input type="radio" name="pin-mode" value="both"> И бандлы, и отдельные</label>
+  </div>
+
+  <label for="pin-count">Сколько бандлов</label>
+  <select id="pin-count">
+    <option value="1">1</option>
+    <option value="2" selected>2</option>
+    <option value="3">3</option>
+  </select>
+
+  <label for="pin-keywords">Ключевики для Pinterest (через запятую)</label>
+  <input id="pin-keywords" placeholder="thanksgiving coloring pages, turkey printable, free fall coloring">
+
+  <label class="check" style="margin-top:0.8rem">
+    <input id="pin-copy" type="checkbox" checked>
+    Написать заголовок и описание для Pinterest (дешёвый текст, не рисование)
+  </label>
+  <label class="check">
+    <input id="pin-remove" type="checkbox">
+    Удалить старые пины этого типа у темы
+  </label>
+
+  <div id="pin-sheets-wrap">
+    <label>Какие листы брать</label>
+    <div class="row" style="margin-top:0.3rem">
+      <button id="pin-sheets-all" class="quiet" type="button">Все</button>
+      <button id="pin-sheets-none" class="quiet" type="button">Снять</button>
+    </div>
+    <div id="pin-sheets" class="sheet-list"></div>
+    <p class="hint">Для бандла берутся отмеченные листы по порядку, группами по 4.</p>
+  </div>
+
+  <div class="row">
+    <button id="pin-run" type="button">Собрать</button>
+    <button id="pin-cancel" class="quiet" type="button">Отмена</button>
+  </div>
+</dialog>
+
 <script>
   const draftsEl = document.querySelector('#drafts');
   const themesEl = document.querySelector('#themes');
@@ -182,8 +246,59 @@
   const newFields = document.querySelector('#new-fields');
   const importNewFields = document.querySelector('#import-new-fields');
   const logEl = document.querySelector('#log');
+  const pinDialog = document.querySelector('#pin-dialog');
+  const pinSheetsEl = document.querySelector('#pin-sheets');
+  const pinSheetsWrap = document.querySelector('#pin-sheets-wrap');
   let drafts = [];
   let lastTheme = '';
+  let pinTargetTheme = '';
+
+  async function openPinDialog(theme) {
+    pinTargetTheme = theme || '';
+    document.querySelector('#pin-dialog-theme').textContent = theme
+      ? `Тема: ${theme}`
+      : 'Все подборки (выбор листов недоступен — лучше собирать по одной теме)';
+    pinSheetsWrap.classList.toggle('hidden', !theme);
+    pinSheetsEl.innerHTML = '';
+    if (theme) {
+      const data = await fetch('/api/pins/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
+      const sheets = data.sheets || [];
+      pinSheetsEl.innerHTML = sheets.map((sheet) => `
+        <label>
+          <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasPrint ? 'checked' : 'disabled'}>
+          <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${sheet.hasPrint ? '' : ' · нет PNG'}</span>
+        </label>`).join('') || '<p class="hint">Листов нет.</p>';
+    }
+    pinDialog.showModal();
+  }
+
+  async function runPins() {
+    const mode = document.querySelector('input[name="pin-mode"]:checked')?.value || 'collection';
+    const slugs = pinTargetTheme
+      ? [...pinSheetsEl.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value)
+      : undefined;
+    if (pinTargetTheme && mode !== 'both' && (!slugs || !slugs.length)) {
+      logEl.textContent = 'Отметьте хотя бы один лист.';
+      return;
+    }
+    pinDialog.close();
+    lastTheme = pinTargetTheme || lastTheme;
+    const response = await fetch('/api/pins', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme: pinTargetTheme || undefined,
+        mode,
+        slugs,
+        collectionCount: Number(document.querySelector('#pin-count').value || 2),
+        writeCopy: document.querySelector('#pin-copy').checked,
+        removeOld: document.querySelector('#pin-remove').checked,
+        keywords: document.querySelector('#pin-keywords').value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить пины.';
+  }
 
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -286,9 +401,8 @@
   themesEl.addEventListener('click', async (event) => {
     const pins = event.target.closest('[data-pins]');
     if (pins) {
-      if (!confirm('Собрать пины этой подборки из готовых рисунков? Модель не вызывается.')) return;
       lastTheme = pins.dataset.pins;
-      await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: pins.dataset.pins }) });
+      await openPinDialog(pins.dataset.pins);
       return;
     }
     const button = event.target.closest('[data-redraw]');
@@ -298,8 +412,16 @@
   });
 
   document.querySelector('#pins-all').addEventListener('click', async () => {
-    if (!confirm('Собрать пины всех подборок из готовых рисунков? Модель не вызывается.')) return;
-    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    await openPinDialog('');
+  });
+
+  document.querySelector('#pin-cancel').addEventListener('click', () => pinDialog.close());
+  document.querySelector('#pin-run').addEventListener('click', () => runPins());
+  document.querySelector('#pin-sheets-all').addEventListener('click', () => {
+    pinSheetsEl.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach((input) => { input.checked = true; });
+  });
+  document.querySelector('#pin-sheets-none').addEventListener('click', () => {
+    pinSheetsEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
   });
 
   document.querySelector('#redraw-all').addEventListener('click', async () => {
@@ -308,18 +430,36 @@
   });
 
   document.querySelector('#create').addEventListener('click', async () => {
-    const response = await fetch('/api/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        theme: themeSelect.value,
-        title: document.querySelector('#title').value,
-        kind: document.querySelector('#kind').value,
-        ideas: document.querySelector('#ideas').value,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) logEl.textContent = data.error || 'Не получилось запустить.';
+    const ideas = document.querySelector('#ideas').value.trim();
+    if (!ideas) {
+      logEl.textContent = 'Напишите хотя бы один рисунок в поле, каждый с новой строки.\nПример:\nPumpkin: one huge pumpkin\nEar of corn: one thick ear of corn';
+      return;
+    }
+    if (!themeSelect.value && document.querySelector('#title').value.trim().length < 3) {
+      logEl.textContent = 'Выберите подборку в списке или напишите название новой.';
+      return;
+    }
+    logEl.textContent = 'Запускаю рисование…';
+    try {
+      const response = await fetch('/api/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          theme: themeSelect.value,
+          title: document.querySelector('#title').value,
+          kind: document.querySelector('#kind').value,
+          ideas,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        logEl.textContent = data.error || 'Не получилось запустить.';
+        return;
+      }
+      logEl.textContent = 'Рисование запущено. Ниже появится ход работы. Пины после этого сами не собираются — их можно сделать кнопкой «Пины».';
+    } catch (error) {
+      logEl.textContent = 'Фабрика не отвечает. Закройте старое окно и снова откройте Open Factory.bat.\n' + String(error?.message || error);
+    }
   });
 
   document.querySelector('#scan').addEventListener('click', async () => {
@@ -384,8 +524,7 @@
       logEl.textContent = 'Сначала залейте тему или выберите существующую подборку.';
       return;
     }
-    if (!confirm('Собрать пины этой подборки из готовых рисунков?')) return;
-    await fetch('/api/pins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme }) });
+    await openPinDialog(theme);
   });
 
   let wasRunning = false;

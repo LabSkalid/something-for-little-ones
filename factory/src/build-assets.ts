@@ -6,6 +6,7 @@ import sharp from 'sharp';
 import { readSite } from './brand.ts';
 import { stampSite } from './footer.ts';
 import { pngToPdf } from './pdf.ts';
+import { writePinterestCopy } from './pin-copy.ts';
 import { renderCollectionPin, renderPin } from './pins.ts';
 import {
   artRoot,
@@ -17,6 +18,7 @@ import {
 
 type ThemeData = {
   title: string;
+  description?: string;
   accent: string;
   pins?: { id: string; title: string; subtitle: string }[];
 };
@@ -25,6 +27,30 @@ type SheetData = {
   title: string;
   slug: string;
   order: number;
+  description?: string;
+  age?: string;
+};
+
+export type PinMode = 'collection' | 'single' | 'both';
+
+export type PinBuildOptions = {
+  theme?: string;
+  mode?: PinMode;
+  slugs?: string[];
+  collectionCount?: number;
+  removeOld?: boolean;
+  writeCopy?: boolean;
+  keywords?: string;
+};
+
+type PinRow = {
+  filename: string;
+  type: 'single' | 'collection';
+  title: string;
+  url: string;
+  pinTitle?: string;
+  pinDescription?: string;
+  keywords?: string;
 };
 
 async function walkSvg(dir: string): Promise<string[]> {
@@ -89,31 +115,62 @@ export async function buildSheetAssets() {
   }
 }
 
-type PinRow = {
-  filename: string;
-  type: 'single' | 'collection';
-  title: string;
-  url: string;
-};
-
 function csvField(value: string) {
   if (/[",\r\n]/.test(value)) return `"${value.replaceAll('"', '""')}"`;
   return value;
 }
 
-function collectionSets<T>(pages: T[]): T[][] {
+function parseCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let cur = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"' && line[i + 1] === '"') {
+        cur += '"';
+        i += 1;
+      } else if (ch === '"') inQuotes = false;
+      else cur += ch;
+    } else if (ch === '"') inQuotes = true;
+    else if (ch === ',') {
+      out.push(cur);
+      cur = '';
+    } else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+function collectionSets<T>(pages: T[], maxGroups = 2): T[][] {
   if (pages.length < 3) return [];
-  if (pages.length === 3) return [pages];
-  const first = pages.slice(0, 4);
-  if (pages.length === 4) return [first, pages.slice(1)];
-  const start = pages.length >= 8 ? 4 : pages.length - 4;
-  return [first, pages.slice(start, start + 4)];
+  const groups: T[][] = [];
+  const firstSize = Math.min(4, pages.length);
+  groups.push(pages.slice(0, firstSize));
+  if (maxGroups >= 2 && pages.length >= 6) {
+    const start = pages.length >= 8 ? 4 : Math.max(0, pages.length - 4);
+    const second = pages.slice(start, start + 4);
+    if (second.length >= 3) groups.push(second);
+  }
+  return groups.slice(0, maxGroups);
 }
 
 async function writeManifest(rows: PinRow[]) {
-  const lines = ['filename,type,title,destination URL'];
+  const lines = ['filename,type,theme_title,destination URL,pin_title,pin_description,keywords'];
   for (const row of rows) {
-    lines.push([row.filename, row.type, row.title, row.url].map(csvField).join(','));
+    lines.push(
+      [
+        row.filename,
+        row.type,
+        row.title,
+        row.url,
+        row.pinTitle ?? '',
+        row.pinDescription ?? '',
+        row.keywords ?? '',
+      ]
+        .map(csvField)
+        .join(','),
+    );
   }
   await fs.writeFile(path.join(pinRoot, 'pins.csv'), `${lines.join('\n')}\n`);
 }
@@ -124,13 +181,16 @@ async function readManifest() {
     const rows: PinRow[] = [];
     for (const line of raw.split(/\r?\n/).slice(1)) {
       if (!line.trim()) continue;
-      const parts = line.split(',');
+      const parts = parseCsvLine(line);
       if (parts.length < 4) continue;
       rows.push({
         filename: parts[0],
         type: parts[1] === 'collection' ? 'collection' : 'single',
         title: parts[2],
-        url: parts.slice(3).join(','),
+        url: parts[3],
+        pinTitle: parts[4] ?? '',
+        pinDescription: parts[5] ?? '',
+        keywords: parts[6] ?? '',
       });
     }
     return rows;
@@ -139,16 +199,65 @@ async function readManifest() {
   }
 }
 
-export async function buildPins(onlyTheme?: string) {
+export async function listPinSheets(themeId: string) {
+  const sheetDir = path.join(sheetContentRoot, themeId);
+  let sheetFiles: string[] = [];
+  try {
+    sheetFiles = (await fs.readdir(sheetDir)).filter((name) => name.endsWith('.md'));
+  } catch {
+    return [];
+  }
+  const sheets = [];
+  for (const sheetFile of sheetFiles) {
+    const sheet = readFrontmatter(await fs.readFile(path.join(sheetDir, sheetFile), 'utf8')) as SheetData;
+    const slug = String(sheet.slug ?? sheetFile.replace(/\.md$/, ''));
+    let hasPrint = false;
+    try {
+      await fs.access(path.join(printRoot, themeId, `${slug}.png`));
+      hasPrint = true;
+    } catch {
+      hasPrint = false;
+    }
+    sheets.push({
+      slug,
+      title: String(sheet.title ?? slug),
+      age: String(sheet.age ?? ''),
+      order: Number(sheet.order ?? 0),
+      description: String(sheet.description ?? ''),
+      hasPrint,
+    });
+  }
+  return sheets.sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
+}
+
+export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
+  const options: PinBuildOptions =
+    typeof themeOrOptions === 'string' || themeOrOptions === undefined
+      ? { theme: themeOrOptions, mode: 'both', removeOld: true, writeCopy: false }
+      : themeOrOptions;
+
+  const mode: PinMode = options.mode ?? 'both';
+  const onlyTheme = options.theme || undefined;
+  const selected = new Set((options.slugs ?? []).filter(Boolean));
+  const collectionCount = Math.max(1, Math.min(4, options.collectionCount ?? 2));
+  const removeOld = Boolean(options.removeOld);
+  const writeCopy = Boolean(options.writeCopy);
+  const keywords = (options.keywords ?? '').trim();
+
   await fs.mkdir(pinRoot, { recursive: true });
   const site = readSite();
   const origin = site.url.replace(/\/$/, '');
   const themes = (await fs.readdir(themeContentRoot)).filter((name) => name.endsWith('.md')).sort();
   const rows: PinRow[] = [];
+  const copyInputs: Parameters<typeof writePinterestCopy>[0] = [];
   let singles = 0;
   let collections = 0;
   const skipped: string[] = [];
-  console.log('pins: local composites only, no image model');
+  console.log(
+    `pins: local composites only, no image model; mode=${mode}` +
+      (writeCopy ? '; Pinterest copy via text model' : ''),
+  );
+
   for (const file of themes) {
     const themeId = file.replace(/\.md$/, '');
     if (onlyTheme && themeId !== onlyTheme) continue;
@@ -168,13 +277,23 @@ export async function buildPins(onlyTheme?: string) {
       sheets.push(sheet);
     }
     sheets.sort((a, b) => a.order - b.order);
-    const pages: { slug: string; image: Buffer }[] = [];
+    type Page = { slug: string; image: Buffer; title: string; description: string; age: string };
+    const pages: Page[] = [];
     for (const sheet of sheets) {
-      const pngPath = path.join(printRoot, themeId, `${sheet.slug}.png`);
+      const slug = String(sheet.slug ?? '');
+      if (!slug) continue;
+      if (selected.size && !selected.has(slug)) continue;
+      const pngPath = path.join(printRoot, themeId, `${slug}.png`);
       try {
-        pages.push({ slug: sheet.slug, image: await drawingOnly(await fs.readFile(pngPath)) });
+        pages.push({
+          slug,
+          image: await drawingOnly(await fs.readFile(pngPath)),
+          title: String(sheet.title ?? slug),
+          description: String(sheet.description ?? ''),
+          age: String(sheet.age ?? ''),
+        });
       } catch {
-        console.warn(`missing preview for ${themeId}/${sheet.slug}`);
+        console.warn(`missing preview for ${themeId}/${slug}`);
       }
     }
     if (!pages.length) {
@@ -182,60 +301,136 @@ export async function buildPins(onlyTheme?: string) {
       console.log(`skip ${themeId}: no print files`);
       continue;
     }
+
     const title = data.title;
-    const accent = data.accent || '#E36C1F';
+    const accent = data.accent || '#1d7ad6';
     const keep = new Set<string>();
-    for (const page of pages) {
-      const filename = `${themeId}-${page.slug}.png`;
-      const png = await renderPin({ title, accent, brand: site.name, image: page.image });
-      await fs.writeFile(path.join(pinRoot, filename), png);
-      keep.add(filename);
-      rows.push({
-        filename,
-        type: 'single',
-        title,
-        url: `${origin}/${themeId}/${page.slug}/`,
-      });
-      singles += 1;
-      console.log(`pin ${filename}`);
+    const themeRows: PinRow[] = [];
+
+    if (mode === 'single' || mode === 'both') {
+      for (const page of pages) {
+        const filename = `${themeId}-${page.slug}.png`;
+        const png = await renderPin({ title, accent, brand: site.name, image: page.image });
+        await fs.writeFile(path.join(pinRoot, filename), png);
+        keep.add(filename);
+        const url = `${origin}/${themeId}/${page.slug}/`;
+        themeRows.push({ filename, type: 'single', title, url });
+        copyInputs.push({
+          filename,
+          type: 'single',
+          themeTitle: title,
+          url,
+          sheetTitle: page.title,
+          sheetDescription: page.description,
+          age: page.age,
+        });
+        singles += 1;
+        console.log(`pin ${filename}`);
+      }
     }
-    const groups = collectionSets(pages);
-    if (!groups.length) {
-      skipped.push(`${themeId} collection (${pages.length} sheets)`);
-      console.log(`skip collection ${themeId}: ${pages.length} sheet${pages.length === 1 ? '' : 's'}`);
+
+    if (mode === 'collection' || mode === 'both') {
+      const groups = collectionSets(pages, collectionCount);
+      if (!groups.length) {
+        skipped.push(`${themeId} collection (${pages.length} sheets)`);
+        console.log(`skip collection ${themeId}: ${pages.length} sheet${pages.length === 1 ? '' : 's'}`);
+      }
+      for (const [index, group] of groups.entries()) {
+        const filename = `${themeId}-collection-${index + 1}.png`;
+        const png = await renderCollectionPin({
+          title,
+          accent,
+          brand: site.name,
+          images: group.map((page) => page.image),
+        });
+        await fs.writeFile(path.join(pinRoot, filename), png);
+        keep.add(filename);
+        const url = `${origin}/${themeId}/`;
+        themeRows.push({ filename, type: 'collection', title, url });
+        copyInputs.push({
+          filename,
+          type: 'collection',
+          themeTitle: title,
+          url,
+          sheetTitle: group.map((page) => page.title).join(', '),
+          sheetDescription: data.description ?? '',
+          age: [...new Set(group.map((page) => page.age).filter(Boolean))].join(', '),
+        });
+        collections += 1;
+        console.log(`pin ${filename}`);
+      }
     }
-    for (const [index, group] of groups.entries()) {
-      const filename = `${themeId}-collection-${index + 1}.png`;
-      const png = await renderCollectionPin({
-        title,
-        accent,
-        brand: site.name,
-        images: group.map((page) => page.image),
-      });
-      await fs.writeFile(path.join(pinRoot, filename), png);
-      keep.add(filename);
-      rows.push({
-        filename,
-        type: 'collection',
-        title,
-        url: `${origin}/${themeId}/`,
-      });
-      collections += 1;
-      console.log(`pin ${filename}`);
-    }
-    const existing = await fs.readdir(pinRoot);
-    for (const name of existing) {
-      if (!name.endsWith('.png') || !name.startsWith(`${themeId}-`) || keep.has(name)) continue;
-      await fs.rm(path.join(pinRoot, name));
-      console.log(`remove old pin ${name}`);
+
+    rows.push(...themeRows);
+
+    if (removeOld) {
+      const existing = await fs.readdir(pinRoot);
+      for (const name of existing) {
+        if (!name.endsWith('.png') || !name.startsWith(`${themeId}-`)) continue;
+        const isCollection = /-collection-\d+\.png$/i.test(name);
+        if (mode === 'collection' && !isCollection) continue;
+        if (mode === 'single' && isCollection) continue;
+        if (keep.has(name)) continue;
+        await fs.rm(path.join(pinRoot, name));
+        console.log(`remove old pin ${name}`);
+      }
     }
   }
-  const manifest = onlyTheme ? [...(await readManifest()).filter((row) => !row.filename.startsWith(`${onlyTheme}-`)), ...rows] : rows;
+
+  if (writeCopy && copyInputs.length) {
+    console.log(`pin copy: ${copyInputs.length} texts via cheap text model`);
+    try {
+      // Chunk to keep prompts small.
+      const chunkSize = 12;
+      const copyMap = new Map<string, { pinTitle: string; pinDescription: string }>();
+      for (let i = 0; i < copyInputs.length; i += chunkSize) {
+        const chunk = copyInputs.slice(i, i + chunkSize);
+        const part = await writePinterestCopy(chunk, keywords);
+        for (const [filename, value] of part) copyMap.set(filename, value);
+      }
+      for (const row of rows) {
+        const copy = copyMap.get(row.filename);
+        if (!copy) continue;
+        row.pinTitle = copy.pinTitle;
+        row.pinDescription = copy.pinDescription;
+        row.keywords = keywords;
+      }
+      console.log(`pin copy done: ${copyMap.size}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.log(`pin copy failed: ${message}`);
+      console.log('Картинки пинов уже сохранены. Текст можно дописать позже.');
+    }
+  }
+
+  let manifest: PinRow[];
+  if (onlyTheme) {
+    const previous = await readManifest();
+    const kept = previous.filter((row) => {
+      if (!row.filename.startsWith(`${onlyTheme}-`)) return true;
+      const isCollection = /-collection-\d+\.png$/i.test(row.filename);
+      if (mode === 'collection' && !isCollection) return true;
+      if (mode === 'single' && isCollection) return true;
+      // Replace rows for the types we rebuilt.
+      return false;
+    });
+    manifest = [...kept, ...rows];
+  } else if (mode === 'both' && !selected.size) {
+    manifest = rows;
+  } else {
+    const previous = await readManifest();
+    const rebuilt = new Set(rows.map((row) => row.filename));
+    manifest = [...previous.filter((row) => !rebuilt.has(row.filename)), ...rows];
+  }
   await writeManifest(manifest);
-  console.log(`pins done: ${singles} single, ${collections} collection${skipped.length ? `; skipped: ${skipped.join(', ')}` : ''}`);
+  console.log(
+    `pins done: ${singles} single, ${collections} collection` +
+      (skipped.length ? `; skipped: ${skipped.join(', ')}` : ''),
+  );
+  console.log(`manifest: ${path.join(pinRoot, 'pins.csv')}`);
 }
 
 export async function buildAssets() {
   await buildSheetAssets();
-  await buildPins();
+  await buildPins({ mode: 'both', removeOld: true, writeCopy: false });
 }

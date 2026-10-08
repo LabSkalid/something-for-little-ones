@@ -4,7 +4,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
-import { buildPins } from './build-assets.ts';
+import { buildPins, listPinSheets, type PinBuildOptions, type PinMode } from './build-assets.ts';
 import { loadEnv } from './env.ts';
 import {
   type AgeBand,
@@ -78,7 +78,9 @@ function parseIdeas(text: string) {
     if (!line || line.startsWith('#')) continue;
     const splitAt = line.indexOf(':');
     const name = (splitAt === -1 ? line : line.slice(0, splitAt)).trim();
-    const prompt = (splitAt === -1 ? line : line.slice(splitAt + 1)).trim() || name;
+    let prompt = (splitAt === -1 ? line : line.slice(splitAt + 1)).trim() || name;
+    // produce() requires prompt length >= 8
+    if (prompt.length < 8) prompt = `a simple ${prompt} coloring page drawing`;
     let slug = slugify(name.replace(/coloring page/i, ''));
     if (!slug) continue;
     while (used.has(slug)) slug = `${slug}-2`;
@@ -259,10 +261,33 @@ const server = http.createServer(async (req, res) => {
       });
       return send(res, 202, { ok: true });
     }
+    if (req.method === 'GET' && url.pathname === '/api/pins/sheets') {
+      const theme = url.searchParams.get('theme') ?? '';
+      if (!theme) throw new Error('Укажите тему.');
+      return send(res, 200, { sheets: await listPinSheets(theme) });
+    }
     if (req.method === 'POST' && url.pathname === '/api/pins') {
       const body = await readBody(req);
       const theme = body.theme ? String(body.theme) : undefined;
-      startJob(theme ? `Пины ${theme}` : 'Пины всех подборок', () => buildPins(theme));
+      const mode = (['collection', 'single', 'both'].includes(String(body.mode))
+        ? String(body.mode)
+        : 'both') as PinMode;
+      const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : undefined;
+      const options: PinBuildOptions = {
+        theme,
+        mode,
+        slugs,
+        collectionCount: body.collectionCount ? Number(body.collectionCount) : 2,
+        removeOld: Boolean(body.removeOld),
+        writeCopy: body.writeCopy !== false,
+        keywords: body.keywords ? String(body.keywords) : '',
+      };
+      const label = [
+        theme ? `Пины ${theme}` : 'Пины всех подборок',
+        mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
+        options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
+      ].join(', ');
+      startJob(label, () => buildPins(options));
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/redraw') {

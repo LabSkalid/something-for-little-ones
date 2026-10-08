@@ -12,10 +12,14 @@ const help = `Фабрика раскрасок.
       Собрать PNG, PDF и пины подборок из factory/art.
 
   npm run pins
-      Собрать пины всех подборок из уже готовых PNG в site/public/print.
-      Модель не вызывается. Рабочая папка: factory.
+      Собрать пины из уже готовых PNG. Картинки бесплатные.
+      Текст для Pinterest — только с флагом --copy (дешёвая текстовая модель).
       Одна подборка:
       npm run pins -- halloween-coloring-pages
+      Только бандлы:
+      npm run pins -- halloween-coloring-pages --mode=collection
+      С текстом:
+      npm run pins -- halloween-coloring-pages --mode=collection --copy --keywords="thanksgiving, turkey"
 
   npm run produce -- briefs/animal-coloring-pages.yaml
       По заданию дорисовать новые страницы и положить их на сайт.
@@ -49,7 +53,18 @@ async function main() {
   }
   if (command === 'pins') {
     const theme = rest.find((arg) => !arg.startsWith('--'));
-    await buildPins(theme);
+    const modeArg = rest.find((arg) => arg.startsWith('--mode='))?.slice('--mode='.length);
+    const keywords = rest.find((arg) => arg.startsWith('--keywords='))?.slice('--keywords='.length) ?? '';
+    const mode =
+      modeArg === 'collection' || modeArg === 'single' || modeArg === 'both' ? modeArg : 'both';
+    await buildPins({
+      theme,
+      mode,
+      writeCopy: rest.includes('--copy'),
+      keywords,
+      removeOld: rest.includes('--remove-old'),
+      collectionCount: Number(rest.find((arg) => arg.startsWith('--count='))?.slice('--count='.length) ?? 2) || 2,
+    });
     return;
   }
   if (command === 'redraw') {
