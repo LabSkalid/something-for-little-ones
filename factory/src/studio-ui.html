@@ -95,11 +95,12 @@
 </style>
 <main>
   <h1>Фабрика</h1>
-  <p class="lede">Две вкладки: сток без перерисовки, и отдельный лист для новых картинок и пинов. Запуск с кнопки Open Factory.bat.</p>
+  <p class="lede">Сток на сайт, рисование/пины, и сборка PDF для Amazon KDP. Запуск с кнопки Open Factory.bat.</p>
 
   <div class="tabs" role="tablist">
     <button class="tab active" type="button" data-tab="import">Сток → сайт</button>
     <button class="tab" type="button" data-tab="draw">Рисовать и пины</button>
+    <button class="tab" type="button" data-tab="kdp">Amazon KDP</button>
   </div>
 
   <section id="panel-import" class="panel active">
@@ -173,6 +174,63 @@
     <p class="hint">Порядок для переделки: подборка Winter → галочка «Только картинки» → «Открыть папку» → дождаться «Сопоставлено» → «Залить». Имена на диске D могут отличаться.</p>
 
     <div id="drafts" class="grid" style="margin-top:1rem"></div>
+  </section>
+
+  <section id="panel-kdp" class="panel">
+    <p>Собирает один PDF интерьера для Amazon KDP из папки SVG/PNG. Срезает рамку, ставит рисунок на страницу 8.5×11, без футера сайта. Шрифт титула и подписей — Fredoka (бесплатный). Обложку KDP делает отдельно.</p>
+    <div class="note">
+      В KDP потом: Paperback → Black &amp; white → trim <strong>8.5" × 11"</strong> → Bleed: <strong>No Bleed</strong>.
+      Пустые обороты помогают, чтобы маркеры не пробивали на следующий рисунок.
+      Подписи — латиница (Bunny, Garden Fox). Один раз нажмите «Назвать по картинке», проверьте список, потом соберите PDF.
+    </div>
+
+    <label for="kdp-folder">Папка с SVG/PNG</label>
+    <input id="kdp-folder" placeholder="D:\COLORING\...\SVG">
+    <div class="row">
+      <button id="kdp-scan" class="quiet" type="button">Открыть папку</button>
+      <button id="kdp-name" class="quiet" type="button">Назвать по картинке</button>
+      <button id="kdp-from-import" class="quiet" type="button">Взять названия из импорта</button>
+    </div>
+    <p id="kdp-pages-meta" class="hint"></p>
+    <div id="kdp-pages" class="grid" style="margin-top:0.6rem"></div>
+
+    <label for="kdp-title">Название книги</label>
+    <input id="kdp-title" placeholder="Adorable Garden Coloring Book">
+
+    <label for="kdp-subtitle">Подзаголовок (на титуле, можно пусто)</label>
+    <input id="kdp-subtitle" placeholder="Bold and Easy Coloring Pages for Kids">
+
+    <div class="two">
+      <div>
+        <label for="kdp-author">Автор (на титуле)</label>
+        <input id="kdp-author" placeholder="Your Name">
+      </div>
+      <div>
+        <label for="kdp-out">Куда сохранить PDF (можно пусто)</label>
+        <input id="kdp-out" placeholder="factory\out\kdp\my-book.pdf">
+      </div>
+    </div>
+
+    <label for="kdp-copyright">Copyright (можно пусто — подставится сам)</label>
+    <input id="kdp-copyright" placeholder="Copyright © 2026 Your Name. All rights reserved.">
+
+    <label class="check" style="margin-top:0.8rem">
+      <input id="kdp-blanks" type="checkbox" checked>
+      Пустая страница после каждого рисунка
+    </label>
+    <label class="check">
+      <input id="kdp-front" type="checkbox" checked>
+      Титул и страница copyright в начале
+    </label>
+    <label class="check">
+      <input id="kdp-captions" type="checkbox" checked>
+      Подписи под рисунками (Fredoka)
+    </label>
+
+    <div class="row" style="margin-top:0.8rem">
+      <button id="kdp-build" type="button">Собрать PDF для KDP</button>
+    </div>
+    <p class="hint">Готовый файл обычно лежит в <code>factory\out\kdp\</code>. Это не заливает ничего на сайт.</p>
   </section>
 
   <section id="panel-draw" class="panel">
@@ -282,9 +340,45 @@
   const pinSheetsEl = document.querySelector('#pin-sheets');
   const pinSheetsWrap = document.querySelector('#pin-sheets-wrap');
   let drafts = [];
+  let kdpPages = [];
   let siteSheets = [];
   let lastTheme = '';
   let pinTargetTheme = '';
+  const kdpPagesEl = document.querySelector('#kdp-pages');
+  const kdpPagesMeta = document.querySelector('#kdp-pages-meta');
+  let lastKdpPaint = '';
+
+  function paintKdpPages(list) {
+    const next = JSON.stringify(list || []);
+    if (next === lastKdpPaint) return;
+    if (document.activeElement?.closest?.('#kdp-pages')) return;
+    lastKdpPaint = next;
+    kdpPages = list || [];
+    const named = kdpPages.filter((page) => (page.caption || '').trim()).length;
+    kdpPagesMeta.textContent = kdpPages.length
+      ? `Листов: ${kdpPages.length}` + (named ? ` · с подписью: ${named}` : ' · подписи пустые — нажмите «Назвать по картинке»')
+      : '';
+    kdpPagesEl.innerHTML = kdpPages.map((page, index) => `
+      <div class="card" data-kdp-index="${index}" style="grid-template-columns:1fr">
+        <div class="fields">
+          <div class="top">
+            <strong>#${index + 1}</strong>
+            <span class="hint" style="margin:0">${esc(page.file.split(/[\\\\/]/).pop())}</span>
+          </div>
+          <label>Подпись (латиница)
+            <input data-field="kdp-caption" value="${esc(page.caption || '')}" placeholder="Bunny">
+          </label>
+        </div>
+      </div>`).join('');
+  }
+
+  function readKdpPagesFromDom() {
+    return kdpPages.map((page, index) => {
+      const card = kdpPagesEl.querySelector(`[data-kdp-index="${index}"]`);
+      const caption = card?.querySelector('[data-field="kdp-caption"]')?.value?.trim() ?? page.caption ?? '';
+      return { file: page.file, caption };
+    });
+  }
 
   async function openPinDialog(theme) {
     pinTargetTheme = theme || '';
@@ -600,6 +694,107 @@
   document.querySelector('#drafts-check-all')?.addEventListener('click', () => markDraftIncludes('all'));
   document.querySelector('#drafts-check-none')?.addEventListener('click', () => markDraftIncludes('none'));
 
+  document.querySelector('#kdp-scan')?.addEventListener('click', async () => {
+    const folder = document.querySelector('#kdp-folder').value.trim();
+    if (!folder) {
+      logEl.textContent = 'Укажите папку с SVG/PNG.';
+      return;
+    }
+    logEl.textContent = 'Сканирую папку…';
+    const response = await fetch('/api/kdp/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folder }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось открыть папку.';
+      return;
+    }
+    paintKdpPages(data.pages || []);
+    logEl.textContent = `Найдено ${kdpPages.length} картинок. Нажмите «Назвать по картинке», потом соберите PDF.`;
+  });
+
+  document.querySelector('#kdp-name')?.addEventListener('click', async () => {
+    const pages = readKdpPagesFromDom();
+    if (!pages.length) {
+      logEl.textContent = 'Сначала нажмите «Открыть папку».';
+      return;
+    }
+    if (!confirm(`Назвать ${pages.length} рисунков через vision? Один проход, дешёвый запрос.`)) return;
+    const response = await fetch('/api/kdp/name', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pages }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить именование.';
+      return;
+    }
+    logEl.textContent = 'Называю по картинке… В логе появятся vision 1/N…';
+  });
+
+  document.querySelector('#kdp-from-import')?.addEventListener('click', async () => {
+    const pages = readKdpPagesFromDom();
+    if (!pages.length) {
+      logEl.textContent = 'Сначала на вкладке Amazon KDP нажмите «Открыть папку» (та же папка, что в импорте).';
+      return;
+    }
+    const fromDom = typeof readDraftsFromDom === 'function' ? readDraftsFromDom() : drafts;
+    const response = await fetch('/api/kdp/from-import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pages, drafts: fromDom.length ? fromDom : drafts }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось перенести названия.';
+      return;
+    }
+    lastKdpPaint = '';
+    paintKdpPages(data.pages || []);
+    logEl.textContent =
+      data.applied > 0
+        ? `Подписи взяты из импорта: ${data.applied} из ${data.total}. Модель не вызывалась. Проверьте список и соберите PDF.`
+        : 'Совпадений по файлам не нашлось. Откройте ту же папку, что называли в импорте.';
+  });
+
+  document.querySelector('#kdp-build')?.addEventListener('click', async () => {
+    const folder = document.querySelector('#kdp-folder').value.trim();
+    const title = document.querySelector('#kdp-title').value.trim();
+    if (!folder || !title) {
+      logEl.textContent = 'Укажите папку с SVG и название книги.';
+      return;
+    }
+    const pages = readKdpPagesFromDom();
+    if (!confirm(`Собрать KDP PDF «${title}»?\nШрифт Fredoka на титуле` +
+      (document.querySelector('#kdp-captions').checked ? ' и подписях' : '') +
+      `.\nЭто может занять несколько минут.`)) return;
+    const response = await fetch('/api/kdp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        folder,
+        title,
+        subtitle: document.querySelector('#kdp-subtitle').value.trim(),
+        author: document.querySelector('#kdp-author').value.trim(),
+        copyright: document.querySelector('#kdp-copyright').value.trim(),
+        outFile: document.querySelector('#kdp-out').value.trim() || undefined,
+        blankBacks: document.querySelector('#kdp-blanks').checked,
+        frontMatter: document.querySelector('#kdp-front').checked,
+        captions: document.querySelector('#kdp-captions').checked,
+        pages: pages.length ? pages : undefined,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить сборку KDP.';
+      return;
+    }
+    logEl.textContent = 'Сборка KDP запущена. В логе будут строки KDP 1/N… Готовый PDF — в factory\\out\\kdp\\';
+  });
+
   document.querySelector('#commit-import').addEventListener('click', async () => {
     const imagesOnly = document.querySelector('#images-only').checked;
     if (!drafts.length) {
@@ -660,6 +855,7 @@
     const data = await fetch('/api/job').then((res) => res.json());
     if (data.log?.length) logEl.textContent = data.log.join('\n');
     if (data.drafts) paintDrafts(data.drafts);
+    if (data.kdpPages) paintKdpPages(data.kdpPages);
     if (data.lastTheme) lastTheme = data.lastTheme;
     if (wasRunning && !data.running) loadThemes();
     wasRunning = Boolean(data.running);

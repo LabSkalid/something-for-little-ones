@@ -7,9 +7,11 @@
     "pins": "tsx src/cli.ts pins",
     "produce": "tsx src/cli.ts produce",
     "redraw": "tsx src/cli.ts redraw",
+    "kdp": "tsx src/cli.ts kdp",
     "studio": "tsx src/studio.ts"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "@resvg/resvg-js": "^2.6.2",
     "pdf-lib": "^1.17.1",
     "sharp": "^0.35.5",

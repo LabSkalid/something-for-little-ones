@@ -14,6 +14,13 @@ import {
   nameDraftWithVision,
   scanImportFolder,
 } from './import-stock.ts';
+import {
+  applyImportCaptions,
+  buildKdpBook,
+  listKdpPages,
+  nameKdpPage,
+  type KdpPage,
+} from './kdp-book.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
@@ -28,10 +35,53 @@ type Job = {
   log: string[];
   error: string;
   drafts: DraftSheet[] | null;
+  kdpPages: KdpPage[] | null;
   lastTheme: string;
 };
 
-const job: Job = { running: false, log: [], error: '', drafts: null, lastTheme: '' };
+const job: Job = { running: false, log: [], error: '', drafts: null, kdpPages: null, lastTheme: '' };
+const sessionPath = path.join(factoryRoot, '.cache', 'studio-session.json');
+
+type StudioSession = {
+  drafts: DraftSheet[] | null;
+  kdpPages: KdpPage[] | null;
+  lastTheme: string;
+  savedAt: string;
+};
+
+async function saveSession() {
+  try {
+    await fs.mkdir(path.dirname(sessionPath), { recursive: true });
+    const payload: StudioSession = {
+      drafts: job.drafts,
+      kdpPages: job.kdpPages,
+      lastTheme: job.lastTheme,
+      savedAt: new Date().toISOString(),
+    };
+    await fs.writeFile(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
+  } catch (error) {
+    console.error('Не удалось сохранить сессию фабрики:', error);
+  }
+}
+
+async function loadSession() {
+  try {
+    const raw = await fs.readFile(sessionPath, 'utf8');
+    const data = JSON.parse(raw) as Partial<StudioSession>;
+    if (Array.isArray(data.drafts)) job.drafts = data.drafts as DraftSheet[];
+    if (Array.isArray(data.kdpPages)) job.kdpPages = data.kdpPages as KdpPage[];
+    if (typeof data.lastTheme === 'string') job.lastTheme = data.lastTheme;
+    const n = (job.drafts?.length ?? 0) + (job.kdpPages?.length ?? 0);
+    if (n) {
+      console.log(
+        `Восстановлена сессия: импорт ${job.drafts?.length ?? 0}, KDP ${job.kdpPages?.length ?? 0}` +
+          (data.savedAt ? ` (${data.savedAt})` : ''),
+      );
+    }
+  } catch {
+    // no session yet
+  }
+}
 
 function frontmatter(raw: string) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -233,6 +283,7 @@ const server = http.createServer(async (req, res) => {
         log: job.log,
         error: job.error,
         drafts: job.drafts,
+        kdpPages: job.kdpPages,
         lastTheme: job.lastTheme,
       });
     }
@@ -270,7 +321,17 @@ const server = http.createServer(async (req, res) => {
         }));
       }
       job.drafts = sheets;
+      void saveSession();
       return send(res, 200, { sheets, matched, siteSheets });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/import/restore') {
+      const body = await readBody(req);
+      const sheets = asDraftSheets(body.sheets ?? body.drafts);
+      if (!sheets.length) throw new Error('Пустой список — в окне больше нет карточек импорта.');
+      job.drafts = sheets;
+      await saveSession();
+      console.log(`Восстановлено из окна браузера: ${sheets.length} листов. Сессия сохранена.`);
+      return send(res, 200, { ok: true, count: sheets.length, sheets });
     }
     if (req.method === 'POST' && url.pathname === '/api/import/name') {
       const body = await readBody(req);
@@ -281,7 +342,9 @@ const server = http.createServer(async (req, res) => {
         for (const [index, sheet] of sheets.entries()) {
           console.log(`vision ${index + 1}/${sheets.length}: ${path.basename(sheet.file)}`);
           try {
-            named.push(await nameDraftWithVision(sheet));
+            const next = await nameDraftWithVision(sheet);
+            named.push(next);
+            console.log(`  → ${next.slug} · ${next.title}`);
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             console.log(`не назвался: ${message}`);
@@ -290,7 +353,89 @@ const server = http.createServer(async (req, res) => {
         }
         const byId = new Map(named.map((sheet) => [sheet.id, sheet]));
         job.drafts = (job.drafts ?? sheets).map((sheet) => byId.get(sheet.id) ?? sheet);
-        console.log('Названия обновлены. Проверьте таблицу и нажмите «Залить на сайт».');
+        await saveSession();
+        console.log('Названия обновлены и сохранены. Можно перезапускать фабрику — они не пропадут.');
+        console.log('Для книги: Amazon KDP → Открыть папку → Взять названия из импорта.');
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/scan') {
+      const body = await readBody(req);
+      const folder = String(body.folder ?? '').trim();
+      if (!folder) throw new Error('Укажите папку с SVG/PNG.');
+      const pages = await listKdpPages(folder);
+      const prev = new Map(
+        (job.kdpPages ?? []).map((page) => [path.resolve(page.file).toLowerCase(), page.caption.trim()]),
+      );
+      job.kdpPages = pages.map((page) => {
+        const old = prev.get(path.resolve(page.file).toLowerCase());
+        return old ? { ...page, caption: old } : page;
+      });
+      void saveSession();
+      return send(res, 200, { pages: job.kdpPages });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/name') {
+      const body = await readBody(req);
+      const pages = Array.isArray(body.pages) ? (body.pages as KdpPage[]) : [];
+      if (!pages.length) throw new Error('Сначала откройте папку KDP.');
+      startJob(`KDP: называю рисунки (${pages.length})`, async () => {
+        const named: KdpPage[] = [];
+        for (const [index, page] of pages.entries()) {
+          console.log(`vision ${index + 1}/${pages.length}: ${path.basename(page.file)}`);
+          try {
+            named.push(await nameKdpPage(page));
+            console.log(`  → ${named[named.length - 1].caption}`);
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.log(`не назвался: ${message}`);
+            named.push(page);
+          }
+        }
+        job.kdpPages = named;
+        await saveSession();
+        console.log('Подписи готовы и сохранены. Проверьте список и нажмите «Собрать PDF для KDP».');
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/from-import') {
+      const body = await readBody(req);
+      const pages =
+        (Array.isArray(body.pages) ? (body.pages as KdpPage[]) : null) ?? job.kdpPages ?? [];
+      const drafts =
+        (Array.isArray(body.drafts) ? (body.drafts as DraftSheet[]) : null) ?? job.drafts ?? [];
+      if (!pages.length) throw new Error('Сначала на вкладке Amazon KDP нажмите «Открыть папку».');
+      if (!drafts.length) {
+        throw new Error(
+          'Нет сохранённых названий из импорта. Откройте папку на вкладке импорта или назовите заново в KDP.',
+        );
+      }
+      const { pages: next, applied } = applyImportCaptions(pages, drafts);
+      job.kdpPages = next;
+      void saveSession();
+      return send(res, 200, { pages: next, applied, total: pages.length });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp') {
+      const body = await readBody(req);
+      const folder = String(body.folder ?? '').trim();
+      const title = String(body.title ?? '').trim();
+      if (!folder) throw new Error('Укажите папку с SVG/PNG.');
+      if (!title) throw new Error('Напишите название книги.');
+      const pages = Array.isArray(body.pages) ? (body.pages as KdpPage[]) : undefined;
+      startJob(`KDP книга: ${title}`, async () => {
+        const result = await buildKdpBook({
+          folder,
+          title,
+          subtitle: body.subtitle ? String(body.subtitle) : undefined,
+          author: body.author ? String(body.author) : undefined,
+          copyright: body.copyright ? String(body.copyright) : undefined,
+          outFile: body.outFile ? String(body.outFile) : undefined,
+          blankBacks: body.blankBacks !== false,
+          frontMatter: body.frontMatter !== false,
+          captions: body.captions !== false,
+          pages,
+        });
+        console.log(`Открой файл и загрузи в KDP как Interior.`);
+        console.log(result.outFile);
       });
       return send(res, 202, { ok: true });
     }
@@ -375,8 +520,10 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(port, '127.0.0.1', () => {
-  const address = `http://127.0.0.1:${port}`;
-  console.log(address);
-  exec(`start "" "${address}"`);
+void loadSession().finally(() => {
+  server.listen(port, '127.0.0.1', () => {
+    const address = `http://127.0.0.1:${port}`;
+    console.log(address);
+    exec(`start "" "${address}"`);
+  });
 });

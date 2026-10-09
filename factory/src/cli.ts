@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { buildAssets, buildPins } from './build-assets.ts';
+import { buildKdpBook } from './kdp-book.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { factoryRoot } from './paths.ts';
@@ -34,9 +35,12 @@ const help = `Фабрика раскрасок.
       npm run redraw -- animal-coloring-pages
 
   npm run studio
-      Открыть локальную страницу с двумя вкладками:
-      сток PNG/SVG на сайт, и отдельно рисование/пины.
+      Открыть локальную страницу: сток, рисование/пины, книга Amazon KDP.
       Удобнее запускать файлом Open Factory.bat (без npm run).
+
+  npm run kdp -- --folder="D:\\COLORING\\Garden\\SVG" --title="Adorable Garden Coloring Book"
+      Собрать один PDF интерьера для Amazon KDP (8.5×11, без bleed, без футера сайта).
+      Опции: --author=Name --no-blanks --no-front --out=path.pdf
 
 Ключ один: factory/.env с OPENROUTER_API_KEY.
 Картинки: OPENROUTER_IMAGE_MODEL (по умолчанию openai/gpt-image-2).
@@ -81,6 +85,26 @@ async function main() {
     }
     const briefPath = path.isAbsolute(brief) ? brief : path.join(factoryRoot, brief);
     await produce(briefPath, rest.includes('--dry-run'));
+    return;
+  }
+  if (command === 'kdp') {
+    const folder = rest.find((arg) => arg.startsWith('--folder='))?.slice('--folder='.length);
+    const title = rest.find((arg) => arg.startsWith('--title='))?.slice('--title='.length);
+    if (!folder || !title) {
+      console.log(help);
+      process.exit(1);
+    }
+    await buildKdpBook({
+      folder,
+      title,
+      subtitle: rest.find((arg) => arg.startsWith('--subtitle='))?.slice('--subtitle='.length),
+      author: rest.find((arg) => arg.startsWith('--author='))?.slice('--author='.length),
+      copyright: rest.find((arg) => arg.startsWith('--copyright='))?.slice('--copyright='.length),
+      outFile: rest.find((arg) => arg.startsWith('--out='))?.slice('--out='.length),
+      blankBacks: !rest.includes('--no-blanks'),
+      frontMatter: !rest.includes('--no-front'),
+      captions: !rest.includes('--no-captions'),
+    });
     return;
   }
   console.log(help);

@@ -219,12 +219,13 @@ async function stripOuterFrame(image: Buffer) {
 }
 
 /** Place the drawing on a US Letter white page, centered, filling the printable area. */
-export async function fitOnLetter(image: Buffer) {
+export async function fitOnLetter(image: Buffer, options?: { bottomExtraPx?: number }) {
   const letterW = 2550;
   const letterH = 3300;
   const margin = 120;
+  const bottomExtra = Math.max(0, options?.bottomExtraPx ?? 0);
   const maxW = letterW - margin * 2;
-  const maxH = letterH - margin * 2;
+  const maxH = letterH - margin * 2 - bottomExtra;
 
   let art = await stripOuterFrame(image);
   try {
@@ -240,7 +241,10 @@ export async function fitOnLetter(image: Buffer) {
 
   const meta = await sharp(art).metadata();
   const left = Math.max(0, Math.round((letterW - (meta.width ?? 0)) / 2));
-  const top = Math.max(0, Math.round((letterH - (meta.height ?? 0)) / 2));
+  const top = Math.max(
+    margin,
+    Math.round((letterH - bottomExtra - (meta.height ?? 0)) / 2),
+  );
   return sharp({
     create: { width: letterW, height: letterH, channels: 3, background: '#ffffff' },
   })
@@ -249,10 +253,10 @@ export async function fitOnLetter(image: Buffer) {
     .toBuffer();
 }
 
-export async function loadSourceImage(file: string) {
+export async function loadSourceImage(file: string, options?: { bottomExtraPx?: number }) {
   const ext = path.extname(file).toLowerCase();
   const raw = ext === '.svg' ? await renderSvg(file) : await loadRaster(file);
-  return fitOnLetter(raw);
+  return fitOnLetter(raw, options);
 }
 
 function frontmatter(raw: string) {
