@@ -5,7 +5,7 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { parse } from 'yaml';
 import { readSite } from './brand.ts';
-import { footerHeight, stampSite } from './footer.ts';
+import { footerHeight, stampSite, stripSiteFooter } from './footer.ts';
 import { loadEnv } from './env.ts';
 import { visionChat } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
@@ -135,7 +135,7 @@ function edgeDarkRatio(
 ) {
   let dark = 0;
   let total = 0;
-  const isDark = (value: number) => value < 56;
+  const isDark = (value: number) => value < 72;
   if (side === 'top' || side === 'bottom') {
     const y = side === 'top' ? inset : height - 1 - inset;
     if (y < 0 || y >= height) return 0;
@@ -162,11 +162,11 @@ function findDarkBand(
   maxScan: number,
 ) {
   for (let i = 0; i < maxScan; i += 1) {
-    if (edgeDarkRatio(data, width, height, side, i) < 0.5) continue;
+    if (edgeDarkRatio(data, width, height, side, i) < 0.42) continue;
     let thickness = 1;
     while (
       i + thickness < maxScan &&
-      edgeDarkRatio(data, width, height, side, i + thickness) >= 0.4
+      edgeDarkRatio(data, width, height, side, i + thickness) >= 0.32
     ) {
       thickness += 1;
     }
@@ -190,7 +190,7 @@ async function stripOuterFrame(image: Buffer) {
   if (width < 80 || height < 80) return working;
 
   // Stock frames often sit 1–few px inside the trimmed box (a white hairline outside).
-  const maxScan = Math.max(8, Math.min(70, Math.floor(Math.min(width, height) * 0.12)));
+  const maxScan = Math.max(10, Math.min(90, Math.floor(Math.min(width, height) * 0.16)));
   const top = findDarkBand(data, width, height, 'top', maxScan);
   const bottom = findDarkBand(data, width, height, 'bottom', maxScan);
   const left = findDarkBand(data, width, height, 'left', maxScan);
@@ -198,12 +198,18 @@ async function stripOuterFrame(image: Buffer) {
   if (!top || !bottom || !left || !right) return working;
 
   // Ignore random dark strokes deep inside the art — frame hugs the outer edge.
-  const edgeLimit = Math.max(6, Math.floor(Math.min(width, height) * 0.06));
+  const edgeLimit = Math.max(8, Math.floor(Math.min(width, height) * 0.1));
   if (top.pos > edgeLimit || bottom.pos > edgeLimit || left.pos > edgeLimit || right.pos > edgeLimit) {
     return working;
   }
 
-  const pad = 3;
+  // A real mat/frame is similar on all sides; skip random L-shapes from the drawing.
+  const thicknesses = [top.thickness, bottom.thickness, left.thickness, right.thickness];
+  const maxT = Math.max(...thicknesses);
+  const minT = Math.min(...thicknesses);
+  if (maxT > minT * 4 && maxT > 14) return working;
+
+  const pad = 4;
   const cropLeft = left.pos + left.thickness + pad;
   const cropTop = top.pos + top.thickness + pad;
   const cropRight = right.pos + right.thickness + pad;
@@ -227,7 +233,10 @@ export async function fitOnLetter(image: Buffer, options?: { bottomExtraPx?: num
   const maxW = letterW - margin * 2;
   const maxH = letterH - margin * 2 - bottomExtra;
 
-  let art = await stripOuterFrame(image);
+  // Footer first (letter pages keep stamp below the frame), then stock frame.
+  // Footer detector ignores thick frame edges / dark side columns.
+  let art = await stripSiteFooter(image);
+  art = await stripOuterFrame(art);
   try {
     art = await sharp(art).trim({ background: '#ffffff', threshold: 14 }).png().toBuffer();
   } catch {

@@ -177,7 +177,7 @@
   </section>
 
   <section id="panel-kdp" class="panel">
-    <p>Собирает один PDF интерьера для Amazon KDP из папки SVG/PNG. Срезает рамку, ставит рисунок на страницу 8.5×11, без футера сайта. Шрифт титула и подписей — Fredoka (бесплатный). Обложку KDP делает отдельно.</p>
+    <p>Собирает один PDF интерьера для Amazon KDP из папки SVG/PNG. Срезает стоковую рамку и надпись сайта внизу (host + FREE PRINTABLE), ставит рисунок на 8.5×11. Шрифт титула и подписей — Fredoka. Обложку KDP делает отдельно.</p>
     <div class="note">
       В KDP потом: Paperback → Black &amp; white → trim <strong>8.5" × 11"</strong> → Bleed: <strong>No Bleed</strong>.
       Пустые обороты помогают, чтобы маркеры не пробивали на следующий рисунок.
@@ -231,10 +231,77 @@
       <button id="kdp-build" type="button">Собрать PDF для KDP</button>
     </div>
     <p class="hint">Готовый файл обычно лежит в <code>factory\out\kdp\</code>. Это не заливает ничего на сайт.</p>
+
+    <h2>Проверка стиля перед книгой</h2>
+    <p class="hint">Считает плотность линий и сравнивает с медианой книги. Можно проверить <strong>с учётом уже перерисованных</strong> (укажи папку audit ниже). Оригиналы не трогает — новые PNG рядом. Можно задать номера/имена вручную или кинуть отдельную папку картинок «в стиле этой книги».</p>
+    <label class="check">
+      <input id="kdp-audit-redraw" type="checkbox">
+      Сразу перерисовать выбивающиеся (дорого, только их)
+    </label>
+    <label for="kdp-audit-resume">Папка с заменами / куда дорисовывать</label>
+    <input id="kdp-audit-resume" placeholder="D:\KIDS\factory\out\kdp\audit\winter book\2026-10-10T13-19-43">
+    <label for="kdp-audit-select">Перерисовать только эти (точное имя файла или номер, через запятую)</label>
+    <input id="kdp-audit-select" placeholder="Untitled-2-06, striped-mitten.png">
+    <p class="hint">Не копируй в папку книги файлы вида <code>47-striped-mitten.png</code> — из‑за них путаются номера. Замены держи только в папке audit.</p>
+    <label for="kdp-audit-extra">Или папка чужих картинок → перерисовать в стиле этой книги</label>
+    <input id="kdp-audit-extra" placeholder="D:\COLORING\fix-these">
+    <div class="row" style="margin-top:0.5rem">
+      <button id="kdp-audit" class="quiet" type="button">Проверить стиль книги</button>
+      <button id="kdp-audit-resume-btn" class="quiet" type="button">Дорисовать оставшиеся</button>
+      <button id="kdp-audit-manual" class="quiet" type="button">Перерисовать указанные</button>
+    </div>
+
+    <h2>Обложка Amazon</h2>
+    <p class="hint">Один PNG: задник + корешок + лицо, с bleed и плейсхолдерами. Число страниц — из лога после сборки интерьера (например 90), <strong>не дели пополам</strong>: Amazon считает каждую сторону PDF. Потом Canva / Photopea → PDF в KDP Cover. Официально: <a href="https://kdp.amazon.com/cover-calculator" target="_blank" rel="noreferrer">kdp.amazon.com/cover-calculator</a>.</p>
+    <div class="two">
+      <div>
+        <label for="kdp-cover-pages">Страниц PDF (как в логе, не рисунки ÷ 2)</label>
+        <input id="kdp-cover-pages" type="number" min="24" step="1" placeholder="например 90">
+      </div>
+      <div>
+        <label for="kdp-cover-slots">Плейсхолдеров на лице</label>
+        <select id="kdp-cover-slots">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:0.8rem">
+      <button id="kdp-cover" class="quiet" type="button">Сделать шаблон обложки</button>
+    </div>
+
+    <h2>Порядок страниц в готовом PDF</h2>
+    <p class="hint">Не пересобирает книгу — только меняет местами уже готовые листы. Исходный PDF не затирает: сохраняет <code>…-reordered.pdf</code>. Номера — как в просмотрщике PDF (1 = первая страница).</p>
+    <label for="kdp-reorder-pdf">Готовый interior PDF</label>
+    <input id="kdp-reorder-pdf" placeholder="D:\KIDS\factory\out\kdp\cute-winter-coloring-book.pdf">
+    <div class="two">
+      <div>
+        <label for="kdp-reorder-a">Страница A</label>
+        <input id="kdp-reorder-a" type="number" min="1" placeholder="5">
+      </div>
+      <div>
+        <label for="kdp-reorder-b">Страница B</label>
+        <input id="kdp-reorder-b" type="number" min="1" placeholder="17">
+      </div>
+    </div>
+    <label class="check">
+      <input id="kdp-reorder-backs" type="checkbox" checked>
+      Вместе с пустым оборотом (A↔B и A+1↔B+1) — удобно, если после каждого рисунка пустая страница
+    </label>
+    <div class="row" style="margin-top:0.5rem">
+      <button id="kdp-reorder-swap" class="quiet" type="button">Поменять A ↔ B</button>
+    </div>
+    <label for="kdp-reorder-order">Или полный новый порядок всех страниц (через запятую)</label>
+    <textarea id="kdp-reorder-order" placeholder="1, 2, 5, 6, 3, 4, 7, 8, …" style="min-height:4rem"></textarea>
+    <div class="row" style="margin-top:0.5rem">
+      <button id="kdp-reorder-full" class="quiet" type="button">Собрать PDF в этом порядке</button>
+    </div>
   </section>
 
   <section id="panel-draw" class="panel">
-    <p>Новые рисунки и перерисовка вызывают платную модель картинок. Сами картинки пинов бесплатные. Текст для Pinterest — дешёвая текстовая модель, только если включите галочку.</p>
+    <p>Новые рисунки и «Перерисовать» — платная модель. <strong>Убрать квадраты</strong> — бесплатно: берёт PDF с сайта и заново кладёт на лист (исходники не нужны). Пины бесплатные.</p>
     <section id="themes"></section>
     <h2>Новые рисунки</h2>
     <label for="theme">Подборка</label>
@@ -325,6 +392,30 @@
   <div class="row">
     <button id="pin-run" type="button">Собрать</button>
     <button id="pin-cancel" class="quiet" type="button">Отмена</button>
+  </div>
+</dialog>
+
+<dialog id="refit-dialog">
+  <h2>Убрать квадраты (с сайта, без ИИ)</h2>
+  <p class="hint" id="refit-dialog-theme"></p>
+  <p>Берёт letter PDF уже залитый на сайт, срезает рамку/футер и снова кладёт рисунок на весь лист. Исходники не нужны. Тексты не трогает. <strong>Бесплатно</strong> — модель картинок не вызывается.</p>
+  <label for="refit-age">Возраст (можно все)</label>
+  <select id="refit-age">
+    <option value="">Все возраста</option>
+    <option value="2-3">2–3</option>
+    <option value="3-4">3–4</option>
+    <option value="4-5">4–5</option>
+    <option value="5-6">5–6</option>
+    <option value="6-8">6–8</option>
+  </select>
+  <div class="row" style="margin-top:0.5rem">
+    <button id="refit-sheets-all" class="quiet" type="button">Все</button>
+    <button id="refit-sheets-none" class="quiet" type="button">Снять</button>
+  </div>
+  <div id="refit-sheets" class="sheet-list" style="max-height:280px;margin-top:0.4rem"></div>
+  <div class="row" style="margin-top:0.8rem">
+    <button id="refit-run" type="button">Поправить выбранные</button>
+    <button id="refit-cancel" class="quiet" type="button">Отмена</button>
   </div>
 </dialog>
 
@@ -451,6 +542,7 @@
         <div><h3>${esc(theme.title)}</h3><p>${theme.count} листов · ${esc(theme.kind)}</p></div>
         <div class="row">
           <button class="quiet" type="button" data-pins="${esc(theme.slug)}">Пины</button>
+          <button class="quiet" type="button" data-refit="${esc(theme.slug)}">Убрать квадраты</button>
           <button class="quiet" type="button" data-redraw="${esc(theme.slug)}">Перерисовать</button>
         </div>
       </article>`).join('');
@@ -574,6 +666,33 @@
     importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
   });
 
+  const refitDialog = document.querySelector('#refit-dialog');
+  const refitSheetsEl = document.querySelector('#refit-sheets');
+  let refitTheme = '';
+  let refitSheets = [];
+
+  async function openRefitDialog(theme) {
+    refitTheme = theme || '';
+    document.querySelector('#refit-dialog-theme').textContent = theme
+      ? `Тема: ${theme}`
+      : '';
+    document.querySelector('#refit-age').value = '';
+    const data = await fetch('/api/refit/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
+    refitSheets = data.sheets || [];
+    paintRefitSheets();
+    refitDialog.showModal();
+  }
+
+  function paintRefitSheets() {
+    const age = document.querySelector('#refit-age').value;
+    const list = age ? refitSheets.filter((sheet) => sheet.age === age) : refitSheets;
+    refitSheetsEl.innerHTML = list.map((sheet) => `
+      <label>
+        <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasLetter || sheet.hasPng ? 'checked' : 'disabled'}>
+        <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${sheet.hasLetter ? '' : sheet.hasPng ? ' · только PNG' : ' · нет файла'}</span>
+      </label>`).join('') || '<p class="hint">Листов нет.</p>';
+  }
+
   themesEl.addEventListener('click', async (event) => {
     const pins = event.target.closest('[data-pins]');
     if (pins) {
@@ -581,10 +700,45 @@
       await openPinDialog(pins.dataset.pins);
       return;
     }
+    const refit = event.target.closest('[data-refit]');
+    if (refit) {
+      lastTheme = refit.dataset.refit;
+      await openRefitDialog(refit.dataset.refit);
+      return;
+    }
     const button = event.target.closest('[data-redraw]');
     if (!button) return;
     if (!confirm('Перерисовать все листы этой подборки? Это платный запрос к модели картинок.')) return;
     await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
+  });
+
+  document.querySelector('#refit-cancel')?.addEventListener('click', () => refitDialog.close());
+  document.querySelector('#refit-age')?.addEventListener('change', () => paintRefitSheets());
+  document.querySelector('#refit-sheets-all')?.addEventListener('click', () => {
+    refitSheetsEl.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach((input) => { input.checked = true; });
+  });
+  document.querySelector('#refit-sheets-none')?.addEventListener('click', () => {
+    refitSheetsEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
+  });
+  document.querySelector('#refit-run')?.addEventListener('click', async () => {
+    const slugs = [...refitSheetsEl.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value);
+    if (!slugs.length) {
+      logEl.textContent = 'Отметьте хотя бы один лист.';
+      return;
+    }
+    if (!confirm(`Поправить ${slugs.length} лист(ов) с сайта без ИИ?\nКвадраты уберу, тексты не трону.`)) return;
+    refitDialog.close();
+    const response = await fetch('/api/refit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: refitTheme, slugs }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить поправку.';
+      return;
+    }
+    logEl.textContent = 'Поправка с сайта запущена (без оплаты ИИ). В логе появятся slug по одному…';
   });
 
   document.querySelector('#pins-all').addEventListener('click', async () => {
@@ -760,6 +914,162 @@
         : 'Совпадений по файлам не нашлось. Откройте ту же папку, что называли в импорте.';
   });
 
+  async function startKdpAudit(opts) {
+    const folder = document.querySelector('#kdp-folder').value.trim();
+    if (!folder) {
+      logEl.textContent = 'Укажите папку и нажмите «Открыть папку».';
+      return;
+    }
+    const pages = readKdpPagesFromDom();
+    const resumeDir = document.querySelector('#kdp-audit-resume').value.trim();
+    const response = await fetch('/api/kdp/audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        folder,
+        pages: pages.length ? pages : undefined,
+        redraw: Boolean(opts.redraw),
+        resumeDir: opts.resumeDir || resumeDir || undefined,
+        overridesDir: opts.overridesDir || resumeDir || undefined,
+        select: opts.select || undefined,
+        extraFolder: opts.extraFolder || undefined,
+        overwrite: Boolean(opts.overwrite),
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить аудит.';
+      return;
+    }
+    logEl.textContent = opts.message || 'Задача запущена. Смотрите лог ниже.';
+  }
+
+  document.querySelector('#kdp-audit')?.addEventListener('click', async () => {
+    const pages = readKdpPagesFromDom();
+    const redraw = document.querySelector('#kdp-audit-redraw').checked;
+    const resumeDir = document.querySelector('#kdp-audit-resume').value.trim();
+    const msg = resumeDir && !redraw
+      ? `Проверить стиль с учётом замен из папки audit? (${pages.length || '?'} стр.)`
+      : redraw
+        ? `Проверить и перерисовать выбивающиеся? Перерисовка — платная модель.`
+        : `Проверить стиль ${pages.length || 'всех'} картинок? Оригиналы не меняются.`;
+    if (!confirm(msg)) return;
+    await startKdpAudit({
+      redraw,
+      overridesDir: resumeDir || undefined,
+      resumeDir: redraw ? resumeDir || undefined : undefined,
+      message: resumeDir
+        ? 'Повторная проверка с учётом уже перерисованных PNG…'
+        : redraw
+          ? 'Аудит + перерисовка…'
+          : 'Аудит…',
+    });
+  });
+
+  document.querySelector('#kdp-audit-resume-btn')?.addEventListener('click', async () => {
+    const resumeDir = document.querySelector('#kdp-audit-resume').value.trim();
+    if (!resumeDir) {
+      logEl.textContent = 'Вставьте путь к папке audit, где уже лежат часть PNG.';
+      return;
+    }
+    if (!confirm('Дорисовать только недостающие в эту папку? Уже готовые не трону.')) return;
+    await startKdpAudit({
+      redraw: true,
+      resumeDir,
+      overridesDir: resumeDir,
+      message: 'Дорисовываю только недостающие PNG…',
+    });
+  });
+
+  document.querySelector('#kdp-audit-manual')?.addEventListener('click', async () => {
+    const select = document.querySelector('#kdp-audit-select').value.trim();
+    const extraFolder = document.querySelector('#kdp-audit-extra').value.trim();
+    const resumeDir = document.querySelector('#kdp-audit-resume').value.trim();
+    if (!select && !extraFolder) {
+      logEl.textContent = 'Укажите номера/имена или папку с картинками для перерисовки.';
+      return;
+    }
+    if (!confirm('Перерисовать указанные в стиле этой книги? Уже существующие PNG с теми же номерами перезапишу.')) return;
+    await startKdpAudit({
+      redraw: true,
+      select: select || undefined,
+      extraFolder: extraFolder || undefined,
+      resumeDir: resumeDir || undefined,
+      overridesDir: resumeDir || undefined,
+      overwrite: true,
+      message: 'Ручная перерисовка в стиле книги…',
+    });
+  });
+
+  document.querySelector('#kdp-cover')?.addEventListener('click', async () => {
+    const title = document.querySelector('#kdp-title').value.trim() || 'Coloring Book';
+    const pageCount = Number(document.querySelector('#kdp-cover-pages').value || 0);
+    const pages = readKdpPagesFromDom();
+    const response = await fetch('/api/kdp/cover', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        pageCount: pageCount || undefined,
+        artCount: pages.length || undefined,
+        slots: Number(document.querySelector('#kdp-cover-slots').value || 4),
+        blankBacks: document.querySelector('#kdp-blanks').checked,
+        frontMatter: document.querySelector('#kdp-front').checked,
+        pages,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось сделать шаблон обложки.';
+      return;
+    }
+    logEl.textContent = 'Шаблон обложки собирается… Файл будет в factory\\out\\kdp\\';
+  });
+
+  async function startKdpReorder(body, message) {
+    const response = await fetch('/api/kdp/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось поменять страницы.';
+      return;
+    }
+    logEl.textContent = message;
+  }
+
+  document.querySelector('#kdp-reorder-swap')?.addEventListener('click', async () => {
+    const pdfFile = document.querySelector('#kdp-reorder-pdf').value.trim();
+    const a = Number(document.querySelector('#kdp-reorder-a').value);
+    const b = Number(document.querySelector('#kdp-reorder-b').value);
+    if (!pdfFile || !a || !b) {
+      logEl.textContent = 'Укажите PDF и два номера страниц.';
+      return;
+    }
+    const withBacks = document.querySelector('#kdp-reorder-backs').checked;
+    if (!confirm(`Поменять страницы ${a} ↔ ${b}${withBacks ? ' (+ их обороты)' : ''}?\nИсходный файл останется, появится …-reordered.pdf`)) return;
+    await startKdpReorder(
+      { pdfFile, mode: 'swap', a, b, withBacks },
+      'Меняю страницы местами… Новый файл будет рядом с исходным (*-reordered.pdf).',
+    );
+  });
+
+  document.querySelector('#kdp-reorder-full')?.addEventListener('click', async () => {
+    const pdfFile = document.querySelector('#kdp-reorder-pdf').value.trim();
+    const order = document.querySelector('#kdp-reorder-order').value.trim();
+    if (!pdfFile || !order) {
+      logEl.textContent = 'Укажите PDF и полный список номеров страниц.';
+      return;
+    }
+    if (!confirm('Собрать PDF в указанном порядке? Исходник не затру.')) return;
+    await startKdpReorder(
+      { pdfFile, mode: 'order', order },
+      'Собираю PDF в новом порядке…',
+    );
+  });
+
   document.querySelector('#kdp-build')?.addEventListener('click', async () => {
     const folder = document.querySelector('#kdp-folder').value.trim();
     const title = document.querySelector('#kdp-title').value.trim();
@@ -857,6 +1167,9 @@
     if (data.drafts) paintDrafts(data.drafts);
     if (data.kdpPages) paintKdpPages(data.kdpPages);
     if (data.lastTheme) lastTheme = data.lastTheme;
+    if (data.lastKdpPageCount && !document.querySelector('#kdp-cover-pages').value) {
+      document.querySelector('#kdp-cover-pages').placeholder = String(data.lastKdpPageCount);
+    }
     if (wasRunning && !data.running) loadThemes();
     wasRunning = Boolean(data.running);
   }

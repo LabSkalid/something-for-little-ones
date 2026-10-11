@@ -21,8 +21,12 @@ import {
   nameKdpPage,
   type KdpPage,
 } from './kdp-book.ts';
+import { auditKdpFolder } from './kdp-audit.ts';
+import { buildKdpCoverTemplate, estimateInteriorPages } from './kdp-cover.ts';
+import { reorderKdpPdf } from './kdp-reorder.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
+import { listRefitSheets, refitFromSite } from './refit-site.ts';
 import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
 
 loadEnv();
@@ -37,15 +41,25 @@ type Job = {
   drafts: DraftSheet[] | null;
   kdpPages: KdpPage[] | null;
   lastTheme: string;
+  lastKdpPageCount: number;
 };
 
-const job: Job = { running: false, log: [], error: '', drafts: null, kdpPages: null, lastTheme: '' };
+const job: Job = {
+  running: false,
+  log: [],
+  error: '',
+  drafts: null,
+  kdpPages: null,
+  lastTheme: '',
+  lastKdpPageCount: 0,
+};
 const sessionPath = path.join(factoryRoot, '.cache', 'studio-session.json');
 
 type StudioSession = {
   drafts: DraftSheet[] | null;
   kdpPages: KdpPage[] | null;
   lastTheme: string;
+  lastKdpPageCount: number;
   savedAt: string;
 };
 
@@ -56,6 +70,7 @@ async function saveSession() {
       drafts: job.drafts,
       kdpPages: job.kdpPages,
       lastTheme: job.lastTheme,
+      lastKdpPageCount: job.lastKdpPageCount,
       savedAt: new Date().toISOString(),
     };
     await fs.writeFile(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
@@ -71,6 +86,7 @@ async function loadSession() {
     if (Array.isArray(data.drafts)) job.drafts = data.drafts as DraftSheet[];
     if (Array.isArray(data.kdpPages)) job.kdpPages = data.kdpPages as KdpPage[];
     if (typeof data.lastTheme === 'string') job.lastTheme = data.lastTheme;
+    if (typeof data.lastKdpPageCount === 'number') job.lastKdpPageCount = data.lastKdpPageCount;
     const n = (job.drafts?.length ?? 0) + (job.kdpPages?.length ?? 0);
     if (n) {
       console.log(
@@ -285,6 +301,7 @@ const server = http.createServer(async (req, res) => {
         drafts: job.drafts,
         kdpPages: job.kdpPages,
         lastTheme: job.lastTheme,
+        lastKdpPageCount: job.lastKdpPageCount,
       });
     }
     if (req.method === 'GET' && url.pathname === '/api/import/thumb') {
@@ -434,8 +451,122 @@ const server = http.createServer(async (req, res) => {
           captions: body.captions !== false,
           pages,
         });
+        job.lastKdpPageCount = result.pages;
+        await saveSession();
         console.log(`Открой файл и загрузи в KDP как Interior.`);
         console.log(result.outFile);
+        console.log(
+          `Страниц в PDF: ${result.pages} (рисунков: ${result.artPages}).` +
+            ` В Amazon и в шаблон обложки вводи ${result.pages} — считают каждую сторону листа, не «листы пополам».`,
+        );
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/audit') {
+      const body = await readBody(req);
+      const folder = String(body.folder ?? '').trim();
+      if (!folder) throw new Error('Укажите папку с SVG/PNG.');
+      const pages = Array.isArray(body.pages) ? (body.pages as KdpPage[]) : undefined;
+      const redraw = Boolean(body.redraw);
+      const resumeDir = body.resumeDir ? String(body.resumeDir).trim() : undefined;
+      const overridesDir = body.overridesDir ? String(body.overridesDir).trim() : undefined;
+      const select = body.select ? String(body.select).trim() : undefined;
+      const extraFolder = body.extraFolder ? String(body.extraFolder).trim() : undefined;
+      const overwrite = Boolean(body.overwrite);
+      const label = select || extraFolder
+        ? 'KDP: ручная перерисовка'
+        : resumeDir && redraw
+          ? 'KDP: дорисовываю / проверяю с заменами'
+          : redraw
+            ? 'KDP: аудит + перерисовка'
+            : 'KDP: аудит стиля';
+      startJob(label, async () => {
+        const report = await auditKdpFolder({
+          folder,
+          pages,
+          redraw: redraw || Boolean(resumeDir) || Boolean(select) || Boolean(extraFolder),
+          age: body.age ? String(body.age) : '3-4',
+          styleHint: body.styleHint ? String(body.styleHint) : undefined,
+          resumeDir,
+          overridesDir: overridesDir || resumeDir,
+          select,
+          extraFolder,
+          overwrite,
+        });
+        console.log(
+          report.flagged.length
+            ? `Готово: заменить/проверить номера ${report.flagged.map((row) => row.index).join(', ')}.`
+            : 'Готово: все страницы примерно одного уровня.',
+        );
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/cover') {
+      const body = await readBody(req);
+      const title = String(body.title ?? '').trim() || 'Coloring Book';
+      let pageCount = Number(body.pageCount ?? 0);
+      if (!pageCount || pageCount < 24) {
+        const artCount =
+          Number(body.artCount ?? 0) ||
+          (Array.isArray(body.pages) ? body.pages.length : 0) ||
+          job.kdpPages?.length ||
+          0;
+        pageCount =
+          job.lastKdpPageCount ||
+          estimateInteriorPages({
+            artCount,
+            blankBacks: body.blankBacks !== false,
+            frontMatter: body.frontMatter !== false,
+          });
+      }
+      startJob(`KDP обложка: ${pageCount} стр.`, async () => {
+        const result = await buildKdpCoverTemplate({
+          pageCount,
+          title,
+          slots: body.slots ? Number(body.slots) : 4,
+          outFile: body.outFile ? String(body.outFile) : undefined,
+        });
+        job.lastKdpPageCount = result.pages;
+        await saveSession();
+        console.log(result.outFile);
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/reorder') {
+      const body = await readBody(req);
+      const pdfFile = String(body.pdfFile ?? '').trim();
+      if (!pdfFile) throw new Error('Укажите путь к готовому PDF.');
+      const mode = String(body.mode ?? 'swap');
+      const withBacks = body.withBacks !== false;
+      const outFile = body.outFile ? String(body.outFile).trim() : undefined;
+      startJob('KDP: меняю порядок страниц', async () => {
+        if (mode === 'order') {
+          const order = String(body.order ?? '')
+            .split(/[,;\s]+/)
+            .map((n) => Number(n.trim()))
+            .filter((n) => Number.isFinite(n));
+          const result = await reorderKdpPdf({ pdfFile, order, outFile });
+          console.log(`Готово: ${result.pages} стр. → ${result.outFile}`);
+          return;
+        }
+        if (mode === 'move') {
+          const from = Number(body.from);
+          const to = Number(body.to);
+          const result = await reorderKdpPdf({ pdfFile, move: { from, to }, outFile });
+          console.log(`Готово: стр. ${from} → позиция ${to}. ${result.outFile}`);
+          return;
+        }
+        const a = Number(body.a);
+        const b = Number(body.b);
+        const result = await reorderKdpPdf({
+          pdfFile,
+          swap: [a, b],
+          withBacks,
+          outFile,
+        });
+        console.log(
+          `Готово: поменяла ${a}↔${b}${withBacks ? ' (+ обороты)' : ''}. ${result.outFile}`,
+        );
       });
       return send(res, 202, { ok: true });
     }
@@ -500,6 +631,27 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const theme = body.theme ? String(body.theme) : undefined;
       startJob(theme ? `Перерисовка ${theme}` : 'Перерисовка всех листов', () => redraw(theme));
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'GET' && url.pathname === '/api/refit/sheets') {
+      const theme = url.searchParams.get('theme') ?? '';
+      if (!theme) throw new Error('Укажите тему.');
+      return send(res, 200, { sheets: await listRefitSheets(theme) });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/refit') {
+      const body = await readBody(req);
+      const theme = String(body.theme ?? '').trim();
+      if (!theme) throw new Error('Укажите подборку.');
+      const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : undefined;
+      const age = body.age ? String(body.age) : undefined;
+      startJob(`Поправка с сайта: ${theme}`, async () => {
+        const result = await refitFromSite({ theme, slugs, age });
+        console.log(
+          result.failed.length
+            ? `Поправлено ${result.ok}/${result.total}. Часть не вышла — смотри лог.`
+            : `Поправлено ${result.ok}/${result.total}. Можно обновить сайт.`,
+        );
+      });
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/create') {

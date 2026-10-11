@@ -131,6 +131,17 @@ function addTitlePage(
   }
 }
 
+/** Print-safe encode for KDP B&W interiors: full letter @ 300 dpi, JPEG (not Flate PNG). */
+async function encodeLetterForPdf(letterPng: Buffer) {
+  // Dense line art as RGB PNG @ 2550×3300 balloons to ~2–4 MB/page in the PDF.
+  // High-quality JPEG (4:4:4) keeps crisp black lines and lands ~0.3–0.7 MB/page.
+  return sharp(letterPng)
+    .removeAlpha()
+    .flatten({ background: '#ffffff' })
+    .jpeg({ quality: 92, mozjpeg: true, chromaSubsampling: '4:4:4' })
+    .toBuffer();
+}
+
 async function addArtPage(
   doc: PDFDocument,
   letterPng: Buffer,
@@ -139,8 +150,8 @@ async function addArtPage(
   showCaption: boolean,
 ) {
   const page = doc.addPage([PAGE_W, PAGE_H]);
-  const forPdf = await sharp(letterPng).removeAlpha().png({ compressionLevel: 9, force: true }).toBuffer();
-  const image = await doc.embedPng(forPdf);
+  const forPdf = await encodeLetterForPdf(letterPng);
+  const image = await doc.embedJpg(forPdf);
   page.drawImage(image, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
 
   const label = caption.trim();
@@ -334,5 +345,8 @@ export async function buildKdpBook(options: KdpBookOptions) {
   console.log(`Готово: ${artPages} рисунков, ${totalPages} страниц PDF`);
   console.log(`Файл: ${outFile}`);
   console.log('В KDP: Paperback → Black & white interior → 8.5" x 11" → Bleed: No Bleed');
+  console.log(
+    `Для обложки: page count = ${totalPages} (стороны в PDF). Физических листов примерно ${Math.ceil(totalPages / 2)}, но в калькулятор Amazon — ${totalPages}.`,
+  );
   return { outFile, artPages, pages: totalPages, files: pages.length };
 }
