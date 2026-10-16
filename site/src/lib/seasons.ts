@@ -48,7 +48,7 @@ export const seasonWindows: SeasonWindow[] = [
   {
     id: 'fall',
     label: 'This fall',
-    blurb: 'Leaves, friendly Halloween, and Thanksgiving — pick a set, then an age.',
+    blurb: 'Leaves, friendly Halloween, and Thanksgiving. Pick a set, then an age.',
     themeIds: [
       'fall-coloring-pages',
       'halloween-coloring-pages',
