@@ -302,13 +302,51 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .tip a { font-weight: 800; }
 
+.book-offer {
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.book-offer h2 {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0.7rem 0 0.35rem;
+  line-height: 1.2;
+}
+
+.book-offer > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.book-offer-cover {
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.book-offer-cover img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
 .book-offer-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.55rem;
   align-items: center;
-  margin: 0.65rem 0 0;
+  margin: 0.7rem 0 0;
 }
+
+.book-offer-links a { font-weight: 800; }
 
 .book-offer-links span { color: var(--muted); }
 
