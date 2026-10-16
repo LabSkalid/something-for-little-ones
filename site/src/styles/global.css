@@ -307,6 +307,7 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--paper);
+  margin-bottom: 0.65rem;
 }
 
 .book-offer h2 {
