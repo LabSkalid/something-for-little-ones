@@ -171,7 +171,13 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .section-head p { color: var(--muted); margin: 0.3rem 0 0; }
 
-.age-block, #ages, #themes, #holidays, .age-shelf, .theme-panel, .theme-card { scroll-margin-top: 5.5rem; }
+.age-block, #ages, #themes, #holidays, #season, .age-shelf, .theme-panel, .theme-card { scroll-margin-top: 5.5rem; }
+
+.season-spotlight {
+  padding: 1.1rem 0 0.2rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
 .age-block { margin: 0 0 1.8rem; }
 .age-block h2 { font-size: 1.35rem; margin: 0 0 0.75rem; }
 

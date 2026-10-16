@@ -7,6 +7,7 @@ import { absoluteUrl, site } from '../site';
 import { ageBandLabel, ageBands, ageSpanLabel } from '../lib/ages';
 import { pinPath, sheetAssets, themePath } from '../lib/paths';
 import { publisherRef, websiteId } from '../lib/schema';
+import { getCurrentSeason } from '../lib/seasons';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 const sheets = await getCollection('sheets');
@@ -94,6 +95,7 @@ const holidayNames: Record<string, string> = {
   'fall-coloring-pages': 'Fall',
   'halloween-coloring-pages': 'Halloween',
   'thanksgiving-coloring-pages': 'Thanksgiving',
+  'winter-coloring-pages': 'Winter',
   'christmas-coloring-pages': 'Christmas',
   'christian-christmas-coloring-pages': 'Christian Christmas',
 };
@@ -105,6 +107,15 @@ const holidayTiles = holidays
     theme,
     title: holidayNames[theme.id] ?? shortThemeTitle(theme.data.title),
   }));
+const holidaysById = new Map(holidays.map((theme) => [theme.id, theme]));
+const season = getCurrentSeason();
+const seasonThemes = season
+  ? season.themeIds.flatMap((id) => {
+      const theme = holidaysById.get(id);
+      return theme ? [theme] : [];
+    })
+  : [];
+
 const claimedThemeIds = new Set(subjectChoices.flatMap((choice) => choice.ids));
 const extraThemeChoices = everyday
   .filter((theme) => !claimedThemeIds.has(theme.id))
@@ -187,10 +198,37 @@ const jsonLd = {
         Choose pages by age or by theme, then download and print the PDF at home. The sets range from big, simple shapes for ages 2–3 to fuller scenes and patterns for ages 6–8.
       </p>
       <div class="hero-actions">
+        {seasonThemes.length > 0 && (
+          <a class="btn" href="#season">{season!.label}</a>
+        )}
         <a class="btn" href="#ages">Choose by age</a>
         <a class="btn" href="#themes">Choose by theme</a>
       </div>
     </section>
+
+    {seasonThemes.length > 0 && season && (
+      <section class="section season-spotlight" id="season">
+        <div class="section-head">
+          <h2>{season.label}</h2>
+          <p>{season.blurb}</p>
+        </div>
+        <div class="theme-grid">
+          {seasonThemes.map((theme) => {
+            const art = cover(theme.id);
+            return (
+              <ThemeCard
+                href={themePath(theme.id)}
+                title={theme.data.title}
+                image={art.src}
+                imageAlt={art.alt}
+                count={art.count}
+                eyebrow={holidayNames[theme.id] ?? 'Season'}
+              />
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     <section class="section" id="ages">
       <div class="section-head">
