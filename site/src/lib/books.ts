@@ -14,7 +14,7 @@ export const books: BookOffer[] = [
   {
     id: 'winter-christmas',
     title: 'A ready coloring book',
-    body: 'More winter and Christmas pages that aren’t free on the site: already in one stack, ready to color. Paperback on Amazon if you want a real book in the mail. PDF on Ko-fi if you’d rather print the pages at home.',
+    body: 'More winter and Christmas pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
     cover: '/books/adorable-winter-christmas-coloring-book.png',
     coverAlt: 'Cover of Adorable Winter Coloring Book: two children ice skating in the snow',
     amazonUrl: 'https://www.amazon.com/dp/B0HMMBW1F6',

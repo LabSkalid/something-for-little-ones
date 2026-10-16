@@ -343,17 +343,19 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   object-position: center top;
 }
 
-.book-offer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.55rem;
-  align-items: center;
-  margin: 0.55rem 0 0;
+.book-offer-actions {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.7rem 0 0;
 }
 
-.book-offer-links a { font-weight: 800; }
-
-.book-offer-links span { color: var(--muted); }
+.book-offer-actions .btn {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.7rem;
+}
 
 .ad-slot {
   display: grid;

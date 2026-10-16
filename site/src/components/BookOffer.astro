@@ -21,9 +21,8 @@ const { book } = Astro.props;
   </a>
   <h2>{book.title}</h2>
   <p>{book.body}</p>
-  <p class="book-offer-links">
-    <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer">Amazon</a>
-    <span aria-hidden="true">·</span>
-    <a href={book.kofiUrl} target="_blank" rel="noopener noreferrer">Ko-fi</a>
-  </p>
+  <div class="book-offer-actions">
+    <a class="btn" href={book.amazonUrl} target="_blank" rel="noopener noreferrer">Paperback on Amazon</a>
+    <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener noreferrer">PDF on Ko-fi</a>
+  </div>
 </div>
