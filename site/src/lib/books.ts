@@ -21,6 +21,16 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/53304342a5',
     themes: ['winter-coloring-pages', 'christmas-coloring-pages'],
   },
+  {
+    id: 'garden-animals',
+    title: 'A ready coloring book',
+    body: 'More garden animal pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    cover: '/books/cute-garden-animals-coloring-book.png',
+    coverAlt: 'Cover of Cute Garden Animals Coloring Book: a snail on a watering can and a chick with a rake',
+    amazonUrl: 'https://www.amazon.com/dp/B0HMJPQXPT',
+    kofiUrl: 'https://ko-fi.com/s/b535114e98',
+    themes: ['garden-coloring-pages', 'animal-coloring-pages'],
+  },
 ];
 
 export function bookForTheme(themeId: string) {

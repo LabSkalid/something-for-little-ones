@@ -131,6 +131,7 @@ async function main() {
       process.exit(1);
     }
     const download = rest.includes('--download');
+    const blankBacks = download ? false : !rest.includes('--no-blanks');
     await buildKdpBook({
       folder,
       title,
@@ -138,7 +139,7 @@ async function main() {
       author: rest.find((arg) => arg.startsWith('--author='))?.slice('--author='.length),
       copyright: rest.find((arg) => arg.startsWith('--copyright='))?.slice('--copyright='.length),
       outFile,
-      blankBacks: download ? false : !rest.includes('--no-blanks'),
+      blankBacks,
       padEvenPages: download ? false : !rest.includes('--no-blanks'),
       frontMatter: download
         ? rest.includes('--front-matter')
@@ -146,6 +147,7 @@ async function main() {
       captions: !rest.includes('--no-captions'),
       frontCover,
       backCover,
+      encodePreset: download || !blankBacks ? 'download' : undefined,
     });
     return;
   }

@@ -26,8 +26,16 @@ export type KdpPage = {
   caption: string;
 };
 
-/** KDP stays crisp @ 300 dpi; download is smaller for email / Etsy / home print. */
-export type PdfEncodePreset = 'kdp' | 'download';
+/**
+ * KDP stays crisp @ 300 dpi; download is smaller for email / Etsy / home print.
+ * - `download`: interior art — grayscale ~200 dpi q75
+ * - `download-cover`: front/back covers — color ~200 dpi q82 (still much lighter than KDP)
+ */
+export type PdfEncodePreset = 'kdp' | 'download' | 'download-cover';
+
+export function isDownloadEncodePreset(preset: PdfEncodePreset): boolean {
+  return preset === 'download' || preset === 'download-cover';
+}
 
 export type KdpBookOptions = {
   folder: string;
@@ -205,7 +213,8 @@ const DOWNLOAD_PX_H = 2200;
 /**
  * Encode a letter page image for PDF.
  * - kdp: 300 dpi, JPEG q92 (Amazon interior)
- * - download: ~200 dpi, grayscale JPEG q75 (digital download / print-at-home)
+ * - download: ~200 dpi, grayscale JPEG q75 (coloring pages)
+ * - download-cover: ~200 dpi, color JPEG q82 (front/back covers stay in color)
  */
 export async function encodeLetterForPdf(letterPng: Buffer, preset: PdfEncodePreset = 'kdp') {
   let pipeline = sharp(letterPng).removeAlpha().flatten({ background: '#ffffff' });
@@ -214,6 +223,13 @@ export async function encodeLetterForPdf(letterPng: Buffer, preset: PdfEncodePre
       .resize(DOWNLOAD_PX_W, DOWNLOAD_PX_H, { fit: 'inside', withoutEnlargement: false })
       .grayscale();
     return pipeline.jpeg({ quality: 75, mozjpeg: true, chromaSubsampling: '4:2:0' }).toBuffer();
+  }
+  if (preset === 'download-cover') {
+    pipeline = pipeline.resize(DOWNLOAD_PX_W, DOWNLOAD_PX_H, {
+      fit: 'inside',
+      withoutEnlargement: false,
+    });
+    return pipeline.jpeg({ quality: 82, mozjpeg: true, chromaSubsampling: '4:2:0' }).toBuffer();
   }
   // Dense line art as RGB PNG @ 2550×3300 balloons to ~2–4 MB/page in the PDF.
   // High-quality JPEG (4:4:4) keeps crisp black lines and lands ~0.3–0.7 MB/page.
@@ -233,6 +249,9 @@ export async function addLetterImagePage(
   file: string,
   preset: PdfEncodePreset = 'kdp',
 ) {
+  // Covers in download builds stay color (never grayscale interiors preset).
+  const encodePreset: PdfEncodePreset =
+    preset === 'download' ? 'download-cover' : preset;
   const resolved = path.resolve(file.trim());
   const ext = path.extname(resolved).toLowerCase();
   if (!COVER_EXT.has(ext)) {
@@ -241,13 +260,24 @@ export async function addLetterImagePage(
     );
   }
   if (ext === '.pdf') {
-    // Download: rasterize via pdf-lib embed then... keep vector embed (covers are 1 page).
-    // For size, prefer copying first page as-is (usually already small design PDFs).
+    // KDP: keep vector/embed for print quality. Download: never embed raw cover PDFs
+    // (design exports are often 10–20 MB each) — extract the bitmap and encode lightly.
+    if (isDownloadEncodePreset(encodePreset)) {
+      const { encodePdfFirstPageImage } = await import('./kdp-pdf-images.ts');
+      const jpeg = await encodePdfFirstPageImage(resolved, encodePreset);
+      if (jpeg) {
+        await addEncodedLetterPage(doc, jpeg);
+        return;
+      }
+      console.warn(
+        `PDF обложка без картинки — вставляю как есть (файл может быть тяжёлым): ${path.basename(resolved)}`,
+      );
+    }
     await addLetterPdfCoverPage(doc, resolved);
     return;
   }
   const letterPng = await loadCoverLetter(resolved);
-  const forPdf = await encodeLetterForPdf(letterPng, preset);
+  const forPdf = await encodeLetterForPdf(letterPng, encodePreset);
   await addEncodedLetterPage(doc, forPdf);
 }
 
@@ -415,13 +445,17 @@ export async function buildKdpBook(options: KdpBookOptions) {
   await fs.mkdir(path.dirname(outFile), { recursive: true });
 
   const fontBytes = await loadFontBytes();
-  const kind = encodePreset === 'download' ? 'Download PDF' : 'KDP';
+  const kind = isDownloadEncodePreset(encodePreset) ? 'Download PDF' : 'KDP';
   console.log(`${kind}: ${pages.length} картинок → ${outFile}`);
   console.log(
     `Формат 8.5×11 in, Fredoka на титуле` +
       (showCaptions ? ', подписи под рисунками' : '') +
       (blankBacks ? ', пустые обороты' : ', без пустых страниц') +
-      (encodePreset === 'download' ? ', лёгкое JPEG (~200 dpi, grayscale)' : ', JPEG q92 @ 300 dpi') +
+      (encodePreset === 'download'
+        ? ', лёгкое JPEG (~200 dpi: обложки цвет, рисунки ч/б)'
+        : encodePreset === 'download-cover'
+          ? ', лёгкое цветное JPEG (~200 dpi q82)'
+          : ', JPEG q92 @ 300 dpi') +
       (frontCover ? ', обложка спереди' : '') +
       (backCover ? ', обложка сзади' : '') +
       ', без футера сайта',

@@ -453,6 +453,8 @@ const server = http.createServer(async (req, res) => {
       const frontCover = body.frontCover ? String(body.frontCover).trim() : '';
       const backCover = body.backCover ? String(body.backCover).trim() : '';
       const download = Boolean(body.download) || Boolean(frontCover || backCover) || blankBacks === false;
+      // Always force light JPEG for digital/download builds (covers alone used to balloon past 100 MB).
+      const encodePreset = download || blankBacks === false ? 'download' : undefined;
       startJob(download ? `PDF скачивание: ${title}` : `KDP книга: ${title}`, async () => {
         const result = await buildKdpBook({
           folder,
@@ -467,6 +469,7 @@ const server = http.createServer(async (req, res) => {
           padEvenPages,
           frontCover: frontCover || undefined,
           backCover: backCover || undefined,
+          encodePreset,
           pages,
         });
         job.lastKdpPageCount = result.pages;
@@ -572,9 +575,12 @@ const server = http.createServer(async (req, res) => {
         });
         job.lastKdpPageCount = result.pagesOut;
         await saveSession();
+        const outMb = (result.sizeOut / (1024 * 1024)).toFixed(1);
+        const inMb = (result.sizeIn / (1024 * 1024)).toFixed(1);
         console.log(
           `Готово для digital download: было ${result.pagesIn}, осталось ${result.kept}, ` +
-            `убрано пустых ${result.removed}, в файле ${result.pagesOut} стр.`,
+            `убрано пустых ${result.removed}, сжато ${result.rebuilt}, как есть ${result.copied}, ` +
+            `в файле ${result.pagesOut} стр. (${inMb} → ${outMb} MB)`,
         );
       });
       return send(res, 202, { ok: true });

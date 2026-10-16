@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import sharp from 'sharp';
 import {
   PDFArray,
@@ -39,8 +40,85 @@ function streamBytes(stream: PDFRawStream): Buffer {
   }
 }
 
+type ExtractedImage = { bytes: Buffer; width: number; height: number; area: number };
+
+async function imageFromStream(obj: PDFRawStream): Promise<ExtractedImage | null> {
+  const dict = obj.dict;
+  const width = Number(dict.lookup(PDFName.of('Width')));
+  const height = Number(dict.lookup(PDFName.of('Height')));
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width < 32 || height < 32) {
+    return null;
+  }
+
+  const filter = dict.lookup(PDFName.of('Filter'));
+  const raw = filterIsJpeg(filter) ? Buffer.from(obj.getContents()) : streamBytes(obj);
+
+  let bytes = raw;
+  if (!filterIsJpeg(filter)) {
+    const colorSpace = dict.lookup(PDFName.of('ColorSpace'));
+    const cs =
+      colorSpace instanceof PDFName
+        ? colorSpace.decodeText()
+        : colorSpace instanceof PDFArray && colorSpace.get(0) instanceof PDFName
+          ? (colorSpace.get(0) as PDFName).decodeText()
+          : '';
+    const channels = cs === 'DeviceGray' || cs === 'CalGray' ? 1 : 3;
+    if (raw.length < width * height * channels) return null;
+    try {
+      bytes = await sharp(raw.subarray(0, width * height * channels), {
+        raw: { width, height, channels: channels as 1 | 3 },
+      })
+        .png()
+        .toBuffer();
+    } catch {
+      return null;
+    }
+  }
+
+  return { bytes, width, height, area: width * height };
+}
+
 /**
- * Largest embedded bitmap on a page (factory art pages are one full-page JPEG).
+ * Walk page (and nested Form XObject) Resources for Image XObjects.
+ * Embedded PDF covers via pdf-lib `drawPage` are Forms wrapping the original images.
+ */
+async function scanXObjectImages(
+  xobjects: PDFDict,
+  context: PDFDocument['context'],
+  best: { current: ExtractedImage | null },
+  seen: Set<PDFRawStream>,
+) {
+  for (const key of xobjects.keys()) {
+    const obj = resolveRef(context, xobjects.get(key));
+    if (!(obj instanceof PDFRawStream) || seen.has(obj)) continue;
+    seen.add(obj);
+
+    const subtype = obj.dict.get(PDFName.of('Subtype'));
+    if (!(subtype instanceof PDFName)) continue;
+    const kind = subtype.decodeText();
+
+    if (kind === 'Image') {
+      const image = await imageFromStream(obj);
+      if (image && (!best.current || image.area > best.current.area)) {
+        best.current = image;
+      }
+      continue;
+    }
+
+    if (kind === 'Form') {
+      const formResources = resolveRef(context, obj.dict.get(PDFName.of('Resources')));
+      if (!(formResources instanceof PDFDict)) continue;
+      const nested = resolveRef(context, formResources.get(PDFName.of('XObject')));
+      if (nested instanceof PDFDict) {
+        await scanXObjectImages(nested, context, best, seen);
+      }
+    }
+  }
+}
+
+/**
+ * Largest embedded bitmap on a page (factory art pages are one full-page JPEG;
+ * PDF covers embedded as Form XObjects are searched recursively).
  * Returns raw image bytes Sharp can open (JPEG file or raw decoded Flate RGB/Gray).
  */
 export async function extractLargestPageImage(
@@ -52,57 +130,11 @@ export async function extractLargestPageImage(
   const xobjects = resolveRef(context, resources.get(PDFName.of('XObject')));
   if (!(xobjects instanceof PDFDict)) return null;
 
-  let best: { bytes: Buffer; width: number; height: number; area: number } | null = null;
-
-  for (const key of xobjects.keys()) {
-    const obj = resolveRef(context, xobjects.get(key));
-    if (!(obj instanceof PDFRawStream)) continue;
-    const dict = obj.dict;
-    const subtype = dict.get(PDFName.of('Subtype'));
-    if (!(subtype instanceof PDFName) || subtype.decodeText() !== 'Image') continue;
-
-    const width = Number(dict.lookup(PDFName.of('Width')));
-    const height = Number(dict.lookup(PDFName.of('Height')));
-    if (!Number.isFinite(width) || !Number.isFinite(height) || width < 32 || height < 32) continue;
-
-    const area = width * height;
-    if (best && area <= best.area) continue;
-
-    const filter = dict.lookup(PDFName.of('Filter'));
-    const raw = filterIsJpeg(filter)
-      ? Buffer.from(obj.getContents())
-      : streamBytes(obj);
-
-    // Sharp opens JPEG/PNG; for Flate DeviceRGB try raw.
-    let bytes = raw;
-    if (!filterIsJpeg(filter)) {
-      const colorSpace = dict.lookup(PDFName.of('ColorSpace'));
-      const cs =
-        colorSpace instanceof PDFName
-          ? colorSpace.decodeText()
-          : colorSpace instanceof PDFArray && colorSpace.get(0) instanceof PDFName
-            ? (colorSpace.get(0) as PDFName).decodeText()
-            : '';
-      const channels = cs === 'DeviceGray' || cs === 'CalGray' ? 1 : 3;
-      if (raw.length >= width * height * channels) {
-        try {
-          bytes = await sharp(raw.subarray(0, width * height * channels), {
-            raw: { width, height, channels: channels as 1 | 3 },
-          })
-            .png()
-            .toBuffer();
-        } catch {
-          continue;
-        }
-      } else {
-        continue;
-      }
-    }
-
-    best = { bytes, width, height, area };
-  }
-
-  return best ? { bytes: best.bytes, width: best.width, height: best.height } : null;
+  const best: { current: ExtractedImage | null } = { current: null };
+  await scanXObjectImages(xobjects, context, best, new Set());
+  return best.current
+    ? { bytes: best.current.bytes, width: best.current.width, height: best.current.height }
+    : null;
 }
 
 /** Re-encode a page's main image with download/kdp preset; null if no image. */
@@ -114,6 +146,20 @@ export async function recompressPageImage(
   const image = await extractLargestPageImage(page, context);
   if (!image) return null;
   return encodeLetterForPdf(image.bytes, preset);
+}
+
+/**
+ * First page of a cover PDF → download/kdp JPEG (extracts largest image XObject).
+ * Returns null if the page has no extractable bitmap (caller may embed vectors).
+ */
+export async function encodePdfFirstPageImage(
+  file: string,
+  preset: PdfEncodePreset = 'download',
+): Promise<Buffer | null> {
+  const bytes = await fs.readFile(file);
+  const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
+  if (src.getPageCount() < 1) return null;
+  return recompressPageImage(src.getPage(0)!, src.context, preset);
 }
 
 /**

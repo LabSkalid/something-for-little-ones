@@ -10,7 +10,11 @@ import {
   decodePDFRawStream,
   type PDFPage,
 } from 'pdf-lib';
-import { addLetterImagePage, type PdfEncodePreset } from './kdp-book.ts';
+import {
+  addLetterImagePage,
+  isDownloadEncodePreset,
+  type PdfEncodePreset,
+} from './kdp-book.ts';
 import { appendPageLight } from './kdp-pdf-images.ts';
 
 export type DownloadFromKdpOptions = {
@@ -148,8 +152,10 @@ export async function buildDownloadPdfFromKdp(options: DownloadFromKdpOptions) {
   if (backCover) console.log(`Обложка (зад): ${path.basename(backCover)}`);
   console.log(
     encodePreset === 'download'
-      ? 'Сжимаю картинки: ~200 dpi, grayscale JPEG q75 (удобно качать и печатать дома)'
-      : 'Картинки без доп. сжатия (режим kdp)',
+      ? 'Сжимаю: обложки цвет ~200 dpi q82; рисунки ч/б ~200 dpi q75'
+      : encodePreset === 'download-cover'
+        ? 'Сжимаю картинки: цветное JPEG ~200 dpi q82'
+        : 'Картинки без доп. сжатия (режим kdp)',
   );
 
   const out = await PDFDocument.create();
@@ -158,17 +164,43 @@ export async function buildDownloadPdfFromKdp(options: DownloadFromKdpOptions) {
   const author = src.getAuthor();
   if (author) out.setAuthor(author);
 
+  // Explicit cover files always go through color download encode.
   if (frontCover) await addLetterImagePage(out, frontCover, encodePreset);
+
+  // Rebuilding a digital PDF without separate covers: first/last pages are covers → color.
+  const colorFirst = isDownloadEncodePreset(encodePreset) && !frontCover;
+  const colorLast = isDownloadEncodePreset(encodePreset) && !backCover;
 
   let rebuilt = 0;
   let copied = 0;
-  for (const index of keepIndexes) {
-    const kind = await appendPageLight(out, src, index, encodePreset);
-    if (kind === 'image') rebuilt += 1;
-    else copied += 1;
+  let coverRebuilt = 0;
+  for (let i = 0; i < keepIndexes.length; i++) {
+    const index = keepIndexes[i]!;
+    const isBookendCover =
+      (colorFirst && i === 0) || (colorLast && i === keepIndexes.length - 1);
+    const pagePreset: PdfEncodePreset =
+      encodePreset === 'download' && isBookendCover ? 'download-cover' : encodePreset;
+    const kind = await appendPageLight(out, src, index, pagePreset);
+    if (kind === 'image') {
+      rebuilt += 1;
+      if (isBookendCover) coverRebuilt += 1;
+    } else {
+      copied += 1;
+    }
     if ((rebuilt + copied) % 10 === 0 || rebuilt + copied === keepIndexes.length) {
       console.log(`Страницы: ${rebuilt + copied}/${keepIndexes.length} (сжато ${rebuilt}, как есть ${copied})`);
     }
+  }
+  if (isDownloadEncodePreset(encodePreset) && copied > 0 && copied >= rebuilt) {
+    console.warn(
+      `Внимание: ${copied} стр. скопированы без сжатия (нет Image XObject). Ожидалось сжатие большинства страниц.`,
+    );
+  } else {
+    console.log(
+      `Итого картинок: сжато ${rebuilt}` +
+        (coverRebuilt ? ` (из них обложек цветных ${coverRebuilt})` : '') +
+        `, скопировано как есть ${copied}`,
+    );
   }
 
   if (backCover) await addLetterImagePage(out, backCover, encodePreset);
@@ -180,7 +212,13 @@ export async function buildDownloadPdfFromKdp(options: DownloadFromKdpOptions) {
   const writePath = samePath ? `${outFile}.tmp.pdf` : outFile;
   await fs.writeFile(writePath, await out.save({ useObjectStreams: false }));
   if (samePath) {
-    await fs.rename(writePath, outFile);
+    try {
+      await fs.rename(writePath, outFile);
+    } catch {
+      // Windows often EPERM on rename when the PDF is open / AV-locked — replace via copy.
+      await fs.copyFile(writePath, outFile);
+      await fs.unlink(writePath);
+    }
   }
 
   const totalOut = out.getPageCount();
@@ -205,6 +243,7 @@ export async function buildDownloadPdfFromKdp(options: DownloadFromKdpOptions) {
     removed: removedPages.length,
     removedPages,
     rebuilt,
+    copied,
     sizeIn: bytes.length,
     sizeOut: outStat.size,
   };
