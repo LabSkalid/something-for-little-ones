@@ -11,6 +11,7 @@ import { factoryRoot } from './paths.ts';
 import { Resvg } from '@resvg/resvg-js';
 
 const IMAGE_EXT = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp']);
+const COVER_EXT = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp', '.pdf']);
 
 /** Amazon KDP common coloring-book trim: 8.5 × 11 in, no bleed (PDF points). */
 const PAGE_W = 612;
@@ -24,6 +25,9 @@ export type KdpPage = {
   file: string;
   caption: string;
 };
+
+/** KDP stays crisp @ 300 dpi; download is smaller for email / Etsy / home print. */
+export type PdfEncodePreset = 'kdp' | 'download';
 
 export type KdpBookOptions = {
   folder: string;
@@ -39,9 +43,72 @@ export type KdpBookOptions = {
   frontMatter?: boolean;
   /** Show short captions under drawings. Default true. */
   captions?: boolean;
+  /**
+   * Pad to an even page count with a final blank (KDP paperback).
+   * Default: same as blankBacks. Turn off for digital download / print-at-home.
+   */
+  padEvenPages?: boolean;
+  /** Full-page front cover (PNG/JPG/SVG/PDF), 8.5×11. First page of the output. */
+  frontCover?: string;
+  /** Full-page back cover (PNG/JPG/SVG/PDF), 8.5×11. Last page of the output. */
+  backCover?: string;
   /** Optional pre-named pages (from vision). Otherwise filenames are used. */
   pages?: KdpPage[];
+  /**
+   * Image encode preset. Default: `kdp` when blank backs are on, else `download`
+   * (smaller files for digital sales / home print).
+   */
+  encodePreset?: PdfEncodePreset;
 };
+
+/** Letter @ 300 dpi — same trim as KDP interior / download PDF. */
+const LETTER_PX_W = 2550;
+const LETTER_PX_H = 3300;
+
+/** Fit a designed cover image to one letter page (no frame strip — keeps color fills). */
+async function loadCoverLetter(file: string) {
+  const resolved = path.resolve(file.trim());
+  const ext = path.extname(resolved).toLowerCase();
+  let source: Buffer;
+  if (ext === '.svg') {
+    const svg = await fs.readFile(resolved, 'utf8');
+    source = Buffer.from(
+      new Resvg(svg, { fitTo: { mode: 'width', value: LETTER_PX_W }, background: 'white' }).render().asPng(),
+    );
+  } else {
+    source = await sharp(resolved).rotate().png().toBuffer();
+  }
+  return sharp(source)
+    .resize(LETTER_PX_W, LETTER_PX_H, { fit: 'contain', background: '#ffffff' })
+    .flatten({ background: '#ffffff' })
+    .png()
+    .toBuffer();
+}
+
+/** First page of a cover PDF → letter page via pdf-lib (keeps vectors when possible). */
+async function addLetterPdfCoverPage(doc: PDFDocument, file: string) {
+  const bytes = await fs.readFile(file);
+  const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
+  const pageCount = src.getPageCount();
+  if (pageCount < 1) {
+    throw new Error(`В PDF обложки нет страниц: ${path.basename(file)}`);
+  }
+  const embeddedPages = await doc.embedPdf(bytes, [0]);
+  const embedded = embeddedPages[0];
+  if (!embedded) {
+    throw new Error(`В PDF обложки нет страниц: ${path.basename(file)}`);
+  }
+  const page = doc.addPage([PAGE_W, PAGE_H]);
+  const scale = Math.min(PAGE_W / embedded.width, PAGE_H / embedded.height);
+  const w = embedded.width * scale;
+  const h = embedded.height * scale;
+  page.drawPage(embedded, {
+    x: (PAGE_W - w) / 2,
+    y: (PAGE_H - h) / 2,
+    width: w,
+    height: h,
+  });
+}
 
 async function walkImages(dir: string): Promise<string[]> {
   let entries;
@@ -131,15 +198,57 @@ function addTitlePage(
   }
 }
 
-/** Print-safe encode for KDP B&W interiors: full letter @ 300 dpi, JPEG (not Flate PNG). */
-async function encodeLetterForPdf(letterPng: Buffer) {
+/** Letter @ ~200 dpi — still sharp enough for home print of line art. */
+const DOWNLOAD_PX_W = 1700;
+const DOWNLOAD_PX_H = 2200;
+
+/**
+ * Encode a letter page image for PDF.
+ * - kdp: 300 dpi, JPEG q92 (Amazon interior)
+ * - download: ~200 dpi, grayscale JPEG q75 (digital download / print-at-home)
+ */
+export async function encodeLetterForPdf(letterPng: Buffer, preset: PdfEncodePreset = 'kdp') {
+  let pipeline = sharp(letterPng).removeAlpha().flatten({ background: '#ffffff' });
+  if (preset === 'download') {
+    pipeline = pipeline
+      .resize(DOWNLOAD_PX_W, DOWNLOAD_PX_H, { fit: 'inside', withoutEnlargement: false })
+      .grayscale();
+    return pipeline.jpeg({ quality: 75, mozjpeg: true, chromaSubsampling: '4:2:0' }).toBuffer();
+  }
   // Dense line art as RGB PNG @ 2550×3300 balloons to ~2–4 MB/page in the PDF.
   // High-quality JPEG (4:4:4) keeps crisp black lines and lands ~0.3–0.7 MB/page.
-  return sharp(letterPng)
-    .removeAlpha()
-    .flatten({ background: '#ffffff' })
-    .jpeg({ quality: 92, mozjpeg: true, chromaSubsampling: '4:4:4' })
-    .toBuffer();
+  return pipeline.jpeg({ quality: 92, mozjpeg: true, chromaSubsampling: '4:4:4' }).toBuffer();
+}
+
+/** Draw a full-page JPEG (already encoded) onto a new letter page. */
+export async function addEncodedLetterPage(doc: PDFDocument, jpegBytes: Buffer) {
+  const page = doc.addPage([PAGE_W, PAGE_H]);
+  const image = await doc.embedJpg(jpegBytes);
+  page.drawImage(image, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
+}
+
+/** Full-page letter cover (PNG/JPG/SVG raster, or first page of a PDF) into an existing doc. */
+export async function addLetterImagePage(
+  doc: PDFDocument,
+  file: string,
+  preset: PdfEncodePreset = 'kdp',
+) {
+  const resolved = path.resolve(file.trim());
+  const ext = path.extname(resolved).toLowerCase();
+  if (!COVER_EXT.has(ext)) {
+    throw new Error(
+      `Обложка: нужен PNG, JPG, SVG или PDF (сейчас ${ext || 'без расширения'}): ${path.basename(resolved)}`,
+    );
+  }
+  if (ext === '.pdf') {
+    // Download: rasterize via pdf-lib embed then... keep vector embed (covers are 1 page).
+    // For size, prefer copying first page as-is (usually already small design PDFs).
+    await addLetterPdfCoverPage(doc, resolved);
+    return;
+  }
+  const letterPng = await loadCoverLetter(resolved);
+  const forPdf = await encodeLetterForPdf(letterPng, preset);
+  await addEncodedLetterPage(doc, forPdf);
 }
 
 async function addArtPage(
@@ -148,9 +257,10 @@ async function addArtPage(
   font: PDFFont,
   caption: string,
   showCaption: boolean,
+  preset: PdfEncodePreset = 'kdp',
 ) {
   const page = doc.addPage([PAGE_W, PAGE_H]);
-  const forPdf = await encodeLetterForPdf(letterPng);
+  const forPdf = await encodeLetterForPdf(letterPng, preset);
   const image = await doc.embedJpg(forPdf);
   page.drawImage(image, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
 
@@ -275,6 +385,11 @@ export async function buildKdpBook(options: KdpBookOptions) {
   const blankBacks = options.blankBacks !== false;
   const frontMatter = options.frontMatter !== false;
   const showCaptions = options.captions !== false;
+  const padEvenPages = options.padEvenPages !== undefined ? Boolean(options.padEvenPages) : blankBacks;
+  const encodePreset: PdfEncodePreset =
+    options.encodePreset ?? (blankBacks ? 'kdp' : 'download');
+  const frontCover = (options.frontCover ?? '').trim();
+  const backCover = (options.backCover ?? '').trim();
   const subtitle = (options.subtitle ?? '').trim();
   const author = (options.author ?? '').trim();
   const copyright =
@@ -291,17 +406,24 @@ export async function buildKdpBook(options: KdpBookOptions) {
     for (const page of pages) assertPdfLatin(page.caption, `Подпись для ${path.basename(page.file)}`);
   }
 
+  const defaultName = frontCover || backCover || !blankBacks
+    ? `${slugifyName(title)}-download.pdf`
+    : `${slugifyName(title)}.pdf`;
   const outFile =
     options.outFile?.trim() ||
-    path.join(factoryRoot, 'out', 'kdp', `${slugifyName(title)}.pdf`);
+    path.join(factoryRoot, 'out', 'kdp', defaultName);
   await fs.mkdir(path.dirname(outFile), { recursive: true });
 
   const fontBytes = await loadFontBytes();
-  console.log(`KDP: ${pages.length} картинок → ${outFile}`);
+  const kind = encodePreset === 'download' ? 'Download PDF' : 'KDP';
+  console.log(`${kind}: ${pages.length} картинок → ${outFile}`);
   console.log(
     `Формат 8.5×11 in, Fredoka на титуле` +
       (showCaptions ? ', подписи под рисунками' : '') +
-      (blankBacks ? ', пустые обороты' : '') +
+      (blankBacks ? ', пустые обороты' : ', без пустых страниц') +
+      (encodePreset === 'download' ? ', лёгкое JPEG (~200 dpi, grayscale)' : ', JPEG q92 @ 300 dpi') +
+      (frontCover ? ', обложка спереди' : '') +
+      (backCover ? ', обложка сзади' : '') +
       ', без футера сайта',
   );
 
@@ -310,6 +432,11 @@ export async function buildKdpBook(options: KdpBookOptions) {
   const font = await doc.embedFont(fontBytes);
   doc.setTitle(title);
   if (author) doc.setAuthor(author);
+
+  if (frontCover) {
+    console.log(`Обложка (лицо): ${path.basename(frontCover)}`);
+    await addLetterImagePage(doc, frontCover, encodePreset);
+  }
 
   if (frontMatter) {
     addTitlePage(doc, font, [
@@ -331,12 +458,17 @@ export async function buildKdpBook(options: KdpBookOptions) {
     const pagePng = await loadSourceImage(page.file, {
       bottomExtraPx: showCaptions && page.caption.trim() ? CAPTION_BAND_PX : 0,
     });
-    await addArtPage(doc, pagePng, font, page.caption, showCaptions);
+    await addArtPage(doc, pagePng, font, page.caption, showCaptions, encodePreset);
     artPages += 1;
     if (blankBacks) await addBlankPage(doc);
   }
 
-  if (doc.getPageCount() % 2 === 1) await addBlankPage(doc);
+  if (backCover) {
+    console.log(`Обложка (зад): ${path.basename(backCover)}`);
+    await addLetterImagePage(doc, backCover, encodePreset);
+  }
+
+  if (padEvenPages && doc.getPageCount() % 2 === 1) await addBlankPage(doc);
 
   const pdf = await doc.save({ useObjectStreams: false });
   await fs.writeFile(outFile, pdf);
@@ -344,9 +476,13 @@ export async function buildKdpBook(options: KdpBookOptions) {
   const totalPages = doc.getPageCount();
   console.log(`Готово: ${artPages} рисунков, ${totalPages} страниц PDF`);
   console.log(`Файл: ${outFile}`);
-  console.log('В KDP: Paperback → Black & white interior → 8.5" x 11" → Bleed: No Bleed');
-  console.log(
-    `Для обложки: page count = ${totalPages} (стороны в PDF). Физических листов примерно ${Math.ceil(totalPages / 2)}, но в калькулятор Amazon — ${totalPages}.`,
-  );
+  if (blankBacks || padEvenPages) {
+    console.log('В KDP: Paperback → Black & white interior → 8.5" x 11" → Bleed: No Bleed');
+    console.log(
+      `Для обложки: page count = ${totalPages} (стороны в PDF). Физических листов примерно ${Math.ceil(totalPages / 2)}, но в калькулятор Amazon — ${totalPages}.`,
+    );
+  } else {
+    console.log('PDF для скачивания / печати дома: 8.5×11, без пустых оборотов. Продай как digital download.');
+  }
   return { outFile, artPages, pages: totalPages, files: pages.length };
 }

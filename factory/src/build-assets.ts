@@ -43,6 +43,18 @@ export type PinBuildOptions = {
   keywords?: string;
   /** Rounded frames around tiles in collection pins. Default on. */
   framed?: boolean;
+  /** FREE PRINTABLE label (+ collection frames). Hex like #1d7ad6. Empty = theme accent. */
+  accent?: string;
+};
+
+export type PinCopyOnlyOptions = {
+  theme?: string;
+  /** Limit to these pin filenames (e.g. fall-coloring-pages-acorn.png). */
+  filenames?: string[];
+  mode?: PinMode;
+  /** When false (default), only fill empty pin_title / pin_description. */
+  overwrite?: boolean;
+  keywords?: string;
 };
 
 type PinRow = {
@@ -220,6 +232,255 @@ async function readManifest() {
   }
 }
 
+/** Unique pin PNG basenames under pinRoot (including done/… subfolders). */
+async function listPinPngFilenames(themeId?: string): Promise<string[]> {
+  const prefix = themeId ? `${themeId}-` : '';
+  const names = new Set<string>();
+  async function walk(dir: string) {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(full);
+      } else if (entry.name.endsWith('.png') && (!prefix || entry.name.startsWith(prefix))) {
+        names.add(entry.name);
+      }
+    }
+  }
+  await walk(pinRoot);
+  return [...names].sort((a, b) => a.localeCompare(b));
+}
+
+function pinTypeFromFilename(filename: string, existingType?: PinRow['type']): PinRow['type'] {
+  if (existingType === 'collection' || existingType === 'single') return existingType;
+  return /-collection-\d+\.png$/i.test(filename) ? 'collection' : 'single';
+}
+
+async function ensureManifestRow(filename: string, existing?: PinRow): Promise<PinRow> {
+  if (existing) return existing;
+  const themeId = themeIdFromPinFilename(filename);
+  const type = pinTypeFromFilename(filename);
+  let title = themeId;
+  try {
+    const theme = await loadThemeMeta(themeId);
+    title = theme.title || title;
+  } catch {
+    /* keep slug as title */
+  }
+  const origin = readSite().url.replace(/\/$/, '');
+  let url = `${origin}/${themeId}/`;
+  if (type === 'single') {
+    const slug = sheetSlugFromPinFilename(filename, themeId);
+    if (slug) url = `${origin}/${themeId}/${slug}/`;
+  }
+  return {
+    filename,
+    type,
+    title,
+    url,
+    pinTitle: '',
+    pinDescription: '',
+  };
+}
+
+function themeIdFromPinFilename(filename: string) {
+  const base = filename.replace(/\.png$/i, '');
+  const collection = base.match(/^(.*)-collection-\d+$/i);
+  if (collection) return collection[1];
+  const dash = base.lastIndexOf('-');
+  // theme slugs end with -coloring-pages; sheet slug is the rest
+  const match = base.match(/^(.+-coloring-pages)-(.+)$/i);
+  if (match) return match[1];
+  return dash === -1 ? base : base.slice(0, dash);
+}
+
+function sheetSlugFromPinFilename(filename: string, themeId: string) {
+  const base = filename.replace(/\.png$/i, '');
+  if (/-collection-\d+$/i.test(base)) return null;
+  if (!base.startsWith(`${themeId}-`)) return null;
+  return base.slice(themeId.length + 1);
+}
+
+async function loadThemeMeta(themeId: string) {
+  const file = path.join(themeContentRoot, `${themeId}.md`);
+  const data = readFrontmatter(await fs.readFile(file, 'utf8')) as ThemeData;
+  return data;
+}
+
+async function loadSheetMeta(themeId: string, slug: string): Promise<SheetData | null> {
+  const file = path.join(sheetContentRoot, themeId, `${slug}.md`);
+  try {
+    return readFrontmatter(await fs.readFile(file, 'utf8')) as SheetData;
+  } catch {
+    return null;
+  }
+}
+
+async function buildCopyInputForRow(
+  row: PinRow,
+): Promise<Parameters<typeof writePinterestCopy>[0][number] | null> {
+  const themeId = themeIdFromPinFilename(row.filename);
+  let themeTitle = row.title;
+  let themeDescription = '';
+  try {
+    const theme = await loadThemeMeta(themeId);
+    themeTitle = theme.title || themeTitle;
+    themeDescription = String(theme.description ?? '');
+  } catch {
+    /* keep CSV title */
+  }
+
+  if (row.type === 'collection') {
+    let sheetTitle = '';
+    let age = '';
+    try {
+      const sheets = await listPinSheets(themeId);
+      sheetTitle = sheets.map((sheet) => sheet.title).join(', ');
+      age = [...new Set(sheets.map((sheet) => sheet.age).filter(Boolean))].join(', ');
+    } catch {
+      /* optional */
+    }
+    return {
+      filename: row.filename,
+      type: 'collection',
+      themeTitle,
+      url: row.url,
+      sheetTitle,
+      sheetDescription: themeDescription,
+      age,
+    };
+  }
+
+  const slug = sheetSlugFromPinFilename(row.filename, themeId);
+  const sheet = slug ? await loadSheetMeta(themeId, slug) : null;
+  return {
+    filename: row.filename,
+    type: 'single',
+    themeTitle,
+    url: row.url,
+    sheetTitle: String(sheet?.title ?? slug ?? ''),
+    sheetDescription: String(sheet?.description ?? ''),
+    age: String(sheet?.age ?? ''),
+  };
+}
+
+/**
+ * List pin PNGs for a theme (root + done/…), merged with pins.csv copy fields.
+ * Orphan CSV rows without a PNG are omitted — presence of an image is the source of truth.
+ */
+export async function listThemePins(themeId: string) {
+  const rows = await readManifest();
+  const byName = new Map(
+    rows.filter((row) => row.filename.startsWith(`${themeId}-`)).map((row) => [row.filename, row]),
+  );
+  const filenames = await listPinPngFilenames(themeId);
+  const pins = [];
+  for (const filename of filenames) {
+    const row = byName.get(filename);
+    const pinTitle = row?.pinTitle ?? '';
+    const pinDescription = row?.pinDescription ?? '';
+    const type = pinTypeFromFilename(filename, row?.type);
+    pins.push({
+      filename,
+      type,
+      title: row?.title ?? '',
+      url: row?.url ?? '',
+      pinTitle,
+      pinDescription,
+      hasCopy: hasPinCopy({ pinTitle, pinDescription }),
+      hasImage: true,
+    });
+  }
+  // Missing text first so Studio defaults to the work queue.
+  pins.sort((a, b) => Number(a.hasCopy) - Number(b.hasCopy) || a.filename.localeCompare(b.filename));
+  return pins;
+}
+
+/**
+ * Write Pinterest titles/descriptions only. Does not create, rewrite, or delete pin PNGs.
+ * Discovers PNGs on disk (including done/…) and adds missing pins.csv rows as needed.
+ * Default: fill empty copy. Pass overwrite:true to replace existing texts.
+ */
+export async function writePinCopyOnly(options: PinCopyOnlyOptions = {}) {
+  const onlyTheme = options.theme || undefined;
+  const mode: PinMode = options.mode ?? 'both';
+  const overwrite = Boolean(options.overwrite);
+  const keywords = (options.keywords ?? '').trim();
+  const selected = new Set((options.filenames ?? []).filter(Boolean));
+
+  const manifest = await readManifest();
+  const byName = new Map(manifest.map((row) => [row.filename, row]));
+  const filenames = await listPinPngFilenames(onlyTheme);
+  const targets: PinRow[] = [];
+
+  for (const filename of filenames) {
+    if (onlyTheme && !filename.startsWith(`${onlyTheme}-`)) continue;
+    const existing = byName.get(filename);
+    const type = pinTypeFromFilename(filename, existing?.type);
+    const isCollection = type === 'collection';
+    if (mode === 'collection' && !isCollection) continue;
+    if (mode === 'single' && isCollection) continue;
+    if (selected.size && !selected.has(filename)) continue;
+
+    const row = await ensureManifestRow(filename, existing);
+    if (!existing) {
+      manifest.push(row);
+      byName.set(filename, row);
+      console.log(`pin copy: new CSV row for ${filename}`);
+    }
+    if (!overwrite && hasPinCopy(row)) continue;
+    targets.push(row);
+  }
+
+  if (!targets.length) {
+    console.log(
+      overwrite
+        ? 'pin copy: nothing to write (no matching pin images)'
+        : 'pin copy: nothing to write (all matching pins already have text, or no images)',
+    );
+    return { updated: 0, skipped: 0 };
+  }
+
+  console.log(
+    `pin copy only: ${targets.length} pin(s), images untouched` +
+      (overwrite ? ', overwrite existing' : ', empty fields only'),
+  );
+
+  const copyInputs: Parameters<typeof writePinterestCopy>[0] = [];
+  for (const row of targets) {
+    const input = await buildCopyInputForRow(row);
+    if (input) copyInputs.push(input);
+  }
+
+  const chunkSize = 12;
+  const copyMap = new Map<string, { pinTitle: string; pinDescription: string }>();
+  for (let i = 0; i < copyInputs.length; i += chunkSize) {
+    const chunk = copyInputs.slice(i, i + chunkSize);
+    const part = await writePinterestCopy(chunk, keywords);
+    for (const [filename, value] of part) copyMap.set(filename, value);
+  }
+
+  let updated = 0;
+  for (const row of manifest) {
+    const copy = copyMap.get(row.filename);
+    if (!copy) continue;
+    row.pinTitle = copy.pinTitle;
+    row.pinDescription = copy.pinDescription;
+    if (keywords) row.keywords = keywords;
+    updated += 1;
+  }
+
+  await writeManifest(manifest);
+  console.log(`pin copy only done: ${updated} row(s) in pins.csv`);
+  console.log(`manifest: ${path.join(pinRoot, 'pins.csv')}`);
+  return { updated, skipped: targets.length - updated };
+}
+
 export async function listPinSheets(themeId: string) {
   const sheetDir = path.join(sheetContentRoot, themeId);
   let sheetFiles: string[] = [];
@@ -325,7 +586,8 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     }
 
     const title = data.title;
-    const accent = data.accent || '#1d7ad6';
+    const override = String(options.accent ?? '').trim();
+    const accent = /^#[0-9a-fA-F]{6}$/.test(override) ? override : data.accent || '#1d7ad6';
     const keep = new Set<string>();
     const themeRows: PinRow[] = [];
 

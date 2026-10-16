@@ -1,0 +1,19 @@
+---
+import type { BookOffer as BookOfferData } from '../lib/books';
+
+interface Props {
+  book: BookOfferData;
+}
+
+const { book } = Astro.props;
+---
+
+<div class="tip book-offer">
+  <h2>{book.title}</h2>
+  <p>{book.body}</p>
+  <p class="book-offer-links">
+    <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer">Amazon</a>
+    <span aria-hidden="true">·</span>
+    <a href={book.kofiUrl} target="_blank" rel="noopener noreferrer">Ko-fi</a>
+  </p>
+</div>

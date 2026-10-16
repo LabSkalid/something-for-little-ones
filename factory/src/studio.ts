@@ -4,7 +4,14 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
-import { buildPins, listPinSheets, type PinBuildOptions, type PinMode } from './build-assets.ts';
+import {
+  buildPins,
+  listPinSheets,
+  listThemePins,
+  writePinCopyOnly,
+  type PinBuildOptions,
+  type PinMode,
+} from './build-assets.ts';
 import { loadEnv } from './env.ts';
 import {
   type AgeBand,
@@ -23,6 +30,7 @@ import {
 } from './kdp-book.ts';
 import { auditKdpFolder } from './kdp-audit.ts';
 import { buildKdpCoverTemplate, estimateInteriorPages } from './kdp-cover.ts';
+import { buildDownloadPdfFromKdp } from './kdp-download-from-pdf.ts';
 import { reorderKdpPdf } from './kdp-reorder.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
@@ -130,6 +138,7 @@ async function listThemes() {
       slug,
       title: String(data.title ?? slug),
       kind: String(data.kind ?? 'evergreen'),
+      accent: String(data.accent ?? '#1d7ad6'),
       count,
     });
   }
@@ -438,7 +447,13 @@ const server = http.createServer(async (req, res) => {
       if (!folder) throw new Error('Укажите папку с SVG/PNG.');
       if (!title) throw new Error('Напишите название книги.');
       const pages = Array.isArray(body.pages) ? (body.pages as KdpPage[]) : undefined;
-      startJob(`KDP книга: ${title}`, async () => {
+      const blankBacks = body.blankBacks !== false;
+      const padEvenPages =
+        body.padEvenPages !== undefined ? Boolean(body.padEvenPages) : blankBacks;
+      const frontCover = body.frontCover ? String(body.frontCover).trim() : '';
+      const backCover = body.backCover ? String(body.backCover).trim() : '';
+      const download = Boolean(body.download) || Boolean(frontCover || backCover) || blankBacks === false;
+      startJob(download ? `PDF скачивание: ${title}` : `KDP книга: ${title}`, async () => {
         const result = await buildKdpBook({
           folder,
           title,
@@ -446,19 +461,28 @@ const server = http.createServer(async (req, res) => {
           author: body.author ? String(body.author) : undefined,
           copyright: body.copyright ? String(body.copyright) : undefined,
           outFile: body.outFile ? String(body.outFile) : undefined,
-          blankBacks: body.blankBacks !== false,
+          blankBacks,
           frontMatter: body.frontMatter !== false,
           captions: body.captions !== false,
+          padEvenPages,
+          frontCover: frontCover || undefined,
+          backCover: backCover || undefined,
           pages,
         });
         job.lastKdpPageCount = result.pages;
         await saveSession();
-        console.log(`Открой файл и загрузи в KDP как Interior.`);
         console.log(result.outFile);
-        console.log(
-          `Страниц в PDF: ${result.pages} (рисунков: ${result.artPages}).` +
-            ` В Amazon и в шаблон обложки вводи ${result.pages} — считают каждую сторону листа, не «листы пополам».`,
-        );
+        if (download && !blankBacks) {
+          console.log(
+            `Готово для продажи как digital download: ${result.pages} стр. (рисунков: ${result.artPages}).`,
+          );
+        } else {
+          console.log(`Открой файл и загрузи в KDP как Interior.`);
+          console.log(
+            `Страниц в PDF: ${result.pages} (рисунков: ${result.artPages}).` +
+              ` В Amazon и в шаблон обложки вводи ${result.pages} — считают каждую сторону листа, не «листы пополам».`,
+          );
+        }
       });
       return send(res, 202, { ok: true });
     }
@@ -532,6 +556,29 @@ const server = http.createServer(async (req, res) => {
       });
       return send(res, 202, { ok: true });
     }
+    if (req.method === 'POST' && url.pathname === '/api/kdp/download-from-pdf') {
+      const body = await readBody(req);
+      const pdfFile = String(body.pdfFile ?? '').trim();
+      if (!pdfFile) throw new Error('Укажите путь к готовому KDP PDF.');
+      const frontCover = body.frontCover ? String(body.frontCover).trim() : '';
+      const backCover = body.backCover ? String(body.backCover).trim() : '';
+      const outFile = body.outFile ? String(body.outFile).trim() : undefined;
+      startJob('KDP PDF → скачивание', async () => {
+        const result = await buildDownloadPdfFromKdp({
+          pdfFile,
+          frontCover: frontCover || undefined,
+          backCover: backCover || undefined,
+          outFile,
+        });
+        job.lastKdpPageCount = result.pagesOut;
+        await saveSession();
+        console.log(
+          `Готово для digital download: было ${result.pagesIn}, осталось ${result.kept}, ` +
+            `убрано пустых ${result.removed}, в файле ${result.pagesOut} стр.`,
+        );
+      });
+      return send(res, 202, { ok: true });
+    }
     if (req.method === 'POST' && url.pathname === '/api/kdp/reorder') {
       const body = await readBody(req);
       const pdfFile = String(body.pdfFile ?? '').trim();
@@ -589,7 +636,7 @@ const server = http.createServer(async (req, res) => {
         } else {
           console.log(`Готово: ${result.published.length} листов в ${result.theme}`);
           console.log('Новая тема сама появится в футере. На главной праздники и лишние темы подхватываются автоматически.');
-          console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Рисовать и пины».');
+          console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Пины».');
         }
       });
       return send(res, 202, { ok: true });
@@ -599,6 +646,36 @@ const server = http.createServer(async (req, res) => {
       if (!theme) throw new Error('Укажите тему.');
       return send(res, 200, { sheets: await listPinSheets(theme) });
     }
+    if (req.method === 'GET' && url.pathname === '/api/pins/list') {
+      const theme = url.searchParams.get('theme') ?? '';
+      if (!theme) throw new Error('Укажите тему.');
+      return send(res, 200, { pins: await listThemePins(theme) });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/pins/copy') {
+      const body = await readBody(req);
+      const theme = body.theme ? String(body.theme) : undefined;
+      const mode = (['collection', 'single', 'both'].includes(String(body.mode))
+        ? String(body.mode)
+        : 'both') as PinMode;
+      const filenames = Array.isArray(body.filenames) ? body.filenames.map(String) : undefined;
+      const overwrite = Boolean(body.overwrite);
+      const keywords = body.keywords ? String(body.keywords) : '';
+      const label = [
+        theme ? `Тексты пинов ${theme}` : 'Тексты пинов всех подборок',
+        mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'все типы',
+        overwrite ? 'перезапись' : 'только пустые',
+        'без перерисовки картинок',
+      ].join(', ');
+      startJob(label, async () => {
+        const result = await writePinCopyOnly({ theme, mode, filenames, overwrite, keywords });
+        console.log(
+          result.updated
+            ? `Готово: обновлены тексты у ${result.updated} пин(ов) в pins.csv. PNG не трогали.`
+            : 'Готово: менять нечего (уже есть текст или нет картинок).',
+        );
+      });
+      return send(res, 202, { ok: true });
+    }
     if (req.method === 'POST' && url.pathname === '/api/pins') {
       const body = await readBody(req);
       const theme = body.theme ? String(body.theme) : undefined;
@@ -606,6 +683,8 @@ const server = http.createServer(async (req, res) => {
         ? String(body.mode)
         : 'both') as PinMode;
       const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : undefined;
+      const accentRaw = body.accent ? String(body.accent).trim() : '';
+      const accent = /^#[0-9a-fA-F]{6}$/i.test(accentRaw) ? accentRaw : undefined;
       const options: PinBuildOptions = {
         theme,
         mode,
@@ -615,12 +694,14 @@ const server = http.createServer(async (req, res) => {
         writeCopy: Boolean(body.writeCopy),
         framed: body.framed !== false,
         keywords: body.keywords ? String(body.keywords) : '',
+        accent,
       };
       const label = [
         theme ? `Пины ${theme}` : 'Пины всех подборок',
         mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
         options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
         mode !== 'single' ? (options.framed !== false ? 'с рамками' : 'без рамок') : '',
+        accent ? `FREE PRINTABLE ${accent}` : '',
       ]
         .filter(Boolean)
         .join(', ');

@@ -2,9 +2,11 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import BookOffer from '../../components/BookOffer.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FaqList from '../../components/FaqList.astro';
 import SheetCard from '../../components/SheetCard.astro';
+import { bookForTheme } from '../../lib/books';
 import { pinPath, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
@@ -46,6 +48,7 @@ const crumbs = [
   { name: theme.data.title, path: themePath(theme.id) },
 ];
 const pin = pinPath(theme.id, 'collection-1');
+const book = bookForTheme(theme.id);
 const pageUrl = absoluteUrl(themePath(theme.id));
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -141,6 +144,7 @@ const jsonLd = {
       )}
     </article>
     <aside class="rail">
+      {book && <BookOffer book={book} />}
       <div class="tip">
         <h2>Print tip</h2>
         <p>I made these for letter paper. There's an A4 file too if that's what you have. On the printer, pick actual size, or fit-to-page if it warns you.</p>

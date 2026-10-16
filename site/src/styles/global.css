@@ -302,6 +302,16 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .tip a { font-weight: 800; }
 
+.book-offer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: center;
+  margin: 0.65rem 0 0;
+}
+
+.book-offer-links span { color: var(--muted); }
+
 .ad-slot {
   display: grid;
   place-items: center;

@@ -318,7 +318,7 @@ export async function renderCollectionPin(options: {
       const box = fitBox(art.iw, art.ih, inner.w, inner.h, inner.x, inner.y);
       const chrome = framed
         ? [
-            `<rect x="${cell.x}" y="${cell.y}" width="${cell.w}" height="${cell.h}" rx="${radius}" ry="${radius}" fill="#FAFBFC"/>`,
+            `<rect x="${cell.x}" y="${cell.y}" width="${cell.w}" height="${cell.h}" rx="${radius}" ry="${radius}" fill="#FFFFFF"/>`,
             `<rect x="${cell.x + stroke / 2}" y="${cell.y + stroke / 2}" width="${cell.w - stroke}" height="${cell.h - stroke}" rx="${radius - 2}" ry="${radius - 2}" fill="none" stroke="${xml(options.accent)}" stroke-width="${stroke}"/>`,
           ].join('\n')
         : '';

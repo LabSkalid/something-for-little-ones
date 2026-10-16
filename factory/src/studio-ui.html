@@ -92,14 +92,26 @@
   .modes { display: grid; gap: 0.35rem; margin-top: 0.4rem; }
   .modes label { font-weight: 600; display: flex; gap: 0.45rem; align-items: center; margin: 0; }
   .modes input { width: auto; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; align-items: center; }
+  .swatch {
+    width: 1.7rem; height: 1.7rem; border-radius: 999px; border: 2px solid #fff;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.18); cursor: pointer; padding: 0;
+  }
+  .swatch.active { box-shadow: 0 0 0 2px var(--blue), inset 0 0 0 1px rgba(0,0,0,0.18); }
+  .color-row { display: flex; gap: 0.55rem; align-items: center; margin-top: 0.35rem; }
+  .color-row input[type="color"] {
+    width: 3rem; height: 2.2rem; padding: 0.15rem; border-radius: 8px; cursor: pointer;
+  }
+  .color-row input[type="text"] { width: 7.5rem; font-family: ui-monospace, Consolas, monospace; }
 </style>
 <main>
   <h1>Фабрика</h1>
-  <p class="lede">Сток на сайт, рисование/пины, и сборка PDF для Amazon KDP. Запуск с кнопки Open Factory.bat.</p>
+  <p class="lede">Сток на сайт, рисование для сайта, пины Pinterest и PDF для Amazon KDP. Запуск с кнопки Open Factory.bat.</p>
 
   <div class="tabs" role="tablist">
     <button class="tab active" type="button" data-tab="import">Сток → сайт</button>
-    <button class="tab" type="button" data-tab="draw">Рисовать и пины</button>
+    <button class="tab" type="button" data-tab="draw">Рисовать для сайта</button>
+    <button class="tab" type="button" data-tab="pins">Пины</button>
     <button class="tab" type="button" data-tab="kdp">Amazon KDP</button>
   </div>
 
@@ -216,7 +228,7 @@
 
     <label class="check" style="margin-top:0.8rem">
       <input id="kdp-blanks" type="checkbox" checked>
-      Пустая страница после каждого рисунка
+      Пустая страница после каждого рисунка (нужно для Amazon KDP)
     </label>
     <label class="check">
       <input id="kdp-front" type="checkbox" checked>
@@ -231,6 +243,30 @@
       <button id="kdp-build" type="button">Собрать PDF для KDP</button>
     </div>
     <p class="hint">Готовый файл обычно лежит в <code>factory\out\kdp\</code>. Это не заливает ничего на сайт.</p>
+
+    <h2>PDF для скачивания (печать дома)</h2>
+    <p class="hint"><strong>Идеальный путь:</strong> берёшь уже готовый interior PDF с Amazon-сборки — папка с рисунками не нужна. Убираем пустые обороты, добавляем лицо и зад обложки. Размер тот же: 8.5×11.</p>
+    <label for="kdp-from-pdf">Готовый KDP interior PDF</label>
+    <input id="kdp-from-pdf" placeholder="D:\KIDS\factory\out\kdp\cute-winter-coloring-book.pdf">
+    <label for="kdp-front-cover">Лицо обложки (PNG/JPG/PDF, можно пусто)</label>
+    <input id="kdp-front-cover" placeholder="D:\COLORING\MyBook\cover-front.pdf">
+    <label for="kdp-back-cover">Зад обложки (PNG/JPG/PDF, можно пусто)</label>
+    <input id="kdp-back-cover" placeholder="D:\COLORING\MyBook\cover-back.pdf">
+    <div class="row" style="margin-top:0.8rem">
+      <button id="kdp-from-pdf-btn" type="button">Из KDP PDF → скачивание</button>
+    </div>
+    <p class="hint">Сохраняет рядом с исходником как <code>…-download.pdf</code>. Титул и copyright из KDP остаются; пустые страницы после рисунков и pad в конце — выкидываются. Картинки сжимаются легче (~200 dpi, ч/б JPEG) — файл обычно ~15–25 MB, не 90+. Для Amazon KDP по-прежнему тяжёлый q92.</p>
+
+    <h3 style="margin-top:1.4rem;font-size:1rem">Или заново из папки SVG/PNG</h3>
+    <p class="hint">Если папка с рисунками ещё под рукой — можно собрать download PDF с нуля (без пустых оборотов). Обложки выше тоже подхватятся.</p>
+    <label class="check" style="margin-top:0.8rem">
+      <input id="kdp-download-front" type="checkbox">
+      Титул и copyright после обложки (обычно не нужно — уже на лице)
+    </label>
+    <div class="row" style="margin-top:0.8rem">
+      <button id="kdp-build-download" class="quiet" type="button">Собрать PDF для скачивания из папки</button>
+    </div>
+    <p class="hint">Нужны папка и название выше. Файл: <code>factory\out\kdp\…-download.pdf</code>.</p>
 
     <h2>Проверка стиля перед книгой</h2>
     <p class="hint">Считает плотность линий и сравнивает с медианой книги. Можно проверить <strong>с учётом уже перерисованных</strong> (укажи папку audit ниже). Оригиналы не трогает — новые PNG рядом. Можно задать номера/имена вручную или кинуть отдельную папку картинок «в стиле этой книги».</p>
@@ -301,8 +337,8 @@
   </section>
 
   <section id="panel-draw" class="panel">
-    <p>Новые рисунки и «Перерисовать» — платная модель. <strong>Убрать квадраты</strong> — бесплатно: берёт PDF с сайта и заново кладёт на лист (исходники не нужны). Пины бесплатные.</p>
-    <section id="themes"></section>
+    <p>Только картинки для сайта (PNG/PDF). Новые рисунки и <strong>Перерисовать</strong> — платная модель. <strong>Убрать квадраты</strong> — бесплатно: letter PDF с сайта заново на лист, без ИИ. Пины и тексты Pinterest — на вкладке <strong>Пины</strong>.</p>
+    <section id="themes-draw"></section>
     <h2>Новые рисунки</h2>
     <label for="theme">Подборка</label>
     <select id="theme"></select>
@@ -328,9 +364,18 @@
     <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
     <div class="row">
       <button id="create" type="button">Нарисовать новые</button>
-      <button id="pins-all" class="quiet" type="button">Собрать все пины</button>
       <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
     </div>
+    <p class="hint">«Перерисовать все» — платно и по всем подборкам. Пины здесь не собираются.</p>
+  </section>
+
+  <section id="panel-pins" class="panel">
+    <p>Только пины Pinterest: сборка PNG и тексты в <code>pins.csv</code>. Картинки листов на сайте здесь не перерисовываются — это вкладка <strong>Рисовать для сайта</strong>.</p>
+    <section id="themes-pins"></section>
+    <div class="row" style="margin-top:0.8rem">
+      <button id="pins-all" type="button">Собрать пины всех подборок</button>
+    </div>
+    <p class="hint"><strong>Собрать пины</strong> — картинки для Pinterest. <strong>Тексты</strong> — только заголовки/описания, без пересборки PNG.</p>
   </section>
 
   <h2>Ход работы</h2>
@@ -366,6 +411,22 @@
   <label for="pin-keywords">Ключевики для Pinterest (через запятую)</label>
   <input id="pin-keywords" placeholder="thanksgiving coloring pages, turkey printable, free fall coloring">
 
+  <label for="pin-accent">Цвет FREE PRINTABLE внизу</label>
+  <p class="hint">Тот же цвет идёт на рамки бандла. У Christmas в теме зелёный — можно поставить синий.</p>
+  <div class="swatches" id="pin-accent-swatches">
+    <button class="swatch" type="button" data-color="#1d7ad6" title="Синий" style="background:#1d7ad6"></button>
+    <button class="swatch" type="button" data-color="#c45c26" title="Оранжевый" style="background:#c45c26"></button>
+    <button class="swatch" type="button" data-color="#c9a227" title="Золотой" style="background:#c9a227"></button>
+    <button class="swatch" type="button" data-color="#b33b3b" title="Красный" style="background:#b33b3b"></button>
+    <button class="swatch" type="button" data-color="#1f6b4a" title="Зелёный" style="background:#1f6b4a"></button>
+    <button class="swatch" type="button" data-color="#6b4c9a" title="Фиолетовый" style="background:#6b4c9a"></button>
+  </div>
+  <div class="color-row">
+    <input id="pin-accent" type="color" value="#1d7ad6" aria-label="Цвет FREE PRINTABLE">
+    <input id="pin-accent-hex" type="text" value="#1d7ad6" maxlength="7" spellcheck="false" aria-label="HEX цвета">
+    <button id="pin-accent-theme" class="quiet" type="button">Как в теме</button>
+  </div>
+
   <label class="check" style="margin-top:0.8rem">
     <input id="pin-framed" type="checkbox" checked>
     Рамки вокруг картинок в бандле (удобно для 4–8 лет; для 2–3 можно снять)
@@ -395,6 +456,44 @@
   </div>
 </dialog>
 
+<dialog id="pin-copy-dialog">
+  <h2>Тексты для Pinterest</h2>
+  <p id="pin-copy-dialog-theme" class="hint">Тема не выбрана</p>
+  <p class="hint">Пишет только заголовки и описания в <code>pins.csv</code>. Картинки пинов (PNG) не пересобирает и не трогает.</p>
+
+  <div class="modes">
+    <label><input type="radio" name="pin-copy-mode" value="both" checked> Все пины темы</label>
+    <label><input type="radio" name="pin-copy-mode" value="single"> Только одиночные</label>
+    <label><input type="radio" name="pin-copy-mode" value="collection"> Только бандлы</label>
+  </div>
+
+  <label for="pin-copy-keywords">Ключевики (через запятую)</label>
+  <input id="pin-copy-keywords" placeholder="fall coloring pages, autumn printable, free fall coloring">
+
+  <label class="check" style="margin-top:0.8rem">
+    <input id="pin-copy-overwrite" type="checkbox">
+    Перезаписать уже написанные тексты
+  </label>
+  <p class="hint">По умолчанию заполняет только пустые title/description — как галочка «для новых пинов без текста» при сборке. С галочкой выше перепишет выбранные строки заново.</p>
+
+  <div id="pin-copy-list-wrap">
+    <label>Какие пины</label>
+    <p id="pin-copy-counts" class="hint">Счётчики появятся после выбора темы.</p>
+    <div class="row" style="margin-top:0.3rem">
+      <button id="pin-copy-all" class="quiet" type="button">Все</button>
+      <button id="pin-copy-none" class="quiet" type="button">Снять</button>
+      <button id="pin-copy-empty" class="quiet" type="button">Без текста</button>
+    </div>
+    <div id="pin-copy-list" class="sheet-list"></div>
+    <p class="hint">Список строится по реальным PNG (включая <code>done/</code>). Без текста отмечены по умолчанию. Строки в pins.csv без картинки не считаются «готовыми».</p>
+  </div>
+
+  <div class="row">
+    <button id="pin-copy-run" type="button">Написать тексты</button>
+    <button id="pin-copy-cancel" class="quiet" type="button">Отмена</button>
+  </div>
+</dialog>
+
 <dialog id="refit-dialog">
   <h2>Убрать квадраты (с сайта, без ИИ)</h2>
   <p class="hint" id="refit-dialog-theme"></p>
@@ -421,7 +520,8 @@
 
 <script>
   const draftsEl = document.querySelector('#drafts');
-  const themesEl = document.querySelector('#themes');
+  const themesDrawEl = document.querySelector('#themes-draw');
+  const themesPinsEl = document.querySelector('#themes-pins');
   const themeSelect = document.querySelector('#theme');
   const importTheme = document.querySelector('#import-theme');
   const newFields = document.querySelector('#new-fields');
@@ -430,11 +530,15 @@
   const pinDialog = document.querySelector('#pin-dialog');
   const pinSheetsEl = document.querySelector('#pin-sheets');
   const pinSheetsWrap = document.querySelector('#pin-sheets-wrap');
+  const pinCopyDialog = document.querySelector('#pin-copy-dialog');
+  const pinCopyListEl = document.querySelector('#pin-copy-list');
   let drafts = [];
   let kdpPages = [];
   let siteSheets = [];
   let lastTheme = '';
   let pinTargetTheme = '';
+  let pinCopyTheme = '';
+  let pinCopyPins = [];
   const kdpPagesEl = document.querySelector('#kdp-pages');
   const kdpPagesMeta = document.querySelector('#kdp-pages-meta');
   let lastKdpPaint = '';
@@ -471,6 +575,27 @@
     });
   }
 
+  function normalizeHex(value) {
+    const raw = String(value || '').trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(raw)) return raw.toLowerCase();
+    if (/^[0-9a-fA-F]{6}$/.test(raw)) return `#${raw.toLowerCase()}`;
+    return '';
+  }
+
+  function setPinAccent(color) {
+    const hex = normalizeHex(color) || '#1d7ad6';
+    document.querySelector('#pin-accent').value = hex;
+    document.querySelector('#pin-accent-hex').value = hex;
+    document.querySelectorAll('#pin-accent-swatches .swatch').forEach((btn) => {
+      btn.classList.toggle('active', normalizeHex(btn.dataset.color) === hex);
+    });
+  }
+
+  function themeAccent(slug) {
+    const found = (window.__pinThemes || []).find((item) => item.slug === slug);
+    return normalizeHex(found?.accent) || '#1d7ad6';
+  }
+
   async function openPinDialog(theme) {
     pinTargetTheme = theme || '';
     document.querySelector('#pin-dialog-theme').textContent = theme
@@ -478,6 +603,7 @@
       : 'Все подборки (выбор листов недоступен — лучше собирать по одной теме)';
     pinSheetsWrap.classList.toggle('hidden', !theme);
     pinSheetsEl.innerHTML = '';
+    setPinAccent(theme ? themeAccent(theme) : '#1d7ad6');
     if (theme) {
       const data = await fetch('/api/pins/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
       const sheets = data.sheets || [];
@@ -488,6 +614,81 @@
         </label>`).join('') || '<p class="hint">Листов нет.</p>';
     }
     pinDialog.showModal();
+  }
+
+  function paintPinCopyList() {
+    const mode = document.querySelector('input[name="pin-copy-mode"]:checked')?.value || 'both';
+    const list = pinCopyPins.filter((pin) => {
+      if (!pin.hasImage) return false;
+      if (mode === 'single') return pin.type === 'single';
+      if (mode === 'collection') return pin.type === 'collection';
+      return true;
+    });
+    const withText = list.filter((pin) => pin.hasCopy).length;
+    const withoutText = list.length - withText;
+    const countsEl = document.querySelector('#pin-copy-counts');
+    if (countsEl) {
+      countsEl.textContent = list.length
+        ? `Пинов: ${list.length} · с текстом: ${withText} · без текста: ${withoutText}`
+        : 'Пинов с PNG нет.';
+    }
+    pinCopyListEl.innerHTML = list.map((pin) => `
+      <label>
+        <input type="checkbox" value="${esc(pin.filename)}" ${pin.hasCopy ? '' : 'checked'}>
+        <span>${esc(pin.filename.replace(/\.png$/i, ''))}${pin.type === 'collection' ? ' · бандл' : ''}${pin.hasCopy ? ' · есть текст' : ' · без текста'}</span>
+      </label>`).join('') || '<p class="hint">Пинов с PNG нет. Сначала соберите пины кнопкой «Собрать пины».</p>';
+  }
+
+  async function openPinCopyDialog(theme) {
+    pinCopyTheme = theme || '';
+    document.querySelector('#pin-copy-dialog-theme').textContent = theme
+      ? `Тема: ${theme}`
+      : 'Все подборки — лучше выбирать одну тему';
+    pinCopyListEl.innerHTML = '<p class="hint">Загрузка…</p>';
+    pinCopyDialog.showModal();
+    if (!theme) {
+      pinCopyPins = [];
+      pinCopyListEl.innerHTML = '<p class="hint">Выберите тему кнопкой «Тексты» у подборки.</p>';
+      return;
+    }
+    const data = await fetch('/api/pins/list?theme=' + encodeURIComponent(theme)).then((res) => res.json());
+    pinCopyPins = data.pins || [];
+    paintPinCopyList();
+  }
+
+  async function runPinCopyOnly() {
+    if (!pinCopyTheme) {
+      logEl.textContent = 'Выберите тему кнопкой «Тексты» у подборки.';
+      return;
+    }
+    const mode = document.querySelector('input[name="pin-copy-mode"]:checked')?.value || 'both';
+    const filenames = [...pinCopyListEl.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value);
+    if (!filenames.length) {
+      logEl.textContent = 'Отметьте хотя бы один пин.';
+      return;
+    }
+    const overwrite = document.querySelector('#pin-copy-overwrite').checked;
+    pinCopyDialog.close();
+    lastTheme = pinCopyTheme || lastTheme;
+    const response = await fetch('/api/pins/copy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme: pinCopyTheme,
+        mode,
+        filenames,
+        overwrite,
+        keywords: document.querySelector('#pin-copy-keywords').value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить тексты пинов.';
+      return;
+    }
+    logEl.textContent = overwrite
+      ? 'Пишу тексты для Pinterest (можно перезаписать старые). PNG пинов не трогаю…'
+      : 'Пишу тексты только для пинов без title/description. PNG пинов не трогаю…';
   }
 
   async function runPins() {
@@ -513,6 +714,7 @@
         framed: document.querySelector('#pin-framed').checked,
         removeOld: document.querySelector('#pin-remove').checked,
         keywords: document.querySelector('#pin-keywords').value,
+        accent: normalizeHex(document.querySelector('#pin-accent-hex').value || document.querySelector('#pin-accent').value),
       }),
     });
     const data = await response.json();
@@ -537,13 +739,23 @@
   }
 
   function paintThemes(themes) {
-    themesEl.innerHTML = themes.map((theme) => `
+    window.__pinThemes = themes;
+    const head = (theme) => `
+        <div><h3>${esc(theme.title)}</h3><p>${theme.count} листов · ${esc(theme.kind)}</p></div>`;
+    themesDrawEl.innerHTML = themes.map((theme) => `
       <article>
-        <div><h3>${esc(theme.title)}</h3><p>${theme.count} листов · ${esc(theme.kind)}</p></div>
+        ${head(theme)}
         <div class="row">
-          <button class="quiet" type="button" data-pins="${esc(theme.slug)}">Пины</button>
           <button class="quiet" type="button" data-refit="${esc(theme.slug)}">Убрать квадраты</button>
           <button class="quiet" type="button" data-redraw="${esc(theme.slug)}">Перерисовать</button>
+        </div>
+      </article>`).join('');
+    themesPinsEl.innerHTML = themes.map((theme) => `
+      <article>
+        ${head(theme)}
+        <div class="row">
+          <button type="button" data-pins="${esc(theme.slug)}">Собрать пины</button>
+          <button class="quiet" type="button" data-pin-copy="${esc(theme.slug)}">Тексты</button>
         </div>
       </article>`).join('');
 
@@ -693,11 +905,17 @@
       </label>`).join('') || '<p class="hint">Листов нет.</p>';
   }
 
-  themesEl.addEventListener('click', async (event) => {
+  async function onThemeRowClick(event) {
     const pins = event.target.closest('[data-pins]');
     if (pins) {
       lastTheme = pins.dataset.pins;
       await openPinDialog(pins.dataset.pins);
+      return;
+    }
+    const pinCopy = event.target.closest('[data-pin-copy]');
+    if (pinCopy) {
+      lastTheme = pinCopy.dataset.pinCopy;
+      await openPinCopyDialog(pinCopy.dataset.pinCopy);
       return;
     }
     const refit = event.target.closest('[data-refit]');
@@ -710,7 +928,9 @@
     if (!button) return;
     if (!confirm('Перерисовать все листы этой подборки? Это платный запрос к модели картинок.')) return;
     await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
-  });
+  }
+  themesDrawEl.addEventListener('click', onThemeRowClick);
+  themesPinsEl.addEventListener('click', onThemeRowClick);
 
   document.querySelector('#refit-cancel')?.addEventListener('click', () => refitDialog.close());
   document.querySelector('#refit-age')?.addEventListener('change', () => paintRefitSheets());
@@ -747,11 +967,43 @@
 
   document.querySelector('#pin-cancel').addEventListener('click', () => pinDialog.close());
   document.querySelector('#pin-run').addEventListener('click', () => runPins());
+  document.querySelector('#pin-accent-swatches').addEventListener('click', (event) => {
+    const swatch = event.target.closest('.swatch');
+    if (!swatch) return;
+    setPinAccent(swatch.dataset.color);
+  });
+  document.querySelector('#pin-accent').addEventListener('input', (event) => setPinAccent(event.target.value));
+  document.querySelector('#pin-accent-hex').addEventListener('change', (event) => {
+    const hex = normalizeHex(event.target.value);
+    if (hex) setPinAccent(hex);
+    else event.target.value = document.querySelector('#pin-accent').value;
+  });
+  document.querySelector('#pin-accent-theme').addEventListener('click', () => {
+    setPinAccent(pinTargetTheme ? themeAccent(pinTargetTheme) : '#1d7ad6');
+  });
   document.querySelector('#pin-sheets-all').addEventListener('click', () => {
     pinSheetsEl.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach((input) => { input.checked = true; });
   });
   document.querySelector('#pin-sheets-none').addEventListener('click', () => {
     pinSheetsEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
+  });
+
+  document.querySelector('#pin-copy-cancel').addEventListener('click', () => pinCopyDialog.close());
+  document.querySelector('#pin-copy-run').addEventListener('click', () => runPinCopyOnly());
+  document.querySelectorAll('input[name="pin-copy-mode"]').forEach((input) => {
+    input.addEventListener('change', () => paintPinCopyList());
+  });
+  document.querySelector('#pin-copy-all').addEventListener('click', () => {
+    pinCopyListEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = true; });
+  });
+  document.querySelector('#pin-copy-none').addEventListener('click', () => {
+    pinCopyListEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
+  });
+  document.querySelector('#pin-copy-empty').addEventListener('click', () => {
+    pinCopyListEl.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      const pin = pinCopyPins.find((item) => item.filename === input.value);
+      input.checked = Boolean(pin && !pin.hasCopy);
+    });
   });
 
   document.querySelector('#redraw-all').addEventListener('click', async () => {
@@ -788,7 +1040,7 @@
         return;
       }
       const age = document.querySelector('#draw-age').value;
-      logEl.textContent = `Рисование запущено для возраста ${age}. Ниже появится ход работы. Пины сами не собираются — их можно сделать кнопкой «Пины».`;
+      logEl.textContent = `Рисование запущено для возраста ${age}. Ниже появится ход работы. Пины сами не собираются — откройте вкладку «Пины».`;
     } catch (error) {
       logEl.textContent = 'Фабрика не отвечает. Закройте старое окно и снова откройте Open Factory.bat.\n' + String(error?.message || error);
     }
@@ -1070,7 +1322,7 @@
     );
   });
 
-  document.querySelector('#kdp-build')?.addEventListener('click', async () => {
+  async function startKdpPdf(opts, confirmText, startedText) {
     const folder = document.querySelector('#kdp-folder').value.trim();
     const title = document.querySelector('#kdp-title').value.trim();
     if (!folder || !title) {
@@ -1078,9 +1330,7 @@
       return;
     }
     const pages = readKdpPagesFromDom();
-    if (!confirm(`Собрать KDP PDF «${title}»?\nШрифт Fredoka на титуле` +
-      (document.querySelector('#kdp-captions').checked ? ' и подписях' : '') +
-      `.\nЭто может занять несколько минут.`)) return;
+    if (!confirm(confirmText(title))) return;
     const response = await fetch('/api/kdp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1091,18 +1341,88 @@
         author: document.querySelector('#kdp-author').value.trim(),
         copyright: document.querySelector('#kdp-copyright').value.trim(),
         outFile: document.querySelector('#kdp-out').value.trim() || undefined,
-        blankBacks: document.querySelector('#kdp-blanks').checked,
-        frontMatter: document.querySelector('#kdp-front').checked,
         captions: document.querySelector('#kdp-captions').checked,
         pages: pages.length ? pages : undefined,
+        ...opts,
       }),
     });
     const data = await response.json();
     if (!response.ok) {
-      logEl.textContent = data.error || 'Не удалось запустить сборку KDP.';
+      logEl.textContent = data.error || 'Не удалось запустить сборку PDF.';
       return;
     }
-    logEl.textContent = 'Сборка KDP запущена. В логе будут строки KDP 1/N… Готовый PDF — в factory\\out\\kdp\\';
+    logEl.textContent = startedText;
+  }
+
+  document.querySelector('#kdp-build')?.addEventListener('click', async () => {
+    await startKdpPdf(
+      {
+        blankBacks: document.querySelector('#kdp-blanks').checked,
+        frontMatter: document.querySelector('#kdp-front').checked,
+        padEvenPages: true,
+        download: false,
+      },
+      (title) =>
+        `Собрать KDP PDF «${title}»?\nШрифт Fredoka на титуле` +
+        (document.querySelector('#kdp-captions').checked ? ' и подписях' : '') +
+        `.\nЭто может занять несколько минут.`,
+      'Сборка KDP запущена. В логе будут строки KDP 1/N… Готовый PDF — в factory\\out\\kdp\\',
+    );
+  });
+
+  document.querySelector('#kdp-from-pdf-btn')?.addEventListener('click', async () => {
+    const pdfFile = document.querySelector('#kdp-from-pdf').value.trim();
+    const frontCover = document.querySelector('#kdp-front-cover').value.trim();
+    const backCover = document.querySelector('#kdp-back-cover').value.trim();
+    if (!pdfFile) {
+      logEl.textContent = 'Укажите путь к готовому KDP PDF (interior с Amazon-сборки).';
+      return;
+    }
+    const ok = confirm(
+      'Сделать PDF для скачивания из готового KDP?\n' +
+        'Уберём пустые страницы' +
+        (frontCover ? ', добавим лицо обложки' : '') +
+        (backCover ? ', добавим зад обложки' : '') +
+        '.\nПапка с рисунками не нужна.',
+    );
+    if (!ok) return;
+    logEl.textContent = 'KDP PDF → скачивание… Убираю пустые страницы, добавляю обложки.';
+    const response = await fetch('/api/kdp/download-from-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pdfFile,
+        frontCover: frontCover || undefined,
+        backCover: backCover || undefined,
+      }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить.';
+      return;
+    }
+    poll();
+  });
+
+  document.querySelector('#kdp-build-download')?.addEventListener('click', async () => {
+    const frontCover = document.querySelector('#kdp-front-cover').value.trim();
+    const backCover = document.querySelector('#kdp-back-cover').value.trim();
+    await startKdpPdf(
+      {
+        blankBacks: false,
+        padEvenPages: false,
+        frontMatter: document.querySelector('#kdp-download-front').checked,
+        frontCover: frontCover || undefined,
+        backCover: backCover || undefined,
+        download: true,
+      },
+      (title) =>
+        `Собрать PDF для скачивания «${title}» из папки?\nБез пустых страниц` +
+        (frontCover ? ', с лицом обложки' : '') +
+        (backCover ? ', с задом обложки' : '') +
+        `.\nРазмер тот же: 8.5×11.`,
+      'Сборка PDF для скачивания из папки… Без пустых оборотов. Файл: factory\\out\\kdp\\…-download.pdf',
+    );
   });
 
   document.querySelector('#commit-import').addEventListener('click', async () => {

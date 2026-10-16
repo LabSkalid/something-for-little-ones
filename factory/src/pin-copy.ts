@@ -37,23 +37,29 @@ export async function writePinterestCopy(
     .split(/[,;\n]/)
     .map((item) => item.trim())
     .filter(Boolean)
-    .slice(0, 8)
+    .slice(0, 16)
     .join(', ');
 
   const system = [
-    'You write Pinterest pin titles and descriptions for Something for Little Ones,',
-    'a small American mom website with free printable coloring pages.',
+    'You write Pinterest pin titles and descriptions for Something for Little Ones.',
+    'Voice: an American mom who makes printable coloring pages for her own kids and shares them.',
+    'Calm, descriptive, and helpful — like a quiet note to another parent, not an ad.',
     'Reply with JSON only: an array of objects with keys filename, pinTitle, pinDescription.',
-    'pinTitle: under 100 characters, clear, natural, not clickbait.',
-    'pinDescription: 1-3 short sentences, warm kitchen-table tone, mention it is free to print,',
-    'naturally use 1-3 of the given keywords if they fit, then end with the exact destination URL on its own line.',
-    'Do not say the owner drew stock art. Do not invent claims, ages that were not given, or movie characters.',
-    'No hashtag walls. No ALL CAPS spam. No markdown outside the JSON.',
+    'pinTitle: under 100 characters, plain and specific (what is on the page / who it suits). Not clickbait.',
+    'pinDescription: 2-4 short sentences. Describe the page or set, the subject, the feel, and who it is for when age is given.',
+    'It is fine to mention these are free printable coloring pages when it fits naturally.',
+    'Weave in as many of the given keywords as sound natural in American English; prefer several over one.',
+    'Do not use calls to action (no save, pin, click, download now, grab, try, check out, visit, link in bio, follow, share, etc.).',
+    'Do not put any website URL, domain, or link in the title or description — the pin link is stored separately.',
+    'Do not say the owner drew stock art. Do not invent ages, claims, or movie/trademarked characters.',
+    'No hashtags. No ALL CAPS spam. No emoji. No markdown outside the JSON.',
   ].join(' ');
 
   const user = [
-    keywordLine ? `Keywords to weave in when natural: ${keywordLine}` : 'No extra keywords. Use the theme and sheet names.',
-    'Pins:',
+    keywordLine
+      ? `Keywords to include naturally (use several when they fit): ${keywordLine}`
+      : 'No extra keywords list. Lean on the theme and sheet names as search phrases.',
+    'Write copy for these pins (do not include urls):',
     JSON.stringify(
       pins.map((pin) => ({
         filename: pin.filename,
@@ -62,7 +68,6 @@ export async function writePinterestCopy(
         sheetTitle: pin.sheetTitle ?? '',
         sheetDescription: pin.sheetDescription ?? '',
         age: pin.age ?? '',
-        url: pin.url,
       })),
       null,
       2,
@@ -72,15 +77,19 @@ export async function writePinterestCopy(
   const reply = await chat(system, user);
   const rows = extractJsonArray(reply);
   const map = new Map<string, PinCopyResult>();
+  const stripUrls = (text: string) =>
+    text
+      .replace(/https?:\/\/\S+/gi, '')
+      .replace(/\b(?:www\.)?somethingforlittleones\.com\S*/gi, '')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
   for (const row of rows) {
     const filename = String(row.filename ?? '').trim();
     if (!filename) continue;
-    const pinTitle = String(row.pinTitle ?? row.title ?? '').trim();
-    let pinDescription = String(row.pinDescription ?? row.description ?? '').trim();
-    const source = pins.find((pin) => pin.filename === filename);
-    if (source && pinDescription && !pinDescription.includes(source.url)) {
-      pinDescription = `${pinDescription}\n${source.url}`;
-    }
+    const pinTitle = stripUrls(String(row.pinTitle ?? row.title ?? '').trim());
+    const pinDescription = stripUrls(String(row.pinDescription ?? row.description ?? '').trim());
     if (!pinTitle || !pinDescription) continue;
     map.set(filename, { filename, pinTitle, pinDescription });
   }
