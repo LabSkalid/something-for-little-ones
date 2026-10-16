@@ -327,19 +327,20 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 
 .book-offer-cover {
   display: block;
-  width: min(140px, 58%);
+  width: min(168px, 72%);
   margin: 0 auto;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--soft);
+  line-height: 0;
 }
 
 .book-offer-cover img {
   width: 100%;
   height: auto;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center top;
 }
 
 .book-offer-links {
