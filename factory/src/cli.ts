@@ -38,8 +38,9 @@ const help = `Фабрика раскрасок.
 
   npm run redraw
       Заново нарисовать уже опубликованные листы через OpenRouter.
-      Тексты и пины не меняются. Можно указать одну тему:
+      Тексты и пины не меняются. Можно указать одну тему и возраст:
       npm run redraw -- animal-coloring-pages
+      npm run redraw -- rocket-coloring-pages --ages=4-5,5-6,6-8
 
   npm run studio
       Открыть локальную страницу: сток, рисование/пины, книга Amazon KDP.
@@ -97,7 +98,14 @@ async function main() {
   }
   if (command === 'redraw') {
     const theme = rest.find((arg) => !arg.startsWith('--'));
-    await redraw(theme);
+    const agesArg = rest.find((arg) => arg.startsWith('--ages='))?.slice('--ages='.length);
+    const ages = agesArg
+      ? agesArg
+          .split(',')
+          .map((part) => part.trim())
+          .filter(Boolean)
+      : undefined;
+    await redraw(theme, ages);
     return;
   }
   if (command === 'produce') {

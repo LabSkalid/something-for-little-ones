@@ -22,18 +22,21 @@ function frontmatter(raw: string) {
   };
 }
 
-export async function redraw(themeFilter?: string) {
+export async function redraw(themeFilter?: string, ageFilter?: string[]) {
   loadEnv();
   if (!process.env.OPENROUTER_API_KEY) {
     throw new Error('Нет OPENROUTER_API_KEY. Добавьте ключ в factory/.env и запустите команду снова.');
   }
+  const ages = ageFilter?.length ? new Set(ageFilter) : null;
   const site = readSite();
   const themes = await fs.readdir(sheetContentRoot, { withFileTypes: true });
   let count = 0;
+  let skipped = 0;
   for (const theme of themes) {
     if (!theme.isDirectory()) continue;
     if (themeFilter && theme.name !== themeFilter) continue;
-    let style = 'Cute storybook line art, thick black outlines, white background, no shading, no text.';
+    let style =
+      'Cute storybook coloring-page line art, thick even black outlines, pure white background, no shading, no hatching, no sketch marks, no text.';
     try {
       const brief = parse(await fs.readFile(path.join(briefsRoot, `${theme.name}.yaml`), 'utf8')) as { style?: string };
       if (brief.style) style = brief.style;
@@ -44,12 +47,17 @@ export async function redraw(themeFilter?: string) {
     const files = (await fs.readdir(dir)).filter((name) => name.endsWith('.md'));
     for (const file of files) {
       const sheet = frontmatter(await fs.readFile(path.join(dir, file), 'utf8'));
+      const age = sheet.age ?? '3-4';
+      if (ages && !ages.has(age)) {
+        skipped += 1;
+        continue;
+      }
       const slug = sheet.slug || file.replace(/\.md$/, '');
       const title = sheet.title || slug;
       const subject = sheet.alt || sheet.description || title;
-      console.log(`рисую ${theme.name}/${slug}...`);
+      console.log(`рисую ${theme.name}/${slug} (ages ${age})...`);
       const raw = await generateColoringPage(
-        coloringPrompt(style, subject, sheet.difficulty ?? 'easy', sheet.age ?? '3-4'),
+        coloringPrompt(style, subject, sheet.difficulty ?? 'easy', age),
       );
       const print = await stampSite(await fitPortrait(raw));
       const preview = await webPreview(print);
@@ -62,5 +70,7 @@ export async function redraw(themeFilter?: string) {
       console.log(`обновлён рисунок ${theme.name}/${slug}`);
     }
   }
-  console.log(`Готово. Перерисовано страниц: ${count}. Пины не менялись.`);
+  console.log(
+    `Готово. Перерисовано страниц: ${count}.${skipped ? ` Пропущено по возрасту: ${skipped}.` : ''} Пины не менялись.`,
+  );
 }

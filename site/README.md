@@ -15,7 +15,7 @@ From `site/`:
 
 ## Seasonal homepage strip — `src/lib/seasons.ts`
 
-The homepage shows a **This season** block (cards + hero button) based on today’s calendar date at **build/deploy** time. Edit only this file to change windows or featured themes.
+The homepage shows a **This season** block (theme cards under the intro) based on today’s calendar date at **build/deploy** time. Edit only this file to change windows or featured themes.
 
 ### What to put in a window
 
@@ -24,7 +24,7 @@ Each entry in `seasonWindows` needs:
 | Field | Meaning |
 | --- | --- |
 | `id` | Short key (`fall`, `winter`, `valentine`, …) |
-| `label` | Heading + hero button text (`This fall`, `This winter`) |
+| `label` | Section heading (`This fall`, `This winter`) |
 | `blurb` | One short line under the heading |
 | `themeIds` | Theme folder ids from `src/content/themes/` (e.g. `halloween-coloring-pages`) |
 | `start` / `end` | Inclusive `{ month, day }` (1-based month). May wrap the year (Dec → Jan) |
