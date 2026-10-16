@@ -15,12 +15,8 @@ const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
 const sheetAges = (themeId: string) =>
   sheets.filter((sheet) => sheet.data.theme === themeId).map((sheet) => sheet.data.age);
 const spansAges = (themeId: string) => new Set(sheetAges(themeId)).size > 1;
-const multiAgeEveryday = everyday
-  .filter((theme) => spansAges(theme.id))
-  .map((theme) => ({
-    theme,
-    eyebrow: ageSpanLabel(sheetAges(theme.id)),
-  }));
+const themeHasAge = (themeId: string, age: string) =>
+  sheets.some((sheet) => sheet.data.theme === themeId && sheet.data.age === age);
 const grouped = ageBands.map((band) => ({
   ...band,
   hint:
@@ -31,7 +27,12 @@ const grouped = ageBands.map((band) => ({
       '5-6': 'Ocean and dinosaur scenes',
       '6-8': 'Town and woodland',
     }[band.id] ?? band.label,
-  themes: everyday.filter((theme) => theme.data.ageBand === band.id && !spansAges(theme.id)),
+  // Single-age sets plus multi-age sets (e.g. rockets) that have pages for this band.
+  themes: everyday.filter(
+    (theme) =>
+      themeHasAge(theme.id, band.id) &&
+      (theme.data.ageBand === band.id || spansAges(theme.id)),
+  ),
 }));
 
 const subjectChoices: { id: string; title: string; hint: string; note?: string; ids: string[] }[] = [
@@ -60,6 +61,7 @@ const subjectChoices: { id: string; title: string; hint: string; note?: string; 
     id: 'rockets',
     title: 'Rockets',
     hint: 'Ages 2–8',
+    note: 'Several ages. Open one and those pictures show up below.',
     ids: ['rocket-coloring-pages'],
   },
   {
@@ -122,14 +124,20 @@ const themeChoices = [...subjectChoices, ...extraThemeChoices]
     }),
   }))
   .filter((choice) => choice.themes.length > 0);
-const themePanels = themeChoices.filter((choice) => choice.themes.length > 1);
+const needsThemePanel = (choice: (typeof themeChoices)[number]) =>
+  choice.themes.length > 1 || (choice.themes.length === 1 && spansAges(choice.themes[0].id));
+const themePanels = themeChoices.filter(needsThemePanel);
 
-function cover(themeId: string) {
-  const first = sheets
-    .filter((sheet) => sheet.data.theme === themeId)
-    .sort((a, b) => a.data.order - b.data.order)[0];
+function cover(themeId: string, age?: string) {
+  const inTheme = sheets.filter((sheet) => sheet.data.theme === themeId);
+  const pool = age ? inTheme.filter((sheet) => sheet.data.age === age) : inTheme;
+  const first = pool.slice().sort((a, b) => a.data.order - b.data.order)[0];
   return first
-    ? { src: sheetAssets(themeId, first.data.slug).png, alt: first.data.alt, count: sheets.filter((sheet) => sheet.data.theme === themeId).length }
+    ? {
+        src: sheetAssets(themeId, first.data.slug).png,
+        alt: first.data.alt,
+        count: pool.length,
+      }
     : { src: pinPath(themeId, 'collection-1'), alt: '', count: 0 };
 }
 
@@ -213,7 +221,7 @@ const jsonLd = {
       <ul class="age-choices">
         {themeChoices.map((choice) => (
           <li>
-            <a class="age-choice" href={choice.themes.length > 1 ? `#theme-${choice.id}` : `#${choice.themes[0].id}`}>
+            <a class="age-choice" href={needsThemePanel(choice) ? `#theme-${choice.id}` : `#${choice.themes[0].id}`}>
               <strong>{choice.title}</strong>
               <span>{choice.hint}</span>
             </a>
@@ -230,24 +238,39 @@ const jsonLd = {
       </ul>
     </section>
 
-    {themePanels.map((choice) => (
-      <section class="section theme-panel" id={`theme-${choice.id}`}>
-        <div class="section-head">
-          <h2>{choice.title}</h2>
-          {choice.note && <p>{choice.note}</p>}
-        </div>
-        <ul class="age-choices">
-          {choice.themes.map((theme) => (
-            <li>
-              <a class="age-choice" href={`#${theme.id}`}>
-                <strong>{ageBandLabel(theme.data.ageBand)}</strong>
-                <span>{theme.data.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    {themePanels.map((choice) => {
+      const single = choice.themes.length === 1 ? choice.themes[0] : null;
+      const ageLinks = single
+        ? ageBands.filter((band) => themeHasAge(single.id, band.id))
+        : [];
+      return (
+        <section class="section theme-panel" id={`theme-${choice.id}`}>
+          <div class="section-head">
+            <h2>{choice.title}</h2>
+            {choice.note && <p>{choice.note}</p>}
+          </div>
+          <ul class="age-choices">
+            {single
+              ? ageLinks.map((band) => (
+                  <li>
+                    <a class="age-choice" href={`#${single.id}--${band.id}`}>
+                      <strong>{band.label}</strong>
+                      <span>{single.data.title}</span>
+                    </a>
+                  </li>
+                ))
+              : choice.themes.map((theme) => (
+                  <li>
+                    <a class="age-choice" href={`#${theme.id}`}>
+                      <strong>{ageBandLabel(theme.data.ageBand)}</strong>
+                      <span>{theme.data.title}</span>
+                    </a>
+                  </li>
+                ))}
+          </ul>
+        </section>
+      );
+    })}
 
     {grouped.map((band) => (
       <section class="section age-shelf" id={`age-${band.id}`}>
@@ -257,11 +280,12 @@ const jsonLd = {
         </div>
         <div class="theme-grid">
           {band.themes.map((theme) => {
-            const art = cover(theme.id);
+            const multi = spansAges(theme.id);
+            const art = cover(theme.id, multi ? band.id : undefined);
             return (
               <ThemeCard
-                id={theme.id}
-                href={themePath(theme.id)}
+                id={multi ? `${theme.id}--${band.id}` : theme.id}
+                href={multi ? `${themePath(theme.id)}#ages-${band.id}` : themePath(theme.id)}
                 title={theme.data.title}
                 image={art.src}
                 imageAlt={art.alt}
@@ -273,27 +297,6 @@ const jsonLd = {
         </div>
       </section>
     ))}
-
-    {multiAgeEveryday.length > 0 && (
-      <section class="section">
-        <div class="theme-grid">
-          {multiAgeEveryday.map(({ theme, eyebrow }) => {
-            const art = cover(theme.id);
-            return (
-              <ThemeCard
-                id={theme.id}
-                href={themePath(theme.id)}
-                title={theme.data.title}
-                image={art.src}
-                imageAlt={art.alt}
-                count={art.count}
-                eyebrow={eyebrow}
-              />
-            );
-          })}
-        </div>
-      </section>
-    )}
 
     <AdSlot name="top" />
     <section class="section">
