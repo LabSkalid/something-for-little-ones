@@ -32,14 +32,6 @@ pins:
 
 These pages are grouped by age. They are a nativity, angels, and a few Bible verses.
 
-[Ages 2–3](#ages-2-3) is one huge shape: a [star](/christian-christmas-coloring-pages/huge-star/), a [cross](/christian-christmas-coloring-pages/huge-cross/), a [candle](/christian-christmas-coloring-pages/huge-candle/), or a [wreath](/christian-christmas-coloring-pages/huge-wreath/).
-
-[Ages 3–4](#ages-3-4) has thick lines: a [little church](/christian-christmas-coloring-pages/little-church/), [animals around a manger](/christian-christmas-coloring-pages/manger-animals/), and [two praying angels](/christian-christmas-coloring-pages/praying-angels/).
-
-[Ages 4–5](#ages-4-5) adds a few parts: a [dove](/christian-christmas-coloring-pages/peace-dove/), [camels with gifts](/christian-christmas-coloring-pages/gift-camels/), and [angels with horns](/christian-christmas-coloring-pages/trumpet-angels/).
-
-[Ages 5–6](#ages-5-6) is a small scene or a verse: the [Holy Family](/christian-christmas-coloring-pages/holy-family/), [children with gifts](/christian-christmas-coloring-pages/children-with-gifts/), and a few [four-picture stories](/christian-christmas-coloring-pages/nativity-story/).
-
-[Ages 6–8](#ages-6-8) is the longer sitting: a [family portrait](/christian-christmas-coloring-pages/family-portrait/), a [baby under a star](/christian-christmas-coloring-pages/baby-and-rays/), and a [snow globe](/christian-christmas-coloring-pages/nativity-snow-globe/).
+These pages are grouped by age. Choose a group above to browse nativity scenes, angels, and Bible-themed Christmas coloring pages.
 
 Trees, Santa, and the other December pictures are in the [Christmas coloring pages](/christmas-coloring-pages/).

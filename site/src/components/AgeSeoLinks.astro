@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ageBands } from '../lib/ages';
+import { sheetPath } from '../lib/paths';
+
+interface Props {
+  sheets: CollectionEntry<'sheets'>[];
+  themeId: string;
+}
+const { sheets, themeId } = Astro.props;
+const groups = ageBands
+  .map((band) => ({
+    ...band,
+    sheets: sheets.filter((sheet) => sheet.data.age === band.id),
+  }))
+  .filter((band) => band.sheets.length > 0);
+---
+
+<section class="age-seo" aria-labelledby="age-seo-title">
+  <h2 id="age-seo-title">Explore coloring pages by age</h2>
+  <div class="age-seo-grid">
+    {groups.map((group) => (
+      <section class="age-seo-group" aria-labelledby={`age-seo-${group.id}`}>
+        <h3 id={`age-seo-${group.id}`}><a href={`#ages-${group.id}`}>{group.label}</a></h3>
+        <ul>
+          {group.sheets.map((sheet) => (
+            <li><a href={sheetPath(themeId, sheet.data.slug)}>{sheet.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</section>

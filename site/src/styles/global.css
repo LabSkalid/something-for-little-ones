@@ -532,3 +532,26 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   .theme-grid, .sheet-grid { grid-template-columns: 1fr 1fr; }
   .header-inner { align-items: flex-start; }
 }
+
+
+/* Automatically generated, compact SEO links for age-grouped collections. */
+.age-seo {
+  margin: 2rem 0 1.5rem;
+  padding: 1.1rem 1.2rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--soft);
+}
+.age-seo > h2 { font-size: 1.25rem; margin: 0 0 1rem; }
+.age-seo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1rem 1.4rem;
+}
+.age-seo-group h3 { font-size: 1rem; margin: 0 0 0.45rem; letter-spacing: 0; }
+.age-seo-group h3 a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.age-seo-group ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.28rem; }
+.age-seo-group li { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+.age-seo-group li a { color: var(--muted); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.age-seo-group li a:hover { color: var(--accent-dark); }
+@media (max-width: 640px) { .age-seo { padding: 1rem; } .age-seo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; } }

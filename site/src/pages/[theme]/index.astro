@@ -6,6 +6,7 @@ import BookOffer from '../../components/BookOffer.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FaqList from '../../components/FaqList.astro';
 import SheetCard from '../../components/SheetCard.astro';
+import AgeSeoLinks from '../../components/AgeSeoLinks.astro';
 import { bookForTheme } from '../../lib/books';
 import { pinPath, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
@@ -128,6 +129,7 @@ const jsonLd = {
       <div class="prose">
         <Content />
       </div>
+      {groupedByAge && <AgeSeoLinks sheets={sheets} themeId={theme.id} />}
       <AdSlot name="article" />
       {related.length > 0 && (
         <section class="section">
