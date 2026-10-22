@@ -7,5 +7,5 @@ alt: "Line drawing of children holding hands and an angel above a globe, with th
 parentNote: "Each child can wear a different color. The globe is the circle behind them."
 order: 46
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

@@ -7,5 +7,5 @@ alt: "Line drawing of the nativity under the words Away in a manger."
 parentNote: "The animals along the bottom are the easy finish after the people."
 order: 48
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

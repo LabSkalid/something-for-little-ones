@@ -7,5 +7,5 @@ alt: "Line drawing of Jesus with children, a sheep, a bunny, and a bear under th
 parentNote: "The letters are large. The children and the animals are the picture below."
 order: 44
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

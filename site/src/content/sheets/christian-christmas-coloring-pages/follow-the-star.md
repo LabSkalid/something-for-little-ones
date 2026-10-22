@@ -7,5 +7,5 @@ alt: "Line drawing of two children following a star, one holding a lantern and o
 parentNote: "The star and the two children are the main parts. The little town is in the back."
 order: 52
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

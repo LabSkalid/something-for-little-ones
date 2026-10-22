@@ -7,5 +7,5 @@ alt: "Line drawing of angels and shepherds under the words Glory to God in the h
 parentNote: "There are several angels. Color the words first if the child likes letters, or the sheep if not."
 order: 50
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

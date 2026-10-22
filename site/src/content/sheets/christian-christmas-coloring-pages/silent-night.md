@@ -7,5 +7,5 @@ alt: "Line drawing of two shepherds, sheep, and an angel under the words Silent 
 parentNote: "The words are large. The two sheep in front are a good place to start."
 order: 49
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

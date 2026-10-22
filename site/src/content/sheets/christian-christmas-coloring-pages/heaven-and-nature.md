@@ -7,5 +7,5 @@ alt: "Line drawing of angels and children under the words Let heaven and nature 
 parentNote: "The letters spell a line from Joy to the World. The sheep and the children are under the words."
 order: 54
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

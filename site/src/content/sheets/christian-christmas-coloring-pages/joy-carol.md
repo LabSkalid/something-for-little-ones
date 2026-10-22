@@ -7,5 +7,5 @@ alt: "Line drawing of an angel with a horn and three children under the words Jo
 parentNote: "This is another Joy to the World picture, with fewer animals and more snowflakes."
 order: 47
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

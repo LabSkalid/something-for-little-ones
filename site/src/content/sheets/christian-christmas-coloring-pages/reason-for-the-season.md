@@ -7,5 +7,5 @@ alt: "Line drawing of two children kneeling by baby Jesus under the words Jesus 
 parentNote: "The letters are the busiest part. The manger and the gifts are simpler."
 order: 51
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

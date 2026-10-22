@@ -7,5 +7,5 @@ alt: "Line drawing of three carolers, a deer, and birds under the words Joy to t
 parentNote: "The words take a while if you color every letter. The deer and the birds are quicker."
 order: 45
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

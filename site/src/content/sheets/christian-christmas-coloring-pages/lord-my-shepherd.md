@@ -7,5 +7,5 @@ alt: "Line drawing of a shepherd with sheep under the words The Lord is my sheph
 parentNote: "The letters can be colored too. The sheep are the easier shapes under the words."
 order: 41
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

@@ -7,5 +7,5 @@ alt: "Line drawing of a boat full of animals under a rainbow and the words God k
 parentNote: "This one is a Bible story, not the stable. The animals in the boat are the busy part."
 order: 43
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---

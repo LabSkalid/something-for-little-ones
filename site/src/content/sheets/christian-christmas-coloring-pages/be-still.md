@@ -7,5 +7,5 @@ alt: "Line drawing of a child in a boat and an angel under the words Be still an
 parentNote: "The words are the top of the page. The boat and the ducks are the picture underneath."
 order: 42
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---
