@@ -494,17 +494,7 @@
   </div>
 </dialog>
 
-<dialog id="simplify-originals-dialog">
-  <h2>Упростить исходники — тестовый режим</h2>
-  <p class="hint" id="simplify-originals-theme"></p>
-  <p>Берёт PNG из отдельной папки <code>&lt;тема&gt;-originals</code>, отправляет их как визуальные образцы модели и сохраняет результаты только в <code>factory-review</code>. Файлы сайта и исходники не перезаписываются. Каждый отмеченный файл — отдельный платный запрос.</p>
-  <label for="simplify-originals-age">Возраст</label>
-  <select id="simplify-originals-age"><option value="2-3">2–3</option><option value="3-4" selected>3–4</option><option value="4-5">4–5</option><option value="5-6">5–6</option><option value="6-8">6–8</option></select>
-  <p class="hint" id="simplify-originals-folder"></p>
-  <div class="row" style="margin-top:0.5rem"><button id="simplify-originals-all" class="quiet" type="button">Все</button><button id="simplify-originals-none" class="quiet" type="button">Снять</button></div>
-  <div id="simplify-originals-list" class="sheet-list" style="max-height:280px;margin-top:0.4rem"></div>
-  <div class="row" style="margin-top:0.8rem"><button id="simplify-originals-run" type="button">Создать тестовые варианты</button><button id="simplify-originals-cancel" class="quiet" type="button">Отмена</button></div>
-</dialog>
+
 
 <dialog id="refit-dialog">
   <h2>Убрать квадраты (с сайта, без ИИ)</h2>
@@ -784,8 +774,7 @@
         <div class="row">
           <button class="quiet" type="button" data-refit="${esc(theme.slug)}">Убрать квадраты</button>
           <button class="quiet" type="button" data-redraw="${esc(theme.slug)}">Перерисовать</button>
-          <button type="button" data-simplify-originals="${esc(theme.slug)}">Тест: упростить исходники</button>
-        </div>
+            </div>
       </article>`).join('');
     themesPinsEl.innerHTML = themes.map((theme) => `
       <article>
@@ -914,67 +903,6 @@
   importTheme.addEventListener('change', () => {
     importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
   });
-
-  const simplifyOriginalsDialog = document.querySelector('#simplify-originals-dialog');
-  const simplifyOriginalsList = document.querySelector('#simplify-originals-list');
-  let simplifyOriginalsTheme = '';
-
-  async function openSimplifyOriginalsDialog(theme) {
-    simplifyOriginalsTheme = theme;
-    document.querySelector('#simplify-originals-theme').textContent = `Тема: ${theme}`;
-    const response = await fetch('/api/simplify-originals/sheets?theme=' + encodeURIComponent(theme));
-    const data = await response.json();
-    if (!response.ok) { logEl.textContent = data.error || 'Не удалось прочитать исходники.'; return; }
-    document.querySelector('#simplify-originals-folder').textContent = `Папка исходников: ${data.folder}`;
-    simplifyOriginalsList.innerHTML = (data.sheets || []).map((sheet) => `
-      <label><input type="checkbox" value="${esc(sheet.slug)}" checked><span>${esc(sheet.filename)}</span></label>`).join('') || '<p class="hint">PNG не найдены. Создай папку с именем «тема-originals» и положи туда исходные PNG.</p>';
-    simplifyOriginalsDialog.showModal();
-  }
-
-  themesDrawEl.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-simplify-originals]');
-    if (button) openSimplifyOriginalsDialog(button.dataset.simplifyOriginals);
-  });
-  document.querySelector('#simplify-originals-all').addEventListener('click', () => simplifyOriginalsList.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = true; }));
-  document.querySelector('#simplify-originals-none').addEventListener('click', () => simplifyOriginalsList.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; }));
-  document.querySelector('#simplify-originals-cancel').addEventListener('click', () => simplifyOriginalsDialog.close());
-  document.querySelector('#simplify-originals-run').addEventListener('click', async () => {
-    const slugs = [...simplifyOriginalsList.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value);
-    if (!slugs.length) { logEl.textContent = 'Сначала выбери хотя бы один исходник.'; return; }
-    const age = document.querySelector('#simplify-originals-age').value;
-    if (!confirm(`Создать ${slugs.length} тестовых вариантов для возраста ${age}? Каждый вариант — платная генерация. Файлы сайта не изменятся.`)) return;
-    const response = await fetch('/api/simplify-originals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: simplifyOriginalsTheme, slugs, age }) });
-    const data = await response.json();
-    if (!response.ok) { logEl.textContent = data.error || 'Не удалось запустить обработку.'; return; }
-    simplifyOriginalsDialog.close();
-  });
-
-  const refitDialog = document.querySelector('#refit-dialog');
-  const refitSheetsEl = document.querySelector('#refit-sheets');
-  let refitTheme = '';
-  let refitSheets = [];
-
-  async function openRefitDialog(theme) {
-    refitTheme = theme || '';
-    document.querySelector('#refit-dialog-theme').textContent = theme
-      ? `Тема: ${theme}`
-      : '';
-    document.querySelector('#refit-age').value = '';
-    const data = await fetch('/api/refit/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
-    refitSheets = data.sheets || [];
-    paintRefitSheets();
-    refitDialog.showModal();
-  }
-
-  function paintRefitSheets() {
-    const age = document.querySelector('#refit-age').value;
-    const list = age ? refitSheets.filter((sheet) => sheet.age === age) : refitSheets;
-    refitSheetsEl.innerHTML = list.map((sheet) => `
-      <label>
-        <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasLetter || sheet.hasPng ? 'checked' : 'disabled'}>
-        <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${sheet.hasLetter ? '' : sheet.hasPng ? ' · только PNG' : ' · нет файла'}</span>
-      </label>`).join('') || '<p class="hint">Листов нет.</p>';
-  }
 
   const redrawDialog = document.querySelector('#redraw-dialog');
   const redrawSheetsEl = document.querySelector('#redraw-sheets');

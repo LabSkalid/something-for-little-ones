@@ -33,7 +33,7 @@ import { buildKdpCoverTemplate, estimateInteriorPages } from './kdp-cover.ts';
 import { buildDownloadPdfFromKdp } from './kdp-download-from-pdf.ts';
 import { reorderKdpPdf } from './kdp-reorder.ts';
 import { produce } from './produce.ts';
-import { redraw, listOriginalPngs, simplifyOriginals } from './redraw.ts';
+import { redraw } from './redraw.ts';
 import { listRefitSheets, refitFromSite } from './refit-site.ts';
 import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
 
@@ -722,21 +722,6 @@ const server = http.createServer(async (req, res) => {
         ? `Перерисовка ${theme ?? ''}: ${slugs.length} выбранных листов`
         : theme ? `Перерисовка ${theme}` : 'Перерисовка всех листов';
       startJob(label, () => redraw(theme, undefined, slugs));
-      return send(res, 202, { ok: true });
-    }
-    if (req.method === 'GET' && url.pathname === '/api/simplify-originals/sheets') {
-      const theme = url.searchParams.get('theme') ?? '';
-      if (!theme) throw new Error('Укажите подборку.');
-      return send(res, 200, await listOriginalPngs(theme));
-    }
-    if (req.method === 'POST' && url.pathname === '/api/simplify-originals') {
-      const body = await readBody(req);
-      const theme = String(body.theme ?? '').trim();
-      const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : [];
-      const age = String(body.age ?? '3-4');
-      if (!theme) throw new Error('Укажите подборку.');
-      if (!['2-3', '3-4', '4-5', '5-6', '6-8'].includes(age)) throw new Error('Некорректный возраст.');
-      startJob(`Тестовое упрощение исходников: ${theme} (${slugs.length})`, () => simplifyOriginals(theme, slugs, age));
       return send(res, 202, { ok: true });
     }
     if (req.method === 'GET' && url.pathname === '/api/refit/sheets') {
