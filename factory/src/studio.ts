@@ -4,6 +4,8 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
+import { chat, coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
+import { fitPortrait } from './lineart.ts';
 import {
   buildPins,
   listPinSheets,
@@ -20,6 +22,8 @@ import {
   matchDraftsToTheme,
   nameDraftWithVision,
   scanImportFolder,
+  listThemeSheets,
+  publishPrintAssets,
 } from './import-stock.ts';
 import {
   applyImportCaptions,
@@ -295,13 +299,145 @@ function asDraftSheets(value: unknown): DraftSheet[] {
   return value as DraftSheet[];
 }
 
+
+function bookSlug(value: string) {
+  return value.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 55) || 'coloring-book';
+}
+
+async function createBookPlan(body: Record<string, unknown>) {
+  const theme = String(body.theme ?? '').trim();
+  const age = String(body.age ?? '4-8');
+  const count = Math.max(1, Math.min(100, Number(body.count ?? 50) || 50));
+  if (!theme) throw new Error('Укажите тему книги.');
+  const raw = await chat(
+    'You are an experienced US children’s coloring-book editor. Return valid JSON only, with exactly the requested number of unique page ideas. Schema: {"ideas":[{"title":"short English title","prompt":"clear visual scene description in English","difficulty":"easy|medium|detailed"}]}. Make age-appropriate, commercially appealing variety for parents of children. No text inside illustrations, no trademarked characters, no near-duplicates. Each prompt must describe one distinct printable coloring page.',
+    `Create exactly ${count} distinct coloring-page ideas for a children’s coloring book ages ${age}. Theme: ${theme}. If the theme is religious, treat it respectfully and use recognizable traditional scenes. If seasonal, mix activities, objects, animals, and family scenes as appropriate. Use simple friendly scenes, clear large coloring areas, and avoid invented factual claims. Return exactly ${count} ideas.`
+  );
+  let parsed: { ideas?: { title?: string; prompt?: string; difficulty?: string }[] };
+  try { parsed = JSON.parse(raw.replace(/^```(?:json)?\s*|```$/g, '').trim()); }
+  catch { throw new Error('Текстовая модель вернула план не в формате JSON. Нажмите «Создать план» ещё раз.'); }
+  let ideas = Array.isArray(parsed.ideas) ? parsed.ideas : [];
+  ideas = ideas.filter((x) => x && String(x.title ?? '').trim() && String(x.prompt ?? '').trim());
+  if (ideas.length > count) ideas = ideas.slice(0, count);
+  if (ideas.length < count) {
+    const missing = count - ideas.length;
+    const extraRaw = await chat(
+      'Return valid JSON only: {"ideas":[{"title":"short English title","prompt":"clear visual scene description in English","difficulty":"easy|medium|detailed"}]}. Make each idea unique from the existing list.',
+      `Create exactly ${missing} additional distinct coloring-page ideas for theme ${theme}, ages ${age}. Existing titles to avoid: ${ideas.map((x) => x.title).join('; ')}. Return exactly ${missing} ideas.`
+    );
+    try {
+      const extra = JSON.parse(extraRaw.replace(/^```(?:json)?\s*|```$/g, '').trim()) as {ideas?: typeof ideas};
+      if (Array.isArray(extra.ideas)) ideas.push(...extra.ideas.filter((x) => x?.title && x?.prompt));
+    } catch { /* exact-count fallback below */ }
+  }
+  ideas = ideas.slice(0, count);
+  while (ideas.length < count) {
+    const n = ideas.length + 1;
+    ideas.push({ title: `${theme} Coloring Scene ${n}`, prompt: `A simple, original child-friendly scene related to ${theme}, with one clear focal subject and large enclosed areas for coloring`, difficulty: 'easy' });
+  }
+  return { theme, age, count, ideas: ideas.map((x, i) => ({
+    title: String(x.title).trim().slice(0, 100),
+    prompt: String(x.prompt).trim().slice(0, 1200),
+    difficulty: (['easy', 'medium', 'detailed'].includes(String(x.difficulty)) ? String(x.difficulty) : (age === '4-8' ? 'medium' : 'easy')) as LineDifficulty,
+    index: i + 1,
+  })) };
+}
+
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? '/', 'http://127.0.0.1');
     if (req.method === 'GET' && url.pathname === '/') {
       return send(res, 200, await fs.readFile(uiPath, 'utf8'), 'text/html');
     }
+    if (req.method === 'GET' && url.pathname === '/api/book/styles') {
+      const files = (await fs.readdir(briefsRoot)).filter((name) => name.endsWith('.yaml'));
+      const styles = [];
+      for (const file of files) {
+        try {
+          const data = parse(await fs.readFile(path.join(briefsRoot, file), 'utf8')) as Record<string, unknown>;
+          if (typeof data.style === 'string' && data.style.trim()) styles.push({ slug: file.replace(/\.yaml$/, ''), title: String(data.title ?? file.replace(/\.yaml$/, '')), style: data.style });
+        } catch { /* skip invalid brief */ }
+      }
+      styles.sort((a, b) => a.title.localeCompare(b.title));
+      return send(res, 200, styles);
+    }
+    if (req.method === 'POST' && url.pathname === '/api/book/plan') {
+      const body = await readBody(req);
+      const plan = await createBookPlan(body);
+      return send(res, 200, plan);
+    }
+    if (req.method === 'POST' && url.pathname === '/api/book/generate') {
+      const body = await readBody(req);
+      const title = String(body.title ?? body.theme ?? 'Coloring Book').trim();
+      const theme = String(body.theme ?? title).trim();
+      const age = String(body.age ?? '4-8');
+      let style = String(body.style ?? '').trim() || 'Cute storybook coloring-page line art. Friendly rounded characters, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition, moderate low detail for children ages 4–8. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.';
+      // Reuse the factory's selected style, removing only rules that contradict this book's subject or the established face style.
+      if (/christmas|nativity|jesus|manger/i.test(`${theme} ${title}`)) {
+        style = style.replace(/\bnot a nativity scene\.?/gi, '');
+      }
+      style = style.replace(/\bEyes are open circles,? never solid black\.?/gi, 'Eyes should have small solid black pupils and simple friendly highlights, matching the factory’s usual coloring-page style.');
+      const ideas = Array.isArray(body.ideas) ? body.ideas as {title?: string; prompt?: string; difficulty?: string}[] : [];
+      if (!ideas.length) throw new Error('Сначала создайте план книги.');
+      const safeTitle = bookSlug(title);
+      const outDir = path.join(factoryRoot, 'out', 'books', safeTitle, 'images');
+      startJob(`Книга «${title}»: генерация ${ideas.length} страниц`, async () => {
+        await fs.mkdir(outDir, { recursive: true });
+        for (const [position, idea] of ideas.entries()) {
+          const index = Number.isInteger(Number(idea.index)) ? Number(idea.index) : position;
+          const name = String(idea.title ?? `Page ${index + 1}`).trim();
+          const slug = bookSlug(`${String(index + 1).padStart(2, '0')}-${name}`);
+          const file = path.join(outDir, `${slug}.png`);
+          console.log(`Генерация ${index + 1}/${ideas.length}: ${name}`);
+          const prompt = coloringPrompt(style, String(idea.prompt ?? name), (['easy','medium','detailed'].includes(String(idea.difficulty)) ? String(idea.difficulty) : 'medium') as LineDifficulty, age);
+          const raw = await generateColoringPage(prompt);
+          const print = await fitPortrait(raw);
+          await fs.writeFile(file, print);
+          console.log(`Сохранено: ${file}`);
+        }
+        console.log(`Готово. Папка изображений: ${outDir}`);
+        console.log('Следующий шаг: вкладка Amazon KDP → укажите эту папку → «Открыть папку» → «Собрать PDF для KDP».');
+      });
+      return send(res, 202, { ok: true, folder: outDir, count: ideas.length });
+    }
     if (req.method === 'GET' && url.pathname === '/api/themes') return send(res, 200, await listThemes());
+    if (req.method === 'GET' && url.pathname === '/api/site/sheets') {
+      const theme = url.searchParams.get('theme') ?? '';
+      if (!theme) return send(res, 200, { sheets: [] });
+      return send(res, 200, { sheets: await listThemeSheets(theme) });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/site/replace-image') {
+      const body = await readBody(req);
+      const theme = String(body.theme ?? '').trim();
+      const slug = String(body.slug ?? '').trim();
+      const dataUrl = String(body.dataUrl ?? '');
+      const match = dataUrl.match(/^data:image\/(png|jpeg|jpg|webp);base64,([A-Za-z0-9+/=]+)$/);
+      if (!theme || !slug || !match) throw new Error('Выберите подборку, лист и файл PNG/JPG/WebP.');
+      const sheets = await listThemeSheets(theme);
+      const sheet = sheets.find((item) => item.slug === slug);
+      if (!sheet) throw new Error('Лист не найден в выбранной подборке.');
+      const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+      const tempDir = path.join(factoryRoot, '.cache', 'site-image-replacement');
+      await fs.mkdir(tempDir, { recursive: true });
+      const tempFile = path.join(tempDir, `${Date.now()}-${slug}.${ext}`);
+      const image = Buffer.from(match[2], 'base64');
+      if (image.length > 20 * 1024 * 1024) throw new Error('Файл больше 20 МБ.');
+      try {
+        await fs.writeFile(tempFile, image);
+        startJob(`Замена готового рисунка: ${theme}/${slug}`, async () => {
+          try {
+            await publishPrintAssets(theme, { file: tempFile, slug: sheet.slug, title: sheet.title });
+            console.log(`Готово: заменены preview PNG, US Letter PDF и A4 PDF для ${theme}/${slug}. Описание и метаданные сайта не менялись.`);
+          } finally {
+            await fs.rm(tempFile, { force: true });
+          }
+        });
+      } catch (error) {
+        await fs.rm(tempFile, { force: true });
+        throw error;
+      }
+      return send(res, 202, { ok: true, theme, slug });
+    }
     if (req.method === 'GET' && url.pathname === '/api/job') {
       return send(res, 200, {
         running: job.running,
