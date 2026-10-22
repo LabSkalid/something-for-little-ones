@@ -11,3 +11,8 @@ factory/.cache/
 /factory-review/
 /christian-christmas-coloring-pages-originals/
 .tmp/
+
+# heavy files live in R2
+site/public/print/
+site/public/pins/*
+!site/public/pins/*-collection-1.png

@@ -8,9 +8,9 @@ export function sheetPath(themeId: string, slug: string) {
 
 export function sheetAssets(themeId: string, slug: string) {
   return {
-    png: `/print/${themeId}/${slug}.png`,
-    letter: `/print/${themeId}/${slug}-us-letter.pdf`,
-    a4: `/print/${themeId}/${slug}-a4.pdf`,
+    png: `https://files.somethingforlittleones.com/print/${themeId}/${slug}.png`,
+    letter: `https://files.somethingforlittleones.com/print/${themeId}/${slug}-us-letter.pdf`,
+    a4: `https://files.somethingforlittleones.com/print/${themeId}/${slug}-a4.pdf`,
   };
 }
 
