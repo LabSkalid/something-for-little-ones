@@ -77,6 +77,37 @@ export async function visionChat(system: string, user: string, imagePng: Buffer,
   return content;
 }
 
+
+/** Edit an existing image using it as a visual reference (image-to-image). */
+export async function editColoringPage(sourcePng: Buffer, prompt: string) {
+  const model = process.env.OPENROUTER_EDIT_IMAGE_MODEL || 'openai/gpt-image-1';
+  const quality = process.env.OPENROUTER_IMAGE_QUALITY || 'medium';
+  const json = (await post('images', {
+    model,
+    prompt,
+    input_references: [
+      {
+        type: 'image_url',
+        image_url: { url: `data:image/png;base64,${sourcePng.toString('base64')}` },
+      },
+    ],
+    aspect_ratio: 'auto',
+    resolution: '1K',
+    quality,
+    output_format: 'png',
+    n: 1,
+  })) as ImagePayload;
+  if (json.error?.message) throw new Error(json.error.message);
+  const image = json.data?.[0];
+  if (image?.b64_json) return Buffer.from(image.b64_json, 'base64');
+  if (image?.url) {
+    const file = await fetch(image.url);
+    if (!file.ok) throw new Error(`Не удалось скачать отредактированную картинку: ${file.status}`);
+    return Buffer.from(await file.arrayBuffer());
+  }
+  throw new Error('В ответе OpenRouter нет отредактированной картинки.');
+}
+
 export async function generateColoringPage(prompt: string) {
   const model = process.env.OPENROUTER_IMAGE_MODEL || 'openai/gpt-image-2';
   const quality = process.env.OPENROUTER_IMAGE_QUALITY || 'medium';

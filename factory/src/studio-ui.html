@@ -494,6 +494,18 @@
   </div>
 </dialog>
 
+<dialog id="simplify-originals-dialog">
+  <h2>Упростить исходники — тестовый режим</h2>
+  <p class="hint" id="simplify-originals-theme"></p>
+  <p>Берёт PNG из отдельной папки <code>&lt;тема&gt;-originals</code>, отправляет их как визуальные образцы модели и сохраняет результаты только в <code>factory-review</code>. Файлы сайта и исходники не перезаписываются. Каждый отмеченный файл — отдельный платный запрос.</p>
+  <label for="simplify-originals-age">Возраст</label>
+  <select id="simplify-originals-age"><option value="2-3">2–3</option><option value="3-4" selected>3–4</option><option value="4-5">4–5</option><option value="5-6">5–6</option><option value="6-8">6–8</option></select>
+  <p class="hint" id="simplify-originals-folder"></p>
+  <div class="row" style="margin-top:0.5rem"><button id="simplify-originals-all" class="quiet" type="button">Все</button><button id="simplify-originals-none" class="quiet" type="button">Снять</button></div>
+  <div id="simplify-originals-list" class="sheet-list" style="max-height:280px;margin-top:0.4rem"></div>
+  <div class="row" style="margin-top:0.8rem"><button id="simplify-originals-run" type="button">Создать тестовые варианты</button><button id="simplify-originals-cancel" class="quiet" type="button">Отмена</button></div>
+</dialog>
+
 <dialog id="refit-dialog">
   <h2>Убрать квадраты (с сайта, без ИИ)</h2>
   <p class="hint" id="refit-dialog-theme"></p>
@@ -515,6 +527,30 @@
   <div class="row" style="margin-top:0.8rem">
     <button id="refit-run" type="button">Поправить выбранные</button>
     <button id="refit-cancel" class="quiet" type="button">Отмена</button>
+  </div>
+</dialog>
+
+<dialog id="redraw-dialog">
+  <h2>Перерисовать выбранные листы</h2>
+  <p class="hint" id="redraw-dialog-theme"></p>
+  <p>Отметь только те рисунки, которые нужно перегенерировать. Неотмеченные листы останутся без изменений. Каждый выбранный рисунок — платный запрос к модели.</p>
+  <label for="redraw-age">Возраст (можно все)</label>
+  <select id="redraw-age">
+    <option value="">Все возраста</option>
+    <option value="2-3">2–3</option>
+    <option value="3-4">3–4</option>
+    <option value="4-5">4–5</option>
+    <option value="5-6">5–6</option>
+    <option value="6-8">6–8</option>
+  </select>
+  <div class="row" style="margin-top:0.5rem">
+    <button id="redraw-sheets-all" class="quiet" type="button">Выбрать все</button>
+    <button id="redraw-sheets-none" class="quiet" type="button">Снять выделение</button>
+  </div>
+  <div id="redraw-sheets" class="sheet-list" style="max-height:280px;margin-top:0.4rem"></div>
+  <div class="row" style="margin-top:0.8rem">
+    <button id="redraw-run" type="button">Перерисовать выбранные</button>
+    <button id="redraw-cancel" class="quiet" type="button">Отмена</button>
   </div>
 </dialog>
 
@@ -748,6 +784,7 @@
         <div class="row">
           <button class="quiet" type="button" data-refit="${esc(theme.slug)}">Убрать квадраты</button>
           <button class="quiet" type="button" data-redraw="${esc(theme.slug)}">Перерисовать</button>
+          <button type="button" data-simplify-originals="${esc(theme.slug)}">Тест: упростить исходники</button>
         </div>
       </article>`).join('');
     themesPinsEl.innerHTML = themes.map((theme) => `
@@ -878,6 +915,40 @@
     importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
   });
 
+  const simplifyOriginalsDialog = document.querySelector('#simplify-originals-dialog');
+  const simplifyOriginalsList = document.querySelector('#simplify-originals-list');
+  let simplifyOriginalsTheme = '';
+
+  async function openSimplifyOriginalsDialog(theme) {
+    simplifyOriginalsTheme = theme;
+    document.querySelector('#simplify-originals-theme').textContent = `Тема: ${theme}`;
+    const response = await fetch('/api/simplify-originals/sheets?theme=' + encodeURIComponent(theme));
+    const data = await response.json();
+    if (!response.ok) { logEl.textContent = data.error || 'Не удалось прочитать исходники.'; return; }
+    document.querySelector('#simplify-originals-folder').textContent = `Папка исходников: ${data.folder}`;
+    simplifyOriginalsList.innerHTML = (data.sheets || []).map((sheet) => `
+      <label><input type="checkbox" value="${esc(sheet.slug)}" checked><span>${esc(sheet.filename)}</span></label>`).join('') || '<p class="hint">PNG не найдены. Создай папку с именем «тема-originals» и положи туда исходные PNG.</p>';
+    simplifyOriginalsDialog.showModal();
+  }
+
+  themesDrawEl.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-simplify-originals]');
+    if (button) openSimplifyOriginalsDialog(button.dataset.simplifyOriginals);
+  });
+  document.querySelector('#simplify-originals-all').addEventListener('click', () => simplifyOriginalsList.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = true; }));
+  document.querySelector('#simplify-originals-none').addEventListener('click', () => simplifyOriginalsList.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; }));
+  document.querySelector('#simplify-originals-cancel').addEventListener('click', () => simplifyOriginalsDialog.close());
+  document.querySelector('#simplify-originals-run').addEventListener('click', async () => {
+    const slugs = [...simplifyOriginalsList.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value);
+    if (!slugs.length) { logEl.textContent = 'Сначала выбери хотя бы один исходник.'; return; }
+    const age = document.querySelector('#simplify-originals-age').value;
+    if (!confirm(`Создать ${slugs.length} тестовых вариантов для возраста ${age}? Каждый вариант — платная генерация. Файлы сайта не изменятся.`)) return;
+    const response = await fetch('/api/simplify-originals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: simplifyOriginalsTheme, slugs, age }) });
+    const data = await response.json();
+    if (!response.ok) { logEl.textContent = data.error || 'Не удалось запустить обработку.'; return; }
+    simplifyOriginalsDialog.close();
+  });
+
   const refitDialog = document.querySelector('#refit-dialog');
   const refitSheetsEl = document.querySelector('#refit-sheets');
   let refitTheme = '';
@@ -905,6 +976,31 @@
       </label>`).join('') || '<p class="hint">Листов нет.</p>';
   }
 
+  const redrawDialog = document.querySelector('#redraw-dialog');
+  const redrawSheetsEl = document.querySelector('#redraw-sheets');
+  let redrawTheme = '';
+  let redrawSheets = [];
+
+  async function openRedrawDialog(theme) {
+    redrawTheme = theme || '';
+    document.querySelector('#redraw-dialog-theme').textContent = theme ? `Тема: ${theme}` : '';
+    document.querySelector('#redraw-age').value = '';
+    const data = await fetch('/api/refit/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
+    redrawSheets = data.sheets || [];
+    paintRedrawSheets();
+    redrawDialog.showModal();
+  }
+
+  function paintRedrawSheets() {
+    const age = document.querySelector('#redraw-age').value;
+    const list = age ? redrawSheets.filter((sheet) => sheet.age === age) : redrawSheets;
+    redrawSheetsEl.innerHTML = list.map((sheet) => `
+      <label>
+        <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasLetter || sheet.hasPng ? '' : 'disabled'}>
+        <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${sheet.hasLetter ? '' : sheet.hasPng ? ' · только PNG' : ' · нет файла'}</span>
+      </label>`).join('') || '<p class="hint">Листов нет.</p>';
+  }
+
   async function onThemeRowClick(event) {
     const pins = event.target.closest('[data-pins]');
     if (pins) {
@@ -926,8 +1022,7 @@
     }
     const button = event.target.closest('[data-redraw]');
     if (!button) return;
-    if (!confirm('Перерисовать все листы этой подборки? Это платный запрос к модели картинок.')) return;
-    await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: button.dataset.redraw }) });
+    await openRedrawDialog(button.dataset.redraw);
   }
   themesDrawEl.addEventListener('click', onThemeRowClick);
   themesPinsEl.addEventListener('click', onThemeRowClick);
@@ -959,6 +1054,35 @@
       return;
     }
     logEl.textContent = 'Поправка с сайта запущена (без оплаты ИИ). В логе появятся slug по одному…';
+  });
+
+  document.querySelector('#redraw-cancel')?.addEventListener('click', () => redrawDialog.close());
+  document.querySelector('#redraw-age')?.addEventListener('change', () => paintRedrawSheets());
+  document.querySelector('#redraw-sheets-all')?.addEventListener('click', () => {
+    redrawSheetsEl.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach((input) => { input.checked = true; });
+  });
+  document.querySelector('#redraw-sheets-none')?.addEventListener('click', () => {
+    redrawSheetsEl.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
+  });
+  document.querySelector('#redraw-run')?.addEventListener('click', async () => {
+    const slugs = [...redrawSheetsEl.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value);
+    if (!slugs.length) {
+      logEl.textContent = 'Отметьте хотя бы один лист для перерисовки.';
+      return;
+    }
+    if (!confirm(`Перерисовать ${slugs.length} выбранных лист(ов)? Это платные запросы к модели. Остальные листы не изменятся.`)) return;
+    redrawDialog.close();
+    const response = await fetch('/api/redraw', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: redrawTheme, slugs }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить перерисовку.';
+      return;
+    }
+    logEl.textContent = `Запущена перерисовка ${slugs.length} выбранных листов. Ход работы — в логе ниже.`;
   });
 
   document.querySelector('#pins-all').addEventListener('click', async () => {

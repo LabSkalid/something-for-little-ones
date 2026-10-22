@@ -7,3 +7,7 @@ dist/
 !.env.example
 factory/.cache/
 .DS_Store
+
+/factory-review/
+/christian-christmas-coloring-pages-originals/
+.tmp/
