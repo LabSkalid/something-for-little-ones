@@ -7,5 +7,5 @@ alt: "Line drawing of one mitten with a cuff and a large snowflake."
 parentNote: "The mitten is the big area. The snowflake is a few thick pieces, not a lace pattern to struggle with."
 order: 9
 difficulty: medium
-age: "4-5"
+age: "3-4"
 ---
