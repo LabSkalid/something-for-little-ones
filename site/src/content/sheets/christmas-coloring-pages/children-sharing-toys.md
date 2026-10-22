@@ -5,7 +5,7 @@ slug: children-sharing-toys
 description: "A children sharing toys coloring page. For about ages 6 to 8."
 alt: "Line drawing of children sharing toys."
 parentNote: "Color the big shapes first. The small parts can wait."
-order: 60
+order: 55
 difficulty: detailed
 age: "6-8"
 source: "children-sharing-toys.png"
