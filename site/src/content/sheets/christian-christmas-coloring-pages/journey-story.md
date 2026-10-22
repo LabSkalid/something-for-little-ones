@@ -7,5 +7,5 @@ alt: "Line drawing of four panels with an angel, a donkey journey, a stable, and
 parentNote: "The stable box has the most animals. Save that one for when the child is still willing to sit."
 order: 39
 difficulty: medium
-age: "5-6"
+age: "6-8"
 ---
