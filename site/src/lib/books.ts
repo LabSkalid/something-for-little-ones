@@ -31,6 +31,16 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/b535114e98',
     themes: ['garden-coloring-pages', 'animal-coloring-pages'],
   },
+   {
+    id: 'fall-thanksgiving',
+    title: 'A ready coloring book',
+    body: 'More fall and Thanksgiving pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    cover: '/books/cover-thanksgiving.png',
+    coverAlt: 'Cover of Thanksgiving Coloring Book: a funny turkey and pumpkins',
+    amazonUrl: 'https://www.amazon.com/dp/B0HNT32W6L',
+    kofiUrl: 'https://ko-fi.com/s/4c5ffb1795',
+    themes: ['fall-coloring-pages', 'thanksgiving-coloring-pages'],
+  },
 ];
 
 export function bookForTheme(themeId: string) {

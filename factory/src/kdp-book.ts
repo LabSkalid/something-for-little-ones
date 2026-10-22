@@ -215,6 +215,9 @@ const DOWNLOAD_PX_H = 2200;
  * - kdp: 300 dpi, JPEG q92 (Amazon interior)
  * - download: ~200 dpi, grayscale JPEG q75 (coloring pages)
  * - download-cover: ~200 dpi, color JPEG q82 (front/back covers stay in color)
+ *
+ * Pass sRGB buffers (PNG/JPEG). Do not feed raw DeviceCMYK PDF extracts — use
+ * Ghostscript rasterize for PDF covers (see addLetterImagePage).
  */
 export async function encodeLetterForPdf(letterPng: Buffer, preset: PdfEncodePreset = 'kdp') {
   let pipeline = sharp(letterPng).removeAlpha().flatten({ background: '#ffffff' });
@@ -261,8 +264,20 @@ export async function addLetterImagePage(
   }
   if (ext === '.pdf') {
     // KDP: keep vector/embed for print quality. Download: never embed raw cover PDFs
-    // (design exports are often 10–20 MB each) — extract the bitmap and encode lightly.
+    // (design exports are often 30–40 MB) — rasterize to sRGB then light JPEG.
+    // Extracting the embedded JPEG fails on Canva/Adobe exports: they tag DeviceCMYK
+    // even when designed in RGB, and sharp then yields inverted / washed colors.
     if (isDownloadEncodePreset(encodePreset)) {
+      const { rasterizePdfFirstPagePng } = await import('./pdf-rasterize.ts');
+      const png = await rasterizePdfFirstPagePng(resolved, 200);
+      if (png) {
+        const jpeg = await encodeLetterForPdf(png, encodePreset);
+        await addEncodedLetterPage(doc, jpeg);
+        return;
+      }
+      console.warn(
+        `PDF обложка: Ghostscript недоступен — цвета могут быть неверными (${path.basename(resolved)})`,
+      );
       const { encodePdfFirstPageImage } = await import('./kdp-pdf-images.ts');
       const jpeg = await encodePdfFirstPageImage(resolved, encodePreset);
       if (jpeg) {
