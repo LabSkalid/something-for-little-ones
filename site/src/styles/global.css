@@ -534,6 +534,33 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 }
 
 
+
+/* Keep the original sidebar book placement on desktop; move a compact copy up on mobile. */
+.book-offer-mobile { display: none; }
+.book-offer-desktop { display: block; }
+@media (max-width: 640px) {
+  .book-offer-mobile { display: block; margin: 0 0 1rem; }
+  .book-offer-desktop { display: none; }
+  .book-offer-mobile .book-offer {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 0.85rem;
+    align-items: start;
+    padding: 0.65rem;
+  }
+  .book-offer-mobile .book-offer-cover {
+    grid-column: 1; grid-row: 1 / span 3;
+    width: 88px; margin: 0;
+  }
+  .book-offer-mobile .book-offer h2 { grid-column: 2; margin: 0 0 0.35rem; }
+  .book-offer-mobile .book-offer > p { grid-column: 2; font-size: 0.82rem; }
+  .book-offer-mobile .book-offer-actions {
+    grid-column: 2; grid-template-columns: 1fr; gap: 0.35rem; margin-top: 0.55rem;
+  }
+  .book-offer-mobile .book-offer-actions .btn { font-size: 0.78rem; padding: 0.45rem 0.4rem; }
+}
+
 /* Compact, crawlable age links: native details keeps all links in the HTML. */
 .age-seo {
   margin: 1.5rem 0;

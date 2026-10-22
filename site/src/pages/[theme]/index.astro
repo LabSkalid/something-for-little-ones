@@ -111,7 +111,7 @@ const jsonLd = {
       <p class="eyebrow">{themeEyebrow}</p>
       <h1>{theme.data.title}</h1>
       <p class="lede">{theme.data.tagline}</p>
-      {book && <BookOffer book={book} />}
+      {book && <div class="book-offer-mobile"><BookOffer book={book} /></div>}
       {groupedByAge ? (
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>
@@ -147,6 +147,7 @@ const jsonLd = {
       )}
     </article>
     <aside class="rail">
+      {book && <div class="book-offer-desktop"><BookOffer book={book} /></div>}
       <div class="tip">
         <h2>Print tip</h2>
         <p>I made these for letter paper. There's an A4 file too if that's what you have. On the printer, pick actual size, or fit-to-page if it warns you.</p>
