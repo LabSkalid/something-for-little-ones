@@ -169,7 +169,7 @@ for (const t of themes) {
       filename: fileName,
       board: t.board,
       board_id: t.boardId,
-      image_url: `${siteBase}/pins/${fileName}`,
+      image_url: `https://files.somethingforlittleones.com/pins/${fileName.replace(/\.png$/i, ".jpg")}`,
       title,
       description,
       link: link || meta?.link || '',
