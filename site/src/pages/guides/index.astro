@@ -43,10 +43,10 @@ const jsonLd = {
     </section>
 
     <section class="section">
-      <ul class="guide-list">
+      <ul class="age-choices guide-list">
         {guides.map((guide) => (
           <li>
-            <a class="guide-card" href={`/guides/${guide.id}/`}>
+            <a class="age-choice" href={`/guides/${guide.id}/`}>
               <strong>{guide.data.title}</strong>
               <span>{guide.data.blurb}</span>
             </a>
@@ -56,36 +56,3 @@ const jsonLd = {
     </section>
   </div>
 </Base>
-
-<style>
-  .guide-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-  .guide-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    height: 100%;
-    padding: 1.1rem 1.2rem;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 14px;
-    text-decoration: none;
-    color: inherit;
-  }
-  .guide-card:hover,
-  .guide-card:focus-visible {
-    border-color: rgba(0, 0, 0, 0.4);
-  }
-  .guide-card strong {
-    font-size: 1.1rem;
-    line-height: 1.3;
-  }
-  .guide-card span {
-    opacity: 0.8;
-  }
-</style>

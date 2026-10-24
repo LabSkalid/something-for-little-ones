@@ -17,12 +17,6 @@ const others = (await getCollection('guides'))
   .sort((a, b) => a.data.order - b.data.order);
 
 const path = `/guides/${guide.id}/`;
-const updated = guide.data.updatedDate.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  timeZone: 'UTC',
-});
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -52,19 +46,18 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <div class="wrap">
-    <article class="guide">
-      <p class="guide-crumb"><a href="/guides/">Guides</a></p>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span>/</span><a href="/guides/">Guides</a><span>/</span><span>{guide.data.title}</span>
+    </nav>
+
+    <article class="prose guide-body">
       <h1>{guide.data.title}</h1>
-      <div class="guide-body">
-        <Content />
-      </div>
+      <Content />
     </article>
 
     {others.length > 0 && (
-      <section class="section guide-more">
-        <div class="section-head">
-          <h2>More guides</h2>
-        </div>
+      <section class="prose guide-body">
+        <h2>More guides</h2>
         <ul>
           {others.map((other) => (
             <li><a href={`/guides/${other.id}/`}>{other.data.title}</a></li>
@@ -74,42 +67,3 @@ const jsonLd = {
     )}
   </div>
 </Base>
-
-<style>
-  .guide {
-    max-width: 44rem;
-    margin: 0 auto;
-    padding: 1.5rem 0 1rem;
-  }
-  .guide-crumb {
-    margin: 0 0 0.5rem;
-    font-size: 0.95rem;
-  }
-  .guide-meta {
-    margin: 0 0 1.5rem;
-    opacity: 0.7;
-    font-size: 0.95rem;
-  }
-  .guide-body :global(h2) {
-    margin: 2rem 0 0.6rem;
-  }
-  .guide-body :global(p),
-  .guide-body :global(ul) {
-    line-height: 1.65;
-    margin: 0 0 1rem;
-  }
-  .guide-body :global(ul) {
-    padding-left: 1.3rem;
-  }
-  .guide-body :global(li) {
-    margin-bottom: 0.4rem;
-  }
-  .guide-more {
-    max-width: 44rem;
-    margin: 0 auto;
-  }
-  .guide-more ul {
-    padding-left: 1.3rem;
-    line-height: 1.7;
-  }
-</style>

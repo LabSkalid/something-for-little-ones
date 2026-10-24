@@ -552,3 +552,15 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   .book-offer-mobile .book-offer-actions { grid-column: 2; grid-template-columns: 1fr; gap: 0.35rem; margin-top: 0.55rem; }
   .book-offer-mobile .book-offer-actions .btn { font-size: 0.78rem; padding: 0.45rem 0.4rem; }
 }
+
+
+/* Guides (parents and teachers articles) */
+a.card-action { text-decoration: none; }
+a.card-action:hover { color: var(--accent); }
+
+.guide-list { grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+
+.guide-body a { font-weight: 700; text-decoration: none; }
+.guide-body a:hover { color: var(--accent); }
+.guide-body ul { margin: 0 0 1rem; }
+.guide-body li { margin-bottom: 0.35rem; }
