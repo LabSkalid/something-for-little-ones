@@ -6,6 +6,7 @@ kind: seasonal
 ageBand: "3-4"
 order: 5
 accent: "#7A3044"
+showPinTitle: false
 ink: "#241418"
 related:
   - christmas-coloring-pages

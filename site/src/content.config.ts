@@ -53,4 +53,16 @@ const sheets = defineCollection({
   }),
 });
 
-export const collections = { themes, sheets };
+const guides = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    blurb: z.string(),
+    order: z.number(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date(),
+  }),
+});
+
+export const collections = { themes, sheets, guides };

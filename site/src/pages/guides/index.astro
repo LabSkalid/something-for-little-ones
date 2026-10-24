@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { absoluteUrl } from '../../site';
+import { publisherRef, websiteId } from '../../lib/schema';
+
+const guides = (await getCollection('guides')).sort((a, b) => a.data.order - b.data.order);
+
+const pageTitle = 'Guides for parents and teachers';
+const pageIntro =
+  'Short, practical guides on choosing, using, and printing coloring pages at home and in the classroom.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageIntro,
+      url: absoluteUrl('/guides/'),
+      isPartOf: { '@id': websiteId },
+      publisher: publisherRef(),
+    },
+    {
+      '@type': 'ItemList',
+      name: pageTitle,
+      itemListElement: guides.map((guide, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: guide.data.title,
+        url: absoluteUrl(`/guides/${guide.id}/`),
+      })),
+    },
+  ],
+};
+---
+
+<Base title={pageTitle} description={pageIntro} path="/guides/" jsonLd={jsonLd}>
+  <div class="wrap">
+    <section class="page-intro">
+      <h1>{pageTitle}</h1>
+      <p class="lede">{pageIntro}</p>
+    </section>
+
+    <section class="section">
+      <ul class="guide-list">
+        {guides.map((guide) => (
+          <li>
+            <a class="guide-card" href={`/guides/${guide.id}/`}>
+              <strong>{guide.data.title}</strong>
+              <span>{guide.data.blurb}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .guide-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .guide-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    height: 100%;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .guide-card:hover,
+  .guide-card:focus-visible {
+    border-color: rgba(0, 0, 0, 0.4);
+  }
+  .guide-card strong {
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+  .guide-card span {
+    opacity: 0.8;
+  }
+</style>

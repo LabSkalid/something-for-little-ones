@@ -11,6 +11,9 @@ import { getCurrentSeason } from '../lib/seasons';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 const sheets = await getCollection('sheets');
+const guides = (await getCollection('guides'))
+  .sort((x, y) => x.data.order - y.data.order)
+  .slice(0, 3);
 const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
 const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
 const sheetAges = (themeId: string) =>
@@ -368,6 +371,26 @@ const jsonLd = {
         })}
       </div>
     </section>
+
+    {guides.length > 0 && (
+      <section class="section" id="guides">
+        <div class="section-head">
+          <h2>For parents and teachers</h2>
+          <p>Short guides on choosing, using, and printing coloring pages.</p>
+        </div>
+        <ul class="age-choices">
+          {guides.map((guide) => (
+            <li>
+              <a class="age-choice" href={`/guides/${guide.id}/`}>
+                <strong>{guide.data.title}</strong>
+                <span>{guide.data.blurb}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p><a href="/guides/">All guides</a></p>
+      </section>
+    )}
 
     <section class="section">
       <div class="section-head">

@@ -1,4 +1,4 @@
-import { exec } from 'node:child_process';
+import { exec, spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
@@ -39,7 +39,8 @@ import { reorderKdpPdf } from './kdp-reorder.ts';
 import { produce } from './produce.ts';
 import { redraw } from './redraw.ts';
 import { listRefitSheets, refitFromSite } from './refit-site.ts';
-import { briefsRoot, factoryRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
+import sharp from 'sharp';
+import { briefsRoot, factoryRoot, pinRoot, printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
 
 loadEnv();
 
@@ -341,6 +342,175 @@ async function createBookPlan(body: Record<string, unknown>) {
     difficulty: (['easy', 'medium', 'detailed'].includes(String(x.difficulty)) ? String(x.difficulty) : (age === '4-8' ? 'medium' : 'easy')) as LineDifficulty,
     index: i + 1,
   })) };
+}
+
+// ---------- Выпуск пинов: сжатие → хранилище R2 → очередь → таблица ----------
+
+type RunOptions = { cwd?: string; env?: NodeJS.ProcessEnv; onLine?: (line: string) => void };
+
+function runProgram(
+  cmd: string,
+  args: string[],
+  options: RunOptions = {},
+): Promise<{ code: number; lines: string[] }> {
+  return new Promise((resolve, reject) => {
+    const child = spawn(cmd, args, { cwd: options.cwd, env: options.env ?? process.env, windowsHide: true });
+    const lines: string[] = [];
+    const push = (line: string) => {
+      if (!line.trim()) return;
+      lines.push(line);
+      options.onLine?.(line);
+    };
+    let outRest = '';
+    let errRest = '';
+    const feed = (rest: string, chunk: string) => {
+      const parts = (rest + chunk).split(/\r\n|\n|\r/);
+      const tail = parts.pop() ?? '';
+      parts.forEach(push);
+      return tail;
+    };
+    child.stdout.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
+    child.stdout.on('data', (chunk: string) => {
+      outRest = feed(outRest, chunk);
+    });
+    child.stderr.on('data', (chunk: string) => {
+      errRest = feed(errRest, chunk);
+    });
+    child.on('error', reject);
+    child.on('close', (code) => {
+      push(outRest);
+      push(errRest);
+      resolve({ code: code ?? 1, lines });
+    });
+  });
+}
+
+async function findRclone(): Promise<string> {
+  const candidates = [
+    process.env.RCLONE_PATH,
+    'rclone',
+    process.env.LOCALAPPDATA
+      ? path.join(process.env.LOCALAPPDATA, 'Microsoft', 'WinGet', 'Links', 'rclone.exe')
+      : '',
+  ].filter(Boolean) as string[];
+  for (const cmd of candidates) {
+    try {
+      const result = await runProgram(cmd, ['version']);
+      if (result.code === 0) return cmd;
+    } catch {
+      // try the next candidate
+    }
+  }
+  throw new Error(
+    'Не нашла программу rclone, которая загружает файлы в хранилище. Закройте фабрику, перезагрузите компьютер (так Windows увидит rclone) и запустите снова. Если не поможет, напишите мне.',
+  );
+}
+
+async function compressNewPins() {
+  const names = (await fs.readdir(pinRoot)).filter((name) => /\.png$/i.test(name));
+  let made = 0;
+  for (const name of names) {
+    const png = path.join(pinRoot, name);
+    const jpg = png.replace(/\.png$/i, '.jpg');
+    const pngStat = await fs.stat(png);
+    try {
+      const jpgStat = await fs.stat(jpg);
+      if (jpgStat.mtimeMs >= pngStat.mtimeMs) continue;
+    } catch {
+      // no JPG yet
+    }
+    await sharp(png).flatten({ background: '#ffffff' }).jpeg({ quality: 85 }).toFile(jpg);
+    made++;
+  }
+  return { total: names.length, made };
+}
+
+async function uploadToStorage(rclone: string, label: string, source: string, folder: string, extra: string[] = []) {
+  const remote = process.env.R2_REMOTE || 'r2';
+  const bucket = process.env.R2_BUCKET || 'sfl-files';
+  console.log(`Загружаю: ${label}…`);
+  let copied = 0;
+  const result = await runProgram(rclone, ['copy', source, `${remote}:${bucket}/${folder}`, ...extra, '-v'], {
+    onLine: (line) => {
+      if (/: Copied \(/.test(line)) copied++;
+      else if (/ERROR|Failed|NOTICE/.test(line)) console.log(line);
+    },
+  });
+  if (result.code !== 0) {
+    throw new Error(`Загрузка «${label}» не удалась (rclone вернул код ${result.code}). Ошибки выше в логе.`);
+  }
+  console.log(
+    copied
+      ? `${label}: загружено или обновлено файлов — ${copied}.`
+      : `${label}: всё уже в хранилище, новых файлов нет.`,
+  );
+}
+
+type QueueRow = Record<string, string>;
+
+async function buildMakeQueue(): Promise<QueueRow[]> {
+  const script = path.join(factoryRoot, 'scripts', 'build-make-queue.mjs');
+  const outDir = path.join(factoryRoot, 'out', 'pinterest');
+  const result = await runProgram(process.execPath, [script], {
+    cwd: factoryRoot,
+    env: { ...process.env, PIN_ROOT: pinRoot, OUT_DIR: outDir },
+  });
+  if (result.code !== 0) {
+    throw new Error(`Не удалось собрать очередь: ${result.lines.slice(-3).join(' ')}`);
+  }
+  const wrote = result.lines.findIndex((line) => line.startsWith('Wrote '));
+  if (wrote >= 0) for (const line of result.lines.slice(wrote + 1)) console.log(line);
+  return JSON.parse(await fs.readFile(path.join(outDir, 'make-queue.json'), 'utf8')) as QueueRow[];
+}
+
+async function sendRowsToSheet(rows: QueueRow[]) {
+  const url = (process.env.SHEET_WEBHOOK_URL ?? '').trim();
+  const token = (process.env.SHEET_WEBHOOK_TOKEN ?? '').trim();
+  if (!url) {
+    console.log(
+      'Таблица пока не подключена: в файле .env нет SHEET_WEBHOOK_URL. Очередь лежит в factory\\out\\pinterest\\make-queue.csv.',
+    );
+    return;
+  }
+  let added = 0;
+  let skipped = 0;
+  for (let i = 0; i < rows.length; i += 100) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ token, rows: rows.slice(i, i + 100) }),
+      redirect: 'follow',
+    });
+    const text = await response.text();
+    let data: { ok?: boolean; added?: number; skipped?: number; error?: string };
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(`Таблица ответила не так, как ожидалось: ${text.slice(0, 200)}`);
+    }
+    if (!data.ok) throw new Error(`Таблица отказала: ${data.error ?? 'неизвестная ошибка'}`);
+    added += data.added ?? 0;
+    skipped += data.skipped ?? 0;
+  }
+  console.log(`Таблица: добавлено новых строк — ${added}, уже были — ${skipped}.`);
+}
+
+async function publishPins() {
+  const rclone = await findRclone();
+  console.log('Шаг 1 из 4. Сжимаю новые пины в JPG…');
+  const compressed = await compressNewPins();
+  console.log(
+    compressed.made ? `Сжато новых или обновлённых пинов: ${compressed.made}.` : 'Новых пинов для сжатия нет.',
+  );
+  console.log('Шаг 2 из 4. Загружаю в хранилище…');
+  await uploadToStorage(rclone, 'пины', pinRoot, 'pins', ['--include', '/*.jpg']);
+  await uploadToStorage(rclone, 'листы для скачивания', printRoot, 'print');
+  console.log('Шаг 3 из 4. Собираю очередь для Pinterest…');
+  const rows = await buildMakeQueue();
+  console.log(`В очереди пинов: ${rows.length}.`);
+  console.log('Шаг 4 из 4. Отправляю новые строки в таблицу…');
+  await sendRowsToSheet(rows);
 }
 
 const server = http.createServer(async (req, res) => {
@@ -816,6 +986,10 @@ const server = http.createServer(async (req, res) => {
             : 'Готово: менять нечего (уже есть текст или нет картинок).',
         );
       });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/pins/publish') {
+      startJob('Выпуск пинов: хранилище и таблица', () => publishPins());
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/pins') {

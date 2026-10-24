@@ -408,6 +408,10 @@
   </section>
 
   <section id="panel-pins" class="panel">
+    <div class="row" style="margin-bottom:0.4rem">
+      <button id="pins-publish" type="button">Выпустить пины: в хранилище и в таблицу</button>
+    </div>
+    <p class="hint">Нажимайте, когда пины собраны и тексты написаны. Кнопка сама сожмёт новые пины, загрузит пины и листы в хранилище, соберёт очередь и добавит новые строки в таблицу для Make. Повторно ничего не добавляет, нажимать можно сколько угодно раз.</p>
     <p>Только пины Pinterest: сборка PNG и тексты в <code>pins.csv</code>. Картинки листов на сайте здесь не перерисовываются — это вкладка <strong>Рисовать для сайта</strong>.</p>
     <section id="themes-pins"></section>
     <div class="row" style="margin-top:0.8rem">
@@ -673,8 +677,8 @@
       const sheets = data.sheets || [];
       pinSheetsEl.innerHTML = sheets.map((sheet) => `
         <label>
-          <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasPrint ? 'checked' : 'disabled'}>
-          <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${sheet.hasPrint ? '' : ' · нет PNG'}</span>
+          <input type="checkbox" value="${esc(sheet.slug)}" ${sheet.hasPrint && !sheet.hasPin ? 'checked' : ''} ${sheet.hasPrint ? '' : 'disabled'}>
+          <span>${esc(sheet.title)}${sheet.age ? ` · ${esc(sheet.age)}` : ''}${!sheet.hasPrint ? ' · нет PNG для печати' : sheet.hasPin ? ' · пин уже есть' : ' · пина ещё нет'}</span>
         </label>`).join('') || '<p class="hint">Листов нет.</p>';
     }
     pinDialog.showModal();
@@ -1120,6 +1124,21 @@
 
   document.querySelector('#pins-all').addEventListener('click', async () => {
     await openPinDialog('');
+  });
+
+  document.querySelector('#pins-publish').addEventListener('click', async () => {
+    logEl.textContent = 'Запускаю выпуск пинов…';
+    try {
+      const response = await fetch('/api/pins/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить выпуск пинов.';
+    } catch (error) {
+      logEl.textContent = error.message || String(error);
+    }
   });
 
   document.querySelector('#pin-cancel').addEventListener('click', () => pinDialog.close());

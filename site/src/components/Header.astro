@@ -5,6 +5,7 @@ const path = Astro.url.pathname;
 const links = [
   { href: '/', label: 'Coloring pages' },
   { href: '/how-to-print/', label: 'How to print' },
+  { href: '/guides/', label: 'Guides' },
   { href: '/about/', label: 'About' },
 ];
 ---
@@ -14,7 +15,7 @@ const links = [
     <Wordmark />
     <nav class="nav" aria-label="Primary">
       {links.map((link) => (
-        <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>
+        <a href={link.href} aria-current={path === link.href || (link.href === '/guides/' && path.startsWith('/guides/')) ? 'page' : undefined}>{link.label}</a>
       ))}
     </nav>
   </div>

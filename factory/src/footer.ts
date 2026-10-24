@@ -47,6 +47,7 @@ async function detectSiteFooterHeight(image: Buffer): Promise<number | null> {
   const candidates = [
     expected,
     Math.round(expected * 1.12),
+    Math.round(width * 0.072),
     Math.max(96, Math.round(height * 0.075)),
     Math.max(96, Math.round(height * 0.09)),
   ];

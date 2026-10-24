@@ -489,6 +489,7 @@ export async function listPinSheets(themeId: string) {
   } catch {
     return [];
   }
+  const existingPinNames = new Set(await listPinPngFilenames(themeId));
   const sheets = [];
   for (const sheetFile of sheetFiles) {
     const sheet = readFrontmatter(await fs.readFile(path.join(sheetDir, sheetFile), 'utf8')) as SheetData;
@@ -507,9 +508,28 @@ export async function listPinSheets(themeId: string) {
       order: Number(sheet.order ?? 0),
       description: String(sheet.description ?? ''),
       hasPrint,
+      hasPin: existingPinNames.has(`${themeId}-${slug}.png`),
     });
   }
   return sheets.sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
+}
+
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function nextCollectionIndex(themeId: string): Promise<number> {
+  const names = await listPinPngFilenames(themeId);
+  const numbers = names
+    .map((name) => name.match(new RegExp(`^${themeId}-collection-(\\d+)\\.png$`, 'i'))?.[1])
+    .filter(Boolean)
+    .map(Number);
+  return numbers.length ? Math.max(...numbers) + 1 : 1;
 }
 
 export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
@@ -590,10 +610,16 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     const accent = /^#[0-9a-fA-F]{6}$/.test(override) ? override : data.accent || '#1d7ad6';
     const keep = new Set<string>();
     const themeRows: PinRow[] = [];
+    const existingPinNames = new Set(await listPinPngFilenames(themeId));
 
     if (mode === 'single' || mode === 'both') {
       for (const page of pages) {
         const filename = `${themeId}-${page.slug}.png`;
+        if (selected.size && existingPinNames.has(filename)) {
+          keep.add(filename);
+          console.log(`skip existing pin ${filename}`);
+          continue;
+        }
         const png = await renderPin({ title, accent, brand: site.name, image: page.image });
         await fs.writeFile(path.join(pinRoot, filename), png);
         keep.add(filename);
@@ -619,8 +645,14 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
         skipped.push(`${themeId} collection (${pages.length} sheets)`);
         console.log(`skip collection ${themeId}: ${pages.length} sheet${pages.length === 1 ? '' : 's'}`);
       }
-      for (const [index, group] of groups.entries()) {
-        const filename = `${themeId}-collection-${index + 1}.png`;
+      let nextCollectionNumber = await nextCollectionIndex(themeId);
+      for (const group of groups) {
+        let filename = `${themeId}-collection-${nextCollectionNumber}.png`;
+        while (selected.size && await fileExists(path.join(pinRoot, filename))) {
+          nextCollectionNumber += 1;
+          filename = `${themeId}-collection-${nextCollectionNumber}.png`;
+        }
+        nextCollectionNumber += 1;
         const png = await renderCollectionPin({
           title,
           accent,
@@ -648,7 +680,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
 
     rows.push(...themeRows);
 
-    if (removeOld) {
+    if (removeOld && !selected.size) {
       const existing = await fs.readdir(pinRoot);
       for (const name of existing) {
         if (!name.endsWith('.png') || !name.startsWith(`${themeId}-`)) continue;
@@ -711,13 +743,15 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   }
 
   let manifest: PinRow[];
-  if (onlyTheme) {
+  if (onlyTheme && selected.size) {
+    const rebuilt = new Set(rows.map((row) => row.filename));
+    manifest = [...previous.filter((row) => !rebuilt.has(row.filename)), ...rows];
+  } else if (onlyTheme) {
     const kept = previous.filter((row) => {
       if (!row.filename.startsWith(`${onlyTheme}-`)) return true;
       const isCollection = /-collection-\d+\.png$/i.test(row.filename);
       if (mode === 'collection' && !isCollection) return true;
       if (mode === 'single' && isCollection) return true;
-      // Replace rows for the types we rebuilt.
       return false;
     });
     manifest = [...kept, ...rows];

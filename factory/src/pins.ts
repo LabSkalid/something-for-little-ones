@@ -140,7 +140,8 @@ export async function renderPin(options: {
   const iw = meta.width || 1;
   const ih = meta.height || 1;
 
-  const titleLines = wrap(options.title, 28);
+  const titleLines = options.title.trim() ? wrap(options.title, 28) : [];
+  const hasTitle = titleLines.length > 0;
   const titleSize = titleLines.length > 1 ? 40 : 46;
   const titleLineH = titleSize + 10;
   const brandSize = 36;
@@ -149,12 +150,14 @@ export async function renderPin(options: {
   const marginX = 32;
   const maxArtW = PIN_W - marginX * 2;
   const brandH = 44;
-  const gapBrand = 16;
+  // When the category heading is hidden, the brand sits directly above the art.
+  // Give that transition extra room so the wordmark does not feel attached to the drawing.
+  const gapBrand = hasTitle ? 16 : 48;
   const gapTitle = 28;
-  const gapLabel = 30;
+  const gapLabel = 46;
   const labelH = 42;
   const titleH = titleLines.length * titleLineH;
-  const textChrome = brandH + gapBrand + titleH + gapTitle + gapLabel + labelH;
+  const textChrome = brandH + gapBrand + (hasTitle ? titleH + gapTitle : 0) + gapLabel + labelH;
   const maxArtH = PIN_H - 72 - textChrome;
   const scale = Math.min(maxArtW / iw, maxArtH / ih);
   const artW = Math.round(iw * scale);
@@ -166,7 +169,7 @@ export async function renderPin(options: {
   const brandBaseline = y + brandSize;
   y += brandH + gapBrand;
   const titleBaselines = titleLines.map((_, index) => y + titleSize + index * titleLineH);
-  y += titleH + gapTitle;
+  y += titleH + (hasTitle ? gapTitle : 0);
   const artX = Math.round((PIN_W - artW) / 2);
   const artY = y;
   y += artH + gapLabel;
@@ -232,7 +235,8 @@ export async function renderCollectionPin(options: {
   if (options.images.length < 3) throw new Error('A collection pin needs 3 or 4 drawings');
   const framed = options.framed !== false;
   const arts = await preparedArts(options.images.slice(0, count));
-  const titleLines = wrap(options.title, 34);
+  const titleLines = options.title.trim() ? wrap(options.title, 34) : [];
+  const hasTitle = titleLines.length > 0;
   const titleSize = titleLines.length > 1 ? 38 : 44;
   const titleLineH = titleSize + 8;
   const brandSize = 32;
@@ -241,15 +245,17 @@ export async function renderCollectionPin(options: {
   const marginX = 40;
   const gap = framed ? 22 : 28;
   const brandH = 40;
-  const gapBrand = 12;
-  const gapTitle = 20;
-  const gapLabel = 28;
+  // Without a category heading, keep clear breathing room between the wordmark
+  // and the collection grid. The larger bottom gap balances the FREE PRINTABLES label.
+  const gapBrand = hasTitle ? 12 : 36;
+  const gapTitle = 28;
+  const gapLabel = 48;
 
   let y = 34;
   const brandBaseline = y + brandSize;
   y += brandH + gapBrand;
   const titleBaselines = titleLines.map((_, index) => y + titleSize + index * titleLineH);
-  y += titleLines.length * titleLineH + gapTitle;
+  y += titleLines.length * titleLineH + (hasTitle ? gapTitle : 0);
   const artTop = y;
   const labelBaseline = PIN_H - 52;
   const artBottom = labelBaseline - gapLabel - 8;

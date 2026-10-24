@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { absoluteUrl, site } from '../../site';
+import { publisherRef, websiteId } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+
+const others = (await getCollection('guides'))
+  .filter((other) => other.id !== guide.id)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const path = `/guides/${guide.id}/`;
+const updated = guide.data.updatedDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: guide.data.title,
+      description: guide.data.description,
+      url: absoluteUrl(path),
+      mainEntityOfPage: absoluteUrl(path),
+      datePublished: guide.data.pubDate.toISOString(),
+      dateModified: guide.data.updatedDate.toISOString(),
+      inLanguage: site.locale,
+      isPartOf: { '@id': websiteId },
+      author: publisherRef(),
+      publisher: publisherRef(),
+    },
+  ],
+};
+---
+
+<Base
+  title={guide.data.title}
+  description={guide.data.description}
+  path={path}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <div class="wrap">
+    <article class="guide">
+      <p class="guide-crumb"><a href="/guides/">Guides</a></p>
+      <h1>{guide.data.title}</h1>
+      <p class="guide-meta">Updated {updated}</p>
+      <div class="guide-body">
+        <Content />
+      </div>
+    </article>
+
+    {others.length > 0 && (
+      <section class="section guide-more">
+        <div class="section-head">
+          <h2>More guides</h2>
+        </div>
+        <ul>
+          {others.map((other) => (
+            <li><a href={`/guides/${other.id}/`}>{other.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .guide {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1.5rem 0 1rem;
+  }
+  .guide-crumb {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+  }
+  .guide-meta {
+    margin: 0 0 1.5rem;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+  .guide-body :global(h2) {
+    margin: 2rem 0 0.6rem;
+  }
+  .guide-body :global(p),
+  .guide-body :global(ul) {
+    line-height: 1.65;
+    margin: 0 0 1rem;
+  }
+  .guide-body :global(ul) {
+    padding-left: 1.3rem;
+  }
+  .guide-body :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .guide-more {
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+  .guide-more ul {
+    padding-left: 1.3rem;
+    line-height: 1.7;
+  }
+</style>
