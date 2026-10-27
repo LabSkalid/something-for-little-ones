@@ -6,9 +6,10 @@ import BookOffer from '../../components/BookOffer.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import FaqList from '../../components/FaqList.astro';
 import SheetCard from '../../components/SheetCard.astro';
+import ThemeCard from '../../components/ThemeCard.astro';
 import AgeSeoLinks from '../../components/AgeSeoLinks.astro';
 import { bookForTheme } from '../../lib/books';
-import { pinPath, sheetPath, themePath } from '../../lib/paths';
+import { pinPath, sheetPath, themePath, sheetAssets } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
 import { ageBandLabel, ageBands, ageSpanLabel } from '../../lib/ages';
@@ -41,9 +42,17 @@ const themeEyebrow = seasonal
     ? ageSpanLabel(sheets.map((sheet) => sheet.data.age))
     : ageBandLabel(theme.data.ageBand);
 const allThemes = await getCollection('themes');
-const related = theme.data.related
-  .map((id) => allThemes.find((item) => item.id === id))
-  .filter((item) => item !== undefined);
+const allSheets = await getCollection('sheets');
+const related = theme.data.related.flatMap((id) => {
+  const relatedTheme = allThemes.find((item) => item.id === id);
+  if (!relatedTheme) return [];
+  const relatedSheets = allSheets
+    .filter((sheet) => sheet.data.theme === id)
+    .sort((a, b) => a.data.order - b.data.order);
+  const coverSheet = relatedSheets[0];
+  if (!coverSheet) return [];
+  return [{ theme: relatedTheme, sheets: relatedSheets, coverSheet, assets: sheetAssets(id, coverSheet.data.slug) }];
+});
 const crumbs = [
   { name: 'Home', path: '/' },
   { name: theme.data.title, path: themePath(theme.id) },
@@ -127,20 +136,24 @@ const jsonLd = {
         </div>
       )}
       <AdSlot name="top" />
-      <section class="prose collection-description" aria-label={`${theme.data.title} description`}>
+      <section class="prose collection-description">
         <Content />
       </section>
-      {groupedByAge && <AgeSeoLinks sheets={sheets} themeId={theme.id} />}
+      <AgeSeoLinks sheets={sheets} themeId={theme.id} />
       <AdSlot name="article" />
       {related.length > 0 && (
         <section class="section">
           <h2>More sets to print</h2>
-          <div class="related-grid">
-            {related.map((item) => (
-              <a class="related-card" href={themePath(item.id)}>
-                <strong>{item.data.title}</strong>
-                <span>{item.data.tagline}</span>
-              </a>
+          <div class="theme-grid">
+            {related.map(({ theme: relatedTheme, sheets: relatedSheets, coverSheet, assets }) => (
+              <ThemeCard
+                href={themePath(relatedTheme.id)}
+                title={relatedTheme.data.title}
+                image={assets.png}
+                imageAlt={coverSheet.data.alt}
+                count={relatedSheets.length}
+                eyebrow={relatedTheme.data.tagline}
+              />
             ))}
           </div>
         </section>
