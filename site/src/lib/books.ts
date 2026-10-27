@@ -22,6 +22,16 @@ export const books: BookOffer[] = [
     themes: ['winter-coloring-pages', 'christmas-coloring-pages'],
   },
   {
+    id: 'cristian-christmas',
+    title: 'A ready coloring book',
+    body: 'More Christmas pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    cover: '/books/cristian-christmas-coloring-book.jpg',
+    coverAlt: 'Cover of Cristian Christmass Coloring Book: from the Nativity story to the family traditions',
+    amazonUrl: 'https://www.amazon.com/dp/B0HP9YGF6H',
+    kofiUrl: 'https://ko-fi.com/s/0d6b5ac6dc',
+    themes: ['cristian-christmas-coloring-pages'],
+  },
+  {
     id: 'garden-animals',
     title: 'A ready coloring book',
     body: 'More garden animal pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
