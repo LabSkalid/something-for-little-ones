@@ -1,4 +1,3 @@
----
 interface Props {
   href: string;
   title: string;
@@ -6,10 +5,20 @@ interface Props {
   imageAlt: string;
   count: number;
   eyebrow: string;
-  id?: string;\n  eyebrowAfterTitle?: boolean;
+  id?: string;
+  eyebrowAfterTitle?: boolean;
 }
 
-const { href, title, image, imageAlt, count, eyebrow, id, eyebrowAfterTitle = false } = Astro.props;
+const {
+  href,
+  title,
+  image,
+  imageAlt,
+  count,
+  eyebrow,
+  id,
+  eyebrowAfterTitle = false,
+} = Astro.props;
 ---
 
 <a class="theme-card" href={href} id={id}>
