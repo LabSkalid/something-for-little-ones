@@ -31,10 +31,6 @@ pins:
     subtitle: Huge animal shapes for ages 2–3
 ---
 
-These animals are for about ages 2 to 3. Each one is a few huge shapes, simpler than the animals for ages 3 to 4.
+This collection features first animal coloring pages, with designs such as Puppy, Bird, and Butterfly.
 
-There's a [puppy](/first-animal-coloring-pages/round-puppy/), a [bird](/first-animal-coloring-pages/simple-bird/), a [butterfly](/first-animal-coloring-pages/simple-butterfly/), a [cat](/first-animal-coloring-pages/sitting-cat/), and a [turtle](/first-animal-coloring-pages/round-turtle/). Print one. The shell and the wings are the shortest jobs.
-
-The other ages 2–3 set is the [big shape coloring pages](/big-shape-coloring-pages/), a ball, an apple, a fish, a cup, and a star. When a child starts filling a shape on purpose and wants smaller parts, move to the [animal coloring pages](/animal-coloring-pages/) for ages 3–4.
-
-Staying inside the line is not the goal yet. If the color goes over the edge, the picture still reads as a puppy or a bird.
+Download the PDF, not a screenshot of this page.

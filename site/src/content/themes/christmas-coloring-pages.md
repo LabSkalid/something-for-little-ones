@@ -36,8 +36,6 @@ pins:
     subtitle: Printable holiday pages for kids
 ---
 
-These pages are grouped by age. Pick the group that matches how long your child will sit.
-
-These pages are grouped by age. Choose a group above to browse the matching Christmas coloring pages.
+This collection features christmas coloring pages, with designs such as Christmas Tree, Santa, and Gingerbread House.
 
 Download the PDF, not a screenshot of this page.

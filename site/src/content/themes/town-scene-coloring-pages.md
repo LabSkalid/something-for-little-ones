@@ -32,10 +32,6 @@ pins:
     subtitle: Fuller scenes for ages 6–8
 ---
 
-These town pages are for about ages 6 to 8. They're the fullest drawings on the site: more objects, more windows, and a repeating pattern somewhere on the page. The lines stay thick enough to color. Not fine pen sketches.
+This collection features town scene coloring pages, with designs such as Hot Air Balloon, Treehouse, and Passenger Train.
 
-There's a [hot air balloon](/town-scene-coloring-pages/hot-air-balloon/), a [treehouse](/town-scene-coloring-pages/treehouse/), a [passenger train](/town-scene-coloring-pages/passenger-train/), a [greenhouse](/town-scene-coloring-pages/greenhouse/), and a [bakery window](/town-scene-coloring-pages/bakery-window/). Start with the balloon if you want a pattern with a clear edge. Leave the bakery window for a day when there's time to color each cake.
-
-The other ages 6–8 set is the [woodland animal coloring pages](/woodland-animal-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [garden coloring pages](/garden-coloring-pages/) are ages 4–5, with fewer parts. Ages 2–3 and 3–4 are on the home page if a younger child is coloring at the same table.
-
-On a busy page, color one kind of thing first: all the windows, then the leaves, then the balloon panels. The picture looks finished in stages. You don't need every crayon in the box.
+Download the PDF, not a screenshot of this page.

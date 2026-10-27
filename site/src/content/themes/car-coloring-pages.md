@@ -34,8 +34,6 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-All side views: a [family car](/car-coloring-pages/family-car/), a [pickup](/car-coloring-pages/pickup-truck/), a [race car](/car-coloring-pages/race-car/), a [fire truck](/car-coloring-pages/fire-truck/), and a [dump truck](/car-coloring-pages/dump-truck/). No logos and no movie cars. Print one, or the pile.
+This collection features car and truck coloring pages, with designs such as Family Car, Pickup Truck, and Race Car.
 
-Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/). Animals are in the [animal coloring pages](/animal-coloring-pages/).
-
-Thick lines, for about ages 3 to 4. Still scribbling? Start with the [big shape coloring pages](/big-shape-coloring-pages/). Older sets are on the home page.
+Download the PDF, not a screenshot of this page.

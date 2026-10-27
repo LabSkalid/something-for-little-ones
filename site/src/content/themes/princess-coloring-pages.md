@@ -34,8 +34,6 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-None of these come from a movie or a toy line. There's a [storybook princess](/princess-coloring-pages/storybook-princess/), a [castle](/princess-coloring-pages/fairy-tale-castle/), a [carriage](/princess-coloring-pages/royal-carriage/), a [pony](/princess-coloring-pages/pony-with-ribbon/), and a [crown and wand](/princess-coloring-pages/crown-and-wand/). Print the gown, or the whole pile.
+This collection features princess coloring pages, with designs such as Storybook Princess, Fairy-Tale Castle, and Royal Carriage.
 
-More animals are in the [animal coloring pages](/animal-coloring-pages/). Christmas is in the [Christmas coloring pages](/christmas-coloring-pages/).
-
-Thick lines, for about ages 3 to 4. If they're still scribbling, the [big shape coloring pages](/big-shape-coloring-pages/) are simpler. Older sets are on the home page.
+Download the PDF, not a screenshot of this page.

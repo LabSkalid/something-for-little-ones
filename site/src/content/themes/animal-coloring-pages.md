@@ -34,8 +34,6 @@ pins:
     subtitle: Easy animals for kids ages 3–4
 ---
 
-Five animals in this pile: a [puppy](/animal-coloring-pages/puppy/), a [kitten](/animal-coloring-pages/kitten/), an [elephant](/animal-coloring-pages/elephant/), a [butterfly](/animal-coloring-pages/butterfly/), and a [bunny](/animal-coloring-pages/bunny/). Print the one they pointed at, or the whole pile.
+This collection features animal coloring pages, with designs such as Puppy, Kitten, and Elephant.
 
-I drew these. A pony with a ribbon is with the [princess coloring pages](/princess-coloring-pages/). Dinosaurs are in the [dinosaur coloring pages](/dinosaur-coloring-pages/).
-
-The lines are thick and the spaces are big, so this is for about ages 3 to 4. If your child is still scribbling, try the [big shape coloring pages](/big-shape-coloring-pages/). If they want more to color, the older sets are on the home page.
+Download the PDF, not a screenshot of this page.

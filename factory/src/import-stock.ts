@@ -10,6 +10,7 @@ import { loadEnv } from './env.ts';
 import { visionChat } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
 import { factoryRoot, printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
+import { buildThemeBody } from './theme-copy.ts';
 
 /** Write through a temp file + retries — Windows often locks PDFs (Defender / preview). */
 async function writeFileSafe(dest: string, data: Buffer | string) {
@@ -733,23 +734,14 @@ export async function rewriteThemeBody(theme: string) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) throw new Error(`Не читается тема ${theme}`);
   const sheets = await listThemeSheets(theme);
-  const lines = ['These pages are grouped by age. Pick the group that matches how long your child will sit.', ''];
-  for (const age of AGE_BANDS) {
-    const group = sheets.filter((sheet) => sheet.age === age);
-    if (!group.length) continue;
-    const links = group
-      .map((sheet) => `[${linkLabel(sheet.title)}](/${theme}/${sheet.slug}/)`)
-      .join(', ');
-    const label = age.replace('-', '–');
-    lines.push(`[Ages ${label}](#ages-${age}) includes ${links}.`);
-    lines.push('');
-  }
-  lines.push('Download the PDF, not a screenshot of this page.');
+  const meta = frontmatter(match[1]);
+  const collectionTitle = String(meta.title ?? theme.replaceAll('-', ' '));
+  const body = buildThemeBody(collectionTitle, sheets.map((sheet) => sheet.title));
   const today = new Date().toISOString().slice(0, 10);
   let fm = match[1];
   if (/^updatedDate:/m.test(fm)) fm = fm.replace(/^updatedDate:.*$/m, `updatedDate: ${today}`);
   else fm += `\nupdatedDate: ${today}`;
-  await fs.writeFile(file, `---\n${fm}\n---\n\n${lines.join('\n')}\n`, 'utf8');
+  await fs.writeFile(file, `---\n${fm}\n---\n\n${body}\n`, 'utf8');
 }
 
 export async function commitImport(options: {

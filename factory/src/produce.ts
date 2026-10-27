@@ -9,6 +9,7 @@ import { chat, coloringPrompt, generateColoringPage } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
 import { loadEnv } from './env.ts';
 import { printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
+import { buildThemeBody } from './theme-copy.ts';
 
 const blocked = [
   /disney/i,
@@ -129,7 +130,7 @@ async function ensureTheme(brief: Brief, sheetLinks: { title: string; slug: stri
     .map((sheet) => `- [${sheet.title}](/${brief.slug}/${sheet.slug}/)`)
     .join('\n');
   const related = brief.related.map((slug) => `- [${slug}](/${slug}/)`).join('\n');
-  let article = `This set is ${brief.title.toLowerCase()} for ${brief.audience}.\n\n${links}\n\nSee also:\n\n${related}\n\nPrint the PDF in US Letter or A4. The [printing guide](/how-to-print/) covers the settings.`;
+  const article = buildThemeBody(brief.title, sheetLinks.map((sheet) => sheet.title));
   let faqs = [
     { question: 'What paper size are these?', answer: 'Each page has a US Letter PDF and an A4 PDF.' },
     { question: 'Who are they for?', answer: brief.audience },
@@ -138,18 +139,17 @@ async function ensureTheme(brief: Brief, sheetLinks: { title: string; slug: stri
   let description = brief.description;
   try {
     const raw = await chat(
-      'You write a parent-facing coloring set article in American English. Reply with JSON only: {"tagline":"","description":"","article":"","faqs":[{"question":"","answer":""}]}. article is markdown, 350-500 words, and must include the exact links you are given. No trademarked characters. No mention of AI.',
+      'You write concise metadata for a coloring-page collection for American parents. Reply with JSON only: {"tagline":"","description":"","faqs":[{"question":"","answer":""}]}. Do not write an article or invent contents not supported by the collection title and page titles. No trademarked characters. No mention of AI.',
       `Title: ${brief.title}\nAudience: ${brief.audience}\nStyle: ${brief.style}\nRequired links:\n${links}\nRelated sets:\n${related}\nAlso link /how-to-print/.`,
     );
     const json = JSON.parse(raw.replace(/^```json\s*|```$/g, '')) as {
       tagline: string;
       description: string;
-      article: string;
+      article?: string;
       faqs: { question: string; answer: string }[];
     };
     tagline = json.tagline || tagline;
     description = json.description || description;
-    article = json.article || article;
     if (json.faqs?.length) faqs = json.faqs;
   } catch (error) {
     console.warn(`Текст темы оставлен коротким: ${(error as Error).message}`);

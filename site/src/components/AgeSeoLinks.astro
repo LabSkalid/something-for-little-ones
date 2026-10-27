@@ -1,4 +1,3 @@
----
 import type { CollectionEntry } from 'astro:content';
 import { ageBands } from '../lib/ages';
 import { sheetPath } from '../lib/paths';
@@ -6,27 +5,35 @@ import { sheetPath } from '../lib/paths';
 interface Props {
   sheets: CollectionEntry<'sheets'>[];
   themeId: string;
+  groupedByAge: boolean;
 }
-const { sheets, themeId } = Astro.props;
+const { sheets, themeId, groupedByAge } = Astro.props;
 const groups = ageBands
   .map((band) => ({
     ...band,
     sheets: sheets.filter((sheet) => sheet.data.age === band.id),
   }))
   .filter((band) => band.sheets.length > 0);
+const printableCount = (count: number) => `${count} printable ${count === 1 ? 'page' : 'pages'}`;
 ---
 
 <section class="age-seo" aria-labelledby="age-seo-title">
   <details class="age-seo-details">
     <summary id="age-seo-title">Explore coloring pages by age <span class="age-seo-count">{sheets.length} pages</span></summary>
-    <p class="age-seo-intro">Browse printable coloring pages by age group.</p>
+    <p class="age-seo-intro">Browse printable coloring pages by age group. Each link includes a description of the drawing to help you choose a page.</p>
     <div class="age-seo-grid">
       {groups.map((group) => (
         <section class="age-seo-group" aria-labelledby={`age-seo-${group.id}`}>
-          <h3 id={`age-seo-${group.id}`}><a href={`#ages-${group.id}`}>{group.label}</a></h3>
+          <h3 id={`age-seo-${group.id}`}>
+            {groupedByAge ? <a href={`#ages-${group.id}`}>{group.label}</a> : group.label}
+          </h3>
+          <p class="age-seo-group-intro">{printableCount(group.sheets.length)} for {group.label.toLowerCase()}.</p>
           <ul>
             {group.sheets.map((sheet) => (
-              <li><a href={sheetPath(themeId, sheet.data.slug)}>{sheet.data.title}</a></li>
+              <li>
+                <a href={sheetPath(themeId, sheet.data.slug)}>{sheet.data.title}</a>
+                <span> — {sheet.data.description}</span>
+              </li>
             ))}
           </ul>
         </section>
@@ -34,3 +41,16 @@ const groups = ageBands
     </div>
   </details>
 </section>
+
+<style>
+  .age-seo { margin: 1.25rem 0; }
+  .age-seo-details { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0.75rem 0; }
+  .age-seo-details summary { cursor: pointer; font-weight: 700; }
+  .age-seo-count { color: var(--muted); font-weight: 500; margin-left: 0.25rem; }
+  .age-seo-intro, .age-seo-group-intro { color: var(--muted); margin: 0.75rem 0; }
+  .age-seo-grid { display: grid; gap: 1rem; }
+  .age-seo-group h3 { font-size: 1.05rem; margin: 1rem 0 0.35rem; }
+  .age-seo-group ul { padding-left: 1.25rem; margin: 0.5rem 0 0; }
+  .age-seo-group li { margin: 0.35rem 0; }
+  @media (min-width: 700px) { .age-seo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; } }
+</style>

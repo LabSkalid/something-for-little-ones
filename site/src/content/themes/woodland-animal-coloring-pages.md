@@ -32,10 +32,6 @@ pins:
     subtitle: Patterned woodland scenes for ages 6–8
 ---
 
-These woodland pages are for about ages 6 to 8. Each picture is an animal, a pattern, and a few trees or leaves. The lines stay thick enough to color. This is the woods, not a town.
+This collection features woodland animal coloring pages, with designs such as Woodland Fox, Woodland Owl, and Woodland Deer.
 
-There's a [fox](/woodland-animal-coloring-pages/woodland-fox/), an [owl](/woodland-animal-coloring-pages/woodland-owl/), a [deer](/woodland-animal-coloring-pages/woodland-deer/), a [hedgehog](/woodland-animal-coloring-pages/woodland-hedgehog/), and a [squirrel](/woodland-animal-coloring-pages/woodland-squirrel/). Start with the fox or the deer if you want a pattern with a clear edge. Leave the hedgehog for a longer sitting.
-
-The other ages 6–8 set is the [town scene coloring pages](/town-scene-coloring-pages/). The step before this is the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6. The [animal coloring pages](/animal-coloring-pages/) for ages 3–4 are the simple ones.
-
-Color one kind of thing first, such as the tail stripes or the spots, then the trees. The picture looks finished in stages.
+Download the PDF, not a screenshot of this page.

@@ -32,10 +32,6 @@ pins:
     subtitle: Chunky vehicles for ages 4–5
 ---
 
-These vehicles are for about ages 4 to 5. Each one is a single truck, car, boat, or engine, with chunky shapes. They're a step up from the cars for ages 3 to 4, and they are not a garden scene.
+This collection features simple vehicle coloring pages, with designs such as Family Car, Train Engine, and Boat.
 
-There's a [family car](/simple-vehicle-coloring-pages/family-car/), a [train engine](/simple-vehicle-coloring-pages/train-engine/), a [boat](/simple-vehicle-coloring-pages/little-boat/), a [tractor](/simple-vehicle-coloring-pages/farm-tractor/), and a [fire truck](/simple-vehicle-coloring-pages/fire-truck/). The car and the boat are the shorter pages. The fire truck has a ladder and a hose to finish after the body.
-
-The other ages 4–5 set is the [garden coloring pages](/garden-coloring-pages/). The simpler [car coloring pages](/car-coloring-pages/) are for ages 3–4. If this set is finished quickly and they want patterns, try the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6.
-
-There is no street, no shop name, and no number on the engine. Color the body, then the wheels.
+Download the PDF, not a screenshot of this page.

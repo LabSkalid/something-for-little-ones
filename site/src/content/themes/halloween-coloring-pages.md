@@ -35,16 +35,6 @@ pins:
     subtitle: Pumpkin, ghost, cat, and candy
 ---
 
-These pages are grouped by age. Pick the group that matches how long your child will sit.
-
-[Ages 2–3](#ages-2-3) includes [huge pumpkin](/halloween-coloring-pages/huge-pumpkin/), [huge ghost](/halloween-coloring-pages/huge-ghost/), [huge bat](/halloween-coloring-pages/huge-bat/).
-
-[Ages 3–4](#ages-3-4) includes [smiling pumpkin](/halloween-coloring-pages/jack-o-lantern/), [friendly ghost](/halloween-coloring-pages/friendly-ghost/), [witch hat](/halloween-coloring-pages/witch-hat/), [halloween candy bag](/halloween-coloring-pages/candy-bag/), [black cat](/halloween-coloring-pages/black-cat/).
-
-[Ages 4–5](#ages-4-5) includes [candy apple](/halloween-coloring-pages/candy-apple/), [cauldron](/halloween-coloring-pages/little-cauldron/), [owl and hat](/halloween-coloring-pages/halloween-owl/).
-
-[Ages 5–6](#ages-5-6) includes [pumpkin porch](/halloween-coloring-pages/pumpkin-porch/), [moon and bats](/halloween-coloring-pages/moon-bats/), [pumpkin path](/halloween-coloring-pages/pumpkin-path/), [halloween jack-o'-lantern](/halloween-coloring-pages/halloween-jack-o-lantern/), [pumpkin and scarecrow field](/halloween-coloring-pages/pumpkin-scarecrow-field/), [welcome pumpkins](/halloween-coloring-pages/welcome-pumpkins/).
-
-[Ages 6–8](#ages-6-8) includes [patterned porch](/halloween-coloring-pages/patterned-porch/), [night garden](/halloween-coloring-pages/night-garden/), [cookie table](/halloween-coloring-pages/cookie-table/), [jack-o'-lantern and candles](/halloween-coloring-pages/jack-o-lantern-candles/), [jack-o'-lantern and candles](/halloween-coloring-pages/jack-o-lantern-candles-2/).
+This collection features halloween coloring pages, with designs such as Smiling Pumpkin, Friendly Ghost, and Witch Hat.
 
 Download the PDF, not a screenshot of this page.

@@ -32,10 +32,6 @@ pins:
     subtitle: Patterned dinosaurs for ages 5–6
 ---
 
-These dinosaurs are for about ages 5 to 6. Each one has more parts than the ages 3–4 dinosaur set, plus a small pattern: spots, plates, or wing panels. Friendly faces, not a monster poster.
+This collection features dinosaur scene coloring pages, with designs such as Spotted T-Rex, Long-Neck Dinosaur, and Patterned Triceratops.
 
-There's a [spotted T-rex](/dinosaur-scene-coloring-pages/spotted-trex/), a [long-neck](/dinosaur-scene-coloring-pages/long-neck/), a [patterned triceratops](/dinosaur-scene-coloring-pages/frilled-triceratops/), a [patterned stegosaurus](/dinosaur-scene-coloring-pages/plated-stegosaurus/), and a [flying reptile](/dinosaur-scene-coloring-pages/flying-reptile/). The plates and the spots are the easiest patterns to explain. The flying reptile takes longer.
-
-The other ages 5–6 set is the [ocean scene coloring pages](/ocean-scene-coloring-pages/). The simpler [dinosaur coloring pages](/dinosaur-coloring-pages/) are for ages 3–4. [Town scenes](/town-scene-coloring-pages/) are for ages 6–8.
-
-Two colors taking turns works well, such as every other plate. The plants can stay uncolored.
+Download the PDF, not a screenshot of this page.

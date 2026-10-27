@@ -34,8 +34,6 @@ pins:
     subtitle: Cute dinosaurs to print for kids
 ---
 
-The one they usually ask for is the [friendly T-Rex](/dinosaur-coloring-pages/friendly-trex/). There's also a [brachiosaurus](/dinosaur-coloring-pages/brachiosaurus/), a [triceratops](/dinosaur-coloring-pages/triceratops/), a [stegosaurus](/dinosaur-coloring-pages/stegosaurus/), and a [hatching egg](/dinosaur-coloring-pages/dinosaur-egg/). Print one, or the whole pile.
+This collection features dinosaur coloring pages, with designs such as Friendly T-Rex, Brachiosaurus, and Triceratops.
 
-The faces stay friendly. Animals that aren't dinosaurs are in the [animal coloring pages](/animal-coloring-pages/). Trucks are in the [car and truck coloring pages](/car-coloring-pages/).
-
-Thick lines and big spaces, for about ages 3 to 4. A child who is still scribbling can start with the [big shape coloring pages](/big-shape-coloring-pages/). Older sets are on the home page.
+Download the PDF, not a screenshot of this page.

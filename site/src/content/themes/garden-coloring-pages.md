@@ -33,10 +33,6 @@ pins:
     subtitle: Simple scenes for ages 4–5
 ---
 
-These garden pages are for about ages 4 to 5. The lines are still bold, but each picture is a small scene, not one animal in the middle of the page.
+This collection features garden coloring pages, with designs such as Watering Can, Birdhouse, and Vegetable Basket.
 
-There's a [watering can](/garden-coloring-pages/watering-can/), a [birdhouse](/garden-coloring-pages/birdhouse/), a [vegetable basket](/garden-coloring-pages/vegetable-basket/), [rain boots](/garden-coloring-pages/rain-boots/), and a [garden gate](/garden-coloring-pages/garden-gate/). The boots and the watering can are the shorter jobs. The gate has more leaves and pots. The other ages 4–5 set is the [simple vehicle coloring pages](/simple-vehicle-coloring-pages/): a car, a train engine, a boat, a tractor, and a fire truck.
-
-If a child is still scribbling, go back to the [big shape coloring pages](/big-shape-coloring-pages/) for ages 2–3, or the [animal coloring pages](/animal-coloring-pages/) for ages 3–4. If this set is finished in a few minutes and they want patterns, try the [ocean scene coloring pages](/ocean-scene-coloring-pages/) for ages 5–6.
-
-There are no seed packets and no words to read. Color the flower, the boot, and the leaves as separate jobs.
+Download the PDF, not a screenshot of this page.

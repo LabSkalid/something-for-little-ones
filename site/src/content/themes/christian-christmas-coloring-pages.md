@@ -31,8 +31,6 @@ pins:
     subtitle: Nativity, angels, and Bible verses
 ---
 
-These pages are grouped by age. They are a nativity, angels, and a few Bible verses.
+This collection features christian christmas coloring pages, with designs such as Praying Angels, Huge Cross, and Pointed Star.
 
-These pages are grouped by age. Choose a group above to browse nativity scenes, angels, and Bible-themed Christmas coloring pages.
-
-Trees, Santa, and the other December pictures are in the [Christmas coloring pages](/christmas-coloring-pages/).
+Download the PDF, not a screenshot of this page.
