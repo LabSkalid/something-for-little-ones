@@ -6,17 +6,26 @@ interface Props {
   imageAlt: string;
   count: number;
   eyebrow: string;
-  id?: string;
+  id?: string;\n  eyebrowAfterTitle?: boolean;
 }
 
-const { href, title, image, imageAlt, count, eyebrow, id } = Astro.props;
+const { href, title, image, imageAlt, count, eyebrow, id, eyebrowAfterTitle = false } = Astro.props;
 ---
 
 <a class="theme-card" href={href} id={id}>
   <img src={image} alt={imageAlt} width="640" height="800" loading="lazy" />
   <div>
-    <p class="eyebrow">{eyebrow}</p>
-    <h3>{title}</h3>
+    {eyebrowAfterTitle ? (
+      <>
+        <h3>{title}</h3>
+        <p class="eyebrow">{eyebrow}</p>
+      </>
+    ) : (
+      <>
+        <p class="eyebrow">{eyebrow}</p>
+        <h3>{title}</h3>
+      </>
+    )}
     <p class="meta">{count} pages</p>
     <span class="card-action">See all</span>
   </div>
