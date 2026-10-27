@@ -1,16 +1,13 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SheetCard from '../../components/SheetCard.astro';
-import ThemeCard from '../../components/ThemeCard.astro';
 import AgeSeoLinks from '../../components/AgeSeoLinks.astro';
-import FaqList from '../../components/FaqList.astro';
-import BookOffer from '../../components/BookOffer.astro';
-import { bookForTheme } from '../../lib/books';
-import { ageBands, ageSpanLabel } from '../../lib/ages';
-import { themePath, sheetAssets } from '../../lib/paths';
+import ThemeCard from '../../components/ThemeCard.astro';
+import { ageBandLabel, ageBands } from '../../lib/ages';
+import { sheetAssets, themePath } from '../../lib/paths';
+import { absoluteUrl, site } from '../../site';
 
 export async function getStaticPaths() {
   const themes = await getCollection('themes');
@@ -19,100 +16,62 @@ export async function getStaticPaths() {
 
 const { theme } = Astro.props;
 const { Content } = await render(theme);
-const allThemes = await getCollection('themes');
 const allSheets = await getCollection('sheets');
-const sheets = allSheets
-  .filter((sheet) => sheet.data.theme === theme.id)
-  .sort((a, b) => a.data.order - b.data.order);
-const grouped = ageBands
-  .map((band) => ({ ...band, sheets: sheets.filter((sheet) => sheet.data.age === band.id) }))
-  .filter((band) => band.sheets.length > 0);
-const ages = [...new Set(sheets.map((sheet) => sheet.data.age))];
-const ageLabel = ageSpanLabel(ages);
-const crumbs = [
-  { name: 'Home', path: '/' },
-  { name: theme.data.title, path: themePath(theme.id) },
-];
-const book = bookForTheme(theme.id);
-const firstSheet = sheets[0];
-const heroAssets = firstSheet ? sheetAssets(theme.id, firstSheet.data.slug) : undefined;
-const relatedThemes = theme.data.related.flatMap((id) => {
-  const relatedTheme = allThemes.find((item) => item.id === id);
-  if (!relatedTheme) return [];
-  const relatedSheets = allSheets
-    .filter((sheet) => sheet.data.theme === id)
-    .sort((a, b) => a.data.order - b.data.order);
-  const coverSheet = relatedSheets[0];
-  if (!coverSheet) return [];
-  const assets = sheetAssets(id, coverSheet.data.slug);
-  return [{ theme: relatedTheme, sheets: relatedSheets, coverSheet, assets }];
+const sheets = allSheets.filter((sheet) => sheet.data.theme === theme.id).sort((a, b) => a.data.order - b.data.order);
+const themes = await getCollection('themes');
+const related = theme.data.related.flatMap((id) => {
+  const item = themes.find((entry) => entry.id === id);
+  if (!item) return [];
+  const pool = allSheets.filter((sheet) => sheet.data.theme === item.id).sort((a, b) => a.data.order - b.data.order);
+  const first = pool[0];
+  return first ? [{ item, image: sheetAssets(item.id, first.data.slug).png, alt: first.data.alt, count: pool.length }] : [];
 });
+const pagePath = themePath(theme.id);
+const ages = new Set(sheets.map((sheet) => sheet.data.age));
+const groupedByAge = ages.size > 1;
+const crumbs = [{ name: 'Home', path: '/' }, { name: theme.data.title, path: pagePath }];
 ---
 
-<Base title={theme.data.title} description={theme.data.description} path={themePath(theme.id)} ogImage={heroAssets?.png} ogAlt={firstSheet?.data.alt} type="article">
-  <div class="wrap with-rail">
-    <article>
-      <Breadcrumbs items={crumbs} />
+<Base title={theme.data.title} description={theme.data.description} path={pagePath}>
+  <div class="wrap">
+    <Breadcrumbs items={crumbs} />
+    <header class="collection-header">
       <h1>{theme.data.title}</h1>
-      <p class="lede">{theme.data.description}</p>
-      <p class="meta">{ageLabel} · {sheets.length} printable {sheets.length === 1 ? 'page' : 'pages'}</p>
+      {theme.data.tagline && <p class="lede">{theme.data.tagline}</p>}
+    </header>
 
-      <div class="theme-description">
-        <Content />
+    <section class="collection-description prose" aria-label={`${theme.data.title} description`}>
+      <Content />
+    </section>
+
+    <section class="section" aria-label={theme.data.title}>
+      <div class="sheet-grid">
+        {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
       </div>
+    </section>
 
-      <AdSlot name="top" />
+    <AgeSeoLinks sheets={sheets} themeId={theme.id} groupedByAge={groupedByAge} />
 
-      {grouped.map((group) => (
-        <section class="section" id={`ages-${group.id}`}>
-          <div class="section-head">
-            <h2>{group.label} {theme.data.title.toLowerCase()}</h2>
-            <p>{group.blurb}</p>
-          </div>
-          <div class="sheet-grid">
-            {group.sheets.map((sheet) => <SheetCard sheet={sheet} />)}
-          </div>
-        </section>
-      ))}
-
-      <AgeSeoLinks sheets={sheets} themeId={theme.id} groupedByAge={grouped.length > 1} />
-
-      {relatedThemes.length > 0 && (
-        <section class="section">
-          <div class="section-head">
-            <h2>Related coloring pages</h2>
-          </div>
-          <div class="theme-grid">
-            {relatedThemes.map(({ theme: relatedTheme, sheets: relatedSheets, coverSheet, assets }) => (
-              <ThemeCard
-                href={themePath(relatedTheme.id)}
-                title={relatedTheme.data.title}
-                image={assets.png}
-                imageAlt={coverSheet.data.alt}
-                count={relatedSheets.length}
-                eyebrow={relatedTheme.data.tagline}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      <p><a href="/how-to-print/">How to print coloring pages</a></p>
-      <FaqList items={theme.data.faqs} heading={`Questions about ${theme.data.title.toLowerCase()}`} />
-    </article>
-    <aside class="rail">
-      <div class="tip">
-        <h2>Print your pages</h2>
-        <p>Choose a picture below, then download the PDF for US Letter or A4 paper.</p>
-        <a href="/how-to-print/">Printing guide</a>
-      </div>
-      {book && <BookOffer book={book} />}
-      <AdSlot name="sidebar" />
-    </aside>
+    {related.length > 0 && (
+      <section class="section related-themes">
+        <div class="section-head"><h2>Related coloring pages</h2></div>
+        <div class="theme-grid">
+          {related.map(({ item, image, alt, count }) => (
+            <ThemeCard href={themePath(item.id)} title={item.data.title} image={image} imageAlt={alt} count={count} eyebrow={ageBandLabel(item.data.ageBand)} />
+          ))}
+        </div>
+      </section>
+    )}
   </div>
 </Base>
 
 <style>
-  .theme-description { margin: 1.25rem 0 1.75rem; max-width: 72ch; line-height: 1.7; }
-  .theme-description p { margin: 0.75rem 0; }
+  .collection-header { margin: 1.5rem 0 1rem; }
+  .collection-header h1 { margin-bottom: .5rem; }
+  .collection-description { margin: 1rem 0 1.75rem; }
+  .collection-description :global(p) { margin: 0; }
+  .sheet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .related-themes { margin-top: 2.5rem; }
+  .theme-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  @media (min-width: 700px) { .sheet-grid, .theme-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>
