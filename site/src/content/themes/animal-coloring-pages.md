@@ -1,7 +1,7 @@
 ---
 title: Animal Coloring Pages
-description: Animal coloring pages with thick lines, for about ages 3 to 4. A puppy, a kitten, an elephant, a butterfly, and a bunny.
-tagline: A puppy, a kitten, an elephant, a butterfly, and a bunny. Thick lines, for about ages 3 to 4.
+description: Animal Coloring Pages for ages 2 to 5. Baby Elephant and Bird, Puppy, Hen and Chicks with Mushrooms, and Kitten. Pick a page and print the PDF.
+tagline: Baby Elephant and Bird, Puppy, Hen and Chicks with Mushrooms, and Kitten. Grouped by age, ages 2 to 5.
 kind: evergreen
 ageBand: "3-4"
 order: 1
@@ -11,16 +11,21 @@ related:
   - dinosaur-coloring-pages
   - princess-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-27
+updatedDate: 2026-10-28
 keywords:
   - animal coloring pages
+  - animal
+  - baby elephant and bird coloring page
   - puppy coloring page
+  - hen and chicks with mushrooms coloring page
+  - kitten coloring page
   - elephant coloring page
+  - butterfly coloring page
+  - bunny coloring page
+  - poodle with bow coloring page
 faqs:
   - question: What ages are these animal coloring pages for?
-    answer: They are drawn for about ages 3 to 4. The puppy, kitten, and bunny are the easiest. The elephant and butterfly have a few more separate shapes.
-  - question: Are these real animal species pages or cartoon pets?
-    answer: They are simple storybook animals, not a field guide. The elephant has a trunk and big ears. The butterfly has four wings with closed sections to color. Nothing is trying to be a mascot from a show.
+    answer: They are grouped by age, ages 2 to 5. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?
@@ -28,12 +33,12 @@ faqs:
 pins:
   - id: set
     title: Free Animal Coloring Pages
-    subtitle: Puppy, kitten, elephant, and more
+    subtitle: Printable coloring pages for ages 2 to 5
   - id: pets
     title: Cute Pet Coloring Pages to Print
-    subtitle: Easy animals for kids ages 3–4
+    subtitle: Printable coloring pages for ages 2 to 5
 ---
 
-This collection features animal coloring pages, with designs such as Puppy, Kitten, and Elephant.
+This collection features animal coloring pages, with designs such as Baby Elephant and Bird, Puppy, and Hen and Chicks with Mushrooms. Pages are grouped by age, ages 2 to 5.
 
 Download the PDF, not a screenshot of this page.

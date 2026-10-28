@@ -3,14 +3,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
-import { parse } from 'yaml';
+import { parse, stringify } from 'yaml';
 import { readSite } from './brand.ts';
 import { footerHeight, stampSite, stripSiteFooter } from './footer.ts';
 import { loadEnv } from './env.ts';
 import { visionChat } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
 import { factoryRoot, printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
-import { buildThemeBody } from './theme-copy.ts';
+import { buildThemeBody, exampleNames, listEnglish } from './theme-copy.ts';
 
 /** Write through a temp file + retries — Windows often locks PDFs (Defender / preview). */
 async function writeFileSafe(dest: string, data: Buffer | string) {
@@ -803,10 +803,59 @@ function ageSpanPhrase(ages: AgeBand[]): string {
   return `ages ${present[0].split('-')[0]} to ${present[present.length - 1].split('-')[1]}`;
 }
 
-function setFrontmatterLine(fm: string, key: string, value: string) {
-  const line = `${key}: ${value}`;
-  if (new RegExp(`^${key}:`, 'm').test(fm)) return fm.replace(new RegExp(`^${key}:.*$`, 'm'), line);
-  return `${fm}\n${line}`;
+function dayString(value: unknown, fallback: string) {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString().slice(0, 10);
+  const text = String(value ?? '');
+  const match = text.match(/^(\d{4}-\d{2}-\d{2})/);
+  return match ? match[1] : fallback;
+}
+
+function collectionKeywords(title: string, sheets: ExistingSheet[]) {
+  const subject = title.replace(/\s+coloring pages?\s*$/i, '').trim().toLowerCase();
+  const fromSheets = exampleNames(sheets, 8).map((name) => `${name.toLowerCase()} coloring page`);
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of [`${subject} coloring pages`, subject, ...fromSheets]) {
+    const key = item.trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(key);
+    if (out.length >= 12) break;
+  }
+  return out;
+}
+
+const AGE_BLURB: Record<AgeBand, string> = {
+  '2-3': 'Ages 2–3 are one huge object',
+  '3-4': 'ages 3–4 are thick lines and big spaces',
+  '4-5': 'ages 4–5 add a few parts',
+  '5-6': 'ages 5–6 are a small scene',
+  '6-8': 'ages 6–8 are a fuller scene',
+};
+
+function collectionFaqs(short: string, span: string, ages: AgeBand[]) {
+  const present = AGE_BANDS.filter((band) => ages.includes(band));
+  const multiAge = present.length > 1;
+  const blurbs = present.map((band, index) => (index === 0 ? AGE_BLURB[band] : AGE_BLURB[band]));
+  const ageAnswer = multiAge
+    ? `They are grouped by age, ${span}. Match the lines, not the birthday. ${blurbs.join('; ')}.`
+    : `They are drawn for ${span}.`;
+  return [
+    {
+      question: `What ages are these ${short.toLowerCase()} coloring pages for?`,
+      answer: ageAnswer,
+    },
+    {
+      question: 'Which file should I print?',
+      answer:
+        "Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.",
+    },
+    {
+      question: 'Can a classroom print the whole set?',
+      answer:
+        "Yes. Personal and classroom printing is free. Print the PDF rather than the web page, and please don't resell the files.",
+    },
+  ];
 }
 
 export async function rewriteThemeBody(theme: string) {
@@ -815,19 +864,47 @@ export async function rewriteThemeBody(theme: string) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) throw new Error(`Не читается тема ${theme}`);
   const sheets = await listThemeSheets(theme);
-  const meta = frontmatter(match[1]);
-  const collectionTitle = String(meta.title ?? theme.replaceAll('-', ' '));
+  const data = (parse(match[1]) ?? {}) as Record<string, unknown>;
+  const collectionTitle = String(data.title ?? theme.replaceAll('-', ' '));
   const ages = sheets.map((sheet) => sheet.age);
   const span = ageSpanPhrase(ages);
+  const multiAge = new Set(ages).size > 1;
   const short = collectionTitle.replace(/ Coloring Pages$/i, '');
-  const body = buildThemeBody(collectionTitle, sheets.map((sheet) => sheet.title));
+  const examples = exampleNames(sheets, 4);
+  const examplePhrase = listEnglish(examples);
   const today = new Date().toISOString().slice(0, 10);
-  let fm = match[1];
-  fm = setFrontmatterLine(fm, 'description', q(`${collectionTitle} for ${span}. Pick a page and print the PDF.`));
-  fm = setFrontmatterLine(fm, 'tagline', q(`${short} coloring pages for ${span}.`));
-  fm = setFrontmatterLine(fm, 'ageBand', `"${mostCommonAge(ages)}"`);
-  fm = setFrontmatterLine(fm, 'updatedDate', today);
-  await fs.writeFile(file, `---\n${fm}\n---\n\n${body}\n`, 'utf8');
+
+  data.description = examplePhrase
+    ? `${collectionTitle} for ${span}. ${examplePhrase}. Pick a page and print the PDF.`
+    : `${collectionTitle} for ${span}. Pick a page and print the PDF.`;
+  data.tagline = multiAge
+    ? examplePhrase
+      ? `${examplePhrase}. Grouped by age, ${span}.`
+      : `${short} coloring pages, grouped by age, ${span}.`
+    : examplePhrase
+      ? `${examplePhrase}. For ${span}.`
+      : `${short} coloring pages for ${span}.`;
+  data.ageBand = mostCommonAge(ages);
+  data.updatedDate = today;
+  data.pubDate = dayString(data.pubDate, today);
+  data.keywords = collectionKeywords(collectionTitle, sheets);
+  data.faqs = collectionFaqs(short, span, ages);
+  if (Array.isArray(data.pins)) {
+    data.pins = data.pins.map((pin) => {
+      if (!pin || typeof pin !== 'object') return pin;
+      return { ...(pin as Record<string, unknown>), subtitle: `Printable coloring pages for ${span}` };
+    });
+  }
+
+  const body = buildThemeBody(
+    collectionTitle,
+    examples.length ? examples : sheets.map((sheet) => sheet.title),
+    { ageSpan: span, multiAge },
+  );
+  const yamlText = stringify(data, { lineWidth: 0 })
+    .trim()
+    .replace(/^ageBand:\s*["']?([^"'\n]+)["']?\s*$/m, 'ageBand: "$1"');
+  await fs.writeFile(file, `---\n${yamlText}\n---\n\n${body}\n`, 'utf8');
   console.log(`Текст подборки обновлён: ${sheets.length} листов, ${span}.`);
 }
 

@@ -5,6 +5,7 @@
     { "key": "thanksgiving", "board": "thanksgiving", "boardId": "1086000966335597727", "tier": 1, "weight": 3 },
     { "key": "winter", "board": "winter", "boardId": "1086000966335621162", "tier": 1, "weight": 1 },
     { "key": "christmas", "board": "christmas", "boardId": "1086000966335621302", "tier": 1, "weight": 1 },
-    { "key": "christian-christmas", "board": "christian-christmas", "boardId": "1086000966335664142", "tier": 1, "weight": 1 }
+    { "key": "christian-christmas", "board": "christian-christmas", "boardId": "1086000966335664142", "tier": 1, "weight": 1 },
+    { "key": "animal", "board": "animal", "boardId": "", "tier": 2, "weight": 2 }
   ]
 }

@@ -13,20 +13,49 @@ const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8').replace(/^\uFEFF/, ''));
 const siteBase = cfg.siteBase;
 const imageBase = cfg.imageBase;
 
-const themes = cfg.themes.map((t) => {
-  const theme = {
-    key: t.key,
-    board: t.board || t.key,
-    boardId: String(t.boardId ?? '').trim(),
-    tier: Number(t.tier ?? 9),
-    weight: Math.max(1, Number(t.weight ?? 1)),
-    prefix: `${t.key}-coloring-pages-`,
+const onlyTheme = String(process.env.PIN_THEME ?? '')
+  .trim()
+  .toLowerCase()
+  .replace(/-coloring-pages$/, '');
+
+function makeTheme(key, extra = {}) {
+  return {
+    key,
+    board: extra.board || key,
+    boardId: String(extra.boardId ?? '').trim(),
+    tier: Number(extra.tier ?? 9),
+    weight: Math.max(1, Number(extra.weight ?? 1)),
+    prefix: `${key}-coloring-pages-`,
   };
+}
+
+const themes = cfg.themes.map((t) => {
+  const theme = makeTheme(t.key, t);
   if (theme.boardId && !/^\d+$/.test(theme.boardId)) {
     throw new Error(`boards.json: boardId for "${t.key}" must be digits only, got "${theme.boardId}"`);
   }
   return theme;
 });
+
+function emptySummary() {
+  return {
+    root: 0,
+    alreadyInDone: 0,
+    withCopy: 0,
+    missingCopy: 0,
+    noFreshJpg: 0,
+    waitingForBoardId: 0,
+    queued: 0,
+  };
+}
+
+function ensureTheme(key) {
+  let theme = themes.find((item) => item.key === key);
+  if (theme) return theme;
+  theme = makeTheme(key);
+  themes.push(theme);
+  return theme;
+}
 
 function walk(dir, acc = []) {
   if (!fs.existsSync(dir)) return acc;
@@ -156,33 +185,24 @@ for (const r of parseCsv(csvRaw).slice(1)) {
 }
 
 const summary = {};
-for (const t of themes) {
-  summary[t.key] = {
-    root: 0,
-    alreadyInDone: 0,
-    withCopy: 0,
-    missingCopy: 0,
-    noFreshJpg: 0,
-    waitingForBoardId: 0,
-    queued: 0,
-  };
-}
-
-const rowsByTheme = new Map(themes.map((t) => [t.key, []]));
+const rowsByTheme = new Map();
 const missing = [];
 const noJpg = [];
 const unknownThemes = {};
 
-for (const [baseLower, fileName] of rootPending) {
-  const t = themeOf(baseLower);
+function themeBucket(t) {
+  if (!summary[t.key]) summary[t.key] = emptySummary();
+  if (!rowsByTheme.has(t.key)) rowsByTheme.set(t.key, []);
+  return t;
+}
 
-  if (!t) {
-    if (!doneBasenames.has(baseLower)) {
-      const g = guessTheme(baseLower);
-      unknownThemes[g] = (unknownThemes[g] || 0) + 1;
-    }
-    continue;
-  }
+for (const [baseLower, fileName] of rootPending) {
+  let t = themeOf(baseLower);
+  const guessed = t?.key || guessTheme(baseLower);
+  if (guessed === '(no theme)') continue;
+  if (onlyTheme && guessed !== onlyTheme) continue;
+  t = t || ensureTheme(guessed);
+  themeBucket(t);
 
   const s = summary[t.key];
   s.root++;
@@ -191,11 +211,7 @@ for (const [baseLower, fileName] of rootPending) {
     continue;
   }
 
-  // The board does not exist yet (no board_id in boards.json): hold these pins back.
-  if (!t.boardId) {
-    s.waitingForBoardId++;
-    continue;
-  }
+  if (!t.boardId) s.waitingForBoardId++;
 
   const meta = byFile.get(baseLower);
   const title = cleanText(meta?.title || '');
@@ -239,12 +255,12 @@ for (const [baseLower, fileName] of rootPending) {
 }
 
 // Order: tier 1 first, then tier 2, and so on. Inside a tier the themes are mixed in turn.
-const tiers = [...new Set(themes.filter((t) => t.boardId).map((t) => t.tier))].sort((a, b) => a - b);
+const tiers = [...new Set(themes.map((t) => t.tier))].sort((a, b) => a - b);
 const outRows = [];
 for (const tier of tiers) {
   const groups = themes
-    .filter((t) => t.boardId && t.tier === tier)
-    .map((t) => ({ rows: rowsByTheme.get(t.key).sort(byName), weight: t.weight }));
+    .filter((t) => t.tier === tier)
+    .map((t) => ({ rows: (rowsByTheme.get(t.key) ?? []).sort(byName), weight: t.weight }));
   outRows.push(...interleave(groups));
 }
 
@@ -290,10 +306,10 @@ console.log(JSON.stringify({ summary, queued: outRows.length, missingCopy: missi
 console.log(`Wrote ${path.join(outDir, 'make-queue.csv')}`);
 
 // Human-readable notes
-const waiting = themes.filter((t) => summary[t.key].waitingForBoardId > 0);
+const waiting = themes.filter((t) => (summary[t.key]?.waitingForBoardId ?? 0) > 0);
 if (waiting.length) {
   console.log(
-    `\nЖдут board_id (впишите его в boards.json): ${waiting
+    `\nВ таблице без доски Pinterest (впишите boardId в boards.json, иначе Make не знает куда постить): ${waiting
       .map((t) => `${t.key} (${summary[t.key].waitingForBoardId})`)
       .join(', ')}`,
   );

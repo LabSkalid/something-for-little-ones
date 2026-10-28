@@ -133,8 +133,37 @@ function slugify(value: string) {
     .slice(0, 48);
 }
 
+const boardsPath = path.join(factoryRoot, 'scripts', 'boards.json');
+
+type PinBoardRow = { key: string; board?: string; boardId?: string; tier?: number; weight?: number };
+
+async function readPinBoards(): Promise<{ siteBase?: string; imageBase?: string; themes: PinBoardRow[] }> {
+  const raw = await fs.readFile(boardsPath, 'utf8');
+  const cfg = JSON.parse(raw.replace(/^\uFEFF/, '')) as { siteBase?: string; imageBase?: string; themes?: PinBoardRow[] };
+  return { ...cfg, themes: Array.isArray(cfg.themes) ? cfg.themes : [] };
+}
+
+function themeKeyFromSlug(slug: string) {
+  return slug.trim().toLowerCase().replace(/-coloring-pages$/, '');
+}
+
+async function savePinBoardId(slug: string, boardId: string) {
+  const key = themeKeyFromSlug(slug);
+  if (!key) throw new Error('Нет темы.');
+  const id = String(boardId ?? '').trim();
+  if (id && !/^\d+$/.test(id)) throw new Error('ID доски — только цифры из ссылки Pinterest.');
+  const cfg = await readPinBoards();
+  const existing = cfg.themes.find((row) => row.key === key);
+  if (existing) existing.boardId = id;
+  else cfg.themes.push({ key, board: key, boardId: id, tier: 2, weight: 1 });
+  await fs.writeFile(boardsPath, `${JSON.stringify(cfg, null, 2)}\n`, 'utf8');
+  return { key, boardId: id };
+}
+
 async function listThemes() {
   const files = (await fs.readdir(themeContentRoot)).filter((name) => name.endsWith('.md'));
+  const boards = await readPinBoards().catch(() => ({ themes: [] as PinBoardRow[] }));
+  const boardByKey = new Map(boards.themes.map((row) => [row.key, String(row.boardId ?? '').trim()]));
   const themes = [];
   for (const file of files) {
     const slug = file.replace(/\.md$/, '');
@@ -151,6 +180,7 @@ async function listThemes() {
       kind: String(data.kind ?? 'evergreen'),
       accent: String(data.accent ?? '#1d7ad6'),
       count,
+      boardId: boardByKey.get(themeKeyFromSlug(slug)) ?? '',
     });
   }
   themes.sort((a, b) => a.title.localeCompare(b.title));
@@ -241,7 +271,7 @@ async function createPages(body: {
   let order = 1;
   let accent = '#1D7AD6';
   let ink = '#243038';
-  let related = ['animal-coloring-pages'];
+  let related: string[] = [];
   let ageBand = age;
   if (!existing) {
     title = (body.title ?? '').trim();
@@ -455,12 +485,17 @@ async function uploadToStorage(rclone: string, label: string, source: string, fo
 
 type QueueRow = Record<string, string>;
 
-async function buildMakeQueue(): Promise<QueueRow[]> {
+async function buildMakeQueue(theme?: string): Promise<QueueRow[]> {
   const script = path.join(factoryRoot, 'scripts', 'build-make-queue.mjs');
   const outDir = path.join(factoryRoot, 'out', 'pinterest');
   const result = await runProgram(process.execPath, [script], {
     cwd: factoryRoot,
-    env: { ...process.env, PIN_ROOT: pinRoot, OUT_DIR: outDir },
+    env: {
+      ...process.env,
+      PIN_ROOT: pinRoot,
+      OUT_DIR: outDir,
+      ...(theme ? { PIN_THEME: theme } : {}),
+    },
   });
   if (result.code !== 0) {
     throw new Error(`Не удалось собрать очередь: ${result.lines.slice(-3).join(' ')}`);
@@ -502,8 +537,23 @@ async function sendRowsToSheet(rows: QueueRow[]) {
   console.log(`Таблица: добавлено новых строк — ${added}, уже были — ${skipped}.`);
 }
 
-async function publishPins() {
+async function publishPins(theme?: string) {
+  const themeKey = themeKeyFromSlug(String(theme ?? ''));
+  const copyTheme = themeKey ? `${themeKey}-coloring-pages` : undefined;
   const rclone = await findRclone();
+  const label = themeKey || 'все темы';
+  console.log(`Тема для таблицы: ${label}.`);
+  console.log(
+    copyTheme
+      ? `Дописываю пустые тексты пинов «${copyTheme}» — без названия и описания строка в таблицу не идёт.`
+      : 'Дописываю пустые тексты пинов у всех тем — без названия и описания строка в таблицу не идёт.',
+  );
+  const copy = await writePinCopyOnly({ theme: copyTheme, overwrite: false });
+  console.log(
+    copy.updated
+      ? `Написано текстов: ${copy.updated}.`
+      : 'Пустых текстов нет — либо уже написаны, либо нет картинок.',
+  );
   console.log('Шаг 1 из 4. Сжимаю новые пины в JPG…');
   const compressed = await compressNewPins();
   console.log(
@@ -513,8 +563,14 @@ async function publishPins() {
   await uploadToStorage(rclone, 'пины', pinRoot, 'pins', ['--include', '/*.jpg']);
   await uploadToStorage(rclone, 'листы для скачивания', printRoot, 'print');
   console.log('Шаг 3 из 4. Собираю очередь для Pinterest…');
-  const rows = await buildMakeQueue();
+  const rows = await buildMakeQueue(themeKey || undefined);
   console.log(`В очереди пинов: ${rows.length}.`);
+  if (!rows.length) {
+    console.log(
+      'В очередь никто не попал. Часто причина: нет JPG, нет текста или пины уже лежат в pins/done.',
+    );
+    return;
+  }
   console.log('Шаг 4 из 4. Отправляю новые строки в таблицу…');
   await sendRowsToSheet(rows);
 }
@@ -968,10 +1024,41 @@ const server = http.createServer(async (req, res) => {
         });
         job.lastTheme = result.theme;
         if (imagesOnly) {
-          console.log(`Готово: обновлены картинки у ${result.published.length} листов в ${result.theme}`);
+          console.log(`Готово: обновлены картинки у ${result.published.length} листов в ${result.theme}. Тексты страниц не трогала.`);
         } else {
-          console.log(`Готово: ${result.published.length} листов в ${result.theme}. Текст подборки обновлён. Пины — соседняя вкладка, сами не собирались.`);
+          console.log(
+            `Готово: ${result.published.length} листов в ${result.theme}. Описание подборки, возраст и FAQ переписаны по текущим листам.`,
+          );
         }
+        console.log('Выкладываю PNG/PDF в интернет. Без этого на сайте будут пустые карточки.');
+        try {
+          const rclone = await findRclone();
+          await uploadToStorage(
+            rclone,
+            `картинки ${result.theme}`,
+            path.join(printRoot, result.theme),
+            `print/${result.theme}`,
+          );
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          console.log(`На диск записала, в интернет не вышло: ${message}`);
+          console.log('Нажмите «Выложить картинки в интернет».');
+        }
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/print/upload') {
+      const body = await readBody(req);
+      const theme = String(body.theme ?? '').trim();
+      if (!theme || theme === '__new__') throw new Error('Выберите подборку.');
+      startJob(`Выкладываю картинки: ${theme}`, async () => {
+        const rclone = await findRclone();
+        await uploadToStorage(
+          rclone,
+          `картинки ${theme}`,
+          path.join(printRoot, theme),
+          `print/${theme}`,
+        );
       });
       return send(res, 202, { ok: true });
     }
@@ -1017,11 +1104,24 @@ const server = http.createServer(async (req, res) => {
             ? `Готово: обновлены тексты у ${result.updated} пин(ов) в pins.csv. PNG не трогали.`
             : 'Готово: менять нечего (уже есть текст или нет картинок).',
         );
+        console.log('Дальше вкладка Пины → «В таблицу на автопубликацию».');
       });
       return send(res, 202, { ok: true });
     }
+    if (req.method === 'POST' && url.pathname === '/api/pins/board') {
+      const body = await readBody(req);
+      const slug = String(body.theme ?? body.slug ?? '').trim();
+      const boardId = String(body.boardId ?? '').trim();
+      const saved = await savePinBoardId(slug, boardId);
+      return send(res, 200, { ok: true, ...saved });
+    }
     if (req.method === 'POST' && url.pathname === '/api/pins/publish') {
-      startJob('Выпуск пинов: хранилище и таблица', () => publishPins());
+      const body = await readBody(req).catch(() => ({}));
+      const theme = String((body as { theme?: string }).theme ?? '').trim();
+      const label = theme
+        ? `Выпуск пинов в таблицу: ${theme}`
+        : 'Выпуск пинов: хранилище и таблица';
+      startJob(label, () => publishPins(theme || undefined));
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/pins') {
@@ -1053,7 +1153,10 @@ const server = http.createServer(async (req, res) => {
       ]
         .filter(Boolean)
         .join(', ');
-      startJob(label, () => buildPins(options));
+      startJob(label, async () => {
+        await buildPins(options);
+        console.log('Дальше вкладка Пины → синяя кнопка «В таблицу на автопубликацию».');
+      });
       return send(res, 202, { ok: true });
     }
     if (req.method === 'POST' && url.pathname === '/api/redraw') {

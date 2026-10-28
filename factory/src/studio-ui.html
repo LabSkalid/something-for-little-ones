@@ -93,8 +93,17 @@
     .two { grid-template-columns: 1fr; }
   }
   .note {
-    background: var(--soft); border-radius: 12px; padding: 0.8rem 1rem; margin: 0.6rem 0 0;
+    background: var(--soft); border-radius: 12px; padding: 0.8rem 1rem; margin: 0.6rem 0 1rem;
   }
+  .note ol { margin: 0.45rem 0 0; padding-left: 1.2rem; color: var(--ink); }
+  .note li { margin: 0.4rem 0; }
+  .note strong { color: var(--ink); }
+  #themes-pins article {
+    display: grid; justify-content: stretch; align-items: start; gap: 0.45rem;
+  }
+  .board-row { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .board-row input { width: min(18rem, 100%); font-weight: 500; }
+  .board-row .hint { margin: 0; }
   .age-head { font-size: 1.05rem; margin: 1.1rem 0 0.35rem; }
   dialog {
     border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem 1.1rem;
@@ -133,7 +142,7 @@
   </aside>
   <div class="work-col">
   <h1>Фабрика</h1>
-  <p class="lede">Слева видно, что сейчас делается. Справа — вкладка с делом. Картинки на сайт, пины и Amazon — разные вкладки, они не запускаются друг от друга.</p>
+  <p class="lede">Слева — лог. Справа — вкладка с делом. Картинки на сайт, пины и Amazon сами друг друга не запускают.</p>
 
   <div class="tabs" role="tablist">
     <button class="tab active" type="button" data-tab="import">Картинки на сайт</button>
@@ -144,12 +153,19 @@
   </div>
 
   <section id="panel-import" class="panel active">
-    <p>Новые картинки — из папки. Исправить уже залитые с рамкой — тоже из папки: на сайте обрезанной рамки уже нет, взять её неоткуда.</p>
     <div class="note">
-      <strong>Вернуть рамку на двух листах (остальные не трогать):</strong><br>
-      1. Подборка. 2. Галочка «Только картинки». 3. Папка с исходниками. 4. «Показать картинки».<br>
-      5. Ничего само не отметится. Найдите две карточки, поставьте только «Взять». «Снять рамку» нигде не ставить.<br>
-      6. «Записать на сайт». Уйдёт только то, где стоит «Взять».
+      <strong>Как добавить картинки на сайт</strong>
+      <ol>
+        <li>Выберите подборку или «Новая подборка».</li>
+        <li>Вставьте путь к папке с исходниками на этом компьютере.</li>
+        <li>Нажмите «Показать картинки». Карточки сами не отмечаются.</li>
+        <li>Поставьте «Взять» только на тех, что нужно записать. Возраст фабрика ставит по папке, имени файла или рисунку — поправьте, если ошиблась.</li>
+        <li>Галочка «Только картинки» — заменить PNG/PDF у уже существующих страниц. Названия листов не трогает. Текст всей подборки тоже не трогает.</li>
+        <li>Без этой галочки — это новые (или заново заведённые) листы: фабрика пишет страницы и <em>сама</em> обновляет описание подборки, возраст и FAQ по всем листам, которые уже лежат в этой теме.</li>
+        <li>«Снять рамку» — только если на исходнике стоковая рамка и её надо срезать. Иначе не ставьте: с сайта рамку вернуть нельзя.</li>
+        <li>«Записать на сайт» берёт только карточки с «Взять». Пишет файлы на диск и сразу выкладывает PNG/PDF в интернет. Отдельно «Выложить картинки в интернет» нужно только если загрузка в логе упала.</li>
+        <li>Обновите сайт в браузере (или соберите сайт заново), иначе на живом сайте будет старая страница.</li>
+      </ol>
     </div>
 
     <label for="import-theme">Подборка на сайте</label>
@@ -197,6 +213,7 @@
       <button id="name-vision" class="quiet" type="button">Назвать по картинке</button>
       <button id="commit-import" type="button">Записать на сайт</button>
       <button id="rewrite-theme" class="quiet" type="button">Обновить текст подборки</button>
+      <button id="upload-print" class="quiet" type="button">Выложить картинки в интернет</button>
       <button id="pins-after" class="quiet" type="button">Пины этой темы</button>
     </div>
     <div class="row" style="margin-top:0.4rem">
@@ -204,12 +221,12 @@
       <button id="drafts-check-all" class="quiet" type="button">Отметить все</button>
       <button id="drafts-check-none" class="quiet" type="button">Снять все</button>
     </div>
-    <p class="hint">«Записать» берёт только карточки с галочкой «Взять». Не отмеченные не перезапишет.</p>
+    <p class="hint">«Записать» берёт только карточки с галочкой «Взять». Не отмеченные не перезапишет. «Обновить текст подборки» — если листы уже на сайте, а шапка страницы ещё старая.</p>
 
     <div id="drafts" class="grid" style="margin-top:1rem"></div>
 
     <h2>Уже на сайте</h2>
-    <p>Отсюда рамку не вернуть — в файле на сайте её уже нет. Этот блок только пересобрать лист без исходника (не ваш случай с рамкой).</p>
+    <p>Пересобрать лист, если исходника под рукой нет. Рамку стока отсюда не вернуть: в файле на сайте её уже нет, нужен исходник из папки выше.</p>
     <div class="row">
       <button id="load-site-fix" class="quiet" type="button">Показать листы подборки</button>
       <button id="site-fix-run" type="button">Пересобрать выбранные</button>
@@ -437,16 +454,21 @@
   </section>
 
   <section id="panel-pins" class="panel">
-    <div class="row" style="margin-bottom:0.4rem">
-      <button id="pins-publish" type="button">Выпустить пины: в хранилище и в таблицу</button>
+    <div class="note">
+      <strong>Как выложить пины</strong>
+      <ol>
+        <li>У нужной подборки нажмите «1. Собрать пины» — фабрика делает картинки 1000×1500 (JPEG уйдёт в интернет на шаге 3). Файл pins.csv пишет она же, руками в JSON ничего писать не надо.</li>
+        <li>«2. Тексты» — заголовки и описания для Pinterest. Можно пропустить: шаг 3 сам допишет пустые.</li>
+        <li>«3. В таблицу» у этой подборки — сожмёт новые JPEG, выложит пины и листы в хранилище, допишет пустые тексты и добавит в таблицу Make только новые строки. Уже лежащие в таблице не дублирует.</li>
+        <li>Кнопка «Все новые пины в таблицу» делает то же самое сразу по всем темам. Для одной темы жмите «3» на её карточке, иначе снова прогонятся все старые.</li>
+        <li>Чтобы Make постил на Pinterest, нужен ID доски. Откройте доску в Pinterest, скопируйте длинное число из ссылки, вставьте в поле «ID доски» у темы и сохраните. Без ID строки в таблицу всё равно попадут, но Make не знает, на какую доску постить. Файл <code>factory/scripts/boards.json</code> можно править и руками — то же поле <code>boardId</code>.</li>
+      </ol>
     </div>
-    <p class="hint">Нажимайте, когда пины собраны и тексты написаны. Кнопка сама сожмёт новые пины, загрузит пины и листы в хранилище, соберёт очередь и добавит новые строки в таблицу для Make. Повторно ничего не добавляет, нажимать можно сколько угодно раз.</p>
-    <p>Собрать пины (сразу JPEG 1000×1500 для Pinterest) или только тексты. Картинки листов на сайте здесь не меняются.</p>
+    <div class="row">
+      <button id="pins-publish" type="button">Все новые пины в таблицу</button>
+      <button id="pins-all" class="quiet" type="button">Собрать пины всех подборок</button>
+    </div>
     <section id="themes-pins"></section>
-    <div class="row" style="margin-top:0.8rem">
-      <button id="pins-all" type="button">Собрать пины всех подборок</button>
-    </div>
-    <p class="hint"><strong>Собрать пины</strong> — картинки для Pinterest. <strong>Тексты</strong> — только заголовки/описания, без пересборки PNG.</p>
   </section>
   </div>
 </main>
@@ -478,10 +500,10 @@
   <p class="hint">Каждый бандл — до 4 отмеченных листов по порядку. Сколько получится, зависит от числа галочек: 12 листов ≈ до 3 бандлов, 24 ≈ до 6.</p>
 
   <label for="pin-keywords">Ключевики для Pinterest (через запятую)</label>
-  <input id="pin-keywords" placeholder="thanksgiving coloring pages, turkey printable, free fall coloring">
+  <input id="pin-keywords" placeholder="free coloring pages, printable coloring pages">
 
   <label for="pin-accent">Цвет FREE PRINTABLE внизу</label>
-  <p class="hint">Тот же цвет идёт на рамки бандла. У Christmas в теме зелёный — можно поставить синий.</p>
+  <p class="hint">Тот же цвет идёт на рамки бандла. Можно оставить как в теме или выбрать другой.</p>
   <div class="swatches" id="pin-accent-swatches">
     <button class="swatch" type="button" data-color="#1d7ad6" title="Синий" style="background:#1d7ad6"></button>
     <button class="swatch" type="button" data-color="#c45c26" title="Оранжевый" style="background:#c45c26"></button>
@@ -537,7 +559,7 @@
   </div>
 
   <label for="pin-copy-keywords">Ключевики (через запятую)</label>
-  <input id="pin-copy-keywords" placeholder="fall coloring pages, autumn printable, free fall coloring">
+  <input id="pin-copy-keywords" placeholder="free coloring pages, printable coloring pages">
 
   <label class="check" style="margin-top:0.8rem">
     <input id="pin-copy-overwrite" type="checkbox">
@@ -849,8 +871,14 @@
       <article>
         ${head(theme)}
         <div class="row">
-          <button type="button" data-pins="${esc(theme.slug)}">Собрать пины</button>
-          <button class="quiet" type="button" data-pin-copy="${esc(theme.slug)}">Тексты</button>
+          <button class="quiet" type="button" data-pins="${esc(theme.slug)}">1. Собрать пины</button>
+          <button class="quiet" type="button" data-pin-copy="${esc(theme.slug)}">2. Тексты</button>
+          <button type="button" data-pins-publish="${esc(theme.slug)}">3. В таблицу</button>
+        </div>
+        <div class="board-row">
+          <input data-board-id="${esc(theme.slug)}" value="${esc(theme.boardId || '')}" placeholder="ID доски Pinterest — цифры из ссылки" aria-label="ID доски Pinterest для ${esc(theme.title)}">
+          <button class="quiet" type="button" data-board-save="${esc(theme.slug)}">Сохранить доску</button>
+          <p class="hint">${theme.boardId ? 'Доска записана' : 'Без ID Make не постит на Pinterest'}</p>
         </div>
       </article>`).join('');
 
@@ -1238,19 +1266,50 @@
     await openPinDialog('');
   });
 
-  document.querySelector('#pins-publish').addEventListener('click', async () => {
-    logEl.textContent = 'Запускаю выпуск пинов…';
+  async function startPinsPublish(theme) {
+    logEl.textContent = theme
+      ? `Выкладываю пины «${theme}» в таблицу…`
+      : 'Выкладываю все пины в хранилище и новые строки в таблицу…';
     try {
       const response = await fetch('/api/pins/publish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: '{}',
+        body: JSON.stringify({ theme: theme || '' }),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить выпуск пинов.';
+      if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить.';
     } catch (error) {
       logEl.textContent = error.message || String(error);
     }
+  }
+  document.querySelector('#pins-publish').addEventListener('click', () => startPinsPublish());
+  themesPinsEl.addEventListener('click', async (event) => {
+    const save = event.target.closest('[data-board-save]');
+    if (save) {
+      const slug = save.getAttribute('data-board-save');
+      const input = document.querySelector(`[data-board-id="${slug}"]`);
+      try {
+        const response = await fetch('/api/pins/board', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ theme: slug, boardId: input?.value || '' }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          logEl.textContent = data.error || 'Не удалось сохранить ID доски.';
+          return;
+        }
+        logEl.textContent = data.boardId
+          ? `Доска ${data.key}: ID ${data.boardId} записан. Make будет постить сюда.`
+          : `Доска ${data.key}: ID очищен. Строки в таблицу можно слать, Make без ID не постит.`;
+        loadThemes();
+      } catch (error) {
+        logEl.textContent = error.message || String(error);
+      }
+      return;
+    }
+    const btn = event.target.closest('[data-pins-publish]');
+    if (btn) startPinsPublish(btn.getAttribute('data-pins-publish'));
   });
 
   document.querySelector('#pin-cancel').addEventListener('click', () => pinDialog.close());
@@ -1717,7 +1776,7 @@
     const imagesOnly = document.querySelector('#images-only').checked;
     if (!drafts.length) {
       logEl.textContent =
-        'Сначала нажмите «Открыть папку» — под полем должны появиться карточки с картинками. Путь в поле сам по себе ничего не заливает.';
+        'Сначала нажмите «Показать картинки» — под полем должны появиться карточки. Путь в поле сам по себе ничего не заливает.';
       return;
     }
     const sheets = readDraftsFromDom();
@@ -1754,13 +1813,32 @@
     logEl.textContent = `Пишу ${ready.length} лист(ов). Слева будет 1/${ready.length}…`;
   });
 
+  document.querySelector('#upload-print')?.addEventListener('click', async () => {
+    const theme = importTheme.value;
+    if (!theme || theme === '__new__') {
+      logEl.textContent = 'Выберите подборку.';
+      return;
+    }
+    const response = await fetch('/api/print/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось выложить картинки.';
+      return;
+    }
+    logEl.textContent = 'Выкладываю PNG/PDF в интернет. Слева будет ход.';
+  });
+
   document.querySelector('#rewrite-theme')?.addEventListener('click', async () => {
     const theme = importTheme.value;
     if (!theme || theme === '__new__') {
       logEl.textContent = 'Выберите существующую подборку.';
       return;
     }
-    if (!confirm('Обновить текст страницы подборки по названиям листов, которые уже на сайте? FAQ не трогает. Картинки не перезаливает.')) return;
+    if (!confirm('Обновить описание, возраст и FAQ страницы подборки по листам, которые уже на сайте? Картинки не трогает.')) return;
     const response = await fetch('/api/theme/rewrite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1788,8 +1866,7 @@
     bookStylePresets = styles || [];
     const select = document.querySelector('#book-style-preset');
     select.innerHTML = '<option value="">Свой стиль ниже</option>' + bookStylePresets.map(x => `<option value="${esc(x.slug)}">${esc(x.title)}</option>`).join('');
-    const christmas = bookStylePresets.find(x => /christmas/i.test(x.slug));
-    if (christmas) { select.value = christmas.slug; document.querySelector('#book-style').value = christmas.style; }
+    select.value = '';
   }).catch(() => {});
   document.querySelector('#book-style-preset').addEventListener('change', (event) => {
     const preset = bookStylePresets.find(x => x.slug === event.target.value);
