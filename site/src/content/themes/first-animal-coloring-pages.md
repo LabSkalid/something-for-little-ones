@@ -1,36 +1,40 @@
 ---
 title: First Animal Coloring Pages
-description: Animal coloring pages for about ages 2 to 3. A puppy, a bird, a butterfly, a cat, and a turtle, each one a few huge shapes.
-tagline: A puppy, a bird, a butterfly, a cat, and a turtle. A few huge shapes, for about ages 2 to 3.
+description: First Animal Coloring Pages for about ages 2 to 3. Puppy, Bird, Butterfly, and Cat. Pick a page and print the PDF.
+tagline: Puppy, Bird, Butterfly, and Cat. For about ages 2 to 3.
 kind: evergreen
 ageBand: "2-3"
 order: 2
 accent: "#C47A3A"
 ink: "#241C18"
 related:
-  - big-shape-coloring-pages
   - animal-coloring-pages
+  - woodland-animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-10-28
 keywords:
-  - animal coloring pages for toddlers
-  - simple animal coloring pages
-  - coloring pages for ages 2-3
+  - first animal coloring pages
+  - first animal
+  - puppy coloring page
+  - bird coloring page
+  - butterfly coloring page
+  - cat coloring page
+  - turtle coloring page
 faqs:
-  - question: What age are these first animal pages for?
-    answer: About ages 2 to 3. Each animal is a few huge shapes, much simpler than the animal set for ages 3 to 4.
-  - question: How are these different from the other animal pages?
-    answer: The ages 3–4 animal pages have more parts, such as a mane, spots, or a basket nearby. These stay at one animal and a handful of big areas.
-  - question: Which page should we print first?
-    answer: The turtle and the butterfly are the clearest. The puppy and the cat have ears and a tail, which is still only a few pieces.
-  - question: What paper size are the files?
-    answer: I made these for letter paper. There's an A4 file too if that's what you have. Same drawing.
+  - question: What ages are these first animal coloring pages for?
+    answer: They are drawn for about ages 2 to 3. Each animal is a few huge shapes, for a child who is still scribbling.
+  - question: Where are the other animal pages?
+    answer: Everyday animals with more parts are in the animal set for ages 3 to 5. Forest scenes are in the woodland animal set for ages 6 to 8.
+  - question: Which file should I print?
+    answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
+  - question: Can a classroom print the whole set?
+    answer: Yes. Personal and classroom printing is free. Print the PDF rather than the web page, and please don't resell the files.
 pins:
   - id: set
     title: First Animal Coloring Pages
-    subtitle: Huge animal shapes for ages 2–3
+    subtitle: Printable coloring pages for about ages 2 to 3
 ---
 
-This collection features first animal coloring pages, with designs such as Puppy, Bird, and Butterfly.
+This collection features first animal coloring pages, with designs such as Puppy, Bird, and Butterfly. They are drawn for about ages 2 to 3.
 
 Download the PDF, not a screenshot of this page.

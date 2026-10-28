@@ -1,21 +1,20 @@
 ---
 title: Animal Coloring Pages
-description: Animal Coloring Pages for ages 2 to 5. Baby Elephant and Bird, Puppy, Hen and Chicks with Mushrooms, and Kitten. Pick a page and print the PDF.
-tagline: Baby Elephant and Bird, Puppy, Hen and Chicks with Mushrooms, and Kitten. Grouped by age, ages 2 to 5.
+description: Animal Coloring Pages for ages 3 to 5. Puppy, Hen and Chicks with Mushrooms, Kitten, and Elephant. Pick a page and print the PDF.
+tagline: Puppy, Hen and Chicks with Mushrooms, Kitten, and Elephant. Grouped by age, ages 3 to 5.
 kind: evergreen
 ageBand: "3-4"
 order: 1
 accent: "#C4A15A"
 ink: "#241C18"
 related:
-  - dinosaur-coloring-pages
-  - princess-coloring-pages
+  - first-animal-coloring-pages
+  - woodland-animal-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-28
 keywords:
   - animal coloring pages
   - animal
-  - baby elephant and bird coloring page
   - puppy coloring page
   - hen and chicks with mushrooms coloring page
   - kitten coloring page
@@ -23,9 +22,12 @@ keywords:
   - butterfly coloring page
   - bunny coloring page
   - poodle with bow coloring page
+  - baby elephant and bird coloring page
 faqs:
   - question: What ages are these animal coloring pages for?
-    answer: They are grouped by age, ages 2 to 5. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts.
+    answer: They are grouped by age, ages 3 to 5. Match the lines, not the birthday. Ages 3–4 are thick lines and big spaces. Ages 4–5 add a few parts. These are still one animal on the page, not a forest scene.
+  - question: Where are the toddler animals and the woodland scenes?
+    answer: Huge first animals for about ages 2 to 3 are a separate set. Woodland animals for about ages 6 to 8 are a separate set too. This page is the middle step — everyday animals with a little more detail.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?
@@ -33,12 +35,12 @@ faqs:
 pins:
   - id: set
     title: Free Animal Coloring Pages
-    subtitle: Printable coloring pages for ages 2 to 5
+    subtitle: Printable coloring pages for ages 3 to 5
   - id: pets
     title: Cute Pet Coloring Pages to Print
-    subtitle: Printable coloring pages for ages 2 to 5
+    subtitle: Printable coloring pages for ages 3 to 5
 ---
 
-This collection features animal coloring pages, with designs such as Baby Elephant and Bird, Puppy, and Hen and Chicks with Mushrooms. Pages are grouped by age, ages 2 to 5.
+This collection features animal coloring pages, with designs such as Puppy, Hen and Chicks with Mushrooms, and Kitten. Pages are grouped by age, ages 3 to 5. First animals (ages 2 to 3) and woodland scenes (ages 6 to 8) live on their own pages.
 
 Download the PDF, not a screenshot of this page.

@@ -29,7 +29,7 @@ Children this age start to care about what the picture is. A puppy, a dinosaur, 
 
 Now your child can handle a picture with several parts, such as a car with doors, windows, and wheels. Lines are still bold, but there is more to decide, like which part gets which color.
 
-**Try:** [Garden coloring pages](/garden-coloring-pages/), [Simple vehicle coloring pages](/simple-vehicle-coloring-pages/)
+**Try:** [Animal coloring pages for ages 4–5](/animal-coloring-pages/#ages-4-5), [Garden coloring pages](/garden-coloring-pages/), [Simple vehicle coloring pages](/simple-vehicle-coloring-pages/)
 
 ## Ages 5–6: busier scenes
 
