@@ -61,6 +61,8 @@ export type DraftSheet = {
   parentNote: string;
   include: boolean;
   thumb: string;
+  /** Crop stock square frame before placing on the letter page. Off unless you turn it on. */
+  stripFrame?: boolean;
 };
 
 function q(value: string) {
@@ -85,16 +87,56 @@ function titleCase(slug: string) {
     .join(' ');
 }
 
+function ageToken(value: string): AgeBand | null {
+  const compact = value.trim().toLowerCase().replace(/\s+/g, '');
+  if (AGE_BANDS.includes(compact as AgeBand)) return compact as AgeBand;
+  const match = compact.match(/(?:^|[^0-9])(2-3|3-4|4-5|5-6|6-8)(?:[^0-9]|$)/);
+  return match ? (match[1] as AgeBand) : null;
+}
+
 function ageFromPath(file: string, root: string): AgeBand | null {
+  const fromName = ageToken(path.basename(file, path.extname(file)));
+  if (fromName) return fromName;
   const rel = path.relative(root, path.dirname(file));
-  const parts = rel.split(/[/\\]/).map((part) => part.trim().toLowerCase());
+  const parts = [
+    ...rel.split(/[/\\]/),
+    path.basename(root),
+    ...path.resolve(root).split(/[/\\]/).slice(-4),
+  ];
   for (const part of parts) {
-    const match = part.match(/^(2-3|3-4|4-5|5-6|6-8)$/);
-    if (match) return match[1] as AgeBand;
-    const spaced = part.replace(/\s+/g, '');
-    if (AGE_BANDS.includes(spaced as AgeBand)) return spaced as AgeBand;
+    const found = ageToken(part);
+    if (found) return found;
   }
   return null;
+}
+
+/** Guess age from how busy the line art is. No API. */
+async function ageFromDrawing(image: Buffer): Promise<AgeBand> {
+  const { data, info } = await sharp(image)
+    .flatten({ background: '#ffffff' })
+    .grayscale()
+    .resize(400, 520, { fit: 'inside', withoutEnlargement: true })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const w = info.width;
+  const h = info.height;
+  let dark = 0;
+  let edges = 0;
+  for (let i = 0; i < data.length; i += 1) if (data[i]! < 200) dark += 1;
+  for (let y = 1; y < h - 1; y += 1) {
+    for (let x = 1; x < w - 1; x += 1) {
+      const i = y * w + x;
+      const v = data[i]!;
+      if (Math.abs(v - data[i - 1]!) > 40 || Math.abs(v - data[i - w]!) > 40) edges += 1;
+    }
+  }
+  const ink = dark / Math.max(1, data.length);
+  const edge = edges / Math.max(1, (w - 2) * (h - 2));
+  if (edge < 0.045 && ink < 0.14) return '2-3';
+  if (edge < 0.075) return '3-4';
+  if (edge < 0.11) return '4-5';
+  if (edge < 0.16) return '5-6';
+  return '6-8';
 }
 
 async function walkImages(dir: string): Promise<string[]> {
@@ -226,22 +268,29 @@ async function stripOuterFrame(image: Buffer) {
 }
 
 /** Place the drawing on a US Letter white page, centered, filling the printable area. */
-export async function fitOnLetter(image: Buffer, options?: { bottomExtraPx?: number }) {
+export async function fitOnLetter(
+  image: Buffer,
+  options?: { bottomExtraPx?: number; stripFrame?: boolean },
+) {
   const letterW = 2550;
   const letterH = 3300;
   const margin = 120;
   const bottomExtra = Math.max(0, options?.bottomExtraPx ?? 0);
   const maxW = letterW - margin * 2;
   const maxH = letterH - margin * 2 - bottomExtra;
+  const stripFrame = options?.stripFrame !== false;
 
-  // Footer first (letter pages keep stamp below the frame), then stock frame.
-  // Footer detector ignores thick frame edges / dark side columns.
-  let art = await stripSiteFooter(image);
-  art = await stripOuterFrame(art);
-  try {
-    art = await sharp(art).trim({ background: '#ffffff', threshold: 14 }).png().toBuffer();
-  } catch {
-    // keep as-is
+  let art = image;
+  if (stripFrame) {
+    // Footer first, then stock frame. Skip both when the user kept the frame:
+    // footer detector and white-trim otherwise eat the bottom of the drawing.
+    art = await stripSiteFooter(image);
+    art = await stripOuterFrame(art);
+    try {
+      art = await sharp(art).trim({ background: '#ffffff', threshold: 14 }).png().toBuffer();
+    } catch {
+      // keep as-is
+    }
   }
   art = await sharp(art)
     .extend({ top: 24, bottom: 24, left: 24, right: 24, background: '#ffffff' })
@@ -263,7 +312,10 @@ export async function fitOnLetter(image: Buffer, options?: { bottomExtraPx?: num
     .toBuffer();
 }
 
-export async function loadSourceImage(file: string, options?: { bottomExtraPx?: number }) {
+export async function loadSourceImage(
+  file: string,
+  options?: { bottomExtraPx?: number; stripFrame?: boolean },
+) {
   const ext = path.extname(file).toLowerCase();
   const raw = ext === '.svg' ? await renderSvg(file) : await loadRaster(file);
   return fitOnLetter(raw, options);
@@ -297,7 +349,7 @@ function uniqueSlug(base: string, used: Set<string>) {
   return slug;
 }
 
-export async function scanImportFolder(folder: string, defaultAge: AgeBand = '3-4'): Promise<DraftSheet[]> {
+export async function scanImportFolder(folder: string): Promise<DraftSheet[]> {
   const root = path.resolve(folder);
   const files = await walkImages(root);
   if (!files.length) throw new Error('В папке нет PNG, JPG или SVG.');
@@ -310,7 +362,6 @@ export async function scanImportFolder(folder: string, defaultAge: AgeBand = '3-
   let index = 0;
   for (const file of files.sort((a, b) => a.localeCompare(b))) {
     index += 1;
-    const age = ageFromPath(file, root) ?? defaultAge;
     const baseName = path.basename(file, path.extname(file));
     const fromName = slugify(baseName);
     const weak =
@@ -319,11 +370,13 @@ export async function scanImportFolder(folder: string, defaultAge: AgeBand = '3-
       /^\d+$/.test(fromName) ||
       fromName.length < 3;
     const slug = uniqueSlug(weak ? `page-${index}` : fromName, used);
-    const copy = defaultCopy(weak ? `page-${index}` : fromName, age);
     const id = `imp-${index}-${Date.now().toString(36)}`;
     const thumbPath = path.join(thumbDir, `${id}.jpg`);
+    const fromPath = ageFromPath(file, root);
+    let age: AgeBand = fromPath ?? '3-4';
     try {
       const source = path.extname(file).toLowerCase() === '.svg' ? await renderSvg(file) : await loadRaster(file);
+      if (!fromPath) age = await ageFromDrawing(source);
       await sharp(source)
         .resize(280, 360, { fit: 'inside', background: '#ffffff' })
         .jpeg({ quality: 72 })
@@ -335,6 +388,7 @@ export async function scanImportFolder(folder: string, defaultAge: AgeBand = '3-
         .jpeg()
         .toFile(thumbPath);
     }
+    const copy = defaultCopy(weak ? `page-${index}` : fromName, age);
     drafts.push({
       id,
       file,
@@ -344,8 +398,9 @@ export async function scanImportFolder(folder: string, defaultAge: AgeBand = '3-
       description: copy.description,
       alt: copy.alt,
       parentNote: copy.parentNote,
-      include: true,
+      include: false,
       thumb: thumbPath,
+      stripFrame: false,
     });
   }
   return drafts;
@@ -372,22 +427,25 @@ export async function nameDraftWithVision(draft: DraftSheet): Promise<DraftSheet
     .toBuffer();
   const system = [
     'You name free printable coloring pages for an American parents website called Something for Little Ones.',
-    'Reply with JSON only. Keys: slug, title, description, alt, parentNote.',
+    'Reply with JSON only. Keys: slug, title, description, alt, parentNote, age.',
     'slug: 2-5 English words, kebab-case, no numbers unless needed, no "coloring-page" suffix.',
     'title: short Title Case ending with "Coloring Page".',
     'description: one short sentence for parents, mention the age band lightly, no marketing fluff.',
     'alt: one short sentence starting with "Line drawing of".',
     'parentNote: one short tip for a parent, kitchen-table tone.',
+    'age: one of 2-3, 3-4, 4-5, 5-6, 6-8 from how detailed the drawing is (big empty shapes = younger).',
     'Do not say the site owner drew the picture. Do not invent brand names or movie characters.',
     'No markdown outside the JSON object.',
   ].join(' ');
-  const user = `Age band on the site: ${draft.age}. Look at this coloring page and name it.`;
+  const user = `Current age guess: ${draft.age}. Look at this coloring page, name it, and set age from the drawing.`;
   const reply = await visionChat(system, user, small);
   const json = extractJson(reply);
   const slug = slugify(json.slug || draft.slug) || draft.slug;
   const title = (json.title || draft.title).trim();
+  const age = AGE_BANDS.includes(json.age as AgeBand) ? (json.age as AgeBand) : draft.age;
   return {
     ...draft,
+    age,
     slug,
     title: /coloring page/i.test(title) ? title : `${title} Coloring Page`,
     description: (json.description || draft.description).trim(),
@@ -493,10 +551,10 @@ async function preview(printPng: Buffer) {
 /** Rebuild preview + PDFs only. Does not touch markdown or theme text. */
 export async function publishPrintAssets(
   theme: string,
-  sheet: Pick<DraftSheet, 'file' | 'slug' | 'title'>,
+  sheet: Pick<DraftSheet, 'file' | 'slug' | 'title' | 'stripFrame'>,
 ) {
   const site = readSite();
-  const master = await loadSourceImage(sheet.file);
+  const master = await loadSourceImage(sheet.file, { stripFrame: Boolean(sheet.stripFrame) });
   const print = await stampSite(master);
   // pdf-lib is picky; re-encode a plain RGB PNG before embedding.
   const printForPdf = await sharp(print).removeAlpha().png({ compressionLevel: 9, force: true }).toBuffer();
@@ -600,8 +658,6 @@ function applySheetMatch(draft: DraftSheet, match: ExistingSheet): DraftSheet {
     ...draft,
     slug: match.slug,
     title: match.title,
-    age: match.age,
-    include: true,
   };
 }
 
@@ -713,11 +769,8 @@ export async function matchDraftsToTheme(
     console.log(`По рисунку сопоставлено: ${visualMatched}`);
   }
 
-  if (options?.imagesOnly) {
-    for (let i = 0; i < out.length; i += 1) {
-      if (matchedIndexes.has(i)) continue;
-      out[i] = { ...out[i], include: false };
-    }
+  for (let i = 0; i < out.length; i += 1) {
+    out[i] = { ...out[i], include: false };
   }
 
   console.log(`Итого сопоставлено с сайтом: ${matched} из ${drafts.length}`);
@@ -728,6 +781,34 @@ function linkLabel(title: string) {
   return title.replace(/ Coloring Page$/i, '').toLowerCase();
 }
 
+function mostCommonAge(ages: AgeBand[]): AgeBand {
+  const counts = new Map<AgeBand, number>();
+  for (const age of ages) counts.set(age, (counts.get(age) ?? 0) + 1);
+  let best: AgeBand = ages[0] ?? '3-4';
+  let n = 0;
+  for (const band of AGE_BANDS) {
+    const c = counts.get(band) ?? 0;
+    if (c > n) {
+      n = c;
+      best = band;
+    }
+  }
+  return best;
+}
+
+function ageSpanPhrase(ages: AgeBand[]): string {
+  const present = AGE_BANDS.filter((band) => ages.includes(band));
+  if (!present.length) return 'kids';
+  if (present.length === 1) return `about ages ${present[0].replace('-', ' to ')}`;
+  return `ages ${present[0].split('-')[0]} to ${present[present.length - 1].split('-')[1]}`;
+}
+
+function setFrontmatterLine(fm: string, key: string, value: string) {
+  const line = `${key}: ${value}`;
+  if (new RegExp(`^${key}:`, 'm').test(fm)) return fm.replace(new RegExp(`^${key}:.*$`, 'm'), line);
+  return `${fm}\n${line}`;
+}
+
 export async function rewriteThemeBody(theme: string) {
   const file = path.join(themeContentRoot, `${theme}.md`);
   const raw = await fs.readFile(file, 'utf8');
@@ -736,12 +817,18 @@ export async function rewriteThemeBody(theme: string) {
   const sheets = await listThemeSheets(theme);
   const meta = frontmatter(match[1]);
   const collectionTitle = String(meta.title ?? theme.replaceAll('-', ' '));
+  const ages = sheets.map((sheet) => sheet.age);
+  const span = ageSpanPhrase(ages);
+  const short = collectionTitle.replace(/ Coloring Pages$/i, '');
   const body = buildThemeBody(collectionTitle, sheets.map((sheet) => sheet.title));
   const today = new Date().toISOString().slice(0, 10);
   let fm = match[1];
-  if (/^updatedDate:/m.test(fm)) fm = fm.replace(/^updatedDate:.*$/m, `updatedDate: ${today}`);
-  else fm += `\nupdatedDate: ${today}`;
+  fm = setFrontmatterLine(fm, 'description', q(`${collectionTitle} for ${span}. Pick a page and print the PDF.`));
+  fm = setFrontmatterLine(fm, 'tagline', q(`${short} coloring pages for ${span}.`));
+  fm = setFrontmatterLine(fm, 'ageBand', `"${mostCommonAge(ages)}"`);
+  fm = setFrontmatterLine(fm, 'updatedDate', today);
   await fs.writeFile(file, `---\n${fm}\n---\n\n${body}\n`, 'utf8');
+  console.log(`Текст подборки обновлён: ${sheets.length} листов, ${span}.`);
 }
 
 export async function commitImport(options: {
@@ -775,12 +862,17 @@ export async function commitImport(options: {
       const target = bySlug.get(slug);
       if (!target) {
         skipped.push(`${path.basename(draft.file)} → slug «${slug || '?'}» на сайте нет`);
-        console.log(`skip images-only: ${path.basename(draft.file)} (нет листа ${slug || 'без slug'})`);
+        console.log(`${index}/${included.length}: пропуск ${path.basename(draft.file)} — на сайте нет листа «${slug || '?'}»`);
         continue;
       }
       try {
-        console.log(`images-only ${index}/${included.length}: ${target.slug}`);
-        await publishPrintAssets(theme, { file: draft.file, slug: target.slug, title: target.title });
+        console.log(`${index}/${included.length}: ${target.slug}`);
+        await publishPrintAssets(theme, {
+          file: draft.file,
+          slug: target.slug,
+          title: target.title,
+          stripFrame: draft.stripFrame,
+        });
         updated.push(`${theme}/${target.slug}`);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -830,13 +922,15 @@ export async function commitImport(options: {
   let order = existing.reduce((max, sheet) => Math.max(max, sheet.order), 0);
 
   const published: string[] = [];
+  let index = 0;
   for (const draft of included) {
+    index += 1;
     let slug = slugify(draft.slug) || `page-${published.length + 1}`;
     slug = uniqueSlug(slug, used);
     order += 1;
+    console.log(`${index}/${included.length}: ${slug} · ${draft.age}`);
     await publishDraft(theme, { ...draft, slug }, order);
     published.push(`${theme}/${slug}`);
-    console.log(`import ${theme}/${slug} age ${draft.age}`);
   }
   await rewriteThemeBody(theme);
   return { theme, published };

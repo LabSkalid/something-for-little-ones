@@ -21,6 +21,7 @@ import {
   commitImport,
   matchDraftsToTheme,
   nameDraftWithVision,
+  rewriteThemeBody,
   scanImportFolder,
   listThemeSheets,
   publishPrintAssets,
@@ -55,6 +56,7 @@ type Job = {
   kdpPages: KdpPage[] | null;
   lastTheme: string;
   lastKdpPageCount: number;
+  folder: string;
 };
 
 const job: Job = {
@@ -65,6 +67,7 @@ const job: Job = {
   kdpPages: null,
   lastTheme: '',
   lastKdpPageCount: 0,
+  folder: '',
 };
 const sessionPath = path.join(factoryRoot, '.cache', 'studio-session.json');
 
@@ -73,6 +76,7 @@ type StudioSession = {
   kdpPages: KdpPage[] | null;
   lastTheme: string;
   lastKdpPageCount: number;
+  folder: string;
   savedAt: string;
 };
 
@@ -84,6 +88,7 @@ async function saveSession() {
       kdpPages: job.kdpPages,
       lastTheme: job.lastTheme,
       lastKdpPageCount: job.lastKdpPageCount,
+      folder: job.folder,
       savedAt: new Date().toISOString(),
     };
     await fs.writeFile(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
@@ -100,6 +105,7 @@ async function loadSession() {
     if (Array.isArray(data.kdpPages)) job.kdpPages = data.kdpPages as KdpPage[];
     if (typeof data.lastTheme === 'string') job.lastTheme = data.lastTheme;
     if (typeof data.lastKdpPageCount === 'number') job.lastKdpPageCount = data.lastKdpPageCount;
+    if (typeof data.folder === 'string') job.folder = data.folder;
     const n = (job.drafts?.length ?? 0) + (job.kdpPages?.length ?? 0);
     if (n) {
       console.log(
@@ -617,7 +623,24 @@ const server = http.createServer(async (req, res) => {
         kdpPages: job.kdpPages,
         lastTheme: job.lastTheme,
         lastKdpPageCount: job.lastKdpPageCount,
+        folder: job.folder,
       });
+    }
+    if (req.method === 'GET' && url.pathname === '/api/site/preview') {
+      const theme = url.searchParams.get('theme') ?? '';
+      const slug = url.searchParams.get('slug') ?? '';
+      if (!/^[a-z0-9-]+$/.test(theme) || !/^[a-z0-9-]+$/.test(slug)) {
+        return send(res, 404, { error: 'Нет превью' });
+      }
+      const file = path.join(printRoot, theme, `${slug}.png`);
+      try {
+        const bytes = await fs.readFile(file);
+        res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'no-store' });
+        res.end(bytes);
+        return;
+      } catch {
+        return send(res, 404, { error: 'Нет превью' });
+      }
     }
     if (req.method === 'GET' && url.pathname === '/api/import/thumb') {
       const id = url.searchParams.get('id') ?? '';
@@ -636,8 +659,10 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const folder = String(body.folder ?? '').trim();
       if (!folder) throw new Error('Укажите папку с картинками.');
-      let sheets = await scanImportFolder(folder, (String(body.defaultAge ?? '3-4') as AgeBand) || '3-4');
+      job.folder = folder;
+      let sheets = await scanImportFolder(folder);
       const theme = String(body.theme ?? '').trim();
+      if (theme && theme !== '__new__') job.lastTheme = theme;
       let matched = 0;
       let siteSheets: { slug: string; title: string; age: string }[] = [];
       if (theme && theme !== '__new__') {
@@ -686,8 +711,7 @@ const server = http.createServer(async (req, res) => {
         const byId = new Map(named.map((sheet) => [sheet.id, sheet]));
         job.drafts = (job.drafts ?? sheets).map((sheet) => byId.get(sheet.id) ?? sheet);
         await saveSession();
-        console.log('Названия обновлены и сохранены. Можно перезапускать фабрику — они не пропадут.');
-        console.log('Для книги: Amazon KDP → Открыть папку → Взять названия из импорта.');
+        console.log('Названия обновлены. Можно нажать «Записать на сайт».');
       });
       return send(res, 202, { ok: true });
     }
@@ -946,10 +970,18 @@ const server = http.createServer(async (req, res) => {
         if (imagesOnly) {
           console.log(`Готово: обновлены картинки у ${result.published.length} листов в ${result.theme}`);
         } else {
-          console.log(`Готово: ${result.published.length} листов в ${result.theme}`);
-          console.log('Новая тема сама появится в футере. На главной праздники и лишние темы подхватываются автоматически.');
-          console.log('Чтобы собрать пины: кнопка «Пины этой темы» или вкладка «Пины».');
+          console.log(`Готово: ${result.published.length} листов в ${result.theme}. Текст подборки обновлён. Пины — соседняя вкладка, сами не собирались.`);
         }
+      });
+      return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/theme/rewrite') {
+      const body = await readBody(req);
+      const theme = String(body.theme ?? '').trim();
+      if (!theme || theme === '__new__') throw new Error('Выберите подборку на сайте.');
+      startJob(`Текст подборки: ${theme}`, async () => {
+        await rewriteThemeBody(theme);
+        job.lastTheme = theme;
       });
       return send(res, 202, { ok: true });
     }
@@ -1045,8 +1077,13 @@ const server = http.createServer(async (req, res) => {
       if (!theme) throw new Error('Укажите подборку.');
       const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : undefined;
       const age = body.age ? String(body.age) : undefined;
+      const items = Array.isArray(body.items)
+        ? (body.items as { slug?: string; stripFrame?: boolean }[])
+            .filter((item) => item && item.slug)
+            .map((item) => ({ slug: String(item.slug), stripFrame: Boolean(item.stripFrame) }))
+        : undefined;
       startJob(`Поправка с сайта: ${theme}`, async () => {
-        const result = await refitFromSite({ theme, slugs, age });
+        const result = await refitFromSite({ theme, slugs, age, items });
         console.log(
           result.failed.length
             ? `Поправлено ${result.ok}/${result.total}. Часть не вышла — смотри лог.`

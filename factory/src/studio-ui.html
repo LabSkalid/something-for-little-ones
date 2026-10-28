@@ -13,7 +13,28 @@
     --blue-dark: #1564b5;
   }
   body { margin: 0; font: 16px/1.45 "Segoe UI", sans-serif; color: var(--ink); background: #fff; }
-  main { width: min(980px, calc(100% - 2rem)); margin: 1.25rem auto 3rem; }
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(260px, 32%) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    width: min(1400px, calc(100% - 2rem));
+    margin: 1rem auto 2rem;
+  }
+  .log-col { position: sticky; top: 0.7rem; }
+  .log-col h2 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+  .log-col pre {
+    min-height: calc(100vh - 4.5rem);
+    max-height: calc(100vh - 4.5rem);
+    overflow: auto;
+    margin: 0;
+  }
+  .work-col { min-width: 0; }
+  @media (max-width: 900px) {
+    .workspace { grid-template-columns: 1fr; }
+    .log-col { position: static; order: 2; }
+    .log-col pre { min-height: 10rem; max-height: 16rem; }
+  }
   h1 { font-size: 1.7rem; margin: 0 0 0.25rem; }
   h2 { font-size: 1.2rem; margin: 1.4rem 0 0.4rem; }
   p { color: var(--muted); }
@@ -74,6 +95,7 @@
   .note {
     background: var(--soft); border-radius: 12px; padding: 0.8rem 1rem; margin: 0.6rem 0 0;
   }
+  .age-head { font-size: 1.05rem; margin: 1.1rem 0 0.35rem; }
   dialog {
     border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem 1.1rem;
     width: min(560px, calc(100% - 2rem)); color: var(--ink);
@@ -104,45 +126,38 @@
   }
   .color-row input[type="text"] { width: 7.5rem; font-family: ui-monospace, Consolas, monospace; }
 </style>
-<main>
+<main class="workspace">
+  <aside class="log-col">
+    <h2>Ход работы</h2>
+    <pre id="log">Пока ничего не запущено.</pre>
+  </aside>
+  <div class="work-col">
   <h1>Фабрика</h1>
-  <p class="lede">Сток на сайт, рисование для сайта, пины Pinterest и PDF для Amazon KDP. Запуск с кнопки Open Factory.bat.</p>
+  <p class="lede">Слева видно, что сейчас делается. Справа — вкладка с делом. Картинки на сайт, пины и Amazon — разные вкладки, они не запускаются друг от друга.</p>
 
   <div class="tabs" role="tablist">
-    <button class="tab active" type="button" data-tab="import">Сток → сайт</button>
-    <button class="tab" type="button" data-tab="draw">Рисовать для сайта</button>
+    <button class="tab active" type="button" data-tab="import">Картинки на сайт</button>
     <button class="tab" type="button" data-tab="pins">Пины</button>
-    <button class="tab" type="button" data-tab="book">Создать книгу</button>
-    <button class="tab" type="button" data-tab="kdp">Amazon KDP</button>
+    <button class="tab" type="button" data-tab="kdp">Книга Amazon</button>
+    <button class="tab" type="button" data-tab="book">Нарисовать книгу</button>
+    <button class="tab" type="button" data-tab="draw">Рисовать (платно)</button>
   </div>
 
   <section id="panel-import" class="panel active">
-    <p>Кладёт PNG/SVG на сайт: превью, Letter PDF, A4 PDF и текст листа. OpenRouter нужен только для кнопки «Назвать по картинке».</p>
+    <p>Новые картинки — из папки. Исправить уже залитые с рамкой — тоже из папки: на сайте обрезанной рамки уже нет, взять её неоткуда.</p>
     <div class="note">
-      Удобная раскладка папок: <code>2-3</code>, <code>3-4</code>, <code>4-5</code>, <code>5-6</code>, <code>6-8</code>.
-      Если папок нет — возраст берётся из поля ниже.
+      <strong>Вернуть рамку на двух листах (остальные не трогать):</strong><br>
+      1. Подборка. 2. Галочка «Только картинки». 3. Папка с исходниками. 4. «Показать картинки».<br>
+      5. Ничего само не отметится. Найдите две карточки, поставьте только «Взять». «Снять рамку» нигде не ставить.<br>
+      6. «Записать на сайт». Уйдёт только то, где стоит «Взять».
     </div>
+
+    <label for="import-theme">Подборка на сайте</label>
+    <select id="import-theme"></select>
 
     <label for="folder">Папка с картинками</label>
     <input id="folder" placeholder="D:\COLORING\Winter">
     <p class="hint">Полный путь к папке на этом компьютере.</p>
-
-    <div class="two">
-      <div>
-        <label for="import-theme">Подборка на сайте</label>
-        <select id="import-theme"></select>
-      </div>
-      <div>
-        <label for="default-age">Возраст, если папок нет</label>
-        <select id="default-age">
-          <option value="2-3">2–3</option>
-          <option value="3-4" selected>3–4</option>
-          <option value="4-5">4–5</option>
-          <option value="5-6">5–6</option>
-          <option value="6-8">6–8</option>
-        </select>
-      </div>
-    </div>
 
     <div id="import-new-fields" class="hidden">
       <label for="import-title">Название новой подборки</label>
@@ -170,13 +185,18 @@
 
     <label class="check" style="margin-top:0.8rem">
       <input id="images-only" type="checkbox">
-      Только картинки — обновить PNG/PDF, не трогать названия, описания и текст темы
+      Только картинки — заменить PNG/PDF, названия и описания не трогать
+    </label>
+    <label class="check">
+      <input id="strip-frames" type="checkbox">
+      Снять рамку у всех показанных (по умолчанию выкл — рамку не трогает)
     </label>
 
     <div class="row">
-      <button id="scan" type="button">Открыть папку</button>
+      <button id="scan" type="button">Показать картинки</button>
       <button id="name-vision" class="quiet" type="button">Назвать по картинке</button>
-      <button id="commit-import" type="button">Залить на сайт</button>
+      <button id="commit-import" type="button">Записать на сайт</button>
+      <button id="rewrite-theme" class="quiet" type="button">Обновить текст подборки</button>
       <button id="pins-after" class="quiet" type="button">Пины этой темы</button>
     </div>
     <div class="row" style="margin-top:0.4rem">
@@ -184,9 +204,17 @@
       <button id="drafts-check-all" class="quiet" type="button">Отметить все</button>
       <button id="drafts-check-none" class="quiet" type="button">Снять все</button>
     </div>
-    <p class="hint">Порядок для переделки: подборка Winter → галочка «Только картинки» → «Открыть папку» → дождаться «Сопоставлено» → «Залить». Имена на диске D могут отличаться.</p>
+    <p class="hint">«Записать» берёт только карточки с галочкой «Взять». Не отмеченные не перезапишет.</p>
 
     <div id="drafts" class="grid" style="margin-top:1rem"></div>
+
+    <h2>Уже на сайте</h2>
+    <p>Отсюда рамку не вернуть — в файле на сайте её уже нет. Этот блок только пересобрать лист без исходника (не ваш случай с рамкой).</p>
+    <div class="row">
+      <button id="load-site-fix" class="quiet" type="button">Показать листы подборки</button>
+      <button id="site-fix-run" type="button">Пересобрать выбранные</button>
+    </div>
+    <div id="site-fix" class="grid" style="margin-top:1rem"></div>
   </section>
 
   <section id="panel-book" class="panel">
@@ -217,7 +245,8 @@
   </section>
 
   <section id="panel-kdp" class="panel">
-    <p>Собирает один PDF интерьера для Amazon KDP из папки SVG/PNG. Срезает стоковую рамку и надпись сайта внизу (host + FREE PRINTABLE), ставит рисунок на 8.5×11. Шрифт титула и подписей — Fredoka. Обложку KDP делает отдельно.</p>
+    <p><strong>Обычный порядок:</strong> папка → открыть → назвать страницы → название книги → «Собрать PDF для KDP». На сайт ничего не пишет. PDF для дома, обложка и порядок страниц — ниже, по желанию.</p>
+    <p>Срезает стоковую рамку и надпись сайта, ставит рисунок на 8.5×11. Шрифт титула — Fredoka.</p>
     <div class="note">
       В KDP потом: Paperback → Black &amp; white → trim <strong>8.5" × 11"</strong> → Bleed: <strong>No Bleed</strong>.
       Пустые обороты помогают, чтобы маркеры не пробивали на следующий рисунок.
@@ -412,16 +441,14 @@
       <button id="pins-publish" type="button">Выпустить пины: в хранилище и в таблицу</button>
     </div>
     <p class="hint">Нажимайте, когда пины собраны и тексты написаны. Кнопка сама сожмёт новые пины, загрузит пины и листы в хранилище, соберёт очередь и добавит новые строки в таблицу для Make. Повторно ничего не добавляет, нажимать можно сколько угодно раз.</p>
-    <p>Только пины Pinterest: сборка PNG и тексты в <code>pins.csv</code>. Картинки листов на сайте здесь не перерисовываются — это вкладка <strong>Рисовать для сайта</strong>.</p>
+    <p>Собрать пины (сразу JPEG 1000×1500 для Pinterest) или только тексты. Картинки листов на сайте здесь не меняются.</p>
     <section id="themes-pins"></section>
     <div class="row" style="margin-top:0.8rem">
       <button id="pins-all" type="button">Собрать пины всех подборок</button>
     </div>
     <p class="hint"><strong>Собрать пины</strong> — картинки для Pinterest. <strong>Тексты</strong> — только заголовки/описания, без пересборки PNG.</p>
   </section>
-
-  <h2>Ход работы</h2>
-  <pre id="log">Пока ничего не запущено.</pre>
+  </div>
 </main>
 
 <dialog id="pin-dialog">
@@ -854,12 +881,11 @@
       const siteSlug = siteSelect?.value?.trim() || '';
       const site = siteSheets.find((item) => item.slug === siteSlug);
       const checked = Boolean(card.querySelector('[data-field="include"]')?.checked);
-      // In images-only mode a chosen site sheet counts as selected even if the box was cleared.
-      const include = checked || Boolean(imagesOnly && site);
       return {
         ...draft,
-        include,
-        age: site?.age || card.querySelector('[data-field="age"]').value,
+        include: checked,
+        age: card.querySelector('[data-field="age"]').value,
+        stripFrame: Boolean(card.querySelector('[data-field="stripFrame"]')?.checked),
         slug: siteSlug || card.querySelector('[data-field="slug"]').value.trim(),
         title: site?.title || card.querySelector('[data-field="title"]').value.trim(),
         description: card.querySelector('[data-field="description"]').value.trim(),
@@ -896,20 +922,21 @@
       </select>`;
   }
 
-  function paintDrafts(list) {
-    drafts = list;
-    draftsEl.innerHTML = list.map((draft) => `
+  function draftCardHtml(draft) {
+    const stripOn = Boolean(draft.stripFrame);
+    return `
       <div class="card" data-id="${esc(draft.id)}">
         <img src="/api/import/thumb?id=${encodeURIComponent(draft.id)}" alt="">
         <div class="fields">
           <div class="top">
-            <label class="check"><input data-field="include" type="checkbox" ${draft.include ? 'checked' : ''}> Взять</label>
+            <label class="check"><input data-field="include" type="checkbox"> Взять</label>
             <select data-field="age">
               ${['2-3','3-4','4-5','5-6','6-8'].map((age) =>
                 `<option value="${age}" ${draft.age === age ? 'selected' : ''}>${age}</option>`
               ).join('')}
             </select>
           </div>
+          <label class="check"><input data-field="stripFrame" type="checkbox" ${stripOn ? 'checked' : ''}> Снять рамку</label>
           ${siteSheetOptions(draft.slug)}
           <label>slug</label>
           <input data-field="slug" value="${esc(draft.slug)}">
@@ -923,7 +950,20 @@
           <input data-field="parentNote" value="${esc(draft.parentNote)}">
           <p class="hint">${esc(draft.file)}</p>
         </div>
-      </div>`).join('');
+      </div>`;
+  }
+
+  function paintDrafts(list) {
+    drafts = (list || []).map((draft) => ({ ...draft, include: false, stripFrame: false }));
+    const ages = ['2-3','3-4','4-5','5-6','6-8'];
+    const chunks = ages
+      .map((age) => ({ age, items: list.filter((draft) => draft.age === age) }))
+      .filter((chunk) => chunk.items.length);
+    const leftover = list.filter((draft) => !ages.includes(draft.age));
+    draftsEl.innerHTML = [
+      ...chunks.map((chunk) => `<h3 class="age-head">${chunk.age} · ${chunk.items.length}</h3>${chunk.items.map(draftCardHtml).join('')}`),
+      leftover.length ? `<h3 class="age-head">Другое · ${leftover.length}</h3>${leftover.map(draftCardHtml).join('')}` : '',
+    ].join('');
 
     draftsEl.querySelectorAll('[data-field="site-sheet"]').forEach((select) => {
       select.addEventListener('change', () => {
@@ -933,8 +973,13 @@
         if (!card || !sheet) return;
         card.querySelector('[data-field="slug"]').value = sheet.slug;
         card.querySelector('[data-field="title"]').value = sheet.title;
-        card.querySelector('[data-field="age"]').value = sheet.age;
-        card.querySelector('[data-field="include"]').checked = true;
+      });
+    });
+    draftsEl.querySelectorAll('[data-field="stripFrame"]').forEach((box) => {
+      box.addEventListener('change', () => {
+        const card = box.closest('.card');
+        const draft = drafts.find((item) => item.id === card?.dataset.id);
+        if (draft) draft.stripFrame = box.checked;
       });
     });
   }
@@ -1003,14 +1048,81 @@
       replaceStatusEl.textContent = data.error || 'Не удалось запустить замену.';
       return;
     }
-    replaceStatusEl.textContent = 'Замена запущена. Следи за прогрессом в разделе «Ход работы». После завершения опубликуй обновлённые файлы сайта.';
+    replaceStatusEl.textContent = 'Замена запущена. Ход — слева.';
   });
 
   themeSelect.addEventListener('change', () => {
     newFields.classList.toggle('hidden', themeSelect.value !== '');
   });
+  const siteFixEl = document.querySelector('#site-fix');
+
+  async function loadSiteFixSheets() {
+    const theme = importTheme.value;
+    if (!siteFixEl) return;
+    if (!theme || theme === '__new__') {
+      siteFixEl.innerHTML = '<p class="hint">Выберите подборку выше.</p>';
+      return;
+    }
+    siteFixEl.innerHTML = '<p class="hint">Загружаю листы…</p>';
+    const data = await fetch('/api/refit/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
+    const sheets = data.sheets || [];
+    if (!sheets.length) {
+      siteFixEl.innerHTML = '<p class="hint">В этой подборке пока нет листов.</p>';
+      return;
+    }
+    siteFixEl.innerHTML = sheets.map((sheet) => `
+      <div class="card" data-slug="${esc(sheet.slug)}">
+        <img src="/api/site/preview?theme=${encodeURIComponent(theme)}&slug=${encodeURIComponent(sheet.slug)}" alt="">
+        <div class="fields">
+          <div class="top">
+            <label class="check"><input data-field="include" type="checkbox"> Взять</label>
+            <span>${esc(sheet.age || '')}</span>
+          </div>
+          <label class="check"><input data-field="stripFrame" type="checkbox"> Снять рамку</label>
+          <p>${esc(sheet.title)} <span class="hint">${esc(sheet.slug)}</span></p>
+        </div>
+      </div>`).join('');
+  }
+
   importTheme.addEventListener('change', () => {
     importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
+    loadSiteFixSheets();
+  });
+  document.querySelector('#load-site-fix')?.addEventListener('click', () => loadSiteFixSheets());
+  document.querySelector('#site-fix-run')?.addEventListener('click', async () => {
+    const theme = importTheme.value;
+    if (!theme || theme === '__new__') {
+      logEl.textContent = 'Выберите подборку.';
+      return;
+    }
+    const items = [...siteFixEl.querySelectorAll('.card')].flatMap((card) => {
+      if (!card.querySelector('[data-field="include"]')?.checked) return [];
+      return [{
+        slug: card.dataset.slug,
+        stripFrame: Boolean(card.querySelector('[data-field="stripFrame"]')?.checked),
+      }];
+    });
+    if (!items.length) {
+      logEl.textContent = 'Отметьте листы галочкой «Взять».';
+      return;
+    }
+    if (!confirm(`Пересобрать ${items.length} картинок с сайта? Тексты не меняю. Рамку сниму только где стоит «Снять рамку».`)) return;
+    const response = await fetch('/api/refit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme, items }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить.';
+      return;
+    }
+    logEl.textContent = 'Пересобираю выбранные с сайта. Слева будет 1/N…';
+  });
+  document.querySelector('#strip-frames')?.addEventListener('change', () => {
+    const on = document.querySelector('#strip-frames').checked;
+    draftsEl.querySelectorAll('[data-field="stripFrame"]').forEach((box) => { box.checked = on; });
+    drafts.forEach((draft) => { draft.stripFrame = on; });
   });
 
   const redrawDialog = document.querySelector('#redraw-dialog');
@@ -1119,7 +1231,7 @@
       logEl.textContent = data.error || 'Не удалось запустить перерисовку.';
       return;
     }
-    logEl.textContent = `Запущена перерисовка ${slugs.length} выбранных листов. Ход работы — в логе ниже.`;
+    logEl.textContent = `Запущена перерисовка ${slugs.length} листов. Ход — слева.`;
   });
 
   document.querySelector('#pins-all').addEventListener('click', async () => {
@@ -1228,7 +1340,6 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         folder: document.querySelector('#folder').value,
-        defaultAge: document.querySelector('#default-age').value,
         theme: importTheme.value,
         imagesOnly: document.querySelector('#images-only').checked,
       }),
@@ -1240,19 +1351,20 @@
     }
     siteSheets = data.siteSheets || [];
     paintDrafts(data.sheets || []);
+    draftsEl.querySelectorAll('[data-field="include"]').forEach((box) => { box.checked = false; });
+    draftsEl.querySelectorAll('[data-field="stripFrame"]').forEach((box) => { box.checked = false; });
+    document.querySelector('#strip-frames').checked = false;
     const imagesOnly = document.querySelector('#images-only').checked;
-    if (imagesOnly || siteSheets.length) markDraftIncludes('matched');
     const total = (data.sheets || []).length;
     const matched = Number(data.matched || 0);
     if (imagesOnly || siteSheets.length) {
       logEl.textContent =
-        `Найдено файлов: ${total}. Сопоставлено с сайтом: ${matched}.` +
-        (matched < total
-          ? ` Остальные выберите вручную в списке «Лист на сайте» (или оставьте выключенными).`
-          : ` Можно заливать.`) +
-        (imagesOnly ? ' Режим: только картинки.' : '');
+        `В папке ${total}, с сайтом совпало ${matched}. Ничего не отмечено. Поставьте «Взять» только на тех, что перезаписать. Рамку не снимает, пока нет галочки «Снять рамку».`;
     } else {
-      logEl.textContent = `Найдено листов: ${total}. Проверьте названия или нажмите «Назвать по картинке».`;
+      const ages = {};
+      (data.sheets || []).forEach((sheet) => { ages[sheet.age] = (ages[sheet.age] || 0) + 1; });
+      const ageLine = Object.keys(ages).sort().map((age) => `${age}: ${ages[age]}`).join(', ');
+      logEl.textContent = `Найдено листов: ${total}. Возраст: ${ageLine || '—'}. Проверьте карточки или нажмите «Назвать по картинке».`;
     }
   });
 
@@ -1369,7 +1481,7 @@
       logEl.textContent = data.error || 'Не удалось запустить аудит.';
       return;
     }
-    logEl.textContent = opts.message || 'Задача запущена. Смотрите лог ниже.';
+    logEl.textContent = opts.message || 'Задача запущена. Ход — слева.';
   }
 
   document.querySelector('#kdp-audit')?.addEventListener('click', async () => {
@@ -1608,13 +1720,10 @@
         'Сначала нажмите «Открыть папку» — под полем должны появиться карточки с картинками. Путь в поле сам по себе ничего не заливает.';
       return;
     }
-    if (imagesOnly) markDraftIncludes('matched');
     const sheets = readDraftsFromDom();
     const ready = sheets.filter((sheet) => sheet.include);
     if (!ready.length) {
-      logEl.textContent = imagesOnly
-        ? 'Карточки есть, но ни одна не сопоставлена с сайтом. Нажмите «Открыть папку» ещё раз при выбранной подборке Winter и галочке «Только картинки», дождитесь строки «Сопоставлено: N», затем «Отметить сопоставленные» и «Залить».'
-        : 'Отметьте хотя бы один лист галочкой «Взять» (или кнопку «Отметить все»).';
+      logEl.textContent = 'Нет галочки «Взять». Отметьте только те листы, которые надо записать.';
       return;
     }
     if (imagesOnly && (importTheme.value === '__new__' || !importTheme.value)) {
@@ -1622,8 +1731,8 @@
       return;
     }
     const ok = imagesOnly
-      ? confirm('Обновить только картинки (PNG/PDF)? Названия, описания и текст темы не изменятся.')
-      : confirm('Залить отмеченные листы на сайт? Модель картинок не вызывается. Названия и тексты листов будут записаны заново.');
+      ? confirm(`Заменить картинки у ${ready.length} лист(ов)? Остальные не трону. Названия не меняю. Рамку сниму только где стоит «Снять рамку».`)
+      : confirm(`Записать ${ready.length} лист(ов)? Неотмеченные не трону.`);
     if (!ok) return;
     const response = await fetch('/api/import/commit', {
       method: 'POST',
@@ -1642,9 +1751,27 @@
       logEl.textContent = data.error || 'Не удалось запустить импорт.';
       return;
     }
-    logEl.textContent = imagesOnly
-      ? 'Заливка запущена: обновляю PNG/PDF по одному. В логе появятся строки images-only 1/N… Это может занять несколько минут.'
-      : 'Импорт запущен. Следите за логом ниже.';
+    logEl.textContent = `Пишу ${ready.length} лист(ов). Слева будет 1/${ready.length}…`;
+  });
+
+  document.querySelector('#rewrite-theme')?.addEventListener('click', async () => {
+    const theme = importTheme.value;
+    if (!theme || theme === '__new__') {
+      logEl.textContent = 'Выберите существующую подборку.';
+      return;
+    }
+    if (!confirm('Обновить текст страницы подборки по названиям листов, которые уже на сайте? FAQ не трогает. Картинки не перезаливает.')) return;
+    const response = await fetch('/api/theme/rewrite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось обновить текст подборки.';
+      return;
+    }
+    logEl.textContent = 'Обновляю текст подборки. Следите слева.';
   });
 
   document.querySelector('#pins-after').addEventListener('click', async () => {
@@ -1697,7 +1824,7 @@
       const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme: document.querySelector('#book-theme').value, title: document.querySelector('#book-title').value, age: document.querySelector('#book-age').value, style: document.querySelector('#book-style').value, ideas: [idea]}) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось запустить генерацию.');
-      bookStatus.textContent = `Генерация одной страницы запущена. Файл будет сохранён в: ${data.folder}. Прогресс смотрите в общем логе фабрики внизу страницы.`;
+      bookStatus.textContent = `Генерация одной страницы запущена. Файл: ${data.folder}. Ход — слева.`;
     } catch (error) { bookStatus.textContent = error.message || String(error); }
   });
 
@@ -1733,16 +1860,33 @@
       const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme: document.querySelector('#book-theme').value, title: document.querySelector('#book-title').value, age: document.querySelector('#book-age').value, style: document.querySelector('#book-style').value, ideas}) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось запустить генерацию.');
-      bookStatus.textContent = `Генерация запущена. Изображения сохраняются в: ${data.folder}. Прогресс смотрите в общем логе фабрики внизу страницы.`;
+      bookStatus.textContent = `Генерация запущена. Папка: ${data.folder}. Ход — слева.`;
     } catch (error) { bookStatus.textContent = error.message || String(error); }
   });
 
   let wasRunning = false;
+  let sessionRestored = false;
   async function poll() {
     const data = await fetch('/api/job').then((res) => res.json());
-    if (data.log?.length) logEl.textContent = data.log.join('\n');
-    if (data.drafts) paintDrafts(data.drafts);
-    if (data.kdpPages) paintKdpPages(data.kdpPages);
+    if (data.running || wasRunning) {
+      if (data.log?.length) {
+        logEl.textContent = data.log.join('\n');
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+    }
+    if (!sessionRestored) {
+      sessionRestored = true;
+      if (data.folder) document.querySelector('#folder').value = data.folder;
+      if (data.lastTheme && [...importTheme.options].some((opt) => opt.value === data.lastTheme)) {
+        importTheme.value = data.lastTheme;
+        importNewFields.classList.toggle('hidden', importTheme.value !== '__new__');
+      }
+      if (data.drafts?.length) paintDrafts(data.drafts);
+      if (data.kdpPages?.length) paintKdpPages(data.kdpPages);
+      loadSiteFixSheets();
+    }
+    if (data.drafts && wasRunning && !data.running) paintDrafts(data.drafts);
+    if (data.kdpPages && wasRunning && !data.running) paintKdpPages(data.kdpPages);
     if (data.lastTheme) lastTheme = data.lastTheme;
     if (data.lastKdpPageCount && !document.querySelector('#kdp-cover-pages').value) {
       document.querySelector('#kdp-cover-pages').placeholder = String(data.lastKdpPageCount);
@@ -1751,7 +1895,7 @@
     wasRunning = Boolean(data.running);
   }
 
-  loadThemes();
+  loadThemes().then(() => poll());
   setInterval(poll, 1500);
 </script>
 </html>

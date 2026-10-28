@@ -103,6 +103,14 @@ async function svgToPng(svg: string, width: number) {
   return sharp(resvg.render().asPng()).png({ compressionLevel: 9 }).toBuffer();
 }
 
+/** Compact PNG for the site + JPEG for Pinterest/R2. Same 1000×1500, no extra giant copy. */
+async function writePinFiles(filename: string, png: Buffer) {
+  const dest = path.join(pinRoot, filename);
+  const compact = await sharp(png).png({ compressionLevel: 9, palette: true }).toBuffer();
+  await fs.writeFile(dest, compact);
+  await sharp(png).flatten({ background: '#ffffff' }).jpeg({ quality: 85 }).toFile(dest.replace(/\.png$/i, '.jpg'));
+}
+
 export async function buildSheetAssets() {
   const site = readSite();
   const files = await walkSvg(artRoot);
@@ -621,7 +629,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
           continue;
         }
         const png = await renderPin({ title, accent, brand: site.name, image: page.image });
-        await fs.writeFile(path.join(pinRoot, filename), png);
+        await writePinFiles(filename, png);
         keep.add(filename);
         const url = `${origin}/${themeId}/${page.slug}/`;
         themeRows.push({ filename, type: 'single', title, url });
@@ -660,7 +668,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
           images: group.map((page) => page.image),
           framed,
         });
-        await fs.writeFile(path.join(pinRoot, filename), png);
+        await writePinFiles(filename, png);
         keep.add(filename);
         const url = `${origin}/${themeId}/`;
         themeRows.push({ filename, type: 'collection', title, url });
@@ -689,6 +697,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
         if (mode === 'single' && isCollection) continue;
         if (keep.has(name)) continue;
         await fs.rm(path.join(pinRoot, name));
+        await fs.rm(path.join(pinRoot, name.replace(/\.png$/i, '.jpg')), { force: true });
         console.log(`remove old pin ${name}`);
       }
     }

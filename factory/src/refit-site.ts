@@ -123,9 +123,9 @@ export async function listRefitSheets(theme: string) {
   );
 }
 
-async function refitOne(theme: string, slug: string, title: string) {
+async function refitOne(theme: string, slug: string, title: string, stripFrame: boolean) {
   const art = await loadExistingArt(theme, slug);
-  const fitted = await fitOnLetter(art);
+  const fitted = await fitOnLetter(art, { stripFrame });
   const print = await stampSite(fitted);
   const printForPdf = await sharp(print).removeAlpha().png({ compressionLevel: 9, force: true }).toBuffer();
   const web = await sharp(print)
@@ -154,27 +154,35 @@ export async function refitFromSite(options: {
   theme: string;
   slugs?: string[];
   age?: string;
+  items?: { slug: string; stripFrame?: boolean }[];
 }) {
   const theme = options.theme.trim();
   if (!theme) throw new Error('Укажите подборку.');
   let sheets = await listThemeSheets(theme);
   if (!sheets.length) throw new Error(`В подборке нет листов: ${theme}`);
   if (options.age) sheets = sheets.filter((sheet) => sheet.age === options.age);
-  if (options.slugs?.length) {
-    const want = new Set(options.slugs);
-    sheets = sheets.filter((sheet) => want.has(sheet.slug));
-  }
+  const stripBySlug = new Map(
+    (options.items ?? []).map((item) => [item.slug, Boolean(item.stripFrame)]),
+  );
+  const want = options.items?.length
+    ? new Set(options.items.map((item) => item.slug))
+    : options.slugs?.length
+      ? new Set(options.slugs)
+      : null;
+  if (want) sheets = sheets.filter((sheet) => want.has(sheet.slug));
   if (!sheets.length) throw new Error('Не выбрано ни одного листа.');
 
-  console.log(`Поправка с сайта (без ИИ): ${theme}, ${sheets.length} лист(ов)`);
-  console.log('Беру letter PDF с сайта → срезаю рамку/футер → снова на весь лист.');
+  console.log(`Поправка с сайта: ${theme}, ${sheets.length} лист(ов). Тексты не трогаю.`);
 
   let ok = 0;
   const failed: string[] = [];
   for (const [index, sheet] of sheets.entries()) {
+    const stripFrame = stripBySlug.has(sheet.slug) ? Boolean(stripBySlug.get(sheet.slug)) : true;
     try {
-      console.log(`${index + 1}/${sheets.length} ${sheet.slug}`);
-      await refitOne(theme, sheet.slug, sheet.title);
+      console.log(
+        `${index + 1}/${sheets.length}: ${sheet.slug} · ${stripFrame ? 'снять рамку' : 'рамку оставить'}`,
+      );
+      await refitOne(theme, sheet.slug, sheet.title, stripFrame);
       ok += 1;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

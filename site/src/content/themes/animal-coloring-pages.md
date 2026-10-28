@@ -11,7 +11,7 @@ related:
   - dinosaur-coloring-pages
   - princess-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-10-27
 keywords:
   - animal coloring pages
   - puppy coloring page
