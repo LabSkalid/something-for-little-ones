@@ -7,10 +7,13 @@ export function sheetPath(themeId: string, slug: string) {
 }
 
 export function sheetAssets(themeId: string, slug: string) {
+  const base = import.meta.env.DEV
+    ? '/print'
+    : 'https://files.somethingforlittleones.com/print';
   return {
-    png: `https://files.somethingforlittleones.com/print/${themeId}/${slug}.png`,
-    letter: `https://files.somethingforlittleones.com/print/${themeId}/${slug}-us-letter.pdf`,
-    a4: `https://files.somethingforlittleones.com/print/${themeId}/${slug}-a4.pdf`,
+    png: `${base}/${themeId}/${slug}.png`,
+    letter: `${base}/${themeId}/${slug}-us-letter.pdf`,
+    a4: `${base}/${themeId}/${slug}-a4.pdf`,
   };
 }
 
