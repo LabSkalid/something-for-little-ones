@@ -24,7 +24,7 @@ faqs:
   - question: What ages are these woodland animal coloring pages for?
     answer: They are drawn for about ages 6 to 8. Each page is a simple forest scene, not one huge shape.
   - question: Where are the simpler animal pages?
-    answer: Huge first animals for about ages 2 to 3 are a separate set. Everyday animals for ages 3 to 5 are a separate set too.
+    answer: Huge first animals for about ages 2 to 3 are a separate set. Everyday animals for ages 3 to 6 are a separate set too.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?

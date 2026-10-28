@@ -2,11 +2,11 @@
 title: "Bunny with Flower Coloring Page"
 theme: animal-coloring-pages
 slug: bunny-with-flower
-description: "This sweet coloring page features a happy bunny holding a flower, perfect for children aged 3-4."
+description: "This sweet coloring page features a happy bunny holding a flower, perfect for children aged 4-5."
 alt: "Line drawing of a cute bunny holding a large flower, with a butterfly and clouds in the background."
 parentNote: "Encourage your child to use bright colors for the flower and butterfly to make them pop!"
 order: 45
-difficulty: easy
-age: "3-4"
+difficulty: medium
+age: "4-5"
 source: "Untitled-2-07.png"
 ---

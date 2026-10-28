@@ -35,7 +35,7 @@ Now your child can handle a picture with several parts, such as a car with doors
 
 Many children at this age enjoy a longer sitting. Scenes with a background, such as an ocean or a dinosaur among plants, give them room to take their time.
 
-**Try:** [Ocean scene coloring pages](/ocean-scene-coloring-pages/), [Dinosaur scene coloring pages](/dinosaur-scene-coloring-pages/)
+**Try:** [Animal coloring pages for ages 5–6](/animal-coloring-pages/#ages-5-6), [Ocean scene coloring pages](/ocean-scene-coloring-pages/), [Dinosaur scene coloring pages](/dinosaur-scene-coloring-pages/)
 
 ## Ages 6–8: fuller scenes
 

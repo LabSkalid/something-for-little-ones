@@ -28,7 +28,7 @@ A page that is too hard ends in frustration. One that is too easy is finished be
 - **Ages 2–3:** [big shapes](/big-shape-coloring-pages/) and [first animals](/first-animal-coloring-pages/), done in a few minutes
 - **Ages 3–4:** [animals](/animal-coloring-pages/), [dinosaurs](/dinosaur-coloring-pages/), and [cars](/car-coloring-pages/)
 - **Ages 4–5:** [animals](/animal-coloring-pages/#ages-4-5), [garden scenes](/garden-coloring-pages/) and [simple vehicles](/simple-vehicle-coloring-pages/)
-- **Ages 5–6:** [ocean scenes](/ocean-scene-coloring-pages/) and [dinosaur scenes](/dinosaur-scene-coloring-pages/), which take a longer sitting
+- **Ages 5–6:** [animals](/animal-coloring-pages/#ages-5-6), [ocean scenes](/ocean-scene-coloring-pages/) and [dinosaur scenes](/dinosaur-scene-coloring-pages/), which take a longer sitting
 - **Ages 6–8:** [town scenes](/town-scene-coloring-pages/) and [woodland animals](/woodland-animal-coloring-pages/)
 
 Not sure where your child fits? See [how to choose coloring pages by age](/guides/coloring-pages-by-age/).
