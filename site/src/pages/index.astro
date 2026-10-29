@@ -267,7 +267,7 @@ const jsonLd = {
         ))}
         {holidayTiles.map(({ theme, title }) => (
           <li>
-            <a class="age-choice" href={`#${theme.id}`}>
+            <a class="age-choice" href={themePath(theme.id)}>
               <strong>{title}</strong>
               <span>Holiday</span>
             </a>
@@ -277,10 +277,24 @@ const jsonLd = {
     </section>
 
     {themePanels.map((choice) => {
-      const single = choice.themes.length === 1 ? choice.themes[0] : null;
-      const ageLinks = single
-        ? ageBands.filter((band) => themeHasAge(single.id, band.id))
-        : [];
+      const agePicks = choice.themes.flatMap((theme) => {
+        const ages = ageBands.filter((band) => themeHasAge(theme.id, band.id));
+        const multi = ages.length > 1;
+        if (!multi) {
+          return [
+            {
+              href: themePath(theme.id),
+              label: ageBandLabel(theme.data.ageBand),
+              title: theme.data.title,
+            },
+          ];
+        }
+        return ages.map((band) => ({
+          href: `${themePath(theme.id)}#ages-${band.id}`,
+          label: band.label,
+          title: theme.data.title,
+        }));
+      });
       return (
         <section class="section theme-panel" id={`theme-${choice.id}`}>
           <div class="section-head">
@@ -288,23 +302,14 @@ const jsonLd = {
             {choice.note && <p>{choice.note}</p>}
           </div>
           <ul class="age-choices">
-            {single
-              ? ageLinks.map((band) => (
-                  <li>
-                    <a class="age-choice" href={`#${single.id}--${band.id}`}>
-                      <strong>{band.label}</strong>
-                      <span>{single.data.title}</span>
-                    </a>
-                  </li>
-                ))
-              : choice.themes.map((theme) => (
-                  <li>
-                    <a class="age-choice" href={`#${theme.id}`}>
-                      <strong>{ageBandLabel(theme.data.ageBand)}</strong>
-                      <span>{theme.data.title}</span>
-                    </a>
-                  </li>
-                ))}
+            {agePicks.map((pick) => (
+              <li>
+                <a class="age-choice" href={pick.href}>
+                  <strong>{pick.label}</strong>
+                  <span>{pick.title}</span>
+                </a>
+              </li>
+            ))}
           </ul>
         </section>
       );
