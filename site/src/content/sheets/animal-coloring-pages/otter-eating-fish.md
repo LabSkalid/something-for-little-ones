@@ -7,6 +7,6 @@ alt: "Line drawing of a cute otter floating on its back in water, holding a fish
 parentNote: "Talk about otters and their habitat while your little one colors. Maybe even look up some fun facts together!"
 order: 42
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-03.png"
 ---

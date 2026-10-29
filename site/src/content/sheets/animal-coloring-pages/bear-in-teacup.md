@@ -7,6 +7,6 @@ alt: "Line drawing of a smiling bear in a teacup with tulips, daisies, and a but
 parentNote: "Encourage your child to use bright, cheerful colors for the flowers and butterfly to make this picture pop!"
 order: 62
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-62.png"
 ---

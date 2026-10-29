@@ -7,6 +7,6 @@ alt: "Line drawing of a happy duckling swimming in a pond with lily pads, a drag
 parentNote: "Talk about the different animals and plants in the picture. What colors do they think a duckling, dragonfly, and cattails should be?"
 order: 46
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-09.png"
 ---

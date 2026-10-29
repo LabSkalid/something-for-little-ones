@@ -7,6 +7,6 @@ alt: "Line drawing of a cute bunny holding a large flower, with a butterfly and 
 parentNote: "Encourage your child to use bright colors for the flower and butterfly to make them pop!"
 order: 45
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-07.png"
 ---

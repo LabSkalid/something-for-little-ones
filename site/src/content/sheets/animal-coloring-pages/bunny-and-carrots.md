@@ -7,6 +7,6 @@ alt: "Line drawing of a small, happy bunny sitting in front of a wooden fence wi
 parentNote: "Talk about what bunnies like to eat while your child colors this page. Maybe even try some real carrots together!"
 order: 16
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "1Untitled-2-511 (19).png"
 ---

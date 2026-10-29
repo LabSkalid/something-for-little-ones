@@ -7,6 +7,6 @@ alt: "Line drawing of a cute, plump bear standing and holding a round honeycomb 
 parentNote: "Talk about bears and honey while your child colors. Do bears really eat honey? What else do they eat?"
 order: 38
 difficulty: medium
-age: "4-5"
+age: "3-4"
 source: "1Untitled-2-511 (6).png"
 ---
