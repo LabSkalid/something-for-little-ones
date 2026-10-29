@@ -7,6 +7,6 @@ alt: "Line drawing of a fluffy kitten with big eyes sitting in a flower pot, sur
 parentNote: "Encourage your child to think about what colors they'd use for a real kitten and flowers, or let them get creative with imaginary colors!"
 order: 55
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-38.png"
 ---

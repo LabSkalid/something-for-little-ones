@@ -7,6 +7,6 @@ alt: "Line drawing of a happy puppy with its tongue out, standing and looking fo
 parentNote: "Ask your child what sounds a puppy makes while they color this page."
 order: 40
 difficulty: easy
-age: "5-6"
+age: "3-4"
 source: "1Untitled-2-511 (8).png"
 ---

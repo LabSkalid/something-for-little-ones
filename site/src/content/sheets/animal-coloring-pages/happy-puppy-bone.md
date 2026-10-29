@@ -7,6 +7,6 @@ alt: "Line drawing of a cute puppy holding a bone in its mouth, surrounded by fl
 parentNote: "Encourage your child to use bright, cheerful colors for the puppy and the flowers to make the scene extra lively."
 order: 50
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-16.png"
 ---

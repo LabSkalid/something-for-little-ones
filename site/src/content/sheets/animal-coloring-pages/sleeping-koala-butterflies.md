@@ -7,6 +7,6 @@ alt: "Line drawing of a cute koala sleeping peacefully on a tree branch, with th
 parentNote: "Talk about where koalas live and what they eat while your child colors this page."
 order: 67
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-71.png"
 ---

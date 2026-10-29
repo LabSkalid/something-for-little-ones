@@ -7,6 +7,6 @@ alt: "Line drawing of a smiling ladybug with spots on a large flower, with two b
 parentNote: "Talk about the colors of ladybugs and butterflies as your child colors. What other bugs might visit a flower?"
 order: 66
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-70.png"
 ---

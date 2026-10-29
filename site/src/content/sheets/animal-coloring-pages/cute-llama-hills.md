@@ -7,6 +7,6 @@ alt: "Line drawing of a cute llama standing on rolling hills with trees, clouds,
 parentNote: "Encourage your child to use different colors for the hills and sky to make a vibrant scene."
 order: 61
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-54.png"
 ---
