@@ -345,6 +345,67 @@ function rasterize(svg: string) {
   return Buffer.from(resvg.render().asPng());
 }
 
+export const BUNDLE_OVERLAY_COLORS = ['blue', 'red', 'green', 'yellow'] as const;
+export type BundleOverlayColor = (typeof BUNDLE_OVERLAY_COLORS)[number];
+
+export function bundleOverlayPath(color: BundleOverlayColor) {
+  const file = path.join(factoryRoot, 'assets', `bundle-overlay-${color}.png`);
+  if (!fs.existsSync(file)) throw new Error(`Missing bundle overlay: ${file}`);
+  return file;
+}
+
+/** Room for wordmark on bundle-overlay PNG (scaled to 1000×1500). */
+const BUNDLE_OVERLAY_FOOTER_RESERVE = 112;
+const BUNDLE_OVERLAY_CELL_PAD_X = 8;
+const BUNDLE_OVERLAY_CELL_PAD_TOP = 8;
+const BUNDLE_OVERLAY_CELL_PAD_MID = 10;
+
+/** 2×2 grid + full-pin overlay PNG (682×1024 scaled to 1000×1500). Dividers live on the overlay file, not SVG frames. */
+export async function renderOverlayBundlePin(options: { images: Buffer[]; overlay: BundleOverlayColor }) {
+  if (options.images.length < 4) throw new Error('Overlay bundle needs 4 drawings');
+  const cellW = Math.floor(PIN_W / 2);
+  const cellH = Math.floor(PIN_H / 2);
+  const cells = [
+    { x: 0, y: 0 },
+    { x: cellW, y: 0 },
+    { x: 0, y: cellH },
+    { x: cellW, y: cellH },
+  ];
+
+  const tiles = await Promise.all(
+    options.images.slice(0, 4).map(async (image, index) => {
+      const hero = await heroImage(image);
+      const cell = cells[index]!;
+      const isBottomRow = index >= 2;
+      const padBottom = isBottomRow ? BUNDLE_OVERLAY_FOOTER_RESERVE : BUNDLE_OVERLAY_CELL_PAD_MID;
+      const artW = cellW - BUNDLE_OVERLAY_CELL_PAD_X * 2;
+      const artH = cellH - BUNDLE_OVERLAY_CELL_PAD_TOP - padBottom;
+      const png = await sharp(hero)
+        .resize(artW, artH, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+        .png()
+        .toBuffer();
+      const meta = await sharp(png).metadata();
+      const iw = meta.width ?? artW;
+      const ih = meta.height ?? artH;
+      const left = cell.x + BUNDLE_OVERLAY_CELL_PAD_X + Math.round((artW - iw) / 2);
+      const top = cell.y + BUNDLE_OVERLAY_CELL_PAD_TOP + Math.round((artH - ih) / 2);
+      return { input: png, left, top };
+    }),
+  );
+
+  const overlay = await sharp(bundleOverlayPath(options.overlay))
+    .resize(PIN_W, PIN_H, { fit: 'fill' })
+    .png()
+    .toBuffer();
+
+  return sharp({
+    create: { width: PIN_W, height: PIN_H, channels: 4, background: { r: 255, g: 255, b: 255, alpha: 1 } },
+  })
+    .composite([...tiles, { input: overlay, left: 0, top: 0 }])
+    .png()
+    .toBuffer();
+}
+
 export function pinFileName(themeId: string, pinId: string) {
   return `${themeId}-${pinId}.png`;
 }

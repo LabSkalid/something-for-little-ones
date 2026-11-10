@@ -7,11 +7,22 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const pinRoot = process.env.PIN_ROOT || 'D:/KIDS/site/public/pins';
 const outDir = process.env.OUT_DIR || 'D:/KIDS/factory/out/pinterest';
 const cfgPath = process.env.BOARDS_JSON || path.join(here, 'boards.json');
+const blockPath = path.join(here, 'pin-queue-block.txt');
 
 // Boards, priorities and URLs live in boards.json (next to this script).
 const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8').replace(/^\uFEFF/, ''));
 const siteBase = cfg.siteBase;
 const imageBase = cfg.imageBase;
+
+const queueBlock = new Set(
+  fs.existsSync(blockPath)
+    ? fs
+        .readFileSync(blockPath, 'utf8')
+        .split(/\r?\n/)
+        .map((line) => line.trim().toLowerCase())
+        .filter((line) => line && !line.startsWith('#'))
+    : [],
+);
 
 const onlyTheme = String(process.env.PIN_THEME ?? '')
   .trim()
@@ -208,6 +219,11 @@ for (const [baseLower, fileName] of rootPending) {
   s.root++;
   if (doneBasenames.has(baseLower)) {
     s.alreadyInDone++;
+    continue;
+  }
+  const asPng = baseLower.replace(/\.jpe?g$/, '.png');
+  if (queueBlock.has(baseLower) || queueBlock.has(asPng)) {
+    console.log(`не в таблицу: ${fileName}`);
     continue;
   }
 

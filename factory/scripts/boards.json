@@ -50,6 +50,20 @@
       "boardId": "1086000966335726418",
       "tier": 2,
       "weight": 1
+    },
+    {
+      "key": "fall",
+      "board": "fall",
+      "boardId": "1086000966335620901",
+      "tier": 2,
+      "weight": 1
+    },
+    {
+      "key": "halloween",
+      "board": "halloween",
+      "boardId": "1086000966335595575",
+      "tier": 2,
+      "weight": 1
     }
   ]
 }

@@ -18,8 +18,12 @@ const help = `Фабрика раскрасок.
       Текст для Pinterest — только с флагом --copy (дешёвая текстовая модель).
       Одна подборка:
       npm run pins -- halloween-coloring-pages
-      Только бандлы:
+      Только бандлы (классика 9 клеток, по умолчанию):
       npm run pins -- halloween-coloring-pages --mode=collection
+      Бандлы 4×2 + PNG-рамка (новый тип, не трогает classic):
+      npm run pins -- halloween-coloring-pages --mode=collection --bundle=overlay
+      Цвет рамки: blue|red|green|yellow|random (по умолчанию random):
+      npm run pins -- thanksgiving-coloring-pages --mode=collection --bundle=overlay --overlay-color=blue
       С текстом (при сборке картинок):
       npm run pins -- halloween-coloring-pages --mode=collection --copy --keywords="thanksgiving, turkey"
       Только тексты, без перерисовки PNG (по умолчанию заполняет пустые поля):
@@ -85,6 +89,20 @@ async function main() {
     }
     const accentArg = rest.find((arg) => arg.startsWith('--accent='))?.slice('--accent='.length);
     const headingArg = rest.find((arg) => arg.startsWith('--heading='))?.slice('--heading='.length);
+    const bundleArg = rest.find((arg) => arg.startsWith('--bundle='))?.slice('--bundle='.length);
+    const collectionBundles =
+      bundleArg === 'classic' || bundleArg === 'overlay' || bundleArg === 'both' ? bundleArg : 'classic';
+    const overlayColorArg = rest
+      .find((arg) => arg.startsWith('--overlay-color='))
+      ?.slice('--overlay-color='.length);
+    const overlayColor =
+      overlayColorArg === 'random' ||
+      overlayColorArg === 'blue' ||
+      overlayColorArg === 'red' ||
+      overlayColorArg === 'green' ||
+      overlayColorArg === 'yellow'
+        ? overlayColorArg
+        : 'random';
     await buildPins({
       theme,
       mode,
@@ -93,6 +111,9 @@ async function main() {
       removeOld: rest.includes('--remove-old'),
       heading: headingArg || undefined,
       accent: accentArg && /^#[0-9a-fA-F]{6}$/i.test(accentArg) ? accentArg : undefined,
+      collectionBundles,
+      overlayColor,
+      rebuildClassic: rest.includes('--rebuild-classic'),
     });
     return;
   }

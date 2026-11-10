@@ -10,6 +10,9 @@ import {
   buildPins,
   listPinSheets,
   listThemePins,
+  readQueueBlock,
+  rememberShippedPins,
+  removeShippedLocalFiles,
   writePinCopyOnly,
   type PinBuildOptions,
   type PinMode,
@@ -533,6 +536,7 @@ async function sendRowsToSheet(rows: QueueRow[]) {
     if (!data.ok) throw new Error(`Таблица отказала: ${data.error ?? 'неизвестная ошибка'}`);
     added += data.added ?? 0;
     skipped += data.skipped ?? 0;
+    await rememberShippedPins(rows.slice(i, i + 100).map((row) => row.filename));
   }
   console.log(`Таблица: добавлено новых строк — ${added}, уже были — ${skipped}.`);
 }
@@ -560,7 +564,12 @@ async function publishPins(theme?: string) {
     compressed.made ? `Сжато новых или обновлённых пинов: ${compressed.made}.` : 'Новых пинов для сжатия нет.',
   );
   console.log('Шаг 2 из 4. Загружаю в хранилище…');
-  await uploadToStorage(rclone, 'пины', pinRoot, 'pins', ['--include', '/*.jpg']);
+  const blockedJpg = [...(await readQueueBlock())].map((name) => name.replace(/\.png$/i, '.jpg'));
+  await uploadToStorage(rclone, 'пины', pinRoot, 'pins', [
+    ...blockedJpg.flatMap((name) => ['--exclude', name]),
+    '--include',
+    '/*.jpg',
+  ]);
   await uploadToStorage(rclone, 'листы для скачивания', printRoot, 'print');
   console.log('Шаг 3 из 4. Собираю очередь для Pinterest…');
   const rows = await buildMakeQueue(themeKey || undefined);
@@ -1115,6 +1124,10 @@ const server = http.createServer(async (req, res) => {
       const saved = await savePinBoardId(slug, boardId);
       return send(res, 200, { ok: true, ...saved });
     }
+    if (req.method === 'POST' && url.pathname === '/api/pins/clear-shipped') {
+      startJob('Убираю с диска пины, которые уже в таблице', () => removeShippedLocalFiles().then(() => undefined));
+      return send(res, 202, { ok: true });
+    }
     if (req.method === 'POST' && url.pathname === '/api/pins/publish') {
       const body = await readBody(req).catch(() => ({}));
       const theme = String((body as { theme?: string }).theme ?? '').trim();
@@ -1133,6 +1146,20 @@ const server = http.createServer(async (req, res) => {
       const slugs = Array.isArray(body.slugs) ? body.slugs.map(String) : undefined;
       const accentRaw = body.accent ? String(body.accent).trim() : '';
       const accent = /^#[0-9a-fA-F]{6}$/i.test(accentRaw) ? accentRaw : undefined;
+      const bundleRaw = String(body.collectionBundles ?? 'classic');
+      const collectionBundles =
+        bundleRaw === 'overlay' || bundleRaw === 'classic' || bundleRaw === 'both'
+          ? bundleRaw
+          : 'classic';
+      const overlayRaw = String(body.overlayColor ?? 'random');
+      const overlayColor =
+        overlayRaw === 'blue' ||
+        overlayRaw === 'red' ||
+        overlayRaw === 'green' ||
+        overlayRaw === 'yellow' ||
+        overlayRaw === 'random'
+          ? overlayRaw
+          : 'random';
       const options: PinBuildOptions = {
         theme,
         mode,
@@ -1142,12 +1169,19 @@ const server = http.createServer(async (req, res) => {
         keywords: body.keywords ? String(body.keywords) : '',
         accent,
         heading: body.heading ? String(body.heading).trim() : undefined,
+        collectionBundles,
+        overlayColor,
+        rebuildClassic: Boolean(body.rebuildClassic),
       };
       const label = [
         theme ? `Пины ${theme}` : 'Пины всех подборок',
         mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
         options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
-        mode === 'collection' || mode === 'both' ? 'бандлы заново' : '',
+        mode === 'collection' || mode === 'both' ? `бандлы: ${collectionBundles}` : '',
+        collectionBundles === 'overlay' || collectionBundles === 'both'
+          ? `рамка ${overlayColor}`
+          : '',
+        mode === 'collection' || mode === 'both' ? 'старые бандлы не трогаю' : '',
         options.removeOld ? 'затереть одиночные' : '',
         options.heading ? `надпись «${options.heading}»` : '',
         accent ? `плашка ${accent}` : '',

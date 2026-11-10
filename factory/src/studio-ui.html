@@ -54,6 +54,8 @@
   }
   textarea { min-height: 8.5rem; }
   .hint { font-size: 0.92rem; color: var(--muted); margin: 0.25rem 0 0; }
+  ul.hint { padding-left: 1.2rem; }
+  ul.hint li { margin: 0.15rem 0; }
   .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; align-items: center; }
   button, .btn {
     border: 0; border-radius: 10px; background: var(--blue); color: white; font-weight: 800;
@@ -156,15 +158,11 @@
     <div class="note">
       <strong>Как добавить картинки на сайт</strong>
       <ol>
-        <li>Выберите подборку или «Новая подборка».</li>
-        <li>Вставьте путь к папке с исходниками на этом компьютере.</li>
-        <li>Нажмите «Показать картинки». Карточки сами не отмечаются.</li>
-        <li>Поставьте «Взять» только на тех, что нужно записать. Возраст фабрика ставит по папке, имени файла или рисунку — поправьте, если ошиблась.</li>
-        <li>Галочка «Только картинки» — заменить PNG/PDF у уже существующих страниц. Названия листов не трогает. Текст всей подборки тоже не трогает.</li>
-        <li>Без этой галочки — это новые (или заново заведённые) листы: фабрика пишет страницы и <em>сама</em> обновляет описание подборки, возраст и FAQ по всем листам, которые уже лежат в этой теме.</li>
-        <li>«Снять рамку» — только если на исходнике стоковая рамка и её надо срезать. Иначе не ставьте: с сайта рамку вернуть нельзя.</li>
-        <li>«Записать на сайт» берёт только карточки с «Взять». Пишет файлы на диск и сразу выкладывает PNG/PDF в интернет. Отдельно «Выложить картинки в интернет» нужно только если загрузка в логе упала.</li>
-        <li>Обновите сайт в браузере (или соберите сайт заново), иначе на живом сайте будет старая страница.</li>
+        <li>Выберите подборку. Вставьте путь к папке. Нажмите «Показать картинки».</li>
+        <li>Поставьте «Взять» только на нужных. Возраст можно поправить на карточке.</li>
+        <li>Новые листы: «Только картинки» выключена. Потом «Назвать по картинке», потом «Записать на сайт».</li>
+        <li>Замена уже существующего листа: «Только картинки» включена. Тогда меняются PNG и PDF этой страницы. Бандлы пинов не трогаются.</li>
+        <li>После записи пересоберите сайт, иначе на живой странице будет старый список.</li>
       </ol>
     </div>
 
@@ -201,35 +199,44 @@
 
     <label class="check" style="margin-top:0.8rem">
       <input id="images-only" type="checkbox">
-      Только картинки — заменить PNG/PDF, названия и описания не трогать
+      Только картинки — заменить файлы у старых страниц. Новые страницы не создаёт. Текст не меняет.
     </label>
+    <p class="hint">Для новых листов оставьте выключенной.</p>
     <label class="check">
       <input id="strip-frames" type="checkbox">
-      Снять рамку у всех показанных (по умолчанию выкл — рамку не трогает)
+      Снять рамку на исходнике. С сайта рамку вернуть нельзя.
     </label>
 
     <div class="row">
-      <button id="scan" type="button">Показать картинки</button>
-      <button id="name-vision" class="quiet" type="button">Назвать по картинке</button>
-      <button id="commit-import" type="button">Записать на сайт</button>
-      <button id="rewrite-theme" class="quiet" type="button">Обновить текст подборки</button>
-      <button id="upload-print" class="quiet" type="button">Выложить картинки в интернет</button>
-      <button id="pins-after" class="quiet" type="button">Пины этой темы</button>
+      <button id="scan" type="button" title="Открывает папку. На сайт ничего не пишет.">Показать картинки</button>
+      <button id="name-vision" class="quiet" type="button" title="Даёт имена отмеченным листам. На сайт не кладёт.">Назвать по картинке</button>
+      <button id="commit-import" type="button" title="Пишет отмеченные листы, обновляет текст подборки и отправляет картинки в хранилище.">Записать на сайт</button>
+      <button id="rewrite-theme" class="quiet" type="button" title="Только шапка подборки по листам, которые уже на сайте. Новые картинки не добавляет.">Обновить текст подборки</button>
+      <button id="upload-print" class="quiet" type="button" title="Повторяет отправку уже записанных картинок в хранилище. Новые страницы не создаёт.">Выложить картинки в интернет</button>
+      <button id="pins-after" class="quiet" type="button" title="Открывает сборку пинов. Картинки сайта не пишет.">Пины этой темы</button>
     </div>
+    <ul class="hint">
+      <li><strong>Показать картинки</strong> — открывает папку. Ничего не записывает.</li>
+      <li><strong>Назвать по картинке</strong> — имена для отмеченных «Взять». На сайт не кладёт.</li>
+      <li><strong>Записать на сайт</strong> — главная кнопка. Только галочки «Взять». Новые страницы, текст подборки и отправка картинок в хранилище.</li>
+      <li><strong>Обновить текст подборки</strong> — шапка уже лежащих листов. Новые картинки не добавляет. Перед записью новых не нажимать.</li>
+      <li><strong>Выложить картинки в интернет</strong> — повтор отправки в хранилище, если в логе она оборвалась. Страницы не создаёт.</li>
+      <li><strong>Пины этой темы</strong> — переход к пинам. Сайт не меняет.</li>
+    </ul>
     <div class="row" style="margin-top:0.4rem">
-      <button id="drafts-check-matched" class="quiet" type="button">Отметить сопоставленные</button>
-      <button id="drafts-check-all" class="quiet" type="button">Отметить все</button>
-      <button id="drafts-check-none" class="quiet" type="button">Снять все</button>
+      <button id="drafts-check-matched" class="quiet" type="button" title="Ставит «Взять» на карточках, которые фабрика узнала как уже существующие листы.">Отметить сопоставленные</button>
+      <button id="drafts-check-all" class="quiet" type="button" title="Ставит «Взять» на всех карточках.">Отметить все</button>
+      <button id="drafts-check-none" class="quiet" type="button" title="Снимает «Взять» со всех карточек.">Снять все</button>
     </div>
-    <p class="hint">«Записать» берёт только карточки с галочкой «Взять». Не отмеченные не перезапишет. «Обновить текст подборки» — если листы уже на сайте, а шапка страницы ещё старая.</p>
+    <p class="hint">Без галочки «Взять» лист не записывается. Неотмеченные карточки фабрика не перезаписывает.</p>
 
     <div id="drafts" class="grid" style="margin-top:1rem"></div>
 
     <h2>Уже на сайте</h2>
-    <p>Пересобрать лист, если исходника под рукой нет. Рамку стока отсюда не вернуть: в файле на сайте её уже нет, нужен исходник из папки выше.</p>
+    <p>Заново кладёт рисунок на лист из файла, который уже на сайте. Исходник из папки выше не нужен. Тексты и бандлы пинов не меняет. Рамку стока вернуть нельзя.</p>
     <div class="row">
-      <button id="load-site-fix" class="quiet" type="button">Показать листы подборки</button>
-      <button id="site-fix-run" type="button">Пересобрать выбранные</button>
+      <button id="load-site-fix" class="quiet" type="button" title="Показывает листы этой подборки. Ничего не записывает.">Показать листы подборки</button>
+      <button id="site-fix-run" type="button" title="Пересобирает только отмеченные листы. Тексты не трогает.">Пересобрать выбранные</button>
     </div>
     <div id="site-fix" class="grid" style="margin-top:1rem"></div>
   </section>
@@ -457,17 +464,20 @@
     <div class="note">
       <strong>Как выложить пины</strong>
       <ol>
-        <li>У нужной подборки нажмите «1. Собрать пины» — фабрика делает картинки 1000×1500 (JPEG уйдёт в интернет на шаге 3). Бандл — сетка 9 листов. Файл pins.csv пишет она же.</li>
-        <li>«2. Тексты» — заголовки и описания для Pinterest. Можно пропустить: шаг 3 сам допишет пустые.</li>
-        <li>«3. В таблицу» у этой подборки — сожмёт новые JPEG, выложит пины и листы в хранилище, допишет пустые тексты и добавит в таблицу Make только новые строки. Уже лежащие в таблице не дублирует.</li>
-        <li>Кнопка «Все новые пины в таблицу» делает то же самое сразу по всем темам. Для одной темы жмите «3» на её карточке, иначе снова прогонятся все старые.</li>
-        <li>Чтобы Make постил на Pinterest, нужен ID доски. Откройте доску в Pinterest, скопируйте длинное число из ссылки, вставьте в поле «ID доски» у темы и сохраните. Без ID строки в таблицу всё равно попадут, но Make не знает, на какую доску постить. Файл <code>factory/scripts/boards.json</code> можно править и руками — то же поле <code>boardId</code>.</li>
+        <li><strong>1. Собрать пины</strong> рисует новые картинки 1000×1500. Бандл — сетка из 9 листов, следующий свободный номер. Уже лежащие бандлы не удаляет и не подменяет.</li>
+        <li><strong>2. Тексты</strong> пишет заголовки и описания. Картинки не трогает.</li>
+        <li><strong>3. В таблицу</strong> у этой темы отправляет в таблицу только пины, которых там ещё нет. Бандлы не стирает. Уже отправленные строки не повторяет.</li>
+        <li><strong>Убрать с диска</strong> стирает только пины, которые уже ушли в таблицу. Сначала нажмите «В таблицу» (старые строки не дублируются, фабрика только запоминает имена), потом эту кнопку. Пины «на будущее» и удалённые руками до отправки не трогает.</li>
+        <li><strong>Все новые пины в таблицу</strong> делает шаг 3 сразу по всем темам. Для одной темы жмите «3» на её карточке.</li>
+        <li>ID доски — цифры из ссылки доски Pinterest. Без ID строка в таблицу попадает, но Make не знает, куда постить.</li>
       </ol>
     </div>
     <div class="row">
-      <button id="pins-publish" type="button">Все новые пины в таблицу</button>
-      <button id="pins-all" class="quiet" type="button">Собрать пины всех подборок</button>
+      <button id="pins-publish" type="button" title="Отправляет в таблицу новые пины всех тем. Старые строки не повторяет. Бандлы не удаляет.">Все новые пины в таблицу</button>
+      <button id="pins-clear" class="quiet" type="button" title="Удаляет с компьютера пины, которые уже есть в таблице. Остальные оставляет.">Убрать с диска то, что уже в таблице</button>
+      <button id="pins-all" class="quiet" type="button" title="Рисует новые пины по всем темам. Существующие бандлы не удаляет и не перезаписывает.">Собрать пины всех подборок</button>
     </div>
+    <p class="hint">«Собрать пины всех подборок» не стирает коллекции и не начинает нумерацию с 1. Новые бандлы получают следующий номер.</p>
     <section id="themes-pins"></section>
   </section>
   </div>
@@ -478,13 +488,32 @@
   <p id="pin-dialog-theme" class="hint">Тема не выбрана</p>
 
   <div class="modes">
-    <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы (сетка 9 картинок)</label>
+    <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы</label>
     <label><input type="radio" name="pin-mode" value="single"> Только отдельные пины</label>
     <label><input type="radio" name="pin-mode" value="both"> И бандлы, и отдельные</label>
   </div>
 
-  <p class="hint">Сколько бандлов — столько полных девяток в отмеченных листах: 9 → 1 пин, 18 → 2, 27 → 3. Остаток меньше 9 не берём.</p>
+  <label style="margin-top:0.5rem">Стиль бандла</label>
+  <div class="modes">
+    <label><input type="radio" name="pin-bundle-kind" value="classic" checked> Классика (9 в сетке, полоса сверху)</label>
+    <label><input type="radio" name="pin-bundle-kind" value="overlay"> Сетка 4 + твоя PNG-рамка (больше пинов)</label>
+    <label><input type="radio" name="pin-bundle-kind" value="both"> Оба стиля за один запуск</label>
+  </div>
+  <p id="pin-bundle-hint" class="hint">Классика: 9 новых листов → один <code>-collection-N</code>. Старые бандлы не перезаписываются.</p>
 
+  <div id="pin-overlay-color-wrap" hidden>
+    <label for="pin-overlay-color">Цвет PNG-рамки</label>
+    <select id="pin-overlay-color">
+      <option value="random" selected>Случайно (без лишних повторов подряд)</option>
+      <option value="blue">Синий</option>
+      <option value="red">Красный</option>
+      <option value="green">Зелёный</option>
+      <option value="yellow">Жёлтый</option>
+    </select>
+    <p class="hint">Overlay: 4 листа → <code>-bundle-N</code>. Линии между квадрантами — на твоём PNG (по центру вертикаль ×500 и горизонталь ×750 в макете 1000×1500). Обводку в коде не рисуем.</p>
+  </div>
+
+  <div id="pin-classic-options">
   <label>Надпись на полосе</label>
   <div class="modes">
     <label><input type="radio" name="pin-heading-mode" value="theme" checked> Название коллекции</label>
@@ -511,14 +540,19 @@
     <input id="pin-accent-hex" type="text" value="#1d7ad6" maxlength="7" spellcheck="false" aria-label="HEX цвета">
     <button id="pin-accent-theme" class="quiet" type="button">Как в теме</button>
   </div>
+  </div>
 
   <label class="check" style="margin-top:0.8rem">
     <input id="pin-copy" type="checkbox">
-    Написать заголовок и описание только для новых пинов без текста (старые в pins.csv не затирает)
+    Написать текст только пустым пинам. Уже написанные подписи не затирает. Картинки не трогает.
   </label>
   <label class="check">
     <input id="pin-remove" type="checkbox">
-    Также удалить старые одиночные пины темы (бандлы и так перезаписываются)
+    Удалить старые одиночные пины этой темы. Бандлы не удаляет.
+  </label>
+  <label class="check" id="pin-rebuild-classic-wrap">
+    <input id="pin-rebuild-classic" type="checkbox">
+    Пересобрать classic (сбросить учёт «лист уже в бандле»). Старые collection PNG не удаляет.
   </label>
 
   <div id="pin-sheets-wrap">
@@ -528,12 +562,12 @@
       <button id="pin-sheets-none" class="quiet" type="button">Снять</button>
     </div>
     <div id="pin-sheets" class="sheet-list"></div>
-    <p class="hint">Для бандла берутся отмеченные листы по порядку, группами по 9.</p>
+    <p class="hint">«Пин уже есть» — это отдельная картинка, не бандл. В бандл попадают только отмеченные листы, которых в бандле ещё не было. Уже собранный бандл остаётся со своим номером.</p>
   </div>
 
   <div class="row">
-    <button id="pin-run" type="button">Собрать</button>
-    <button id="pin-cancel" class="quiet" type="button">Отмена</button>
+    <button id="pin-run" type="button" title="Рисует новые пины из отмеченных листов. Старые бандлы не стирает.">Собрать</button>
+    <button id="pin-cancel" class="quiet" type="button" title="Закрывает окно. Ничего не делает.">Отмена</button>
   </div>
 </dialog>
 
@@ -802,8 +836,29 @@
       : 'Пишу тексты только для пинов без title/description. PNG пинов не трогаю…';
   }
 
+  function refreshPinBundleUi() {
+    const mode = document.querySelector('input[name="pin-mode"]:checked')?.value || 'collection';
+    const kind = document.querySelector('input[name="pin-bundle-kind"]:checked')?.value || 'classic';
+    const bundlesOn = mode === 'collection' || mode === 'both';
+    const overlay = bundlesOn && (kind === 'overlay' || kind === 'both');
+    const classic = bundlesOn && (kind === 'classic' || kind === 'both');
+    document.querySelector('#pin-overlay-color-wrap').hidden = !overlay;
+    document.querySelector('#pin-classic-options').hidden = !classic;
+    document.querySelector('#pin-rebuild-classic-wrap').hidden = !classic;
+    document.querySelectorAll('input[name="pin-bundle-kind"]').forEach((input) => {
+      input.closest('label').style.opacity = bundlesOn ? '1' : '0.45';
+      input.disabled = !bundlesOn;
+    });
+  }
+
+  document.querySelectorAll('input[name="pin-mode"], input[name="pin-bundle-kind"]').forEach((input) => {
+    input.addEventListener('change', refreshPinBundleUi);
+  });
+  refreshPinBundleUi();
+
   async function runPins() {
     const mode = document.querySelector('input[name="pin-mode"]:checked')?.value || 'collection';
+    const collectionBundles = document.querySelector('input[name="pin-bundle-kind"]:checked')?.value || 'classic';
     const slugs = pinTargetTheme
       ? [...pinSheetsEl.querySelectorAll('input[type="checkbox"]:checked')].map((input) => input.value)
       : undefined;
@@ -827,6 +882,9 @@
           ? document.querySelector('#pin-heading').value.trim()
           : '',
         accent: normalizeHex(document.querySelector('#pin-accent-hex').value || document.querySelector('#pin-accent').value),
+        collectionBundles,
+        overlayColor: document.querySelector('#pin-overlay-color').value,
+        rebuildClassic: document.querySelector('#pin-rebuild-classic').checked,
       }),
     });
     const data = await response.json();
@@ -866,10 +924,11 @@
       <article>
         ${head(theme)}
         <div class="row">
-          <button class="quiet" type="button" data-pins="${esc(theme.slug)}">1. Собрать пины</button>
-          <button class="quiet" type="button" data-pin-copy="${esc(theme.slug)}">2. Тексты</button>
-          <button type="button" data-pins-publish="${esc(theme.slug)}">3. В таблицу</button>
+          <button class="quiet" type="button" data-pins="${esc(theme.slug)}" title="Новые картинки пинов. Старые бандлы не удаляет.">1. Собрать пины</button>
+          <button class="quiet" type="button" data-pin-copy="${esc(theme.slug)}" title="Только тексты. Картинки не трогает.">2. Тексты</button>
+          <button type="button" data-pins-publish="${esc(theme.slug)}" title="Новые строки в таблицу. Уже отправленные не повторяет. Бандлы не стирает.">3. В таблицу</button>
         </div>
+        <p class="hint">Собрать — новые картинки, старые бандлы целы. Тексты — только подписи. В таблицу — только то, чего в таблице ещё нет.</p>
         <div class="board-row">
           <input data-board-id="${esc(theme.slug)}" value="${esc(theme.boardId || '')}" placeholder="ID доски Pinterest — цифры из ссылки" aria-label="ID доски Pinterest для ${esc(theme.title)}">
           <button class="quiet" type="button" data-board-save="${esc(theme.slug)}">Сохранить доску</button>
@@ -1278,6 +1337,16 @@
     }
   }
   document.querySelector('#pins-publish').addEventListener('click', () => startPinsPublish());
+  document.querySelector('#pins-clear').addEventListener('click', async () => {
+    logEl.textContent = 'Убираю с диска пины, которые уже в таблице…';
+    try {
+      const response = await fetch('/api/pins/clear-shipped', { method: 'POST' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) logEl.textContent = data.error || 'Не удалось запустить уборку.';
+    } catch (error) {
+      logEl.textContent = error.message || String(error);
+    }
+  });
   themesPinsEl.addEventListener('click', async (event) => {
     const save = event.target.closest('[data-board-save]');
     if (save) {

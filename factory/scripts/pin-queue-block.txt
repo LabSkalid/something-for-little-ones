@@ -1,0 +1,8 @@
+# These collection files were rebuilt by mistake. Never send them to the Make sheet.
+animal-coloring-pages-collection-3.png
+animal-coloring-pages-collection-4.png
+animal-coloring-pages-collection-5.png
+animal-coloring-pages-collection-6.png
+animal-coloring-pages-collection-7.png
+animal-coloring-pages-collection-8.png
+animal-coloring-pages-collection-9.png

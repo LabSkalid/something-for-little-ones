@@ -4,12 +4,19 @@ import { parse } from 'yaml';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { readSite } from './brand.ts';
-import { stampSite } from './footer.ts';
+import { footerHeight, stampSite, stripSiteFooter } from './footer.ts';
 import { pngToPdf } from './pdf.ts';
 import { writePinterestCopy } from './pin-copy.ts';
-import { renderCollectionPin, renderPin } from './pins.ts';
+import {
+  type BundleOverlayColor,
+  BUNDLE_OVERLAY_COLORS,
+  renderCollectionPin,
+  renderOverlayBundlePin,
+  renderPin,
+} from './pins.ts';
 import {
   artRoot,
+  factoryRoot,
   pinRoot,
   printRoot,
   sheetContentRoot,
@@ -33,6 +40,9 @@ type SheetData = {
 
 export type PinMode = 'collection' | 'single' | 'both';
 
+/** Classic 9-grid, overlay 4-grid, or both when building bundles. */
+export type CollectionBundleKind = 'classic' | 'overlay' | 'both';
+
 export type PinBuildOptions = {
   theme?: string;
   mode?: PinMode;
@@ -44,6 +54,12 @@ export type PinBuildOptions = {
   accent?: string;
   /** Banner title. Empty = collection title from the theme. */
   heading?: string;
+  /** Which bundle style to build. Default classic (unchanged behavior). */
+  collectionBundles?: CollectionBundleKind;
+  /** Overlay frame color, or random with light balancing per theme run. */
+  overlayColor?: BundleOverlayColor | 'random';
+  /** Clear classic collection slug memory for this theme (does not delete PNG). */
+  rebuildClassic?: boolean;
 };
 
 export type PinCopyOnlyOptions = {
@@ -86,8 +102,14 @@ async function drawingOnly(png: Buffer) {
   const meta = await sharp(png).metadata();
   const width = meta.width ?? 0;
   const height = meta.height ?? 0;
-  const band = Math.round(width * 0.072);
-  if (width < 100 || height <= band + 100) return png;
+  if (width < 100 || height < 200) return png;
+
+  const smart = await stripSiteFooter(png);
+  const smartH = (await sharp(smart).metadata()).height ?? height;
+  if (smartH < height - 12) return smart;
+
+  const band = footerHeight(width);
+  if (height <= band + 100) return png;
   return sharp(png).extract({ left: 0, top: 0, width, height: height - band }).png().toBuffer();
 }
 
@@ -181,6 +203,37 @@ function hasPinCopy(row: Pick<PinRow, 'pinTitle' | 'pinDescription'>) {
 }
 
 /** One pin per 9 sheets, in list order. Leftover sheets under 9 are unused. */
+function overlayBundleSets<T>(pages: T[]): T[][] {
+  const groups: T[][] = [];
+  for (let start = 0; start + 4 <= pages.length; start += 4) {
+    groups.push(pages.slice(start, start + 4));
+  }
+  return groups;
+}
+
+function pickOverlayColor(
+  choice: BundleOverlayColor | 'random' | undefined,
+  counts: Record<BundleOverlayColor, number>,
+): BundleOverlayColor {
+  let picked: BundleOverlayColor;
+  if (choice && choice !== 'random') picked = choice;
+  else {
+    const min = Math.min(...BUNDLE_OVERLAY_COLORS.map((color) => counts[color]));
+    const candidates = BUNDLE_OVERLAY_COLORS.filter((color) => counts[color] === min);
+    picked = candidates[Math.floor(Math.random() * candidates.length)]!;
+  }
+  counts[picked] += 1;
+  return picked;
+}
+
+function isClassicCollectionFilename(name: string) {
+  return /-collection-\d+\.png$/i.test(name);
+}
+
+function isOverlayBundleFilename(name: string) {
+  return /-bundle-\d+\.png$/i.test(name);
+}
+
 function collectionSets<T>(pages: T[]): T[][] {
   const groups: T[][] = [];
   for (let start = 0; start + 9 <= pages.length; start += 9) {
@@ -257,7 +310,7 @@ async function listPinPngFilenames(themeId?: string): Promise<string[]> {
 
 function pinTypeFromFilename(filename: string, existingType?: PinRow['type']): PinRow['type'] {
   if (existingType === 'collection' || existingType === 'single') return existingType;
-  return /-collection-\d+\.png$/i.test(filename) ? 'collection' : 'single';
+  return isClassicCollectionFilename(filename) || isOverlayBundleFilename(filename) ? 'collection' : 'single';
 }
 
 async function ensureManifestRow(filename: string, existing?: PinRow): Promise<PinRow> {
@@ -289,6 +342,8 @@ async function ensureManifestRow(filename: string, existing?: PinRow): Promise<P
 
 function themeIdFromPinFilename(filename: string) {
   const base = filename.replace(/\.png$/i, '');
+  const overlay = base.match(/^(.*)-bundle-\d+$/i);
+  if (overlay) return overlay[1];
   const collection = base.match(/^(.*)-collection-\d+$/i);
   if (collection) return collection[1];
   const dash = base.lastIndexOf('-');
@@ -300,7 +355,7 @@ function themeIdFromPinFilename(filename: string) {
 
 function sheetSlugFromPinFilename(filename: string, themeId: string) {
   const base = filename.replace(/\.png$/i, '');
-  if (/-collection-\d+$/i.test(base)) return null;
+  if (/-collection-\d+$/i.test(base) || /-bundle-\d+$/i.test(base)) return null;
   if (!base.startsWith(`${themeId}-`)) return null;
   return base.slice(themeId.length + 1);
 }
@@ -417,6 +472,7 @@ export async function writePinCopyOnly(options: PinCopyOnlyOptions = {}) {
   const filenames = await listPinPngFilenames(onlyTheme);
   const targets: PinRow[] = [];
 
+  const block = await readQueueBlock();
   for (const filename of filenames) {
     if (onlyTheme && !filename.startsWith(`${onlyTheme}-`)) continue;
     const existing = byName.get(filename);
@@ -424,6 +480,10 @@ export async function writePinCopyOnly(options: PinCopyOnlyOptions = {}) {
     const isCollection = type === 'collection';
     if (mode === 'collection' && !isCollection) continue;
     if (mode === 'single' && isCollection) continue;
+    if (queueBlocked(filename, block)) {
+      console.log(`pin copy: ${filename} в таблицу не идёт, текст не пишу`);
+      continue;
+    }
     if (selected.size && !selected.has(filename)) continue;
 
     const row = await ensureManifestRow(filename, existing);
@@ -513,21 +573,13 @@ export async function listPinSheets(themeId: string) {
   return sheets.sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
 }
 
-async function fileExists(filePath: string): Promise<boolean> {
-  try {
-    await fs.access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function pinMatchesType(name: string, themeId: string, mode: PinMode) {
   if (!name.startsWith(`${themeId}-`)) return false;
   if (!/\.(png|jpg)$/i.test(name)) return false;
-  const isCollection = /-collection-\d+\.(png|jpg)$/i.test(name);
-  if (mode === 'collection') return isCollection;
-  if (mode === 'single') return !isCollection;
+  const isBundle =
+    /-collection-\d+\.(png|jpg)$/i.test(name) || /-bundle-\d+\.(png|jpg)$/i.test(name);
+  if (mode === 'collection') return isBundle;
+  if (mode === 'single') return !isBundle;
   return true;
 }
 
@@ -561,18 +613,359 @@ async function removeThemePins(themeId: string, mode: PinMode) {
   if (removed) console.log(`remove old pins: ${removed}`);
 }
 
-async function nextCollectionIndex(themeId: string): Promise<number> {
-  let names: string[] = [];
+const collectionUsedFile = path.join(factoryRoot, 'scripts', 'collection-used.json');
+const overlayBundleUsedFile = path.join(factoryRoot, 'scripts', 'overlay-bundle-used.json');
+const queueBlockFile = path.join(factoryRoot, 'scripts', 'pin-queue-block.txt');
+
+async function walkPinNames(dir: string): Promise<string[]> {
+  let entries;
   try {
-    names = await fs.readdir(pinRoot);
+    entries = await fs.readdir(dir, { withFileTypes: true });
   } catch {
-    return 1;
+    return [];
   }
+  const names: string[] = [];
+  for (const entry of entries) {
+    if (entry.isDirectory()) names.push(...(await walkPinNames(path.join(dir, entry.name))));
+    else names.push(entry.name);
+  }
+  return names;
+}
+
+async function nextCollectionIndex(themeId: string): Promise<number> {
+  const names = await walkPinNames(pinRoot);
   const numbers = names
-    .map((name) => name.match(new RegExp(`^${themeId}-collection-(\\d+)\\.png$`, 'i'))?.[1])
+    .map((name) => name.match(new RegExp(`^${themeId}-collection-(\\d+)\\.(png|jpe?g)$`, 'i'))?.[1])
     .filter(Boolean)
     .map(Number);
   return numbers.length ? Math.max(...numbers) + 1 : 1;
+}
+
+async function pinNameExists(filename: string) {
+  const want = filename.toLowerCase();
+  const names = await walkPinNames(pinRoot);
+  if (names.some((name) => name.toLowerCase() === want)) return true;
+  return (await readShippedPins()).some((pin) => pin.filename.toLowerCase() === want);
+}
+
+type CollectionUsedEntry = { filename: string; slugs: string[] };
+
+function classicCollectionFilenameRe(themeId: string) {
+  const safe = themeId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`^${safe}-collection-\\d+\\.(png|jpe?g)$`, 'i');
+}
+
+async function listClassicCollectionFilenames(themeId: string): Promise<string[]> {
+  const names = await walkPinNames(pinRoot);
+  const re = classicCollectionFilenameRe(themeId);
+  return names.filter((name) => re.test(name));
+}
+
+async function clearClassicCollectionUsed(themeId: string) {
+  let data: Record<string, string[] | CollectionUsedEntry[]> = {};
+  try {
+    data = JSON.parse(await fs.readFile(collectionUsedFile, 'utf8')) as Record<
+      string,
+      string[] | CollectionUsedEntry[]
+    >;
+  } catch {
+    data = {};
+  }
+  delete data[themeId];
+  await fs.writeFile(collectionUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  console.log(`${themeId}: classic учёт листов сброшен (можно собрать бандлы заново)`);
+}
+
+/** Sheets locked by existing classic collection PNG (per-file records). */
+async function readUsedSlugs(themeId: string): Promise<Set<string>> {
+  let data: Record<string, string[] | CollectionUsedEntry[]> = {};
+  try {
+    data = JSON.parse(await fs.readFile(collectionUsedFile, 'utf8')) as Record<
+      string,
+      string[] | CollectionUsedEntry[]
+    >;
+  } catch {
+    return new Set();
+  }
+  const raw = data[themeId];
+  if (!raw?.length) return new Set();
+
+  if (typeof raw[0] === 'string') {
+    const files = await listClassicCollectionFilenames(themeId);
+    const legacy = raw as string[];
+    if (!files.length) {
+      data[themeId] = [];
+      await fs.writeFile(collectionUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+      console.log(`${themeId}: classic учёт сброшен — collection PNG на диске нет`);
+      return new Set();
+    }
+    const cap = files.length * 9;
+    if (legacy.length > cap) {
+      console.log(
+        `${themeId}: в учёте classic ${legacy.length} листов, а файлов collection — ${files.length}; ` +
+          `держим только первые ${cap}. Для полного сброса включите «Пересобрать classic».`,
+      );
+      return new Set(legacy.slice(0, cap));
+    }
+    return new Set(legacy);
+  }
+
+  const used = new Set<string>();
+  const kept: CollectionUsedEntry[] = [];
+  for (const rec of raw as CollectionUsedEntry[]) {
+    if (await pinNameExists(rec.filename)) {
+      kept.push(rec);
+      for (const slug of rec.slugs) used.add(slug);
+    }
+  }
+  if (kept.length !== (raw as CollectionUsedEntry[]).length) {
+    data[themeId] = kept;
+    await fs.writeFile(collectionUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+    console.log(`${themeId}: classic учёт подчистил записи без файла`);
+  }
+  return used;
+}
+
+async function addUsedSlugs(themeId: string, filename: string, slugs: string[]) {
+  let data: Record<string, string[] | CollectionUsedEntry[]> = {};
+  try {
+    data = JSON.parse(await fs.readFile(collectionUsedFile, 'utf8')) as Record<
+      string,
+      string[] | CollectionUsedEntry[]
+    >;
+  } catch {
+    data = {};
+  }
+  const raw = data[themeId];
+  let records: CollectionUsedEntry[] = [];
+  if (raw?.length && typeof raw[0] === 'object' && raw[0] !== null && 'filename' in raw[0]) {
+    records = [...(raw as CollectionUsedEntry[])];
+  }
+  records = records.filter((entry) => entry.filename !== filename);
+  records.push({ filename, slugs });
+  data[themeId] = records;
+  await fs.writeFile(collectionUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+}
+
+type OverlayBundleUsedEntry = { filename: string; slugs: string[] };
+
+function overlayBundleFilenameRe(themeId: string) {
+  const safe = themeId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`^${safe}-bundle-\\d+\\.(png|jpe?g)$`, 'i');
+}
+
+async function listOverlayBundleFilenames(themeId: string): Promise<string[]> {
+  const names = await walkPinNames(pinRoot);
+  const re = overlayBundleFilenameRe(themeId);
+  return names.filter((name) => re.test(name));
+}
+
+/** Sheets locked only while the matching -bundle-*.png still exists on disk. */
+async function readOverlayUsedSlugs(themeId: string): Promise<Set<string>> {
+  let data: Record<string, string[] | OverlayBundleUsedEntry[]> = {};
+  try {
+    data = JSON.parse(await fs.readFile(overlayBundleUsedFile, 'utf8')) as Record<
+      string,
+      string[] | OverlayBundleUsedEntry[]
+    >;
+  } catch {
+    return new Set();
+  }
+  const raw = data[themeId];
+  if (!raw?.length) return new Set();
+
+  if (typeof raw[0] === 'string') {
+    const bundleFiles = await listOverlayBundleFilenames(themeId);
+    if (!bundleFiles.length) {
+      data[themeId] = [];
+      await fs.writeFile(overlayBundleUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+      console.log(`${themeId}: overlay учёт сброшен — bundle PNG на диске нет`);
+      return new Set();
+    }
+    return new Set(raw as string[]);
+  }
+
+  const used = new Set<string>();
+  const kept: OverlayBundleUsedEntry[] = [];
+  for (const rec of raw as OverlayBundleUsedEntry[]) {
+    if (await pinNameExists(rec.filename)) {
+      kept.push(rec);
+      for (const slug of rec.slugs) used.add(slug);
+    }
+  }
+  if (kept.length !== (raw as OverlayBundleUsedEntry[]).length) {
+    data[themeId] = kept;
+    await fs.writeFile(overlayBundleUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+    console.log(`${themeId}: overlay учёт подчистил записи без файла`);
+  }
+  return used;
+}
+
+async function addOverlayUsedSlugs(themeId: string, filename: string, slugs: string[]) {
+  let data: Record<string, string[] | OverlayBundleUsedEntry[]> = {};
+  try {
+    data = JSON.parse(await fs.readFile(overlayBundleUsedFile, 'utf8')) as Record<
+      string,
+      string[] | OverlayBundleUsedEntry[]
+    >;
+  } catch {
+    data = {};
+  }
+  const raw = data[themeId];
+  let records: OverlayBundleUsedEntry[] = [];
+  if (raw?.length && typeof raw[0] === 'object' && raw[0] !== null && 'filename' in raw[0]) {
+    records = [...(raw as OverlayBundleUsedEntry[])];
+  }
+  records = records.filter((entry) => entry.filename !== filename);
+  records.push({ filename, slugs });
+  data[themeId] = records;
+  await fs.writeFile(overlayBundleUsedFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+}
+
+async function nextOverlayBundleIndex(themeId: string): Promise<number> {
+  const names = await walkPinNames(pinRoot);
+  const numbers = names
+    .map((name) => name.match(new RegExp(`^${themeId}-bundle-(\\d+)\\.(png|jpe?g)$`, 'i'))?.[1])
+    .filter(Boolean)
+    .map(Number);
+  return numbers.length ? Math.max(...numbers) + 1 : 1;
+}
+
+/** Filenames that must never be copied into the Make sheet. */
+export async function readQueueBlock(): Promise<Set<string>> {
+  try {
+    const raw = await fs.readFile(queueBlockFile, 'utf8');
+    return new Set(
+      raw
+        .split(/\r?\n/)
+        .map((line) => line.trim().toLowerCase())
+        .filter((line) => line && !line.startsWith('#')),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+export function queueBlocked(filename: string, block: Set<string>) {
+  const lower = filename.toLowerCase();
+  const asPng = lower.replace(/\.jpe?g$/, '.png');
+  return block.has(lower) || block.has(asPng);
+}
+
+/** Pins already sent to the Make sheet. Files may be deleted; these names and sheets stay used. */
+const shippedPinsFile = path.join(factoryRoot, 'scripts', 'pins-shipped.json');
+
+export type ShippedPin = {
+  filename: string;
+  kind: 'classic' | 'overlay' | 'single';
+  slugs: string[];
+};
+
+function shippedKind(filename: string): ShippedPin['kind'] {
+  if (/-bundle-\d+\.png$/i.test(filename)) return 'overlay';
+  if (/-collection-\d+\.png$/i.test(filename)) return 'classic';
+  return 'single';
+}
+
+export async function readShippedPins(): Promise<ShippedPin[]> {
+  try {
+    const data = JSON.parse(await fs.readFile(shippedPinsFile, 'utf8')) as ShippedPin[];
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+async function slugsRecordedFor(filename: string, kind: ShippedPin['kind']): Promise<string[]> {
+  if (kind === 'single') {
+    const themeId = themeIdFromPinFilename(filename);
+    const slug = sheetSlugFromPinFilename(filename, themeId);
+    return slug ? [slug] : [];
+  }
+  const file = kind === 'classic' ? collectionUsedFile : overlayBundleUsedFile;
+  try {
+    const data = JSON.parse(await fs.readFile(file, 'utf8')) as Record<
+      string,
+      string[] | { filename: string; slugs: string[] }[]
+    >;
+    const themeId = themeIdFromPinFilename(filename);
+    const raw = data[themeId];
+    if (!raw?.length || typeof raw[0] === 'string') return [];
+    const hit = (raw as { filename: string; slugs: string[] }[]).find(
+      (entry) => entry.filename.toLowerCase() === filename.toLowerCase(),
+    );
+    return hit?.slugs ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** Call after the sheet accepts a batch. Hand-deleted pins never get here. */
+export async function rememberShippedPins(filenames: string[]) {
+  const byName = new Map((await readShippedPins()).map((pin) => [pin.filename.toLowerCase(), pin]));
+  let added = 0;
+  for (const raw of filenames) {
+    const filename = String(raw ?? '').trim().replace(/\.jpe?g$/i, '.png');
+    if (!filename) continue;
+    const key = filename.toLowerCase();
+    if (byName.has(key)) continue;
+    const kind = shippedKind(filename);
+    byName.set(key, { filename, kind, slugs: await slugsRecordedFor(filename, kind) });
+    added += 1;
+  }
+  if (!added) return added;
+  await fs.writeFile(shippedPinsFile, `${JSON.stringify([...byName.values()], null, 2)}\n`, 'utf8');
+  console.log(`Запомнила в списке таблицы: ${added} пин(ов). Кнопка «Убрать с диска» сможет их стереть, заново они не соберутся.`);
+  return added;
+}
+
+export async function shippedSlugSet(themeId: string, kind: 'classic' | 'overlay'): Promise<Set<string>> {
+  const slugs = new Set<string>();
+  for (const pin of await readShippedPins()) {
+    if (pin.kind !== kind) continue;
+    if (!pin.filename.toLowerCase().startsWith(`${themeId.toLowerCase()}-`)) continue;
+    for (const slug of pin.slugs) slugs.add(slug);
+  }
+  return slugs;
+}
+
+/** Delete local PNG/JPG of pins already sent to the sheet. Leaves unsent pins and done/. */
+export async function removeShippedLocalFiles() {
+  const shipped = await readShippedPins();
+  if (!shipped.length) {
+    console.log(
+      'Убирать нечего. Сначала нажмите «В таблицу» — фабрика запоминает только те пины, которые реально ушли в таблицу. Остальные, и те что вы удалили руками, не трогаю.',
+    );
+    return { removed: 0, keptPreview: 0 };
+  }
+  let removed = 0;
+  let keptPreview = 0;
+  for (const pin of shipped) {
+    const pngName = pin.filename.replace(/\.jpe?g$/i, '.png');
+    const jpgName = pngName.replace(/\.png$/i, '.jpg');
+    const keepPng = /-collection-1\.png$/i.test(pngName);
+    if (keepPng) keptPreview += 1;
+    for (const name of keepPng ? [jpgName] : [pngName, jpgName]) {
+      const file = path.join(pinRoot, name);
+      try {
+        await fs.access(file);
+      } catch {
+        continue;
+      }
+      await fs.rm(file);
+      removed += 1;
+      console.log(`убрала с диска: ${name}`);
+    }
+  }
+  console.log(
+    removed
+      ? `Готово. С диска убрано файлов: ${removed}. Пины, которых ещё нет в таблице, на месте.`
+      : 'Эти пины с диска уже убраны. Пины вне таблицы не трогала.',
+  );
+  if (keptPreview) {
+    console.log(`Картинку темы для сайта (collection-1) оставила, штук: ${keptPreview}.`);
+  }
+  return { removed, keptPreview };
 }
 
 export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
@@ -587,6 +980,14 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const removeOld = Boolean(options.removeOld);
   const writeCopy = Boolean(options.writeCopy);
   const keywords = (options.keywords ?? '').trim();
+  const collectionBundles: CollectionBundleKind = options.collectionBundles ?? 'classic';
+  const overlayColorChoice = options.overlayColor ?? 'random';
+  const buildClassic =
+    (mode === 'collection' || mode === 'both') &&
+    (collectionBundles === 'classic' || collectionBundles === 'both');
+  const buildOverlay =
+    (mode === 'collection' || mode === 'both') &&
+    (collectionBundles === 'overlay' || collectionBundles === 'both');
 
   await fs.mkdir(pinRoot, { recursive: true });
   const site = readSite();
@@ -596,16 +997,22 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const copyInputs: Parameters<typeof writePinterestCopy>[0] = [];
   let singles = 0;
   let collections = 0;
+  let overlayBundles = 0;
   const skipped: string[] = [];
+  const overlayColorCounts = Object.fromEntries(
+    BUNDLE_OVERLAY_COLORS.map((color) => [color, 0]),
+  ) as Record<BundleOverlayColor, number>;
   console.log(
     `pins: local composites only, no image model; mode=${mode}` +
+      (buildClassic ? '; classic 9-grid' : '') +
+      (buildOverlay ? `; overlay 4-grid (color=${overlayColorChoice})` : '') +
       (writeCopy ? '; Pinterest copy via text model' : ''),
   );
 
   for (const file of themes) {
     const themeId = file.replace(/\.md$/, '');
     if (onlyTheme && themeId !== onlyTheme) continue;
-    if (mode === 'collection' || mode === 'both') await removeThemePins(themeId, 'collection');
+    // Collection files are never deleted. A published pin keeps its filename.
     if (removeOld && (mode === 'single' || mode === 'both')) await removeThemePins(themeId, 'single');
     const data = readFrontmatter(await fs.readFile(path.join(themeContentRoot, file), 'utf8')) as ThemeData;
     const sheetDir = path.join(sheetContentRoot, themeId);
@@ -655,9 +1062,14 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     const themeRows: PinRow[] = [];
     const existingPinNames = new Set(await listPinPngFilenames(themeId));
 
+    const shippedNames = new Set((await readShippedPins()).map((pin) => pin.filename.toLowerCase()));
     if (mode === 'single' || mode === 'both') {
       for (const page of pages) {
         const filename = `${themeId}-${page.slug}.png`;
+        if (shippedNames.has(filename.toLowerCase())) {
+          console.log(`skip ${filename}: уже в таблице`);
+          continue;
+        }
         if (selected.size && existingPinNames.has(filename)) {
           console.log(`skip existing pin ${filename}`);
           continue;
@@ -680,18 +1092,24 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
       }
     }
 
-    if (mode === 'collection' || mode === 'both') {
-      const groups = collectionSets(pages);
+    if (buildClassic) {
+      if (options.rebuildClassic) await clearClassicCollectionUsed(themeId);
+      const used = await readUsedSlugs(themeId);
+      for (const slug of await shippedSlugSet(themeId, 'classic')) used.add(slug);
+      const fresh = pages.filter((page) => !used.has(page.slug));
+      const already = pages.length - fresh.length;
+      if (already) console.log(`${themeId}: ${already} лист(ов) уже в classic-бандле, заново не собираю`);
+      const groups = collectionSets(fresh);
       if (!groups.length) {
-        skipped.push(`${themeId} collection (${pages.length} sheets)`);
-        console.log(`skip collection ${themeId}: need 9 sheets, have ${pages.length}`);
-      } else if (pages.length % 9) {
-        console.log(`${themeId}: ${pages.length % 9} leftover sheet(s) not used (need groups of 9)`);
+        skipped.push(`${themeId} collection (${fresh.length} new sheets)`);
+        console.log(`skip collection ${themeId}: need 9 new sheets, have ${fresh.length}`);
+      } else if (fresh.length % 9) {
+        console.log(`${themeId}: ${fresh.length % 9} leftover sheet(s) not used (need groups of 9)`);
       }
       let nextCollectionNumber = await nextCollectionIndex(themeId);
       for (const group of groups) {
         let filename = `${themeId}-collection-${nextCollectionNumber}.png`;
-        while (!removeOld && selected.size && await fileExists(path.join(pinRoot, filename))) {
+        while (await pinNameExists(filename)) {
           nextCollectionNumber += 1;
           filename = `${themeId}-collection-${nextCollectionNumber}.png`;
         }
@@ -715,7 +1133,53 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
           age: [...new Set(group.map((page) => page.age).filter(Boolean))].join(', '),
         });
         collections += 1;
+        await addUsedSlugs(themeId, filename, group.map((page) => page.slug));
         console.log(`pin ${filename}`);
+      }
+    }
+
+    if (buildOverlay) {
+      const used = await readOverlayUsedSlugs(themeId);
+      for (const slug of await shippedSlugSet(themeId, 'overlay')) used.add(slug);
+      const fresh = pages.filter((page) => !used.has(page.slug));
+      const already = pages.length - fresh.length;
+      if (already)
+        console.log(`${themeId}: ${already} лист(ов) уже в overlay-бандле (4-up), заново не собираю`);
+      const groups = overlayBundleSets(fresh);
+      if (!groups.length) {
+        skipped.push(`${themeId} overlay bundle (${fresh.length} new sheets)`);
+        console.log(`skip overlay bundle ${themeId}: need 4 new sheets, have ${fresh.length}`);
+      } else if (fresh.length % 4) {
+        console.log(`${themeId}: ${fresh.length % 4} leftover sheet(s) not used (need groups of 4)`);
+      }
+      let nextBundleNumber = await nextOverlayBundleIndex(themeId);
+      for (const group of groups) {
+        let filename = `${themeId}-bundle-${nextBundleNumber}.png`;
+        while (await pinNameExists(filename)) {
+          nextBundleNumber += 1;
+          filename = `${themeId}-bundle-${nextBundleNumber}.png`;
+        }
+        const overlay = pickOverlayColor(overlayColorChoice, overlayColorCounts);
+        nextBundleNumber += 1;
+        const png = await renderOverlayBundlePin({
+          images: group.map((page) => page.image),
+          overlay,
+        });
+        await writePinFiles(filename, png);
+        const url = `${origin}/${themeId}/`;
+        themeRows.push({ filename, type: 'collection', title, url });
+        copyInputs.push({
+          filename,
+          type: 'collection',
+          themeTitle: title,
+          url,
+          sheetTitle: group.map((page) => page.title).join(', '),
+          sheetDescription: data.description ?? '',
+          age: [...new Set(group.map((page) => page.age).filter(Boolean))].join(', '),
+        });
+        overlayBundles += 1;
+        await addOverlayUsedSlugs(themeId, filename, group.map((page) => page.slug));
+        console.log(`pin ${filename} (overlay ${overlay})`);
       }
     }
 
@@ -737,7 +1201,9 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   }
   if (keptCopy) console.log(`pin copy kept: ${keptCopy} existing texts`);
 
+  const block = await readQueueBlock();
   const needCopy = copyInputs.filter((item) => {
+    if (queueBlocked(item.filename, block)) return false;
     const row = rows.find((r) => r.filename === item.filename);
     return row ? !hasPinCopy(row) : true;
   });
@@ -777,9 +1243,16 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
       const themeId = onlyTheme;
       if (themeId && !row.filename.startsWith(`${themeId}-`)) return true;
       if (!themeId && mode === 'both') return false;
-      const isCollection = /-collection-\d+\.png$/i.test(row.filename);
-      if ((mode === 'collection' || mode === 'both') && isCollection) return false;
-      if ((mode === 'single' || mode === 'both') && !isCollection) {
+      const isClassic = isClassicCollectionFilename(row.filename);
+      const isOverlay = isOverlayBundleFilename(row.filename);
+      const isBundle = isClassic || isOverlay;
+      if ((mode === 'collection' || mode === 'both') && isBundle) {
+        if (buildClassic && buildOverlay) return !rebuilt.has(row.filename);
+        if (buildClassic && isClassic) return !rebuilt.has(row.filename);
+        if (buildOverlay && isOverlay) return !rebuilt.has(row.filename);
+        return true;
+      }
+      if ((mode === 'single' || mode === 'both') && !isBundle) {
         if (removeOld || !selected.size) return false;
         return !rebuilt.has(row.filename);
       }
@@ -787,8 +1260,13 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     })
     .concat(rows);
   await writeManifest(manifest);
+  if (overlayBundles) {
+    console.log(
+      `overlay colors: ${BUNDLE_OVERLAY_COLORS.map((color) => `${color}=${overlayColorCounts[color]}`).join(', ')}`,
+    );
+  }
   console.log(
-    `pins done: ${singles} single, ${collections} collection` +
+    `pins done: ${singles} single, ${collections} classic collection, ${overlayBundles} overlay bundle` +
       (skipped.length ? `; skipped: ${skipped.join(', ')}` : ''),
   );
   console.log(`manifest: ${path.join(pinRoot, 'pins.csv')}`);
