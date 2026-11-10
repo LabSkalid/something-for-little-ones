@@ -751,13 +751,26 @@ export async function matchDraftsToTheme(
     }
     pairs.sort((a, b) => a.distance - b.distance);
 
-    // Clear matches only; resized/letterboxed copies of the same line art land well under this.
-    const maxDistance = 0.24;
+    // Same line art, after the site footer and a resize, lands around 0.01.
+    // Two different pages in one theme are still mostly white, so a loose
+    // average (the old 0.24) matched almost every new drawing to some sheet.
+    // Different pages in the rocket and animal sets start around 0.08.
+    const maxDistance = 0.045;
+    const minGap = 0.02;
+    const rankedByDraft = new Map<number, number[]>();
+    for (const pair of pairs) {
+      const list = rankedByDraft.get(pair.draftIndex) ?? [];
+      list.push(pair.distance);
+      rankedByDraft.set(pair.draftIndex, list);
+    }
     const claimedDrafts = new Set<number>();
     let visualMatched = 0;
     for (const pair of pairs) {
       if (pair.distance > maxDistance) break;
       if (claimedDrafts.has(pair.draftIndex) || used.has(pair.sheet.slug)) continue;
+      const ranked = rankedByDraft.get(pair.draftIndex) ?? [];
+      const second = ranked.find((distance) => distance > pair.distance + 0.0005);
+      if (second !== undefined && second - pair.distance < minGap) continue;
       used.add(pair.sheet.slug);
       claimedDrafts.add(pair.draftIndex);
       matchedIndexes.add(pair.draftIndex);

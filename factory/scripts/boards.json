@@ -43,6 +43,13 @@
       "boardId": "1086000966335688109",
       "tier": 2,
       "weight": 1
+    },
+    {
+      "key": "rocket",
+      "board": "rocket",
+      "boardId": "1086000966335726418",
+      "tier": 2,
+      "weight": 1
     }
   ]
 }
