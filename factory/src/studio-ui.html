@@ -457,7 +457,7 @@
     <div class="note">
       <strong>Как выложить пины</strong>
       <ol>
-        <li>У нужной подборки нажмите «1. Собрать пины» — фабрика делает картинки 1000×1500 (JPEG уйдёт в интернет на шаге 3). Файл pins.csv пишет она же, руками в JSON ничего писать не надо.</li>
+        <li>У нужной подборки нажмите «1. Собрать пины» — фабрика делает картинки 1000×1500 (JPEG уйдёт в интернет на шаге 3). Бандл — сетка 9 листов. Файл pins.csv пишет она же.</li>
         <li>«2. Тексты» — заголовки и описания для Pinterest. Можно пропустить: шаг 3 сам допишет пустые.</li>
         <li>«3. В таблицу» у этой подборки — сожмёт новые JPEG, выложит пины и листы в хранилище, допишет пустые тексты и добавит в таблицу Make только новые строки. Уже лежащие в таблице не дублирует.</li>
         <li>Кнопка «Все новые пины в таблицу» делает то же самое сразу по всем темам. Для одной темы жмите «3» на её карточке, иначе снова прогонятся все старые.</li>
@@ -478,32 +478,26 @@
   <p id="pin-dialog-theme" class="hint">Тема не выбрана</p>
 
   <div class="modes">
-    <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы (по 3–4 картинки)</label>
+    <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы (сетка 9 картинок)</label>
     <label><input type="radio" name="pin-mode" value="single"> Только отдельные пины</label>
     <label><input type="radio" name="pin-mode" value="both"> И бандлы, и отдельные</label>
   </div>
 
-  <label for="pin-count">Сколько бандлов</label>
-  <select id="pin-count">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6" selected>6</option>
-    <option value="8">8</option>
-    <option value="10">10</option>
-    <option value="12">12</option>
-    <option value="16">16</option>
-    <option value="20">20</option>
-  </select>
-  <p class="hint">Каждый бандл — до 4 отмеченных листов по порядку. Сколько получится, зависит от числа галочек: 12 листов ≈ до 3 бандлов, 24 ≈ до 6.</p>
+  <p class="hint">Сколько бандлов — столько полных девяток в отмеченных листах: 9 → 1 пин, 18 → 2, 27 → 3. Остаток меньше 9 не берём.</p>
+
+  <label>Надпись на полосе</label>
+  <div class="modes">
+    <label><input type="radio" name="pin-heading-mode" value="theme" checked> Название коллекции</label>
+    <label><input type="radio" name="pin-heading-mode" value="custom"> Своё</label>
+  </div>
+  <input id="pin-heading" placeholder="Например: Christian Christmas" disabled>
+  <p class="hint">Плашка Free PDF Printables всегда справа, одно и то же место. Слева — эта надпись на оставшуюся ширину.</p>
 
   <label for="pin-keywords">Ключевики для Pinterest (через запятую)</label>
   <input id="pin-keywords" placeholder="free coloring pages, printable coloring pages">
 
-  <label for="pin-accent">Цвет FREE PRINTABLE внизу</label>
-  <p class="hint">Тот же цвет идёт на рамки бандла. Можно оставить как в теме или выбрать другой.</p>
+  <label for="pin-accent">Цвет плашки с названием</label>
+  <p class="hint">Цвета сайта. Можно оставить как в теме.</p>
   <div class="swatches" id="pin-accent-swatches">
     <button class="swatch" type="button" data-color="#1d7ad6" title="Синий" style="background:#1d7ad6"></button>
     <button class="swatch" type="button" data-color="#c45c26" title="Оранжевый" style="background:#c45c26"></button>
@@ -519,16 +513,12 @@
   </div>
 
   <label class="check" style="margin-top:0.8rem">
-    <input id="pin-framed" type="checkbox" checked>
-    Рамки вокруг картинок в бандле (удобно для 4–8 лет; для 2–3 можно снять)
-  </label>
-  <label class="check">
     <input id="pin-copy" type="checkbox">
     Написать заголовок и описание только для новых пинов без текста (старые в pins.csv не затирает)
   </label>
   <label class="check">
     <input id="pin-remove" type="checkbox">
-    Удалить старые пины этого типа у темы
+    Также удалить старые одиночные пины темы (бандлы и так перезаписываются)
   </label>
 
   <div id="pin-sheets-wrap">
@@ -538,7 +528,7 @@
       <button id="pin-sheets-none" class="quiet" type="button">Снять</button>
     </div>
     <div id="pin-sheets" class="sheet-list"></div>
-    <p class="hint">Для бандла берутся отмеченные листы по порядку, группами по 4.</p>
+    <p class="hint">Для бандла берутся отмеченные листы по порядку, группами по 9.</p>
   </div>
 
   <div class="row">
@@ -721,6 +711,10 @@
     pinSheetsWrap.classList.toggle('hidden', !theme);
     pinSheetsEl.innerHTML = '';
     setPinAccent(theme ? themeAccent(theme) : '#1d7ad6');
+    document.querySelector('input[name="pin-heading-mode"][value="theme"]').checked = true;
+    const headingEl = document.querySelector('#pin-heading');
+    headingEl.value = '';
+    headingEl.disabled = true;
     if (theme) {
       const data = await fetch('/api/pins/sheets?theme=' + encodeURIComponent(theme)).then((res) => res.json());
       const sheets = data.sheets || [];
@@ -826,11 +820,12 @@
         theme: pinTargetTheme || undefined,
         mode,
         slugs,
-        collectionCount: Number(document.querySelector('#pin-count').value || 2),
         writeCopy: document.querySelector('#pin-copy').checked,
-        framed: document.querySelector('#pin-framed').checked,
         removeOld: document.querySelector('#pin-remove').checked,
         keywords: document.querySelector('#pin-keywords').value,
+        heading: document.querySelector('input[name="pin-heading-mode"]:checked')?.value === 'custom'
+          ? document.querySelector('#pin-heading').value.trim()
+          : '',
         accent: normalizeHex(document.querySelector('#pin-accent-hex').value || document.querySelector('#pin-accent').value),
       }),
     });
@@ -1314,6 +1309,13 @@
 
   document.querySelector('#pin-cancel').addEventListener('click', () => pinDialog.close());
   document.querySelector('#pin-run').addEventListener('click', () => runPins());
+  document.querySelectorAll('input[name="pin-heading-mode"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const headingEl = document.querySelector('#pin-heading');
+      headingEl.disabled = document.querySelector('input[name="pin-heading-mode"]:checked')?.value !== 'custom';
+      if (!headingEl.disabled) headingEl.focus();
+    });
+  });
   document.querySelector('#pin-accent-swatches').addEventListener('click', (event) => {
     const swatch = event.target.closest('.swatch');
     if (!swatch) return;

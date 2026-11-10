@@ -1137,19 +1137,20 @@ const server = http.createServer(async (req, res) => {
         theme,
         mode,
         slugs,
-        collectionCount: body.collectionCount ? Number(body.collectionCount) : 2,
         removeOld: Boolean(body.removeOld),
         writeCopy: Boolean(body.writeCopy),
-        framed: body.framed !== false,
         keywords: body.keywords ? String(body.keywords) : '',
         accent,
+        heading: body.heading ? String(body.heading).trim() : undefined,
       };
       const label = [
         theme ? `Пины ${theme}` : 'Пины всех подборок',
         mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
         options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
-        mode !== 'single' ? (options.framed !== false ? 'с рамками' : 'без рамок') : '',
-        accent ? `FREE PRINTABLE ${accent}` : '',
+        mode === 'collection' || mode === 'both' ? 'бандлы заново' : '',
+        options.removeOld ? 'затереть одиночные' : '',
+        options.heading ? `надпись «${options.heading}»` : '',
+        accent ? `плашка ${accent}` : '',
       ]
         .filter(Boolean)
         .join(', ');

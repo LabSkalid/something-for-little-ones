@@ -12,7 +12,7 @@ related:
   - simple-vehicle-coloring-pages
   - car-coloring-pages
 pubDate: 2026-10-07
-updatedDate: 2026-10-07
+updatedDate: 2026-11-10
 keywords:
   - rocket coloring pages
   - space coloring pages
@@ -32,6 +32,6 @@ pins:
     subtitle: One rocket, sorted by age
 ---
 
-This collection features rocket coloring pages, with designs such as Ringed Planet, Two Round Windows, and Chunky Rocket.
+This collection features rocket coloring pages, with designs such as Stacked Windows, Smoke Launch, Saturn Clouds, and Chunky Rocket.
 
 Download the PDF, not a screenshot of this page.

@@ -4,7 +4,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
-import { siteRoot } from './paths.ts';
+import { factoryRoot, siteRoot } from './paths.ts';
 
 const sansCandidates = [
   'C:/Windows/Fonts/segoeui.ttf',
@@ -103,7 +103,7 @@ function xml(value: string) {
     .replaceAll('"', '&quot;');
 }
 
-function wrap(value: string, max: number) {
+function wrap(value: string, max: number, maxLines = 2) {
   const words = value.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let line = '';
@@ -117,7 +117,22 @@ function wrap(value: string, max: number) {
     }
   }
   if (line) lines.push(line);
-  return lines.slice(0, 2);
+  return lines.slice(0, maxLines);
+}
+
+function fitLineSize(text: string, maxWidth: number, start: number, min: number) {
+  for (let size = start; size >= min; size -= 2) {
+    if (text.length * size * 0.62 <= maxWidth) return size;
+  }
+  return min;
+}
+
+function collectionNameLine(title: string) {
+  return title
+    .trim()
+    .replace(/\s+coloring\s+pages\s*$/i, '')
+    .replace(/\s+/g, ' ')
+    .toUpperCase();
 }
 
 async function heroImage(image: Buffer) {
@@ -177,171 +192,143 @@ export async function renderPin(options: {
 
   const wordmark = wordmarkFontFile();
   const href = `data:image/png;base64,${hero.toString('base64')}`;
+  const display = wordmark?.family ?? 'Fredoka';
   const title = titleBaselines
     .map(
       (baseline, index) =>
-        `<text x="500" y="${baseline}" text-anchor="middle" font-family="Segoe UI" font-size="${titleSize}" font-weight="700" fill="#1A1A1A">${xml(titleLines[index])}</text>`,
+        `<text x="500" y="${baseline}" text-anchor="middle" font-family="${xml(display)}" font-size="${titleSize}" font-weight="600" fill="#1A1A1A">${xml(titleLines[index])}</text>`,
     )
     .join('');
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${PIN_W}" height="${PIN_H}" viewBox="0 0 ${PIN_W} ${PIN_H}">
   <rect width="${PIN_W}" height="${PIN_H}" fill="#FFFFFF"/>
-  ${wordmarkSvg(options.brand, brandBaseline, brandSize, wordmark?.family ?? 'Fredoka')}
+  ${wordmarkSvg(options.brand, brandBaseline, brandSize, display)}
   ${title}
   <image href="${href}" x="${artX}" y="${artY}" width="${artW}" height="${artH}" preserveAspectRatio="xMidYMid meet"/>
-  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="800" fill="${xml(options.accent)}" letter-spacing="1.6">FREE PRINTABLE</text>
+  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="${xml(display)}" font-size="${labelSize}" font-weight="600" fill="${xml(options.accent)}" letter-spacing="1.2">FREE PRINTABLE</text>
 </svg>`;
 
   return rasterize(svg);
 }
 
-function fitBox(iw: number, ih: number, cellW: number, cellH: number, cellX: number, cellY: number) {
-  const scale = Math.min(cellW / iw, cellH / ih);
-  const w = Math.round(iw * scale);
-  const h = Math.round(ih * scale);
-  return {
-    x: Math.round(cellX + (cellW - w) / 2),
-    y: Math.round(cellY + (cellH - h) / 2),
-    w,
-    h,
-  };
+function inkOn(hex: string) {
+  const r = Number.parseInt(hex.slice(1, 3), 16);
+  const g = Number.parseInt(hex.slice(3, 5), 16);
+  const b = Number.parseInt(hex.slice(5, 7), 16);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 168 ? '#1A1A1A' : '#FFFFFF';
 }
 
-async function preparedArts(images: Buffer[]) {
-  const heroes = await Promise.all(images.map((image) => heroImage(image)));
-  return Promise.all(
-    heroes.map(async (hero) => {
-      const meta = await sharp(hero).metadata();
-      return {
-        href: `data:image/png;base64,${hero.toString('base64')}`,
-        iw: meta.width || 1,
-        ih: meta.height || 1,
-      };
-    }),
-  );
-}
-
-/** Collection pin for the theme page: 3 or 4 different drawings. */
+/** Collection pin: 3×3 grid, colored title bar, wordmark on the bottom row. */
 export async function renderCollectionPin(options: {
   title: string;
   accent: string;
   brand: string;
   images: Buffer[];
-  /** Soft rounded frame around each tile — helps older, busier pages read as a grid. */
-  framed?: boolean;
 }) {
-  const count = options.images.length >= 4 ? 4 : 3;
-  if (options.images.length < 3) throw new Error('A collection pin needs 3 or 4 drawings');
-  const framed = options.framed !== false;
-  const arts = await preparedArts(options.images.slice(0, count));
-  const titleLines = options.title.trim() ? wrap(options.title, 34) : [];
-  const hasTitle = titleLines.length > 0;
-  const titleSize = titleLines.length > 1 ? 38 : 44;
-  const titleLineH = titleSize + 8;
-  const brandSize = 32;
-  const labelSize = 34;
-  const wordmark = wordmarkFontFile();
-  const marginX = 40;
-  const gap = framed ? 22 : 28;
-  const brandH = 40;
-  // Without a category heading, keep clear breathing room between the wordmark
-  // and the collection grid. The larger bottom gap balances the FREE PRINTABLES label.
-  const gapBrand = hasTitle ? 12 : 36;
-  const gapTitle = 28;
-  const gapLabel = 48;
-
-  let y = 34;
-  const brandBaseline = y + brandSize;
-  y += brandH + gapBrand;
-  const titleBaselines = titleLines.map((_, index) => y + titleSize + index * titleLineH);
-  y += titleLines.length * titleLineH + (hasTitle ? gapTitle : 0);
-  const artTop = y;
-  const labelBaseline = PIN_H - 52;
-  const artBottom = labelBaseline - gapLabel - 8;
-  const artW = PIN_W - marginX * 2;
-  const artH = artBottom - artTop;
-  // Pack a tight grid sized to the drawings, then center the whole block
-  // so rows don't stretch apart to fill the pin height.
-  const maxRatio = Math.max(...arts.map((art) => art.ih / Math.max(1, art.iw)), 1);
+  if (options.images.length < 9) throw new Error('A collection pin needs 9 drawings');
+  const COLS = 3;
+  const bandH = 248;
+  const gap = 6;
+  const padX = 10;
+  const padY = 10;
+  const cellW = Math.floor((PIN_W - padX * 2 - gap * (COLS - 1)) / COLS);
+  const cellH = Math.floor((PIN_H - padY * 2 - gap * 3 - bandH) / 3);
+  const gridW = cellW * COLS + gap * (COLS - 1);
+  const originX = Math.round((PIN_W - gridW) / 2);
+  const bandY = padY + cellH * 2 + gap * 2;
   const cells: { x: number; y: number; w: number; h: number }[] = [];
-  if (count === 4) {
-    const cellW = (artW - gap) / 2;
-    const idealCellH = cellW * maxRatio;
-    const cellH = Math.min(idealCellH, (artH - gap) / 2);
-    const gridH = cellH * 2 + gap;
-    const gridW = cellW * 2 + gap;
-    const originX = marginX + (artW - gridW) / 2;
-    const originY = artTop + (artH - gridH) / 2;
-    for (let row = 0; row < 2; row += 1) {
-      for (let col = 0; col < 2; col += 1) {
-        cells.push({
-          x: originX + col * (cellW + gap),
-          y: originY + row * (cellH + gap),
-          w: cellW,
-          h: cellH,
-        });
-      }
+  for (let row = 0; row < 3; row += 1) {
+    const y = row < 2 ? padY + row * (cellH + gap) : bandY + bandH + gap;
+    for (let col = 0; col < COLS; col += 1) {
+      cells.push({ x: originX + col * (cellW + gap), y, w: cellW, h: cellH });
     }
-  } else {
-    const bottomCellW = (artW - gap) / 2;
-    const topCellW = artW;
-    const idealTopH = topCellW * maxRatio;
-    const idealBottomH = bottomCellW * maxRatio;
-    const scale = Math.min(1, artH / (idealTopH + gap + idealBottomH));
-    const topH = idealTopH * scale;
-    const bottomH = idealBottomH * scale;
-    const gridH = topH + gap + bottomH;
-    const originY = artTop + (artH - gridH) / 2;
-    cells.push({ x: marginX, y: originY, w: topCellW, h: topH });
-    cells.push({ x: marginX, y: originY + topH + gap, w: bottomCellW, h: bottomH });
-    cells.push({
-      x: marginX + bottomCellW + gap,
-      y: originY + topH + gap,
-      w: bottomCellW,
-      h: bottomH,
-    });
   }
 
-  const title = titleBaselines
+  const tiles = await Promise.all(
+    options.images.slice(0, 9).map(async (image, index) => {
+      const hero = await heroImage(image);
+      const cell = cells[index];
+      const png = await sharp(hero)
+        .resize(cell.w, cell.h, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+        .png()
+        .toBuffer();
+      return { input: png, left: cell.x, top: cell.y };
+    }),
+  );
+
+  const ink = inkOn(options.accent);
+  const wordmark = wordmarkFontFile();
+  const family = wordmark?.family ?? 'Fredoka';
+  const nameLine = collectionNameLine(options.title) || 'COLORING';
+  const pagesLine = 'COLORING PAGES';
+  const pillLines = ['Free PDF', 'Printables'];
+  const pillW = 390;
+  const pillH = 168;
+  const pillX = PIN_W - 18 - pillW;
+  const pillY = bandY + Math.round((bandH - pillH) / 2);
+  const titleLeft = 24;
+  const titleMaxW = pillX - 20 - titleLeft;
+  const nameSize = fitLineSize(nameLine, titleMaxW, 74, 42);
+  const pagesSize = fitLineSize(pagesLine, titleMaxW, 66, 42);
+  const titleGap = 4;
+  const titleBlockH = nameSize + titleGap + pagesSize;
+  const titleTop = bandY + Math.round((bandH - titleBlockH) / 2) + nameSize - 4;
+  const title = [
+    `<text x="${titleLeft}" y="${titleTop}" font-family="${xml(family)}" font-size="${nameSize}" font-weight="600" fill="${ink}">${xml(nameLine)}</text>`,
+    `<text x="${titleLeft}" y="${titleTop + titleGap + pagesSize}" font-family="${xml(family)}" font-size="${pagesSize}" font-weight="600" fill="${ink}">${xml(pagesLine)}</text>`,
+  ].join('');
+  const pillFill = ink === '#FFFFFF' ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.12)';
+  const pillSize = 52;
+  const pillLineH = 60;
+  const pillTextTop = pillY + Math.round((pillH - pillLineH * 2) / 2) + pillSize - 4;
+  const pillText = pillLines
     .map(
-      (baseline, index) =>
-        `<text x="500" y="${baseline}" text-anchor="middle" font-family="Segoe UI" font-size="${titleSize}" font-weight="700" fill="#1A1A1A">${xml(titleLines[index])}</text>`,
+      (line, index) =>
+        `<text x="${pillX + pillW / 2}" y="${pillTextTop + index * pillLineH}" text-anchor="middle" font-family="${xml(family)}" font-size="${pillSize}" font-weight="600" fill="${ink}">${xml(line)}</text>`,
     )
     .join('');
-  const inset = framed ? 16 : 0;
-  const radius = 22;
-  const stroke = 4;
-  const drawings = arts
-    .map((art, index) => {
-      const cell = cells[index];
-      const inner = {
-        x: cell.x + inset,
-        y: cell.y + inset,
-        w: cell.w - inset * 2,
-        h: cell.h - inset * 2,
-      };
-      const box = fitBox(art.iw, art.ih, inner.w, inner.h, inner.x, inner.y);
-      const chrome = framed
-        ? [
-            `<rect x="${cell.x}" y="${cell.y}" width="${cell.w}" height="${cell.h}" rx="${radius}" ry="${radius}" fill="#FFFFFF"/>`,
-            `<rect x="${cell.x + stroke / 2}" y="${cell.y + stroke / 2}" width="${cell.w - stroke}" height="${cell.h - stroke}" rx="${radius - 2}" ry="${radius - 2}" fill="none" stroke="${xml(options.accent)}" stroke-width="${stroke}"/>`,
-          ].join('\n')
-        : '';
-      return `${chrome}
-<image href="${art.href}" x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" preserveAspectRatio="xMidYMid meet"/>`;
-    })
-    .join('\n');
-
-  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+  const frames = cells
+    .map(
+      (cell) =>
+        `<rect x="${cell.x + 1.5}" y="${cell.y + 1.5}" width="${cell.w - 3}" height="${cell.h - 3}" fill="none" stroke="#222222" stroke-width="3"/>`,
+    )
+    .join('');
+  const brandSize = 44;
+  const frameSvg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${PIN_W}" height="${PIN_H}" viewBox="0 0 ${PIN_W} ${PIN_H}">
-  <rect width="${PIN_W}" height="${PIN_H}" fill="#FFFFFF"/>
-  ${wordmarkSvg(options.brand, brandBaseline, brandSize, wordmark?.family ?? 'Fredoka')}
-  ${title}
-  ${drawings}
-  <text x="500" y="${labelBaseline}" text-anchor="middle" font-family="Segoe UI" font-size="${labelSize}" font-weight="800" fill="${xml(options.accent)}" letter-spacing="1.4">FREE PRINTABLES</text>
+  ${frames}
 </svg>`;
-  return rasterize(svg);
+  const chromeSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${PIN_W}" height="${PIN_H}" viewBox="0 0 ${PIN_W} ${PIN_H}">
+  <rect x="0" y="${bandY + 5}" width="${PIN_W}" height="${bandH}" fill="rgba(0,0,0,0.16)"/>
+  <rect x="0" y="${bandY}" width="${PIN_W}" height="${bandH}" fill="${xml(options.accent)}"/>
+  ${title}
+  <rect x="${pillX}" y="${pillY}" width="${pillW}" height="${pillH}" rx="14" ry="14" fill="${pillFill}"/>
+  ${pillText}
+  <text x="500" y="${PIN_H - 28}" text-anchor="middle" font-family="${xml(family)}" font-size="${brandSize}" font-weight="600" fill="#ffffff" stroke="#ffffff" stroke-width="12" stroke-linejoin="round">${xml(options.brand)}</text>
+  ${wordmarkSvg(options.brand, PIN_H - 28, brandSize, family)}
+</svg>`;
+
+  const pencils = await pinPencilsOverlay();
+  return sharp({
+    create: { width: PIN_W, height: PIN_H, channels: 4, background: { r: 255, g: 255, b: 255, alpha: 1 } },
+  })
+    .composite([
+      ...tiles,
+      { input: await rasterize(frameSvg) },
+      { input: await rasterize(chromeSvg) },
+      ...(pencils ? [{ input: pencils, left: 0, top: 0 }] : []),
+    ])
+    .png()
+    .toBuffer();
+}
+
+/** Full-pin overlay. Uses the PNG alpha as-is. */
+async function pinPencilsOverlay() {
+  const file = path.join(factoryRoot, 'assets', 'pin-pencils.png');
+  if (!fs.existsSync(file)) return null;
+  return sharp(file).resize(PIN_W, PIN_H, { fit: 'fill' }).png().toBuffer();
 }
 
 function rasterize(svg: string) {
@@ -351,7 +338,7 @@ function rasterize(svg: string) {
     font: {
       fontFiles,
       loadSystemFonts: true,
-      defaultFontFamily: 'Segoe UI',
+      defaultFontFamily: wordmark?.family ?? 'Segoe UI',
     },
     fitTo: { mode: 'width', value: PIN_W },
   });

@@ -37,14 +37,13 @@ export type PinBuildOptions = {
   theme?: string;
   mode?: PinMode;
   slugs?: string[];
-  collectionCount?: number;
   removeOld?: boolean;
   writeCopy?: boolean;
   keywords?: string;
-  /** Rounded frames around tiles in collection pins. Default on. */
-  framed?: boolean;
-  /** FREE PRINTABLE label (+ collection frames). Hex like #1d7ad6. Empty = theme accent. */
+  /** Title-bar color on collection pins. Empty = theme accent. */
   accent?: string;
+  /** Banner title. Empty = collection title from the theme. */
+  heading?: string;
 };
 
 export type PinCopyOnlyOptions = {
@@ -181,19 +180,11 @@ function hasPinCopy(row: Pick<PinRow, 'pinTitle' | 'pinDescription'>) {
   return Boolean(row.pinTitle?.trim() && row.pinDescription?.trim());
 }
 
-/** Split selected pages into bundles of up to 4. Walks through the list in order. */
-function collectionSets<T>(pages: T[], maxGroups = 2): T[][] {
-  if (pages.length < 3) return [];
+/** One pin per 9 sheets, in list order. Leftover sheets under 9 are unused. */
+function collectionSets<T>(pages: T[]): T[][] {
   const groups: T[][] = [];
-  let start = 0;
-  while (start < pages.length && groups.length < maxGroups) {
-    const remaining = pages.length - start;
-    if (remaining < 3) break;
-    const size = Math.min(4, remaining);
-    // Prefer not to leave a dangling 1–2 pages: if 5 left, take 3 then stop next loop; if 6–7 take 4.
-    const take = remaining === 5 ? 3 : size;
-    groups.push(pages.slice(start, start + take));
-    start += take;
+  for (let start = 0; start + 9 <= pages.length; start += 9) {
+    groups.push(pages.slice(start, start + 9));
   }
   return groups;
 }
@@ -531,8 +522,52 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
+function pinMatchesType(name: string, themeId: string, mode: PinMode) {
+  if (!name.startsWith(`${themeId}-`)) return false;
+  if (!/\.(png|jpg)$/i.test(name)) return false;
+  const isCollection = /-collection-\d+\.(png|jpg)$/i.test(name);
+  if (mode === 'collection') return isCollection;
+  if (mode === 'single') return !isCollection;
+  return true;
+}
+
+async function removeThemePins(themeId: string, mode: PinMode) {
+  async function walk(dir: string): Promise<string[]> {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return [];
+    }
+    const found: string[] = [];
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) found.push(...(await walk(full)));
+      else if (pinMatchesType(entry.name, themeId, mode)) found.push(full);
+    }
+    return found;
+  }
+  const files = await walk(pinRoot);
+  let removed = 0;
+  for (const file of files) {
+    try {
+      await fs.rm(file, { force: true });
+      removed += 1;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.log(`не удалось удалить ${path.basename(file)}: ${message}`);
+    }
+  }
+  if (removed) console.log(`remove old pins: ${removed}`);
+}
+
 async function nextCollectionIndex(themeId: string): Promise<number> {
-  const names = await listPinPngFilenames(themeId);
+  let names: string[] = [];
+  try {
+    names = await fs.readdir(pinRoot);
+  } catch {
+    return 1;
+  }
   const numbers = names
     .map((name) => name.match(new RegExp(`^${themeId}-collection-(\\d+)\\.png$`, 'i'))?.[1])
     .filter(Boolean)
@@ -549,10 +584,8 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const mode: PinMode = options.mode ?? 'both';
   const onlyTheme = options.theme || undefined;
   const selected = new Set((options.slugs ?? []).filter(Boolean));
-  const collectionCount = Math.max(1, Math.min(40, options.collectionCount ?? 2));
   const removeOld = Boolean(options.removeOld);
   const writeCopy = Boolean(options.writeCopy);
-  const framed = options.framed !== false;
   const keywords = (options.keywords ?? '').trim();
 
   await fs.mkdir(pinRoot, { recursive: true });
@@ -572,6 +605,8 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   for (const file of themes) {
     const themeId = file.replace(/\.md$/, '');
     if (onlyTheme && themeId !== onlyTheme) continue;
+    if (mode === 'collection' || mode === 'both') await removeThemePins(themeId, 'collection');
+    if (removeOld && (mode === 'single' || mode === 'both')) await removeThemePins(themeId, 'single');
     const data = readFrontmatter(await fs.readFile(path.join(themeContentRoot, file), 'utf8')) as ThemeData;
     const sheetDir = path.join(sheetContentRoot, themeId);
     let sheetFiles: string[] = [];
@@ -614,9 +649,9 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     }
 
     const title = data.title;
+    const heading = String(options.heading ?? '').trim() || title;
     const override = String(options.accent ?? '').trim();
     const accent = /^#[0-9a-fA-F]{6}$/.test(override) ? override : data.accent || '#1d7ad6';
-    const keep = new Set<string>();
     const themeRows: PinRow[] = [];
     const existingPinNames = new Set(await listPinPngFilenames(themeId));
 
@@ -624,13 +659,11 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
       for (const page of pages) {
         const filename = `${themeId}-${page.slug}.png`;
         if (selected.size && existingPinNames.has(filename)) {
-          keep.add(filename);
           console.log(`skip existing pin ${filename}`);
           continue;
         }
         const png = await renderPin({ title, accent, brand: site.name, image: page.image });
         await writePinFiles(filename, png);
-        keep.add(filename);
         const url = `${origin}/${themeId}/${page.slug}/`;
         themeRows.push({ filename, type: 'single', title, url });
         copyInputs.push({
@@ -648,28 +681,28 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     }
 
     if (mode === 'collection' || mode === 'both') {
-      const groups = collectionSets(pages, collectionCount);
+      const groups = collectionSets(pages);
       if (!groups.length) {
         skipped.push(`${themeId} collection (${pages.length} sheets)`);
-        console.log(`skip collection ${themeId}: ${pages.length} sheet${pages.length === 1 ? '' : 's'}`);
+        console.log(`skip collection ${themeId}: need 9 sheets, have ${pages.length}`);
+      } else if (pages.length % 9) {
+        console.log(`${themeId}: ${pages.length % 9} leftover sheet(s) not used (need groups of 9)`);
       }
       let nextCollectionNumber = await nextCollectionIndex(themeId);
       for (const group of groups) {
         let filename = `${themeId}-collection-${nextCollectionNumber}.png`;
-        while (selected.size && await fileExists(path.join(pinRoot, filename))) {
+        while (!removeOld && selected.size && await fileExists(path.join(pinRoot, filename))) {
           nextCollectionNumber += 1;
           filename = `${themeId}-collection-${nextCollectionNumber}.png`;
         }
         nextCollectionNumber += 1;
         const png = await renderCollectionPin({
-          title,
+          title: heading,
           accent,
           brand: site.name,
           images: group.map((page) => page.image),
-          framed,
         });
         await writePinFiles(filename, png);
-        keep.add(filename);
         const url = `${origin}/${themeId}/`;
         themeRows.push({ filename, type: 'collection', title, url });
         copyInputs.push({
@@ -688,19 +721,6 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
 
     rows.push(...themeRows);
 
-    if (removeOld && !selected.size) {
-      const existing = await fs.readdir(pinRoot);
-      for (const name of existing) {
-        if (!name.endsWith('.png') || !name.startsWith(`${themeId}-`)) continue;
-        const isCollection = /-collection-\d+\.png$/i.test(name);
-        if (mode === 'collection' && !isCollection) continue;
-        if (mode === 'single' && isCollection) continue;
-        if (keep.has(name)) continue;
-        await fs.rm(path.join(pinRoot, name));
-        await fs.rm(path.join(pinRoot, name.replace(/\.png$/i, '.jpg')), { force: true });
-        console.log(`remove old pin ${name}`);
-      }
-    }
   }
 
   // Keep paid/written Pinterest copy when only the pin image is rebuilt.
@@ -751,26 +771,21 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     console.log('pin copy: nothing new to write, all rebuilt pins already have text');
   }
 
-  let manifest: PinRow[];
-  if (onlyTheme && selected.size) {
-    const rebuilt = new Set(rows.map((row) => row.filename));
-    manifest = [...previous.filter((row) => !rebuilt.has(row.filename)), ...rows];
-  } else if (onlyTheme) {
-    const kept = previous.filter((row) => {
-      if (!row.filename.startsWith(`${onlyTheme}-`)) return true;
+  const rebuilt = new Set(rows.map((row) => row.filename));
+  const manifest = previous
+    .filter((row) => {
+      const themeId = onlyTheme;
+      if (themeId && !row.filename.startsWith(`${themeId}-`)) return true;
+      if (!themeId && mode === 'both') return false;
       const isCollection = /-collection-\d+\.png$/i.test(row.filename);
-      if (mode === 'collection' && !isCollection) return true;
-      if (mode === 'single' && isCollection) return true;
-      return false;
-    });
-    manifest = [...kept, ...rows];
-  } else if (mode === 'both' && !selected.size) {
-    // Full rebuild still keeps any previous copy for matching filenames above.
-    manifest = rows;
-  } else {
-    const rebuilt = new Set(rows.map((row) => row.filename));
-    manifest = [...previous.filter((row) => !rebuilt.has(row.filename)), ...rows];
-  }
+      if ((mode === 'collection' || mode === 'both') && isCollection) return false;
+      if ((mode === 'single' || mode === 'both') && !isCollection) {
+        if (removeOld || !selected.size) return false;
+        return !rebuilt.has(row.filename);
+      }
+      return true;
+    })
+    .concat(rows);
   await writeManifest(manifest);
   console.log(
     `pins done: ${singles} single, ${collections} collection` +

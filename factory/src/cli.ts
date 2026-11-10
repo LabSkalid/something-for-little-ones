@@ -26,7 +26,7 @@ const help = `Фабрика раскрасок.
       npm run pins -- halloween-coloring-pages --copy-only --keywords="fall coloring pages"
       Перезаписать уже написанные тексты:
       npm run pins -- halloween-coloring-pages --copy-only --overwrite
-      Цвет FREE PRINTABLE (и рамок бандла):
+      Цвет плашки бандла:
       npm run pins -- christmas-coloring-pages --accent=#1d7ad6
 
   npm run produce -- briefs/animal-coloring-pages.yaml
@@ -84,14 +84,14 @@ async function main() {
       return;
     }
     const accentArg = rest.find((arg) => arg.startsWith('--accent='))?.slice('--accent='.length);
+    const headingArg = rest.find((arg) => arg.startsWith('--heading='))?.slice('--heading='.length);
     await buildPins({
       theme,
       mode,
       writeCopy: rest.includes('--copy'),
       keywords,
       removeOld: rest.includes('--remove-old'),
-      framed: !rest.includes('--no-frames'),
-      collectionCount: Number(rest.find((arg) => arg.startsWith('--count='))?.slice('--count='.length) ?? 2) || 2,
+      heading: headingArg || undefined,
       accent: accentArg && /^#[0-9a-fA-F]{6}$/i.test(accentArg) ? accentArg : undefined,
     });
     return;
