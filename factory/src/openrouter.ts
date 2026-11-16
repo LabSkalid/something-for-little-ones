@@ -15,18 +15,56 @@ function requireKey() {
   return key;
 }
 
-async function post(path: string, body: unknown) {
+const TEXT_TIMEOUT_MS = 180_000;
+const IMAGE_TIMEOUT_MS = 180_000;
+
+const IMAGE_GAVE_UP =
+  'OpenRouter не ответил за 3 минуты даже после повторной попытки (таймаут или обрыв сети). Генерация остановлена, чтобы задание не зависало молча. Перезапустите фабрику и запустите книгу снова: уже сохранённые страницы будут пропущены.';
+
+class TransientOpenRouterError extends Error {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = 'TransientOpenRouterError';
+  }
+}
+
+function isTransientFetchError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  if (error.name === 'TransientOpenRouterError' || error.name === 'AbortError' || error.name === 'TimeoutError') return true;
+  const code = 'code' in error ? String((error as { code?: unknown }).code ?? '') : '';
+  if (
+    ['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNREFUSED', 'EAI_AGAIN', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_SOCKET'].includes(code)
+  ) {
+    return true;
+  }
+  if (/timeout|timed out|aborted|fetch failed|network|socket hang up|other side closed/i.test(error.message)) return true;
+  return error.cause ? isTransientFetchError(error.cause) : false;
+}
+
+async function post(path: string, body: unknown, timeoutMs = TEXT_TIMEOUT_MS) {
   const { url, name } = readSite();
-  const response = await fetch(`https://openrouter.ai/api/v1/${path}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${requireKey()}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': url,
-      'X-Title': name,
-    },
-    body: JSON.stringify(body),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`https://openrouter.ai/api/v1/${path}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${requireKey()}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': url,
+        'X-Title': name,
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (error) {
+    if (isTransientFetchError(error)) {
+      throw new TransientOpenRouterError(
+        `OpenRouter не ответил за ${Math.round(timeoutMs / 1000)} с или сеть оборвалась.`,
+        { cause: error },
+      );
+    }
+    throw error;
+  }
   const text = await response.text();
   if (!response.ok) {
     throw new Error(`OpenRouter ответил ${response.status}: ${text.slice(0, 500)}`);
@@ -34,11 +72,41 @@ async function post(path: string, body: unknown) {
   return JSON.parse(text) as unknown;
 }
 
-export async function chat(system: string, user: string) {
+async function fetchImageBytes(fileUrl: string, timeoutMs: number, failLabel: string) {
+  try {
+    const file = await fetch(fileUrl, { signal: AbortSignal.timeout(timeoutMs) });
+    if (!file.ok) throw new Error(`${failLabel}: ${file.status}`);
+    return Buffer.from(await file.arrayBuffer());
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(failLabel)) throw error;
+    if (isTransientFetchError(error)) {
+      throw new TransientOpenRouterError(`${failLabel}: сеть оборвалась или истёк лимит ожидания.`, { cause: error });
+    }
+    throw error;
+  }
+}
+
+/** One retry for a paid image call. A second timeout or network failure stops the job. */
+async function withImageRetry<T>(run: () => Promise<T>): Promise<T> {
+  try {
+    return await run();
+  } catch (error) {
+    if (!isTransientFetchError(error)) throw error;
+    console.log('OpenRouter не ответил вовремя или сеть оборвалась. Повторяю запрос картинки один раз.');
+    try {
+      return await run();
+    } catch (again) {
+      if (!isTransientFetchError(again)) throw again;
+      throw new Error(IMAGE_GAVE_UP);
+    }
+  }
+}
+
+export async function chat(system: string, user: string, temperature = 0.6) {
   const model = process.env.OPENROUTER_TEXT_MODEL || 'google/gemini-2.5-flash';
   const json = (await post('chat/completions', {
     model,
-    temperature: 0.6,
+    temperature,
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user },
@@ -82,7 +150,7 @@ export async function visionChat(system: string, user: string, imagePng: Buffer,
 export async function editColoringPage(sourcePng: Buffer, prompt: string) {
   const model = process.env.OPENROUTER_EDIT_IMAGE_MODEL || 'openai/gpt-image-1';
   const quality = process.env.OPENROUTER_IMAGE_QUALITY || 'medium';
-  const json = (await post('images', {
+  const json = (await withImageRetry(() => post('images', {
     model,
     prompt,
     input_references: [
@@ -96,38 +164,35 @@ export async function editColoringPage(sourcePng: Buffer, prompt: string) {
     quality,
     output_format: 'png',
     n: 1,
-  })) as ImagePayload;
+  }, IMAGE_TIMEOUT_MS))) as ImagePayload;
   if (json.error?.message) throw new Error(json.error.message);
   const image = json.data?.[0];
   if (image?.b64_json) return Buffer.from(image.b64_json, 'base64');
-  if (image?.url) {
-    const file = await fetch(image.url);
-    if (!file.ok) throw new Error(`Не удалось скачать отредактированную картинку: ${file.status}`);
-    return Buffer.from(await file.arrayBuffer());
-  }
+  if (image?.url) return withImageRetry(() => fetchImageBytes(image.url!, IMAGE_TIMEOUT_MS, 'Не удалось скачать отредактированную картинку'));
   throw new Error('В ответе OpenRouter нет отредактированной картинки.');
 }
 
-export async function generateColoringPage(prompt: string) {
-  const model = process.env.OPENROUTER_IMAGE_MODEL || 'openai/gpt-image-2';
+export async function generateColoringPage(prompt: string, references: Buffer[] = [], model = process.env.OPENROUTER_IMAGE_MODEL || 'openai/gpt-image-2') {
   const quality = process.env.OPENROUTER_IMAGE_QUALITY || 'medium';
-  const json = (await post('images', {
+  const json = (await withImageRetry(() => post('images', {
     model,
     prompt,
+    ...(references.length ? {
+      input_references: references.map((png) => ({
+        type: 'image_url',
+        image_url: { url: `data:image/png;base64,${png.toString('base64')}` },
+      })),
+    } : {}),
     aspect_ratio: '2:3',
     resolution: '1K',
     quality,
     output_format: 'png',
     n: 1,
-  })) as ImagePayload;
+  }, IMAGE_TIMEOUT_MS))) as ImagePayload;
   if (json.error?.message) throw new Error(json.error.message);
   const image = json.data?.[0];
   if (image?.b64_json) return Buffer.from(image.b64_json, 'base64');
-  if (image?.url) {
-    const file = await fetch(image.url);
-    if (!file.ok) throw new Error(`Не удалось скачать картинку: ${file.status}`);
-    return Buffer.from(await file.arrayBuffer());
-  }
+  if (image?.url) return withImageRetry(() => fetchImageBytes(image.url!, IMAGE_TIMEOUT_MS, 'Не удалось скачать картинку'));
   throw new Error('В ответе OpenRouter нет картинки.');
 }
 

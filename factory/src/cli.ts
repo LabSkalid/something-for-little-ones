@@ -32,6 +32,8 @@ const help = `Фабрика раскрасок.
       npm run pins -- halloween-coloring-pages --copy-only --overwrite
       Цвет плашки бандла:
       npm run pins -- christmas-coloring-pages --accent=#1d7ad6
+      Одиночные с бейджем (не трогает обычные …-slug.png):
+      npm run pins -- halloween-coloring-pages --mode=single --single=badge
 
   npm run produce -- briefs/animal-coloring-pages.yaml
       По заданию дорисовать новые страницы и положить их на сайт.
@@ -103,6 +105,8 @@ async function main() {
       overlayColorArg === 'yellow'
         ? overlayColorArg
         : 'random';
+    const singleArg = rest.find((arg) => arg.startsWith('--single='))?.slice('--single='.length);
+    const singleStyle = singleArg === 'badge' || singleArg === 'both' || singleArg === 'plain' ? singleArg : 'plain';
     await buildPins({
       theme,
       mode,
@@ -114,6 +118,7 @@ async function main() {
       collectionBundles,
       overlayColor,
       rebuildClassic: rest.includes('--rebuild-classic'),
+      singleStyle,
     });
     return;
   }

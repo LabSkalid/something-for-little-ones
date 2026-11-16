@@ -10,6 +10,7 @@ import { writePinterestCopy } from './pin-copy.ts';
 import {
   type BundleOverlayColor,
   BUNDLE_OVERLAY_COLORS,
+  renderBadgePin,
   renderCollectionPin,
   renderOverlayBundlePin,
   renderPin,
@@ -60,6 +61,8 @@ export type PinBuildOptions = {
   overlayColor?: BundleOverlayColor | 'random';
   /** Clear classic collection slug memory for this theme (does not delete PNG). */
   rebuildClassic?: boolean;
+  /** Plain singles, badge overlay singles, or both. Default plain. */
+  singleStyle?: 'plain' | 'badge' | 'both';
 };
 
 export type PinCopyOnlyOptions = {
@@ -357,7 +360,11 @@ function sheetSlugFromPinFilename(filename: string, themeId: string) {
   const base = filename.replace(/\.png$/i, '');
   if (/-collection-\d+$/i.test(base) || /-bundle-\d+$/i.test(base)) return null;
   if (!base.startsWith(`${themeId}-`)) return null;
-  return base.slice(themeId.length + 1);
+  return base.slice(themeId.length + 1).replace(/-badge$/i, '');
+}
+
+function isBadgePinFilename(name: string) {
+  return /-badge\.(png|jpe?g)$/i.test(name);
 }
 
 async function loadThemeMeta(themeId: string) {
@@ -579,7 +586,7 @@ function pinMatchesType(name: string, themeId: string, mode: PinMode) {
   const isBundle =
     /-collection-\d+\.(png|jpg)$/i.test(name) || /-bundle-\d+\.(png|jpg)$/i.test(name);
   if (mode === 'collection') return isBundle;
-  if (mode === 'single') return !isBundle;
+  if (mode === 'single') return !isBundle && !isBadgePinFilename(name);
   return true;
 }
 
@@ -988,6 +995,9 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const buildOverlay =
     (mode === 'collection' || mode === 'both') &&
     (collectionBundles === 'overlay' || collectionBundles === 'both');
+  const singleStyle = options.singleStyle ?? 'plain';
+  const buildPlain = (mode === 'single' || mode === 'both') && (singleStyle === 'plain' || singleStyle === 'both');
+  const buildBadge = (mode === 'single' || mode === 'both') && (singleStyle === 'badge' || singleStyle === 'both');
 
   await fs.mkdir(pinRoot, { recursive: true });
   const site = readSite();
@@ -996,6 +1006,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
   const rows: PinRow[] = [];
   const copyInputs: Parameters<typeof writePinterestCopy>[0] = [];
   let singles = 0;
+  let badgePins = 0;
   let collections = 0;
   let overlayBundles = 0;
   const skipped: string[] = [];
@@ -1006,6 +1017,8 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     `pins: local composites only, no image model; mode=${mode}` +
       (buildClassic ? '; classic 9-grid' : '') +
       (buildOverlay ? `; overlay 4-grid (color=${overlayColorChoice})` : '') +
+      (buildBadge ? '; badge singles' : '') +
+      (buildPlain ? '; plain singles' : '') +
       (writeCopy ? '; Pinterest copy via text model' : ''),
   );
 
@@ -1013,7 +1026,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     const themeId = file.replace(/\.md$/, '');
     if (onlyTheme && themeId !== onlyTheme) continue;
     // Collection files are never deleted. A published pin keeps its filename.
-    if (removeOld && (mode === 'single' || mode === 'both')) await removeThemePins(themeId, 'single');
+    if (removeOld && buildPlain) await removeThemePins(themeId, 'single');
     const data = readFrontmatter(await fs.readFile(path.join(themeContentRoot, file), 'utf8')) as ThemeData;
     const sheetDir = path.join(sheetContentRoot, themeId);
     let sheetFiles: string[] = [];
@@ -1063,7 +1076,22 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     const existingPinNames = new Set(await listPinPngFilenames(themeId));
 
     const shippedNames = new Set((await readShippedPins()).map((pin) => pin.filename.toLowerCase()));
-    if (mode === 'single' || mode === 'both') {
+    const pushSingle = async (page: (typeof pages)[number], filename: string, png: Buffer) => {
+      await writePinFiles(filename, png);
+      const url = `${origin}/${themeId}/${page.slug}/`;
+      themeRows.push({ filename, type: 'single', title, url });
+      copyInputs.push({
+        filename,
+        type: 'single',
+        themeTitle: title,
+        url,
+        sheetTitle: page.title,
+        sheetDescription: page.description,
+        age: page.age,
+      });
+      console.log(`pin ${filename}`);
+    };
+    if (buildPlain) {
       for (const page of pages) {
         const filename = `${themeId}-${page.slug}.png`;
         if (shippedNames.has(filename.toLowerCase())) {
@@ -1074,21 +1102,19 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
           console.log(`skip existing pin ${filename}`);
           continue;
         }
-        const png = await renderPin({ title, accent, brand: site.name, image: page.image });
-        await writePinFiles(filename, png);
-        const url = `${origin}/${themeId}/${page.slug}/`;
-        themeRows.push({ filename, type: 'single', title, url });
-        copyInputs.push({
-          filename,
-          type: 'single',
-          themeTitle: title,
-          url,
-          sheetTitle: page.title,
-          sheetDescription: page.description,
-          age: page.age,
-        });
+        await pushSingle(page, filename, await renderPin({ title, accent, brand: site.name, image: page.image }));
         singles += 1;
-        console.log(`pin ${filename}`);
+      }
+    }
+    if (buildBadge) {
+      for (const page of pages) {
+        const filename = `${themeId}-${page.slug}-badge.png`;
+        if (shippedNames.has(filename.toLowerCase()) || existingPinNames.has(filename)) {
+          console.log(`skip existing badge ${filename}`);
+          continue;
+        }
+        await pushSingle(page, filename, await renderBadgePin(page.image));
+        badgePins += 1;
       }
     }
 
@@ -1253,6 +1279,10 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
         return true;
       }
       if ((mode === 'single' || mode === 'both') && !isBundle) {
+        const badge = isBadgePinFilename(row.filename);
+        if (badge && !buildBadge) return true;
+        if (!badge && !buildPlain) return true;
+        if (badge) return !rebuilt.has(row.filename);
         if (removeOld || !selected.size) return false;
         return !rebuilt.has(row.filename);
       }
@@ -1266,7 +1296,7 @@ export async function buildPins(themeOrOptions?: string | PinBuildOptions) {
     );
   }
   console.log(
-    `pins done: ${singles} single, ${collections} classic collection, ${overlayBundles} overlay bundle` +
+    `pins done: ${singles} single, ${badgePins} badge, ${collections} classic collection, ${overlayBundles} overlay bundle` +
       (skipped.length ? `; skipped: ${skipped.join(', ')}` : ''),
   );
   console.log(`manifest: ${path.join(pinRoot, 'pins.csv')}`);

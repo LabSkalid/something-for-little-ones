@@ -406,6 +406,38 @@ export async function renderOverlayBundlePin(options: { images: Buffer[]; overla
     .toBuffer();
 }
 
+const badgeOverlayFile = path.join(factoryRoot, 'assets', 'pin-badge.png');
+
+/** Single pin: drawing only, then the badge PNG (top tag + wordmark). No factory text. */
+export async function renderBadgePin(image: Buffer) {
+  if (!fs.existsSync(badgeOverlayFile)) throw new Error(`Missing badge overlay: ${badgeOverlayFile}`);
+  const hero = await heroImage(image);
+  const padX = 48;
+  const padTop = 250;
+  const padBottom = 170;
+  const artW = PIN_W - padX * 2;
+  const artH = PIN_H - padTop - padBottom;
+  const fitted = await sharp(hero)
+    .resize(artW, artH, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+    .png()
+    .toBuffer();
+  const meta = await sharp(fitted).metadata();
+  const iw = meta.width ?? artW;
+  const ih = meta.height ?? artH;
+  const left = padX + Math.round((artW - iw) / 2);
+  const top = padTop + Math.round((artH - ih) / 2);
+  const overlay = await sharp(badgeOverlayFile).resize(PIN_W, PIN_H, { fit: 'fill' }).png().toBuffer();
+  return sharp({
+    create: { width: PIN_W, height: PIN_H, channels: 4, background: { r: 255, g: 255, b: 255, alpha: 1 } },
+  })
+    .composite([
+      { input: fitted, left, top },
+      { input: overlay, left: 0, top: 0 },
+    ])
+    .png()
+    .toBuffer();
+}
+
 export function pinFileName(themeId: string, pinId: string) {
   return `${themeId}-${pinId}.png`;
 }

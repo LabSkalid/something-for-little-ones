@@ -4,6 +4,8 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
+import { createTalePlan, isSafetyRejection, parseStoryboard, softenTaleSubject } from './book-plan.ts';
+import { ensureTaleCast, loadTaleCast, missingTaleCast, normalizeCharacters, redrawTaleCast, referenceNote, TALE_IMAGE_MODEL } from './tale-cast.ts';
 import { chat, coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
 import { fitPortrait } from './lineart.ts';
 import {
@@ -344,11 +346,21 @@ function bookSlug(value: string) {
   return value.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 55) || 'coloring-book';
 }
 
+/** First PNG whose name starts with a zero-padded page prefix (`01-`, `02-`, …), whatever the title slug is. */
+function matchPagePng(names: string[], pagePrefix: string): string | undefined {
+  const prefix = pagePrefix.toLowerCase();
+  return names
+    .filter((entry) => entry.toLowerCase().startsWith(prefix) && entry.toLowerCase().endsWith('.png'))
+    .sort()[0];
+}
+
 async function createBookPlan(body: Record<string, unknown>) {
   const theme = String(body.theme ?? '').trim();
   const age = String(body.age ?? '4-8');
   const count = Math.max(1, Math.min(100, Number(body.count ?? 50) || 50));
+  const mode = body.mode === 'tale' ? 'tale' : 'variety';
   if (!theme) throw new Error('Укажите тему книги.');
+  if (mode === 'tale') return createTalePlan(theme, age, count);
   const raw = await chat(
     'You are an experienced US children’s coloring-book editor. Return valid JSON only, with exactly the requested number of unique page ideas. Schema: {"ideas":[{"title":"short English title","prompt":"clear visual scene description in English","difficulty":"easy|medium|detailed"}]}. Make age-appropriate, commercially appealing variety for parents of children. No text inside illustrations, no trademarked characters, no near-duplicates. Each prompt must describe one distinct printable coloring page.',
     `Create exactly ${count} distinct coloring-page ideas for a children’s coloring book ages ${age}. Theme: ${theme}. If the theme is religious, treat it respectfully and use recognizable traditional scenes. If seasonal, mix activities, objects, animals, and family scenes as appropriate. Use simple friendly scenes, clear large coloring areas, and avoid invented factual claims. Return exactly ${count} ideas.`
@@ -375,7 +387,7 @@ async function createBookPlan(body: Record<string, unknown>) {
     const n = ideas.length + 1;
     ideas.push({ title: `${theme} Coloring Scene ${n}`, prompt: `A simple, original child-friendly scene related to ${theme}, with one clear focal subject and large enclosed areas for coloring`, difficulty: 'easy' });
   }
-  return { theme, age, count, ideas: ideas.map((x, i) => ({
+  return { mode: 'variety' as const, theme, age, count, ideas: ideas.map((x, i) => ({
     title: String(x.title).trim().slice(0, 100),
     prompt: String(x.prompt).trim().slice(0, 1200),
     difficulty: (['easy', 'medium', 'detailed'].includes(String(x.difficulty)) ? String(x.difficulty) : (age === '4-8' ? 'medium' : 'easy')) as LineDifficulty,
@@ -602,10 +614,34 @@ const server = http.createServer(async (req, res) => {
       styles.sort((a, b) => a.title.localeCompare(b.title));
       return send(res, 200, styles);
     }
+    if (req.method === 'POST' && url.pathname === '/api/book/parse') {
+      const body = await readBody(req);
+      const age = String(body.age ?? '4-8');
+      const ideas = parseStoryboard(String(body.text ?? ''), age);
+      if (!ideas.length) throw new Error('В тексте нет таблицы сцен. Нужны строки вида | номер | название | описание | сложность |.');
+      return send(res, 200, { source: 'Вставленная раскадровка', count: ideas.length, ideas });
+    }
     if (req.method === 'POST' && url.pathname === '/api/book/plan') {
       const body = await readBody(req);
       const plan = await createBookPlan(body);
       return send(res, 200, plan);
+    }
+    if (req.method === 'POST' && url.pathname === '/api/book/cast') {
+      const body = await readBody(req);
+      const title = String(body.title ?? body.theme ?? 'Coloring Book').trim();
+      const age = String(body.age ?? '4-8');
+      const style = String(body.style ?? '').trim() || 'Cute storybook coloring-page line art. Friendly rounded characters, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition, moderate low detail for children ages 4–8. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.';
+      const characters = normalizeCharacters(body.characters);
+      const redrawId = String(body.redrawId ?? '').trim();
+      if (!characters.length) throw new Error('В плане нет строк героев. Сначала создайте план сказки или допишите строки # character.');
+      const castDir = path.join(factoryRoot, 'out', 'books', bookSlug(title), 'cast');
+      startJob(redrawId ? `Герой «${redrawId}»` : `Герои книги «${title}»`, async () => {
+        if (redrawId) await redrawTaleCast(castDir, characters, redrawId, style, age);
+        else await ensureTaleCast(castDir, characters, style, age);
+        console.log(`Образцы: ${castDir}`);
+        console.log('Страницы не рисовались. Откройте папку, поправьте текст героя в плане и перерисуйте только его, если лицо не то.');
+      });
+      return send(res, 202, { ok: true, folder: castDir });
     }
     if (req.method === 'POST' && url.pathname === '/api/book/generate') {
       const body = await readBody(req);
@@ -618,20 +654,78 @@ const server = http.createServer(async (req, res) => {
         style = style.replace(/\bnot a nativity scene\.?/gi, '');
       }
       style = style.replace(/\bEyes are open circles,? never solid black\.?/gi, 'Eyes should have small solid black pupils and simple friendly highlights, matching the factory’s usual coloring-page style.');
-      const ideas = Array.isArray(body.ideas) ? body.ideas as {title?: string; prompt?: string; difficulty?: string}[] : [];
+      const ideas = Array.isArray(body.ideas) ? body.ideas as {title?: string; prompt?: string; difficulty?: string; index?: number; cast?: string[]}[] : [];
       if (!ideas.length) throw new Error('Сначала создайте план книги.');
+      const taleMode = body.mode === 'tale';
       const safeTitle = bookSlug(title);
       const outDir = path.join(factoryRoot, 'out', 'books', safeTitle, 'images');
+      const castDir = path.join(outDir, '..', 'cast');
+      const characters = taleMode ? normalizeCharacters(body.characters) : [];
+      if (characters.length) {
+        const known = new Set(characters.map((person) => person.id));
+        const needed = new Set<string>();
+        for (const idea of ideas) {
+          const listed = Array.isArray(idea.cast) ? idea.cast : [];
+          for (const id of listed) if (known.has(String(id).trim())) needed.add(String(id).trim());
+        }
+        const missing = await missingTaleCast(castDir, [...needed]);
+        if (missing.length) {
+          throw new Error(`Нет образцов: ${missing.join(', ')}. Нажмите «Нарисовать героев» и проверьте папку cast. Страницы не рисовались.`);
+        }
+      }
       startJob(`Книга «${title}»: генерация ${ideas.length} страниц`, async () => {
         await fs.mkdir(outDir, { recursive: true });
+        let toldSoften = false;
         for (const [position, idea] of ideas.entries()) {
           const index = Number.isInteger(Number(idea.index)) ? Number(idea.index) : position;
           const name = String(idea.title ?? `Page ${index + 1}`).trim();
-          const slug = bookSlug(`${String(index + 1).padStart(2, '0')}-${name}`);
+          const pagePrefix = `${String(index + 1).padStart(2, '0')}-`;
+          const slug = bookSlug(`${pagePrefix}${name}`);
           const file = path.join(outDir, `${slug}.png`);
+          // A full book skips any PNG already saved for this page number, even when the title slug changed.
+          // One idea is a single page or "replace this scene" and must overwrite.
+          if (ideas.length > 1) {
+            let existingName: string | undefined;
+            try {
+              existingName = matchPagePng(await fs.readdir(outDir), pagePrefix);
+            } catch {
+              existingName = undefined;
+            }
+            if (existingName) {
+              console.log(`Пропуск ${index + 1}/${ideas.length}: ${name} — файл уже есть: ${existingName}`);
+              continue;
+            }
+          }
           console.log(`Генерация ${index + 1}/${ideas.length}: ${name}`);
-          const prompt = coloringPrompt(style, String(idea.prompt ?? name), (['easy','medium','detailed'].includes(String(idea.difficulty)) ? String(idea.difficulty) : 'medium') as LineDifficulty, age);
-          const raw = await generateColoringPage(prompt);
+          const original = String(idea.prompt ?? name);
+          const known = new Set(characters.map((person) => person.id));
+          const castIds = (Array.isArray(idea.cast) ? idea.cast.map((id) => String(id).trim()).filter((id) => known.has(id)) : []);
+          const references = castIds.length ? await loadTaleCast(castDir, castIds) : [];
+          if (castIds.length) console.log(`Образцы для этого кадра: ${castIds.join(', ')}`);
+          const sceneFor = (levelName: 'names' | 'tale' | 'retry') => {
+            const softened = softenTaleSubject(original, taleMode && levelName === 'names' ? 'tale' : levelName);
+            return taleMode ? `${referenceNote(castIds, characters)} One specific moment: ${softened}` : softened;
+          };
+          const subject = sceneFor(taleMode ? 'tale' : 'names');
+          if (!toldSoften && subject !== original) {
+            toldSoften = true;
+            console.log('Описание для картинки смягчено: фильтр OpenAI отклоняет знаменитое имя и сцену с ребёнком в лохмотьях.');
+          }
+          const level = (['easy','medium','detailed'].includes(String(idea.difficulty)) ? String(idea.difficulty) : 'medium') as LineDifficulty;
+          const draw = async (scene: string) => generateColoringPage(coloringPrompt(style, scene, level, age), references, taleMode ? TALE_IMAGE_MODEL : undefined);
+          let raw: Buffer;
+          try {
+            raw = await draw(subject);
+          } catch (error) {
+            if (!isSafetyRejection(error)) throw error;
+            console.log(`Фильтр OpenAI отклонил «${name}». Повторяю ту же сцену нейтральными словами.`);
+            try {
+              raw = await draw(sceneFor('retry'));
+            } catch (again) {
+              if (!isSafetyRejection(again)) throw again;
+              throw new Error(`OpenAI отклонил страницу «${name}»: фильтр видит ребёнка в беде или чужое имя. Перепишите середину строки как спокойную сцену со взрослой героиней в простом чистом платье, без знаменитого имени, лохмотьев и слёз, и запустите эту страницу ещё раз.`);
+            }
+          }
           const print = await fitPortrait(raw);
           await fs.writeFile(file, print);
           console.log(`Сохранено: ${file}`);
@@ -1172,11 +1266,17 @@ const server = http.createServer(async (req, res) => {
         collectionBundles,
         overlayColor,
         rebuildClassic: Boolean(body.rebuildClassic),
+        singleStyle:
+          body.singleStyle === 'badge' || body.singleStyle === 'both' || body.singleStyle === 'plain'
+            ? body.singleStyle
+            : 'plain',
       };
       const label = [
         theme ? `Пины ${theme}` : 'Пины всех подборок',
         mode === 'collection' ? 'только бандлы' : mode === 'single' ? 'только одиночные' : 'бандлы и одиночные',
         options.writeCopy ? 'с текстом для Pinterest' : 'без текста',
+        options.singleStyle === 'badge' ? 'одиночные с бейджем' : '',
+        options.singleStyle === 'both' ? 'одиночные обычные и с бейджем' : '',
         mode === 'collection' || mode === 'both' ? `бандлы: ${collectionBundles}` : '',
         collectionBundles === 'overlay' || collectionBundles === 'both'
           ? `рамка ${overlayColor}`

@@ -242,10 +242,16 @@
   </section>
 
   <section id="panel-book" class="panel">
-    <p>Создаёт план книги через текстовую модель, затем генерирует страницы через существующий механизм фабрики и сохраняет PNG в папку проекта. После генерации соберите PDF во вкладке Amazon KDP.</p>
+    <p>Подборка — отдельные картинки, как раньше. Сказка — сквозные герои: сначала план, потом образцы, и только потом страницы. Текст героя и текст кадра правятся в поле плана. Готовый рисунок этой книги фабрика сама не заменяет.</p>
     <div class="note">Стиль использует тот же генератор OpenRouter и тот же шаблон промпта, что и фабрика. Сначала создайте план, просмотрите сюжеты и только потом запускайте генерацию: 50 изображений расходуют средства API.</div>
     <label for="book-theme">Тема книги</label>
-    <input id="book-theme" value="Christian Christmas" placeholder="Christian Christmas, Woodland Animals, Cozy Fall">
+    <input id="book-theme" value="Christian Christmas" placeholder="Christian Christmas, Woodland Animals, Little Red Riding Hood">
+    <label for="book-mode">Тип плана</label>
+    <select id="book-mode">
+      <option value="variety" selected>Подборка отдельных сцен (как раньше)</option>
+      <option value="tale">Классическая сказка строго по сюжету</option>
+    </select>
+    <p id="book-mode-hint" class="hint">Отдельные картинки на тему: разные сцены, без сквозного сюжета. Этот режим не менялся.</p>
     <div class="fields">
       <div><label for="book-count">Количество страниц</label><input id="book-count" type="number" min="1" max="100" value="50"></div>
       <div><label for="book-age">Возраст</label><select id="book-age"><option value="4-8" selected>4–8 лет</option><option value="2-3">2–3 года</option><option value="3-4">3–4 года</option><option value="5-6">5–6 лет</option><option value="6-8">6–8 лет</option></select></div>
@@ -258,13 +264,16 @@
     <textarea id="book-style" style="min-height:5rem">Cute storybook coloring-page line art. Friendly rounded characters, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition, moderate low detail for children ages 4–8. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.</textarea>
     <div class="row" style="margin-top:.8rem">
       <button id="book-plan" type="button">1. Создать план сюжетов</button>
-      <button id="book-generate-one" type="button">2. Сгенерировать только первую страницу</button>
-      <button id="book-generate" type="button">3. Сгенерировать все страницы</button>
+      <button id="book-parse" class="quiet" type="button">Разобрать таблицу</button>
+      <button id="book-cast" type="button">2. Нарисовать героев</button>
+      <button id="book-redraw-hero" class="quiet" type="button">Перерисовать героя в строке курсора</button>
+      <button id="book-generate-one" type="button">3. Сгенерировать только первую страницу</button>
+      <button id="book-generate" type="button">4. Сгенерировать все страницы</button>
       <button id="book-replace-current" class="quiet" type="button">Заменить картинку выбранного сюжета</button>
     </div>
-    <label for="book-ideas">План книги — один сюжет на строку: название | описание | сложность</label>
-    <textarea id="book-ideas" placeholder="Сначала нажмите «Создать план сюжетов». Можно редактировать строки перед генерацией." style="min-height:18rem;font-family:ui-monospace,Consolas,monospace"></textarea>
-    <p class="hint">Чтобы заменить только рисунок, поставьте курсор в нужную строку плана и нажмите «Заменить картинку выбранного сюжета». Название, описание и сложность останутся прежними; будет перегенерирован только соответствующий PNG.</p>
+    <label for="book-ideas">План: строки героев, затем кадры — название | описание | сложность | кто в кадре</label>
+    <textarea id="book-ideas" placeholder="Нажмите «Создать план сюжетов» или вставьте сюда таблицу раскадровки и нажмите «Разобрать таблицу»." style="min-height:18rem;font-family:ui-monospace,Consolas,monospace"></textarea>
+    <p class="hint">Строка героя: <code># character: id | подпись | текст для образца</code>. Другой костюм того же лица: <code># character: id | same:первый-id | подпись | текст</code>. Кадр: <code>название | что происходит | сложность | id,id</code>. Чтобы поменять героя, исправьте его строку и нажмите «Перерисовать героя». Чтобы поменять страницу, исправьте середину её строки и нажмите «Заменить картинку». Название слева не меняйте, иначе появится второй файл.</p>
     <p id="book-status" class="hint">После генерации программа покажет путь к папке с PNG. Затем перейдите во вкладку Amazon KDP и соберите PDF US Letter.</p>
   </section>
 
@@ -491,6 +500,16 @@
     <label><input type="radio" name="pin-mode" value="collection" checked> Только бандлы</label>
     <label><input type="radio" name="pin-mode" value="single"> Только отдельные пины</label>
     <label><input type="radio" name="pin-mode" value="both"> И бандлы, и отдельные</label>
+  </div>
+
+  <div id="pin-single-style-wrap" hidden>
+    <label>Вид одиночного пина</label>
+    <div class="modes">
+      <label><input type="radio" name="pin-single-style" value="plain" checked> Обычный (надпись сверху и снизу)</label>
+      <label><input type="radio" name="pin-single-style" value="badge"> С бейджем (твой PNG, без заводских надписей)</label>
+      <label><input type="radio" name="pin-single-style" value="both"> Оба вида</label>
+    </div>
+    <p class="hint">Бейдж сохраняется как <code>-badge.png</code> и не затирает обычный одиночный пин. Уже собранный бейдж второй раз не рисуется. В таблицу попадает отдельной строкой.</p>
   </div>
 
   <label style="margin-top:0.5rem">Стиль бандла</label>
@@ -840,6 +859,8 @@
     const mode = document.querySelector('input[name="pin-mode"]:checked')?.value || 'collection';
     const kind = document.querySelector('input[name="pin-bundle-kind"]:checked')?.value || 'classic';
     const bundlesOn = mode === 'collection' || mode === 'both';
+    const singlesOn = mode === 'single' || mode === 'both';
+    document.querySelector('#pin-single-style-wrap').hidden = !singlesOn;
     const overlay = bundlesOn && (kind === 'overlay' || kind === 'both');
     const classic = bundlesOn && (kind === 'classic' || kind === 'both');
     document.querySelector('#pin-overlay-color-wrap').hidden = !overlay;
@@ -851,7 +872,7 @@
     });
   }
 
-  document.querySelectorAll('input[name="pin-mode"], input[name="pin-bundle-kind"]').forEach((input) => {
+  document.querySelectorAll('input[name="pin-mode"], input[name="pin-bundle-kind"], input[name="pin-single-style"]').forEach((input) => {
     input.addEventListener('change', refreshPinBundleUi);
   });
   refreshPinBundleUi();
@@ -882,6 +903,7 @@
           ? document.querySelector('#pin-heading').value.trim()
           : '',
         accent: normalizeHex(document.querySelector('#pin-accent-hex').value || document.querySelector('#pin-accent').value),
+        singleStyle: document.querySelector('input[name="pin-single-style"]:checked')?.value || 'plain',
         collectionBundles,
         overlayColor: document.querySelector('#pin-overlay-color').value,
         rebuildClassic: document.querySelector('#pin-rebuild-classic').checked,
@@ -1944,32 +1966,183 @@
     if (preset) document.querySelector('#book-style').value = preset.style;
   });
 
+  const bookModeHints = {
+    variety: 'Отдельные картинки на тему: разные сцены, без сквозного сюжета. Этот режим не менялся.',
+    tale: 'Сказка по одному первоисточнику. Герои появятся строками в начале плана: их текст можно править. Сначала нарисуйте героев и посмотрите папку cast. Страницы берут уже сохранённые образцы и новых героев сами не рисуют.',
+  };
+  document.querySelector('#book-mode').addEventListener('change', (event) => {
+    document.querySelector('#book-mode-hint').textContent = bookModeHints[event.target.value] || bookModeHints.variety;
+  });
+  function formatPlan(data) {
+    const source = data.source ? `# source: ${data.source}\n` : '';
+    const characters = (data.characters || []).map((person) => (
+      person.sameFaceAs
+        ? `# character: ${person.id} | same:${person.sameFaceAs} | ${person.label} | ${person.prompt}`
+        : `# character: ${person.id} | ${person.label} | ${person.prompt}`
+    )).join('\n');
+    const scenes = (data.ideas || []).map((idea) => {
+      const cast = Array.isArray(idea.cast) && idea.cast.length ? ` | ${idea.cast.join(',')}` : '';
+      return `${idea.title} | ${idea.prompt} | ${idea.difficulty}${cast}`;
+    }).join('\n');
+    return source + (characters ? `${characters}\n` : '') + scenes;
+  }
+  function readPlan(text) {
+    const characters = [];
+    const ideas = [];
+    for (const raw of text.split(/\r?\n/)) {
+      const line = raw.trim();
+      if (!line || line.startsWith('# source')) continue;
+      const character = line.match(/^#\s*character:\s*(.+)$/i);
+      if (character) {
+        const parts = character[1].split('|').map((part) => part.trim());
+        if (parts[1]?.startsWith('same:')) {
+          characters.push({ id: parts[0], sameFaceAs: parts[1].slice(5), label: parts[2] || parts[0], prompt: parts[3] || '' });
+        } else {
+          characters.push({ id: parts[0], label: parts[1] || parts[0], prompt: parts[2] || '' });
+        }
+        continue;
+      }
+      if (line.startsWith('#') || line.startsWith('|')) continue;
+      const parts = line.split('|').map((part) => part.trim());
+      ideas.push({
+        title: parts[0] || `Page ${ideas.length + 1}`,
+        prompt: parts[1] || parts[0],
+        difficulty: parts[2] || 'medium',
+        cast: (parts[3] || '').split(',').map((id) => id.trim()).filter(Boolean),
+        index: ideas.length,
+      });
+    }
+    return { characters, ideas };
+  }
+  function bookPlanLines(text) {
+    return text.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
+  }
+  async function ideasFromPlanField() {
+    const field = document.querySelector('#book-ideas');
+    if (/^\s*\|/m.test(field.value)) {
+      const response = await fetch('/api/book/parse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ text: field.value, age: document.querySelector('#book-age').value }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Не удалось разобрать таблицу.');
+      currentBookPlan = data.ideas || [];
+      currentCharacters = data.characters || [];
+      field.value = formatPlan(data);
+      document.querySelector('#book-count').value = currentBookPlan.length;
+      document.querySelector('#book-mode').value = 'tale';
+      document.querySelector('#book-mode').dispatchEvent(new Event('change'));
+    }
+    const plan = readPlan(field.value);
+    currentCharacters = plan.characters;
+    return plan.ideas;
+  }
+  function bookPayload(ideas) {
+    return {
+      theme: document.querySelector('#book-theme').value,
+      title: document.querySelector('#book-title').value,
+      age: document.querySelector('#book-age').value,
+      style: document.querySelector('#book-style').value,
+      mode: document.querySelector('#book-mode').value,
+      characters: currentCharacters,
+      ideas,
+    };
+  }
+  let currentCharacters = [];
   let currentBookPlan = [];
   const bookStatus = document.querySelector('#book-status');
   document.querySelector('#book-plan').addEventListener('click', async () => {
     const theme = document.querySelector('#book-theme').value.trim();
     const count = Number(document.querySelector('#book-count').value || 50);
+    const mode = document.querySelector('#book-mode').value;
     if (!theme) { bookStatus.textContent = 'Введите тему книги.'; return; }
-    bookStatus.textContent = 'Составляю план сюжетов…';
+    bookStatus.textContent = mode === 'tale' ? 'Собираю сюжет по первоисточнику…' : 'Составляю план сюжетов…';
     try {
-      const response = await fetch('/api/book/plan', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme, count, age: document.querySelector('#book-age').value}) });
+      const response = await fetch('/api/book/plan', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme, count, age: document.querySelector('#book-age').value, mode}) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось создать план.');
       currentBookPlan = data.ideas || [];
-      document.querySelector('#book-ideas').value = currentBookPlan.map(x => `${x.title} | ${x.prompt} | ${x.difficulty}`).join('\n');
+      currentCharacters = data.characters || [];
+      document.querySelector('#book-ideas').value = formatPlan(data);
+      if (data.count) document.querySelector('#book-count').value = data.count;
       if (!document.querySelector('#book-title').value.trim()) document.querySelector('#book-title').value = `${theme} Coloring Book for Kids`;
-      bookStatus.textContent = `План готов: ${currentBookPlan.length} сюжетов. Проверьте список и отредактируйте при необходимости.`;
+      const sourceNote = data.source ? ` Источник: ${data.source}.` : '';
+      bookStatus.textContent = mode === 'tale'
+        ? `План готов. ${currentBookPlan.length} сюжетов.${sourceNote} Поправьте строки героев, если нужно, и нажмите «Нарисовать героев». Страницы пока не рисуются.`
+        : `План готов. ${currentBookPlan.length} сюжетов.${sourceNote} Проверьте список и только потом запускайте картинки.`;
     } catch (error) { bookStatus.textContent = error.message || String(error); }
   });
+  document.querySelector('#book-parse').addEventListener('click', async () => {
+    const text = document.querySelector('#book-ideas').value.trim();
+    if (!text) { bookStatus.textContent = 'Вставьте таблицу раскадровки в поле плана.'; return; }
+    bookStatus.textContent = 'Разбираю таблицу…';
+    try {
+      const response = await fetch('/api/book/parse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ text, age: document.querySelector('#book-age').value }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Не удалось разобрать таблицу.');
+      currentBookPlan = data.ideas || [];
+      currentCharacters = data.characters || [];
+      document.querySelector('#book-ideas').value = formatPlan({ ...data, source: data.source || 'Вставленная раскадровка' });
+      document.querySelector('#book-count').value = data.count || currentBookPlan.length;
+      document.querySelector('#book-mode').value = 'tale';
+      document.querySelector('#book-mode').dispatchEvent(new Event('change'));
+      bookStatus.textContent = `Таблица разобрана: ${currentBookPlan.length} кадров. Проверьте порядок и запускайте картинки.`;
+    } catch (error) { bookStatus.textContent = error.message || String(error); }
+  });
+  async function postCast(redrawId) {
+    const field = document.querySelector('#book-ideas');
+    const plan = readPlan(field.value);
+    currentCharacters = plan.characters;
+    if (!plan.characters.length) {
+      bookStatus.textContent = 'В плане нет строк # character. Создайте план сказки или допишите героя.';
+      return;
+    }
+    const title = document.querySelector('#book-title').value.trim() || document.querySelector('#book-theme').value.trim();
+    if (!title) { bookStatus.textContent = 'Введите название книги: по нему называется папка.'; return; }
+    bookStatus.textContent = redrawId ? `Перерисовываю героя «${redrawId}»…` : 'Рисую недостающих героев…';
+    try {
+      const response = await fetch('/api/book/cast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          theme: document.querySelector('#book-theme').value,
+          age: document.querySelector('#book-age').value,
+          style: document.querySelector('#book-style').value,
+          characters: plan.characters,
+          redrawId: redrawId || '',
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Не удалось нарисовать героев.');
+      bookStatus.textContent = redrawId
+        ? `Герой «${redrawId}» перерисовывается. Остальные образцы не трогаю. Папка: ${data.folder}`
+        : `Рисую только тех героев, чьих файлов ещё нет. Папка: ${data.folder}. Страницы не запускаются.`;
+    } catch (error) { bookStatus.textContent = error.message || String(error); }
+  }
+  document.querySelector('#book-cast').addEventListener('click', async () => {
+    const plan = readPlan(document.querySelector('#book-ideas').value);
+    if (!plan.characters.length) { bookStatus.textContent = 'В плане нет строк # character.'; return; }
+    if (!confirm(`Нарисовать недостающих героев (${plan.characters.length} в плане)? Уже сохранённые образцы не перерисовываются. Страницы не рисуются.`)) return;
+    await postCast('');
+  });
+  document.querySelector('#book-redraw-hero').addEventListener('click', async () => {
+    const textarea = document.querySelector('#book-ideas');
+    const lines = textarea.value.split(/\r?\n/);
+    const caretLine = textarea.value.slice(0, textarea.selectionStart).split(/\r?\n/).length - 1;
+    const line = lines[caretLine]?.trim() || '';
+    const match = line.match(/^#\s*character:\s*([^|]+)/i);
+    if (!match) { bookStatus.textContent = 'Поставьте курсор в строку # character того героя, которого нужно перерисовать.'; return; }
+    const id = match[1].trim();
+    if (!confirm(`Перерисовать героя «${id}» и костюмы, которые копируют его лицо? Остальные образцы и все страницы останутся.`)) return;
+    await postCast(id);
+  });
   document.querySelector('#book-generate-one').addEventListener('click', async () => {
-    const firstLine = document.querySelector('#book-ideas').value.split(/\r?\n/).map(x => x.trim()).find(Boolean);
-    if (!firstLine) { bookStatus.textContent = 'Сначала создайте или вставьте план книги.'; return; }
-    const parts = firstLine.split('|').map(x => x.trim());
-    const idea = { title: parts[0] || 'Page 1', prompt: parts[1] || parts[0], difficulty: parts[2] || 'medium' };
+    let idea;
+    try { idea = (await ideasFromPlanField())[0]; }
+    catch (error) { bookStatus.textContent = error.message || String(error); return; }
+    if (!idea) { bookStatus.textContent = 'Сначала создайте или вставьте план книги.'; return; }
     if (!confirm(`Будет сгенерировано одно изображение: ${idea.title}. Это расходует средства OpenRouter. Продолжить?`)) return;
     bookStatus.textContent = 'Запускаю генерацию первой страницы…';
     try {
-      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme: document.querySelector('#book-theme').value, title: document.querySelector('#book-title').value, age: document.querySelector('#book-age').value, style: document.querySelector('#book-style').value, ideas: [idea]}) });
+      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(bookPayload([idea])) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось запустить генерацию.');
       bookStatus.textContent = `Генерация одной страницы запущена. Файл: ${data.folder}. Ход — слева.`;
@@ -1979,17 +2152,24 @@
   document.querySelector('#book-replace-current').addEventListener('click', async () => {
     const textarea = document.querySelector('#book-ideas');
     const lines = textarea.value.split(/\r?\n/);
-    const caret = textarea.selectionStart;
-    const index = textarea.value.slice(0, caret).split(/\r?\n/).length - 1;
-    const line = lines[index]?.trim();
-    if (!line) { bookStatus.textContent = 'Поставьте курсор в строку сюжета, картинку которого нужно заменить.'; return; }
+    const caretLine = textarea.value.slice(0, textarea.selectionStart).split(/\r?\n/).length - 1;
+    const line = lines[caretLine]?.trim();
+    if (line?.startsWith('|')) {
+      try { await ideasFromPlanField(); }
+      catch (error) { bookStatus.textContent = error.message || String(error); return; }
+      bookStatus.textContent = 'Таблица разобрана. Поставьте курсор в нужную строку и нажмите замену ещё раз.';
+      return;
+    }
+    if (!line || line.startsWith('#')) { bookStatus.textContent = 'Поставьте курсор в строку сюжета, картинку которого нужно заменить.'; return; }
+    const index = lines.slice(0, caretLine).filter((item) => item.trim() && !item.trim().startsWith('#')).length;
     const parts = line.split('|').map(x => x.trim());
-    const idea = { title: parts[0] || `Page ${index + 1}`, prompt: parts[1] || parts[0], difficulty: parts[2] || 'medium', index };
+    currentCharacters = readPlan(textarea.value).characters;
+    const idea = { title: parts[0] || `Page ${index + 1}`, prompt: parts[1] || parts[0], difficulty: parts[2] || 'medium', cast: (parts[3] || '').split(',').map((id) => id.trim()).filter(Boolean), index };
     if (!idea.prompt || idea.prompt.length < 3) { bookStatus.textContent = 'В выбранной строке нет описания сюжета.'; return; }
-    if (!confirm(`Заменить только PNG для страницы ${index + 1}: «${idea.title}»? Описание останется без изменений.`)) return;
+    if (!confirm(`Заменить только PNG страницы ${index + 1}: «${idea.title}»? В картинку уйдёт текст из середины этой строки. Если описание неверное, сначала исправьте его. Герои заново не рисуются.`)) return;
     bookStatus.textContent = `Заменяю рисунок страницы ${index + 1}…`;
     try {
-      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme: document.querySelector('#book-theme').value, title: document.querySelector('#book-title').value, age: document.querySelector('#book-age').value, style: document.querySelector('#book-style').value, ideas: [idea]}) });
+      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(bookPayload([idea])) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось запустить замену картинки.');
       bookStatus.textContent = `Замена запущена для страницы ${index + 1}. Текст плана не изменён. PNG будет сохранён в: ${data.folder}. Прогресс — в общем логе фабрики.`;
@@ -1997,15 +2177,13 @@
   });
 
   document.querySelector('#book-generate').addEventListener('click', async () => {
-    const rows = document.querySelector('#book-ideas').value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-    const ideas = rows.map((line, index) => {
-      const parts = line.split('|').map(x => x.trim());
-      return { title: parts[0] || `Page ${index + 1}`, prompt: parts[1] || parts[0], difficulty: parts[2] || 'medium' };
-    });
+    let ideas;
+    try { ideas = await ideasFromPlanField(); }
+    catch (error) { bookStatus.textContent = error.message || String(error); return; }
     if (!ideas.length) { bookStatus.textContent = 'Сначала создайте план сюжетов.'; return; }
     if (!confirm(`Будет сгенерировано ${ideas.length} изображений. Это расходует средства OpenRouter. Продолжить?`)) return;
     try {
-      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({theme: document.querySelector('#book-theme').value, title: document.querySelector('#book-title').value, age: document.querySelector('#book-age').value, style: document.querySelector('#book-style').value, ideas}) });
+      const response = await fetch('/api/book/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(bookPayload(ideas)) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Не удалось запустить генерацию.');
       bookStatus.textContent = `Генерация запущена. Папка: ${data.folder}. Ход — слева.`;
