@@ -1,9 +1,9 @@
 ---
-title: "Winter Coloring Pages"
-description: Winter coloring pages. One huge mitten for little kids, and fuller snowy scenes for older kids. Pick an age.
-tagline: Snowmen, cocoa, cabins, and winter walks. One huge shape for little kids, or a fuller scene if they'll sit longer.
+title: Winter Coloring Pages
+description: Winter Coloring Pages for ages 2 to 8. Mitten, Snowman, Rocking Chair With Blanket, and Snow. Pick a page and print the PDF.
+tagline: Mitten, Snowman, Rocking Chair With Blanket, and Snow. Grouped by age, ages 2 to 8.
 kind: seasonal
-ageBand: "3-4"
+ageBand: "5-6"
 order: 6
 accent: "#1D7AD6"
 ink: "#243038"
@@ -12,26 +12,31 @@ related:
   - fall-coloring-pages
   - animal-coloring-pages
 pubDate: 2026-10-08
-updatedDate: 2026-10-09
+updatedDate: 2026-11-17
 keywords:
   - winter coloring pages
+  - winter
+  - mitten coloring page
   - snowman coloring page
-  - hot chocolate coloring page
+  - rocking chair with blanket coloring page
+  - snow coloring page
+  - knitting by the fire coloring page
+  - winter hat coloring page
+  - hot chocolate mug coloring page
+  - cozy reading time coloring page
 faqs:
-  - question: How do I pick an age?
-    answer: Match the lines, not the birthday. Ages 2–3 are one huge mitten, snowman, or snowflake. Ages 3–4 are thick lines and big spaces. Ages 4–5 add a few parts. Ages 5–6 are a small scene. Ages 6–8 are a fuller winter picture. The lines stay bold.
-  - question: What kind of pictures are in this set?
-    answer: A big winter pile. Snowmen, mittens, hot cocoa, cozy cabins, penguins, owls, sleighs, ice skating, and a few quiet indoor scenes by the window or the fire. No movie characters.
-  - question: Which page should we print first?
-    answer: For a short sitting, start with the huge mitten or the huge snowman. Ages 3–4 cocoa and snowman pages are the next step. Save the ice skating friends and the fuller cabin scenes for a longer afternoon.
-  - question: What do I download?
-    answer: Each picture is a PDF. I made one for letter paper and one for A4. Print the PDF at actual size. Home and classroom copies are free. Our [how to print](/how-to-print/) page has the simple steps.
+  - question: What ages are these winter coloring pages for?
+    answer: They are grouped by age, ages 2 to 8. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
+  - question: Which file should I print?
+    answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
+  - question: Can a classroom print the whole set?
+    answer: Yes. Personal and classroom printing is free. Print the PDF rather than the web page, and please don't resell the files.
 pins:
   - id: set
     title: Free Winter Coloring Pages
-    subtitle: Snowmen, cocoa, and cozy scenes
+    subtitle: Printable coloring pages for ages 2 to 8
 ---
 
-This collection features winter coloring pages, with designs such as Snowman, Winter Hat, and Hot Chocolate Mug.
+This collection features winter coloring pages, with designs such as Mitten, Snowman, and Rocking Chair With Blanket. Pages are grouped by age, ages 2 to 8.
 
 Download the PDF, not a screenshot of this page.

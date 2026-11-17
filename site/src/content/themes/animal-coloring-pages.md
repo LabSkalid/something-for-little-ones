@@ -11,7 +11,7 @@ related:
   - first-animal-coloring-pages
   - woodland-animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-11-16
+updatedDate: 2026-11-17
 keywords:
   - animal coloring pages
   - animal
