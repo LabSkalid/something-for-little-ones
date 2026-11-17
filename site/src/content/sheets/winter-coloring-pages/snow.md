@@ -1,6 +1,6 @@
 ---
 title: "Snow Coloring Page"
-theme: animal-coloring-pages
+theme: winter-coloring-pages
 slug: snow
 description: "A simple coloring page featuring a cheerful snowman, perfect for young children to decorate with their favorite winter colors."
 alt: "A simple line drawing of a smiling snowman with three round sections, two stick arms, a carrot nose, and a top hat. Several small, simple snowflakes are scattered around the snowman."
