@@ -5,7 +5,7 @@ slug: baby-elephant-splash
 description: "This coloring page features a happy baby elephant splashing in puddles, perfect for little ones aged 4-5."
 alt: "Line drawing of a cute baby elephant with big ears, spraying water from its trunk into puddles, with a butterfly flying nearby."
 parentNote: "Encourage your child to use different shades of blue for the water and splashes to make the scene really pop!"
-order: 44
+order: 2
 difficulty: medium
 age: "4-5"
 source: "Untitled-2-06.png"
