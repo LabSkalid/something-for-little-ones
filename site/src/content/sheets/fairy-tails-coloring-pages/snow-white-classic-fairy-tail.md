@@ -1,10 +1,10 @@
 ---
-title: "Snow White with Forest Animals Coloring Page"
+title: "Snow White and the Apple Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: snow-white-classic-fairy-tail
-description: "A young woman in a plain dress and apron, with one braid, stands by a tree with a rabbit and a bird."
-alt: "Line drawing of a young woman in a long-sleeved dress and apron, hair in one braid. She reaches toward a bird on a branch. A rabbit sits beside her, with a few flowers on the ground."
-parentNote: "The dress, the rabbit, and the bird are the main shapes. The leaves and the flowers are the smaller parts."
+description: "Snow White in a long gown holds an apple, with two short bearded dwarfs beside her."
+alt: "Line drawing of a young woman with very long loose hair and a floor-length gown, holding an apple. Two short dwarfs with beards and pointed caps stand at her sides. A basket of apples sits on the ground."
+parentNote: "The gown and the two dwarfs are the big shapes. The apple and the basket are the smaller parts."
 order: 9
 difficulty: medium
 age: "5-6"

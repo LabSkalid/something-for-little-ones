@@ -23,12 +23,12 @@ const PLAIN_SCENES: { match: RegExp; scene: string }[] = [
   {
     match: /seven dwarfs/i,
     scene:
-      'A young woman in a plain long-sleeved dress and a simple apron, hair in one braid and no hair bow, shares a round loaf at a wooden table with four bearded miners. The miners look alike and wear the same plain tunic and the same plain cap. No puffed sleeves, no high collar, no apples, no musical instruments.',
+      'Inside a cottage, a young woman with very long loose hair and no hair bow wears a floor-length gown with a belt and long fitted sleeves. She sets bowls on a low table for seven dwarfs. Each dwarf is only half her height, with a large head, a full beard, and a simple pointed cap. They are small folk, not adult men, and they look similar to each other. No puffed sleeves, no high white collar, no musical instruments.',
   },
   {
     match: /snow white/i,
     scene:
-      'A young woman in a plain long-sleeved dress and a simple apron, hair in one braid and no hair bow, stands by one tree. A rabbit sits beside her and one bird sits on a branch. No cottage, no apples, no basket, no puffed sleeves.',
+      'A young woman with very long loose hair and no hair bow wears a floor-length gown with a belt and long fitted sleeves. She holds one apple. Two dwarfs stand beside her, each only half her height, with large heads, full beards, and simple pointed caps. They are small folk, not adult men. No apron, no braid, no puffed sleeves, no cottage, no deer.',
   },
   {
     match: /pinocchio|wooden puppet/i,
@@ -38,12 +38,12 @@ const PLAIN_SCENES: { match: RegExp; scene: string }[] = [
   {
     match: /aladdin|magic lamp/i,
     scene:
-      'A young man in a plain long robe and a simple wrapped cloth on his head kneels on a rug, holding an old brass oil lamp. A tall quiet figure made of smoke, in a plain robe, rises from the lamp. No bare chest, no earring, no topknot, no comic grin, no palace.',
+      'A young man in a plain robe kneels holding an old brass lamp. A genie rises from the spout: his lower body is only a thick column of smoke, with no legs and no robe. His upper body is much larger than the man, with a broad beard, pointed ears, and bare shoulders. He is a spirit, not a second man in a turban. No topknot, no single earring, no comic grin.',
   },
   {
     match: /beauty and the beast/i,
     scene:
-      'A young woman in a simple high-necked long dress sits at a table opposite a large gentle horned animal wearing a plain coat. A bowl of fruit, a plain teapot, and a plain candle sit on the table, all without faces. No ballgown, no off-the-shoulder dress.',
+      'A young woman in a simple high-necked long dress sits at a table opposite a large furry beast whose head mixes a wolf and a bear: a broad bear skull, small round bear ears, a short wolf muzzle, thick cheek fur, and a few sharp teeth. No pig snout, no tusks, no floppy pig ears, no lion mane, no curved horns, no tailcoat. He wears a loose plain robe. A bowl of fruit and a candle sit on the table, with no faces. No ballgown.',
   },
   {
     match: /alice|wonderland/i,
