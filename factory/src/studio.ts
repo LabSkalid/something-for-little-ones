@@ -369,6 +369,9 @@ function asDraftSheets(value: unknown): DraftSheet[] {
 }
 
 
+const BOOK_STYLE =
+  'Storybook coloring-page line art. Characters in their story clothes, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition for children ages 4–8. An animal stays that animal, with its ears, muzzle, and tail. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.';
+
 function bookSlug(value: string) {
   return value.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 55) || 'coloring-book';
 }
@@ -664,7 +667,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const title = String(body.title ?? body.theme ?? 'Coloring Book').trim();
       const age = String(body.age ?? '4-8');
-      const style = String(body.style ?? '').trim() || 'Cute storybook coloring-page line art. Friendly rounded characters, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition, moderate low detail for children ages 4–8. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.';
+      const style = String(body.style ?? '').trim() || BOOK_STYLE;
       const characters = normalizeCharacters(body.characters);
       const redrawId = String(body.redrawId ?? '').trim();
       if (!characters.length) throw new Error('В плане нет строк героев. Сначала создайте план сказки или допишите строки # character.');
@@ -682,7 +685,7 @@ const server = http.createServer(async (req, res) => {
       const title = String(body.title ?? body.theme ?? 'Coloring Book').trim();
       const theme = String(body.theme ?? title).trim();
       const age = String(body.age ?? '4-8');
-      let style = String(body.style ?? '').trim() || 'Cute storybook coloring-page line art. Friendly rounded characters, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition, moderate low detail for children ages 4–8. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.';
+      let style = String(body.style ?? '').trim() || BOOK_STYLE;
       // Reuse the factory's selected style, removing only rules that contradict this book's subject or the established face style.
       if (/christmas|nativity|jesus|manger/i.test(`${theme} ${title}`)) {
         style = style.replace(/\bnot a nativity scene\.?/gi, '');

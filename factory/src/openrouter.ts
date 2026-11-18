@@ -217,6 +217,8 @@ const ageLayouts: Record<string, string> = {
     'A small scene: the main subject plus a few nearby objects that belong together. More separate regions than one centered object, fewer than a full patterned page. This page must be busier than a single subject for ages 4 to 5. Keep every region large enough to color. Outlines thick and closed.',
   '6-8':
     `${layouts.detailed} Make this busier than a simple scene: more objects, a repeating pattern, and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
+  '4-8':
+    'A storybook subject in its costume, large enough to color, with the hat, feather, cape, boots, ears, muzzle, and tail kept as separate closed shapes when the subject has them. A few nearby props are fine. Thick closed outlines. Not a toddler scribble of one round head, and not a hairline engraving.',
 };
 
 export function coloringPrompt(

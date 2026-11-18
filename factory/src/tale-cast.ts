@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { coloringPrompt, generateColoringPage } from './openrouter.ts';
+import { coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
 
 /** Tale pages need a model that keeps a face across a new scene. Variety books stay on the factory default. */
 export const TALE_IMAGE_MODEL = 'openai/gpt-image-2.6-sunburst';
@@ -33,21 +33,33 @@ export function normalizeCharacters(value: unknown): TaleCharacter[] {
   return characters;
 }
 
+const SHEET =
+  'Storybook coloring-page character sheet, the same line drawing as a printed fairy-tale page. Full figure, facing forward, plain white background, no other characters. Not a realistic portrait and not a baby face.';
+
+/** A species named in the sheet must stay that animal. "One person, big round eyes" was turning the cat into a mascot girl. */
+function speciesLine(prompt: string) {
+  const hit = prompt.match(/\b(cat|kitten|wolf|pig|duck|swan|bear|fox|dog|mouse|bird|horse|donkey|goat|lion)\b/i);
+  if (!hit) return '';
+  const species = hit[1].toLowerCase() === 'kitten' ? 'cat' : hit[1].toLowerCase();
+  return `The character is a ${species}. Draw that animal's body, head, ears, muzzle, paws, and tail. Do not replace the animal with a human, a girl, or a round mascot face.`;
+}
+
 export function sheetPrompt(person: TaleCharacter) {
-  const cute = 'Cute children\'s coloring-book cartoon, big round eyes, a small friendly smile, simple shapes, not a realistic portrait.';
+  const species = speciesLine(person.prompt);
   if (person.sameFaceAs) {
-    return `Image 1 is the same person. Keep the cute face and hair from Image 1. Change only the clothes. ${cute} ${person.prompt} One person, full body, facing forward, plain white background, no other people.`;
+    return `Image 1 is the same character. Keep the species, face, ears or hair, and body from Image 1. Change only the clothes. ${SHEET} ${person.prompt} ${species}`;
   }
-  return `${cute} ${person.prompt} One person, full body, facing forward, plain white background, no other people.`;
+  return `${SHEET} ${person.prompt} ${species}`;
 }
 
 export function referenceNote(ids: string[], people: TaleCharacter[]) {
-  if (!ids.length) return 'Draw only the people this moment names. Do not add anyone who is not named.';
+  if (!ids.length) return 'Draw only the characters this moment names. Do not add anyone who is not named.';
   const listed = ids.map((id, index) => {
     const person = people.find((item) => item.id === id);
-    return `Image ${index + 1} is ${person?.label || id}. Keep this person's cute cartoon face, hair, and clothes.`;
+    const species = person ? speciesLine(person.prompt) : '';
+    return `Image ${index + 1} is ${person?.label || id}. Keep this character's species, face, ears or hair, and clothes. ${species}`;
   }).join(' ');
-  return `${listed} Draw one new coloring-book moment. Change the pose and the place. Do not copy the empty background. Draw only the people whose pictures are attached. Keep the small smile unless this moment says the person is alarmed or stern.`;
+  return `${listed} Draw one new coloring-book moment. Change the pose and the place. Do not copy the empty background. Draw only the characters whose pictures are attached. Keep the expression unless this moment says the character is alarmed or stern.`;
 }
 
 function ordered(people: TaleCharacter[]) {
@@ -82,7 +94,8 @@ export async function ensureTaleCast(castDir: string, people: TaleCharacter[], s
     console.log(`Образец: ${sheet.id}`);
     const references: Buffer[] = [];
     if (sheet.sameFaceAs) references.push(await fs.readFile(path.join(castDir, `${sheet.sameFaceAs}.png`)));
-    const raw = await generateColoringPage(coloringPrompt(style, sheetPrompt(sheet), 'easy', age), references, TALE_IMAGE_MODEL);
+    const castDifficulty: LineDifficulty = age === '2-3' || age === '3-4' ? 'easy' : 'medium';
+    const raw = await generateColoringPage(coloringPrompt(style, sheetPrompt(sheet), castDifficulty, age), references, TALE_IMAGE_MODEL);
     const small = await sharp(raw).resize({ width: 800, withoutEnlargement: true }).png({ compressionLevel: 9 }).toBuffer();
     await fs.writeFile(file, small);
     console.log(`Сохранён образец: ${file}`);

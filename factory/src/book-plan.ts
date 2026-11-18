@@ -173,7 +173,7 @@ Rules:
 - If there are fewer pages than beats, merge neighboring beats, but the first page must use the first given beat and the last page must use the last given beat.
 - When there are at least as many pages as beats, every given beat number appears at least once.
 - title: short English scene name. Do not use a famous character name or a film name.
-- prompt: one colorable scene. Call people by role. No famous character names. No film-only names.
+- prompt: one colorable scene. Call characters by role. No famous character names. No film-only names. An animal stays that animal in the costume from the character list. Do not redraw a cat, wolf, pig, or bird as a girl or a round mascot.
 - cast: an array of character ids who are actually visible in this picture, chosen only from the character list in the request. Use the costume id that matches the clothes worn in this moment. Leave cast empty when the picture has none of those characters. Do not include a character who is only mentioned, not shown.
 - The image model rejects child distress. Never write child, little girl, girl, rags, ashes, cinders, dirt, crying, tears, cruel, poor, humble, servant, hunger, or punishment. The heroine is a young woman in a clean simple dress. Chores are calm. The cottage is neat.
 - No text inside the picture. difficulty is medium, or easy when the scene is a single large object.`;
@@ -262,14 +262,15 @@ function castIds(value: unknown, allowed: Set<string>) {
 async function designCharacters(theme: string, age: string, source: string, beats: string[]): Promise<TaleCharacter[]> {
   const raw = await chat(
     `You design reusable character sheets for a children's coloring book. Return valid JSON only, no markdown.
-Schema: {"characters":[{"id":"short-slug","label":"who this reference picture is","prompt":"one person alone, full body, facing forward","sameFaceAs":""}]}
+Schema: {"characters":[{"id":"short-slug","label":"who this reference picture is","prompt":"one character alone, full body, facing forward","sameFaceAs":""}]}
 Rules:
-- 2 to 8 characters. One picture is one person alone. No other people in a prompt.
-- A different costume of the SAME person is a separate id. Set sameFaceAs to the first id and say in the prompt to keep Image 1's face and hair and change only the clothes. Do this only when the source tale actually changes that person's clothes.
-- People who are not the same person must not use sameFaceAs. Make their hair and clothes visibly different.
-- ids are lowercase english slugs. label is one short sentence naming the person and the costume, with no famous name.
-- prompt: a cute coloring-book cartoon with big round eyes and a small friendly smile. Never a realistic portrait and never a blank face. Say what is different about the hair and the clothes.
-- Grown characters. Do not describe a child in hardship, rags, ashes, or tears.`,
+- 2 to 8 characters. One picture is one character alone.
+- If the tale's hero is an animal, that character is that animal, not a human and not a girl. Name the species in the prompt. An upright cat keeps a cat body: ears, muzzle, whiskers, paws, and a tail, and wears the story costume on that body (boots, a short cape, and a hat with one feather) when the tale gives him those clothes. Male when the tale's hero is male. Do not describe a round kitten face, a bow, a doll head, or a human girl with cat ears.
+- A different costume of the SAME character is a separate id. Set sameFaceAs to the first id and say in the prompt to keep Image 1's face and species and change only the clothes. Do this only when the source tale actually changes that character's clothes.
+- Characters who are not the same individual must not use sameFaceAs. Make fur or hair, and clothes, visibly different.
+- ids are lowercase english slugs. label is one short sentence naming the character and the costume, with no famous name.
+- prompt: storybook coloring-page line art, the same drawing level as a printed fairy-tale page. Name the species, sex, posture, and costume. Never a realistic portrait, never a blank face, never a baby face, never huge round eyes, never a mascot head.
+- Human characters are grown. Do not describe a child in hardship, rags, ashes, or tears.`,
     `Tale: ${theme}. Source: ${source}. Ages ${age}. Plot, in order: ${beats.join(' | ')}. List only the people who recur or must look the same on more than one page.`,
     0.2,
   );
