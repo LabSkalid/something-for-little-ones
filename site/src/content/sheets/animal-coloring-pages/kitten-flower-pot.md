@@ -6,7 +6,7 @@ description: "This coloring page features a cute kitten peeking out of a flower 
 alt: "Line drawing of a fluffy kitten with big eyes sitting in a flower pot, surrounded by two simple flowers and some grass."
 parentNote: "Encourage your child to think about what colors they'd use for a real kitten and flowers, or let them get creative with imaginary colors!"
 order: 2
-difficulty: medium
-age: "5-6"
+difficulty: easy
+age: "4-5"
 source: "Untitled-2-38.png"
 ---

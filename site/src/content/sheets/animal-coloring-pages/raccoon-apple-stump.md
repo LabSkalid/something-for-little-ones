@@ -7,6 +7,6 @@ alt: "Line drawing of a cartoon raccoon sitting on a tree stump, holding an appl
 parentNote: "Talk about what raccoons eat, or what other animals live in the forest, while your child colors."
 order: 5
 difficulty: medium
-age: "4-5"
+age: "5-6"
 source: "Untitled-2-45.png"
 ---

@@ -7,5 +7,5 @@ alt: "A simple line drawing of a koala sitting in the 'V' of a tree branch, with
 parentNote: "Your child might enjoy using shades of gray or brown for the koala's fur, and green for the eucalyptus leaves. Encourage them to add a bright blue sky or even some colorful flowers around the tree to make the scene extra special."
 order: 95
 difficulty: medium
-age: "4-5"
+age: "5-6"
 ---

@@ -7,5 +7,5 @@ alt: "A simple line drawing of a wombat. The wombat has a round body, short legs
 parentNote: "Encourage your child to think about where wombats live and what colors they might be. They could use shades of brown and gray, or even bright, imaginative colors for a fantasy wombat! Ask them to draw some grass or a burrow around their wombat friend."
 order: 96
 difficulty: medium
-age: "4-5"
+age: "5-6"
 ---
