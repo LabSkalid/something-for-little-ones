@@ -7,5 +7,5 @@ alt: "A princess with long hair, wearing a simple dress, is seated on a log. She
 parentNote: "Encourage your child to think about what colors Snow White might wear and what colors the forest animals could be. They might even add some sparkly details to her dress or the flowers around her."
 order: 9
 difficulty: medium
-age: "4-5"
+age: "5-6"
 ---

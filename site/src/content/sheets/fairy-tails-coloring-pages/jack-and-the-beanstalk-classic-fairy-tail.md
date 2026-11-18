@@ -7,5 +7,5 @@ alt: "A young boy named Jack looking up at a very tall beanstalk with leaves and
 parentNote: "Encourage your child to imagine the vibrant colors of the magical beanstalk and the enormous castle in the sky. They might even add some friendly birds or fluffy clouds around the beanstalk as they color."
 order: 8
 difficulty: medium
-age: "4-5"
+age: "5-6"
 ---

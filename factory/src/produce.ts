@@ -168,12 +168,10 @@ ageBand: ${yamlQuote(brief.ageBand)}
 order: ${brief.order}
 accent: ${yamlQuote(brief.accent)}
 ink: ${yamlQuote(brief.ink)}
-related:
-${brief.related.map((item) => `  - ${item}`).join('\n')}
+${brief.related.length ? `related:\n${brief.related.map((item) => `  - ${item}`).join('\n')}` : 'related: []'}
 pubDate: ${today}
 updatedDate: ${today}
-keywords:
-${brief.keywords.map((item) => `  - ${item}`).join('\n')}
+${brief.keywords.length ? `keywords:\n${brief.keywords.map((item) => `  - ${item}`).join('\n')}` : 'keywords: []'}
 faqs:
 ${faqs
   .map(

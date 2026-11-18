@@ -207,6 +207,18 @@ const layouts: Record<LineDifficulty, string> = {
     'A fuller scene or a repeating pattern with many separate regions to color. The picture can use more of the page. Outlines stay bold and closed, clearly thick enough to print and color with a crayon, never hairline engraving, never crosshatching, never gray fill.',
 };
 
+/** Age picks the density. 4–5 must stay simpler than 5–6; the old shared "medium" layout did not. */
+const ageLayouts: Record<string, string> = {
+  '2-3': layouts.toddler,
+  '3-4': layouts.easy,
+  '4-5':
+    'One main subject, large and centered, plus only two or three big extra parts. Fewer regions than a scene. Do not add a second character, a room full of objects, or a busy background. This page must be simpler than a small scene for ages 5 to 6. Thick closed outlines.',
+  '5-6':
+    'A small scene: the main subject plus a few nearby objects that belong together. More separate regions than one centered object, fewer than a full patterned page. This page must be busier than a single subject for ages 4 to 5. Keep every region large enough to color. Outlines thick and closed.',
+  '6-8':
+    `${layouts.detailed} Make this busier than a simple scene: more objects, a repeating pattern, and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
+};
+
 export function coloringPrompt(
   style: string,
   subject: string,
@@ -214,11 +226,7 @@ export function coloringPrompt(
   age = '3-4',
 ) {
   const ages = age.replace('-', ' to ');
-  let layout = layouts[difficulty] ?? layouts.easy;
-  if (difficulty === 'detailed' && age.startsWith('6')) {
-    layout +=
-      ' Make this busier than a simple scene: more objects, a repeating pattern, and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.';
-  }
+  const layout = ageLayouts[age] ?? layouts[difficulty] ?? layouts.easy;
   return [
     `A finished coloring-book page for children ages ${ages}, portrait composition.`,
     `Subject: ${subject}.`,

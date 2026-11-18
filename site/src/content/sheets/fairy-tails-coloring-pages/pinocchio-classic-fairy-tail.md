@@ -7,5 +7,5 @@ alt: "A line drawing of Pinocchio with a very long nose, wearing a hat and suspe
 parentNote: "Your child can use a variety of colors to bring Pinocchio to life, from his wooden skin to his bright clothes. Encourage them to imagine what colors a magical puppet might wear on his adventures."
 order: 10
 difficulty: medium
-age: "4-5"
+age: "5-6"
 ---

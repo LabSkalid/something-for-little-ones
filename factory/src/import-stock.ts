@@ -45,7 +45,7 @@ const IMAGE_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.svg']);
 const difficulty: Record<AgeBand, string> = {
   '2-3': 'toddler',
   '3-4': 'easy',
-  '4-5': 'medium',
+  '4-5': 'easy',
   '5-6': 'medium',
   '6-8': 'detailed',
 };
@@ -898,6 +898,9 @@ export async function rewriteThemeBody(theme: string) {
       ? `${examplePhrase}. For ${span}.`
       : `${short} coloring pages for ${span}.`;
   data.ageBand = mostCommonAge(ages);
+  data.related = Array.isArray(data.related)
+    ? data.related.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+    : [];
   data.updatedDate = today;
   data.pubDate = dayString(data.pubDate, today);
   data.keywords = collectionKeywords(collectionTitle, sheets);

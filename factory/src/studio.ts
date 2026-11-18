@@ -195,7 +195,7 @@ async function listThemes() {
 const ageDifficulty: Record<string, 'toddler' | 'easy' | 'medium' | 'detailed'> = {
   '2-3': 'toddler',
   '3-4': 'easy',
-  '4-5': 'medium',
+  '4-5': 'easy',
   '5-6': 'medium',
   '6-8': 'detailed',
 };
@@ -307,10 +307,7 @@ async function createPages(body: {
     keywords: [title.toLowerCase()],
     related: related.filter((item) => item !== slug).slice(0, 2),
     audience: `parents of children ages ${agesLabel}`,
-    style:
-      age === '2-3'
-        ? 'Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.'
-        : 'Cute storybook line art, thick black outlines, white background, no shading, no text, no trademarked characters.',
+    style: drawStyle(age),
     ideas,
     pins: [{ id: 'set', title: `Free ${title}`, subtitle: 'Printable coloring pages' }],
   };
@@ -319,7 +316,35 @@ async function createPages(body: {
   const briefPath = path.join(cache, 'studio-brief.yaml');
   await fs.writeFile(briefPath, stringify(brief));
   await fs.mkdir(briefsRoot, { recursive: true });
-  startJob(`Новые рисунки: ${ideas.map((idea) => idea.slug).join(', ')}`, () => produce(briefPath, false));
+  startJob(`Новые рисунки: ${ideas.map((idea) => idea.slug).join(', ')}`, async () => {
+    await produce(briefPath, false);
+    await rewriteThemeBody(slug);
+    console.log('Выкладываю PNG и PDF в хранилище. Без этого на сайте будут пустые карточки.');
+    try {
+      await uploadThemePrints(slug);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.log(`Тексты сайта записаны, в хранилище не вышло: ${message}`);
+      console.log('На странице рисования нажмите «Выложить в хранилище».');
+    }
+  });
+}
+
+function drawStyle(age: string) {
+  const plain = 'Thick black outlines, pure white background, no shading, no text, no trademarked characters.';
+  if (age === '2-3') {
+    return `Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.`;
+  }
+  if (age === '4-5') {
+    return `One main subject with only two or three large extra parts. Not a scene. Simpler than a page for ages 5 to 6. ${plain}`;
+  }
+  if (age === '5-6') {
+    return `A small scene, busier than one centered object and simpler than a dense pattern. ${plain}`;
+  }
+  if (age === '6-8') {
+    return `A fuller scene with many colorable regions. Bolder and busier than a small scene for ages 5 to 6. ${plain}`;
+  }
+  return `One large subject, centered, with a handful of big regions. ${plain}`;
 }
 
 function send(res: http.ServerResponse, status: number, body: unknown, type = 'application/json') {
@@ -496,6 +521,13 @@ async function uploadToStorage(rclone: string, label: string, source: string, fo
       ? `${label}: загружено или обновлено файлов — ${copied}.`
       : `${label}: всё уже в хранилище, новых файлов нет.`,
   );
+}
+
+async function uploadThemePrints(theme: string) {
+  const rclone = await findRclone();
+  const source = theme ? path.join(printRoot, theme) : printRoot;
+  const folder = theme ? `print/${theme}` : 'print';
+  await uploadToStorage(rclone, theme ? `картинки ${theme}` : 'листы для скачивания', source, folder);
 }
 
 type QueueRow = Record<string, string>;
@@ -763,6 +795,14 @@ const server = http.createServer(async (req, res) => {
           try {
             await publishPrintAssets(theme, { file: tempFile, slug: sheet.slug, title: sheet.title });
             console.log(`Готово: заменены preview PNG, US Letter PDF и A4 PDF для ${theme}/${slug}. Описание и метаданные сайта не менялись.`);
+            console.log('Выкладываю заменённые файлы в хранилище.');
+            try {
+              await uploadThemePrints(theme);
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              console.log(`На диске заменено, в хранилище не вышло: ${message}`);
+              console.log('На странице рисования нажмите «Выложить в хранилище».');
+            }
           } finally {
             await fs.rm(tempFile, { force: true });
           }
@@ -1301,7 +1341,17 @@ const server = http.createServer(async (req, res) => {
       const label = slugs?.length
         ? `Перерисовка ${theme ?? ''}: ${slugs.length} выбранных листов`
         : theme ? `Перерисовка ${theme}` : 'Перерисовка всех листов';
-      startJob(label, () => redraw(theme, undefined, slugs));
+      startJob(label, async () => {
+        await redraw(theme, undefined, slugs);
+        console.log('Выкладываю перерисованные PNG и PDF в хранилище.');
+        try {
+          await uploadThemePrints(theme ?? '');
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          console.log(`На диске обновлено, в хранилище не вышло: ${message}`);
+          console.log('На странице рисования нажмите «Выложить в хранилище».');
+        }
+      });
       return send(res, 202, { ok: true });
     }
     if (req.method === 'GET' && url.pathname === '/api/refit/sheets') {

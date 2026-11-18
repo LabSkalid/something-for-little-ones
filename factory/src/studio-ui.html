@@ -464,9 +464,10 @@
     <textarea id="ideas" placeholder="Whale: a friendly whale spouting water&#10;Starfish: one large starfish"></textarea>
     <div class="row">
       <button id="create" type="button">Нарисовать новые</button>
+      <button id="draw-upload" class="quiet" type="button">Выложить в хранилище</button>
       <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
     </div>
-    <p class="hint">«Перерисовать все» — платно и по всем подборкам. Пины здесь не собираются.</p>
+    <p class="hint">После рисования, замены и перерисовки PNG и PDF сами уходят в хранилище. «Выложить в хранилище» — повтор, если этот шаг оборвался. Текст страниц записывается в сайт; чтобы Cloudflare его увидел, нужен обычный деплой. «Перерисовать все» — платно и по всем подборкам. Пины здесь не собираются.</p>
   </section>
 
   <section id="panel-pins" class="panel">
@@ -1451,6 +1452,26 @@
     await fetch('/api/redraw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
   });
 
+  document.querySelector('#draw-upload').addEventListener('click', async () => {
+    const theme = themeSelect.value;
+    if (!theme) {
+      logEl.textContent = 'Выберите подборку, которую выложить в хранилище.';
+      return;
+    }
+    logEl.textContent = 'Запускаю выкладку картинок…';
+    const response = await fetch('/api/print/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось запустить выкладку.';
+      return;
+    }
+    logEl.textContent = 'Выкладка запущена. Ход работы — в логе ниже.';
+  });
+
   document.querySelector('#create').addEventListener('click', async () => {
     const ideas = document.querySelector('#ideas').value.trim();
     if (!ideas) {
@@ -1480,7 +1501,7 @@
         return;
       }
       const age = document.querySelector('#draw-age').value;
-      logEl.textContent = `Рисование запущено для возраста ${age}. Ниже появится ход работы. Пины сами не собираются — откройте вкладку «Пины».`;
+      logEl.textContent = `Рисование запущено для возраста ${age}. Ниже появится ход работы. В конце картинки уйдут в хранилище. Пины сами не собираются — откройте вкладку «Пины».`;
     } catch (error) {
       logEl.textContent = 'Фабрика не отвечает. Закройте старое окно и снова откройте Open Factory.bat.\n' + String(error?.message || error);
     }
