@@ -5414,5 +5414,71 @@
     "slugs": [
       "yak"
     ]
+  },
+  {
+    "filename": "animal-coloring-pages-bear-playing-ball-badge.png",
+    "kind": "single",
+    "slugs": [
+      "bear-playing-ball"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bear-playing-ball.png",
+    "kind": "single",
+    "slugs": [
+      "bear-playing-ball"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bundle-28.png",
+    "kind": "overlay",
+    "slugs": [
+      "bear-playing-ball",
+      "bunny-sniffing-flower",
+      "bunny-and-butterfly",
+      "fox-and-pumpkin"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bunny-and-butterfly-badge.png",
+    "kind": "single",
+    "slugs": [
+      "bunny-and-butterfly"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bunny-and-butterfly.png",
+    "kind": "single",
+    "slugs": [
+      "bunny-and-butterfly"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bunny-sniffing-flower-badge.png",
+    "kind": "single",
+    "slugs": [
+      "bunny-sniffing-flower"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-bunny-sniffing-flower.png",
+    "kind": "single",
+    "slugs": [
+      "bunny-sniffing-flower"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-fox-and-pumpkin-badge.png",
+    "kind": "single",
+    "slugs": [
+      "fox-and-pumpkin"
+    ]
+  },
+  {
+    "filename": "animal-coloring-pages-fox-and-pumpkin.png",
+    "kind": "single",
+    "slugs": [
+      "fox-and-pumpkin"
+    ]
   }
 ]
