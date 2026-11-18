@@ -1,10 +1,10 @@
 ---
-title: "Little Red Riding Hood in the Forest Coloring Page"
+title: "Little Red Riding Hood with a Basket Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: little-red-riding-hood-classic-fairy-tail
-description: "Little Red Riding Hood in a cape, with a basket, walking a forest path toward a cottage."
-alt: "A simple line drawing of a girl with a hooded cape and a small basket, walking on a path through a forest with stylized trees and a distant cottage."
-parentNote: "Encourage your child to imagine what colors Little Red Riding Hood's cape and basket might be, or what kind of flowers grow along her path. They could even draw other friendly forest animals peeking out from behind the trees."
+description: "Little Red Riding Hood in a cape, holding a basket. One figure, with room to color."
+alt: "Line drawing of a smiling girl in a hooded cape and dress, holding a basket."
+parentNote: "The cape and the basket are the two big areas. A child can color the cape one color and the dress another."
 order: 4
 difficulty: easy
 age: "3-4"

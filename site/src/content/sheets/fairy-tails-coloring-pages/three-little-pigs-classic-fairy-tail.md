@@ -1,10 +1,10 @@
 ---
-title: "Three Little Pigs and Their Houses Coloring Page"
+title: "Three Little Pigs Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: three-little-pigs-classic-fairy-tail
-description: "A whimsical coloring page depicting the three little pigs and their houses, perfect for young children to explore and color."
-alt: "A line drawing of three friendly-looking pigs, each standing in front of a different house: one of straw, one of sticks, and one of bricks. A smiling sun is in the corner."
-parentNote: "Encourage your child to use different colors for each pig and their house, discussing the materials used for building. You could also talk about the different emotions the pigs might be feeling in their homes."
+description: "Three little pigs standing together. One holds a bundle of sticks, one holds bricks."
+alt: "Line drawing of three smiling pigs. One wears a cap, one holds a bundle of sticks, and one holds a stack of bricks."
+parentNote: "Each pig can be a different color. The sticks and the bricks are the extra parts to color."
 order: 3
 difficulty: easy
 age: "3-4"
