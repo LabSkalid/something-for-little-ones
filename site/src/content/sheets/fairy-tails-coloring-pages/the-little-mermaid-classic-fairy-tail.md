@@ -1,5 +1,5 @@
 ---
-title: "The Little Mermaid, classic fairy tail Coloring Page"
+title: "Little Mermaid on a Rock Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: the-little-mermaid-classic-fairy-tail
 description: "A beautiful mermaid with flowing hair sits on a rock, gazing at a distant ship. Fish swim around her, and a friendly crab peeks from behind the rock."

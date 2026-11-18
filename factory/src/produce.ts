@@ -5,7 +5,9 @@ import { z } from 'zod';
 import { readSite } from './brand.ts';
 import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
+import { isSafetyRejection, softenTaleSubject } from './book-plan.ts';
 import { chat, coloringPrompt, generateColoringPage } from './openrouter.ts';
+import { imageSubject } from './tale-prompt.ts';
 import { pngToPdf } from './pdf.ts';
 import { loadEnv } from './env.ts';
 import { printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
@@ -247,7 +249,16 @@ export async function produce(briefPath: string, dryRun: boolean) {
   const created: { title: string; slug: string }[] = [];
   for (const idea of pending) {
     console.log(`рисую ${idea.slug}...`);
-    const raw = await generateColoringPage(coloringPrompt(brief.style, idea.prompt, idea.difficulty, idea.age));
+    const subject = imageSubject(idea.title, idea.prompt);
+    let raw: Buffer;
+    try {
+      raw = await generateColoringPage(coloringPrompt(brief.style, subject, idea.difficulty, idea.age));
+    } catch (error) {
+      if (!isSafetyRejection(error)) throw error;
+      console.log(`Фильтр отклонил «${idea.title}». Повторяю ту же сцену без имени сказки.`);
+      const softer = softenTaleSubject(subject, 'retry');
+      raw = await generateColoringPage(coloringPrompt(brief.style, softer, idea.difficulty, idea.age));
+    }
     const print = await stampSite(await fitPortrait(raw));
     const preview = await webPreview(print);
     const dir = path.join(printRoot, brief.slug);

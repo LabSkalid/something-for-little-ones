@@ -1,5 +1,5 @@
 ---
-title: "Three Little Pigs, classic fairy tail Coloring Page"
+title: "Three Little Pigs and Their Houses Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: three-little-pigs-classic-fairy-tail
 description: "A whimsical coloring page depicting the three little pigs and their houses, perfect for young children to explore and color."

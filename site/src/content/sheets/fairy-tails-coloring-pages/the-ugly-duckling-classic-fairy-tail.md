@@ -1,5 +1,5 @@
 ---
-title: "The Ugly Duckling, classic fairy tail Coloring Page"
+title: "The Ugly Duckling Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: the-ugly-duckling-classic-fairy-tail
 description: "A baby swan, once an 'ugly duckling,' now swims gracefully on a pond, transformed and beautiful. A classic tale of finding your true self."

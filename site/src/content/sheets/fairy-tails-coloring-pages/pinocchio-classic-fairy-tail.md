@@ -1,5 +1,5 @@
 ---
-title: "Pinocchio, classic fairy tail Coloring Page"
+title: "Pinocchio the Wooden Puppet Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: pinocchio-classic-fairy-tail
 description: "A classic tale of a wooden puppet who dreams of becoming a real boy. This coloring page features Pinocchio with his long nose."
