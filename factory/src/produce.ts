@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { readSite } from './brand.ts';
 import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
-import { isSafetyRejection, softenTaleSubject } from './book-plan.ts';
+import { isSafetyRejection } from './book-plan.ts';
 import { chat, coloringPrompt, generateColoringPage } from './openrouter.ts';
 import { imageSubject } from './tale-prompt.ts';
 import { pngToPdf } from './pdf.ts';
@@ -255,8 +255,8 @@ export async function produce(briefPath: string, dryRun: boolean) {
       raw = await generateColoringPage(coloringPrompt(brief.style, subject, idea.difficulty, idea.age));
     } catch (error) {
       if (!isSafetyRejection(error)) throw error;
-      console.log(`Фильтр отклонил «${idea.title}». Повторяю ту же сцену без имени сказки.`);
-      const softer = softenTaleSubject(subject, 'retry');
+      console.log(`Фильтр отклонил «${idea.title}». Повторяю ту же сказку без знаменитого имени.`);
+      const softer = imageSubject(idea.title, idea.prompt, true);
       raw = await generateColoringPage(coloringPrompt(brief.style, softer, idea.difficulty, idea.age));
     }
     const print = await stampSite(await fitPortrait(raw));

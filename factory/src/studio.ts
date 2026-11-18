@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
 import { createTalePlan, isSafetyRejection, parseStoryboard, softenTaleSubject } from './book-plan.ts';
-import { stripModelNotes } from './tale-prompt.ts';
+import { sceneDescription, stripModelNotes } from './tale-prompt.ts';
 import { ensureTaleCast, loadTaleCast, missingTaleCast, normalizeCharacters, redrawTaleCast, referenceNote, TALE_IMAGE_MODEL } from './tale-cast.ts';
 import { chat, coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
 import { fitPortrait } from './lineart.ts';
@@ -212,9 +212,11 @@ function parseIdeas(text: string, age = '3-4') {
     if (!line || line.startsWith('#')) continue;
     const splitAt = line.indexOf(':');
     const name = stripModelNotes((splitAt === -1 ? line : line.slice(0, splitAt)).trim());
-    let prompt = stripModelNotes((splitAt === -1 ? line : line.slice(splitAt + 1)).trim()) || name;
+    let prompt = stripModelNotes((splitAt === -1 ? line : line.slice(splitAt + 1)).trim());
+    // A bare title, or only a note such as "classic fairy tale", means the image model picks the scene.
+    if (!sceneDescription(name, prompt || name)) prompt = name;
     // produce() requires prompt length >= 8
-    if (prompt.length < 8) prompt = `a simple ${prompt} coloring page drawing`;
+    if (prompt.length < 8) prompt = `${prompt} fairy tale`;
     if (band === '2-3') {
       prompt = `${prompt}. One huge simple shape only, extra-thick outlines, almost no small parts, toddler coloring page`;
     }

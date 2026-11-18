@@ -2,9 +2,9 @@
 title: "Snow White with Forest Animals Coloring Page"
 theme: fairy-tails-coloring-pages
 slug: snow-white-classic-fairy-tail
-description: "Snow White sits on a log with a deer, a rabbit, and a bird. A printable coloring page."
-alt: "A princess with long hair, wearing a simple dress, is seated on a log. She is surrounded by friendly forest animals: a deer, a rabbit, and a bird perch on her outstretched hand."
-parentNote: "Encourage your child to think about what colors Snow White might wear and what colors the forest animals could be. They might even add some sparkly details to her dress or the flowers around her."
+description: "A young woman in a plain dress and apron, with one braid, stands by a tree with a rabbit and a bird."
+alt: "Line drawing of a young woman in a long-sleeved dress and apron, hair in one braid. She reaches toward a bird on a branch. A rabbit sits beside her, with a few flowers on the ground."
+parentNote: "The dress, the rabbit, and the bird are the main shapes. The leaves and the flowers are the smaller parts."
 order: 9
 difficulty: medium
 age: "5-6"
