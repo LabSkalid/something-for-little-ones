@@ -3,10 +3,7 @@ title: Fairy Tails
 description: Fairy Tails for ages 3 to 8. Goldilocks and the Three Bears, classic fairy tail, Hansel and Gretel, classic fairy tail, Puss in Boots, classic fairy tail, and Sleeping Beauty, classic fairy tail. Pick a page and print the PDF.
 tagline: Goldilocks and the Three Bears, classic fairy tail, Hansel and Gretel, classic fairy tail, Puss in Boots, classic fairy tail, and Sleeping Beauty, classic fairy tail. Grouped by age, ages 3 to 8.
 kind: evergreen
-ageBand: - "3-4"
-  - "4-5"
-  - "5-6"
-  - "6-8"
+ageBand: "5-6"
 order: 14
 accent: "#1D7AD6"
 ink: "#243038"
