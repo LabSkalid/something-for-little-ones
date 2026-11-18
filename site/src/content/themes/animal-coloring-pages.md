@@ -10,6 +10,7 @@ ink: "#241C18"
 related:
   - first-animal-coloring-pages
   - woodland-animal-coloring-pages
+  - farm-animal-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-11-17
 keywords:

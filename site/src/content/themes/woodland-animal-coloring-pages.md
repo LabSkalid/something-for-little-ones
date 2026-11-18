@@ -10,6 +10,7 @@ ink: "#241C18"
 related:
   - first-animal-coloring-pages
   - animal-coloring-pages
+  - farm-animal-coloring-pages
 pubDate: 2026-10-05
 updatedDate: 2026-10-28
 keywords:
