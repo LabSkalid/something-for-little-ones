@@ -7,7 +7,9 @@ ageBand: "5-6"
 order: 14
 accent: "#1D7AD6"
 ink: "#243038"
-related: []
+related:
+  - princess-coloring-pages
+  - animal-coloring-pages
 pubDate: 2026-11-18
 updatedDate: 2026-11-18
 keywords:

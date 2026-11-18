@@ -871,6 +871,39 @@ function collectionFaqs(short: string, span: string, ages: AgeBand[]) {
   ];
 }
 
+const RELATED_STOP = new Set(['coloring', 'pages', 'page', 'and', 'the', 'a', 'of', 'for', 'with']);
+
+/** Two other sets for "More sets to print". Same kind, shared title words first, otherwise the latest sets. */
+export async function suggestRelated(theme: string, kind: string): Promise<string[]> {
+  const words = new Set(
+    theme
+      .replace(/-coloring-pages$/, '')
+      .split('-')
+      .filter((word) => word && !RELATED_STOP.has(word)),
+  );
+  const files = (await fs.readdir(themeContentRoot)).filter((name) => name.endsWith('.md'));
+  const others: { slug: string; order: number; overlap: number }[] = [];
+  for (const file of files) {
+    const slug = file.replace(/\.md$/, '');
+    if (slug === theme) continue;
+    const data = frontmatter(await fs.readFile(path.join(themeContentRoot, file), 'utf8'));
+    if (String(data.kind ?? 'evergreen') !== kind) continue;
+    const theirs = new Set(
+      slug
+        .replace(/-coloring-pages$/, '')
+        .split('-')
+        .filter((word) => word && !RELATED_STOP.has(word)),
+    );
+    let overlap = 0;
+    for (const word of words) if (theirs.has(word)) overlap += 1;
+    others.push({ slug, order: Number(data.order ?? 0), overlap });
+  }
+  others.sort((a, b) => b.overlap - a.overlap || b.order - a.order || a.slug.localeCompare(b.slug));
+  const matched = others.filter((item) => item.overlap > 0);
+  const rest = others.filter((item) => item.overlap === 0).sort((a, b) => b.order - a.order || a.slug.localeCompare(b.slug));
+  return [...matched, ...rest].slice(0, 2).map((item) => item.slug);
+}
+
 export async function rewriteThemeBody(theme: string) {
   const file = path.join(themeContentRoot, `${theme}.md`);
   const raw = await fs.readFile(file, 'utf8');
@@ -898,9 +931,12 @@ export async function rewriteThemeBody(theme: string) {
       ? `${examplePhrase}. For ${span}.`
       : `${short} coloring pages for ${span}.`;
   data.ageBand = mostCommonAge(ages);
-  data.related = Array.isArray(data.related)
+  const keptRelated = Array.isArray(data.related)
     ? data.related.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
     : [];
+  data.related = keptRelated.length
+    ? keptRelated
+    : await suggestRelated(theme, String(data.kind ?? 'evergreen'));
   data.updatedDate = today;
   data.pubDate = dayString(data.pubDate, today);
   data.keywords = collectionKeywords(collectionTitle, sheets);
