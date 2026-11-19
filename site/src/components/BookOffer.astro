@@ -6,6 +6,9 @@ interface Props {
 }
 
 const { book } = Astro.props;
+const actions: { href: string; label: string }[] = [];
+if (book.kofiUrl) actions.push({ href: book.kofiUrl, label: `PDF · ${book.pdfPrice} on Ko-fi` });
+if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${book.paperbackPrice} on Amazon` });
 ---
 
 <div class="book-offer">
@@ -22,7 +25,8 @@ const { book } = Astro.props;
   <h2>{book.title}</h2>
   <p>{book.body}</p>
   <div class="book-offer-actions">
-    <a class="btn" href={book.amazonUrl} target="_blank" rel="noopener noreferrer">Paperback on Amazon</a>
-    <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener noreferrer">PDF on Ko-fi</a>
+    {actions.map((action, index) => (
+      <a class:list={['btn', { 'btn-ghost': index > 0 }]} href={action.href} target="_blank" rel="noopener noreferrer">{action.label}</a>
+    ))}
   </div>
 </div>

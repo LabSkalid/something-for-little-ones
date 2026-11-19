@@ -8,8 +8,12 @@ export type BookOffer = {
   kofiUrl: string;
   /** Pages in the printed book, used by the single-picture promo line. */
   pages: number;
-  /** Paperback price, used by the single-picture promo. */
+  /** Price shown on the single-picture promo. */
   price: string;
+  /** Ko-fi PDF price for the theme-page banner. */
+  pdfPrice: string;
+  /** Amazon paperback price for the theme-page banner. */
+  paperbackPrice: string;
   /** Theme pages where this offer appears in the rail. */
   themes: string[];
 };
@@ -25,6 +29,8 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/53304342a5',
     pages: 50,
     price: '$5.99',
+    pdfPrice: '$5.99',
+    paperbackPrice: '$9.99',
     themes: ['winter-coloring-pages', 'christmas-coloring-pages'],
   },
   {
@@ -37,6 +43,8 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/0d6b5ac6dc',
     pages: 35,
     price: '$3.99',
+    pdfPrice: '$3.99',
+    paperbackPrice: '$7.99',
     themes: ['christian-christmas-coloring-pages'],
   },
   {
@@ -49,6 +57,8 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/b535114e98',
     pages: 60,
     price: '$5.99',
+    pdfPrice: '$5.99',
+    paperbackPrice: '$9.99',
     themes: ['garden-coloring-pages', 'animal-coloring-pages'],
   },
    {
@@ -61,6 +71,8 @@ export const books: BookOffer[] = [
     kofiUrl: 'https://ko-fi.com/s/4c5ffb1795',
     pages: 50,
     price: '$5.99',
+    pdfPrice: '$5.99',
+    paperbackPrice: '$9.99',
     themes: ['fall-coloring-pages', 'thanksgiving-coloring-pages'],
   },
 ];
