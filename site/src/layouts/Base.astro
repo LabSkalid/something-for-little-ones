@@ -169,5 +169,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
       </script>
     )}
+    <script is:inline>
+      document.addEventListener('click', function (event) {
+        var node = event.target;
+        if (!node || !node.closest) return;
+        var link = node.closest('[data-book-store]');
+        if (!link) return;
+        var store = link.getAttribute('data-book-store');
+        var eventName = store === 'amazon' ? 'amazon_click' : store === 'kofi' ? 'kofi_click' : '';
+        if (!eventName) return;
+        var params = {
+          book_id: link.getAttribute('data-book-id') || '',
+          book_place: link.getAttribute('data-book-place') || '',
+        };
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', eventName, params);
+        } else {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: eventName, book_id: params.book_id, book_place: params.book_place });
+        }
+      });
+    </script>
   </body>
 </html>

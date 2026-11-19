@@ -108,12 +108,12 @@ const jsonLd = {
           </div>
           {book && (
             <aside class="sheet-book">
-              <a class="sheet-book-cover" href={book.kofiUrl} target="_blank" rel="noopener">
+              <a class="sheet-book-cover" href={book.kofiUrl} target="_blank" rel="noopener" data-book-store="kofi" data-book-id={book.id} data-book-place="sheet">
                 <img src={book.cover} alt={book.coverAlt} width="88" height="132" loading="lazy" decoding="async" />
               </a>
               <div>
                 <p>{book.pages} more {bookThemeLabel} pages, ready to print</p>
-                <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener">Get the PDF · {book.pdfPrice}</a>
+                <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener" data-book-store="kofi" data-book-id={book.id} data-book-place="sheet">Get the PDF · {book.pdfPrice}</a>
               </div>
             </aside>
           )}

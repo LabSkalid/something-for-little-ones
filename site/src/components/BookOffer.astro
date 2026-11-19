@@ -6,13 +6,13 @@ interface Props {
 }
 
 const { book } = Astro.props;
-const actions: { href: string; label: string }[] = [];
-if (book.kofiUrl) actions.push({ href: book.kofiUrl, label: `PDF · ${book.pdfPrice} on Ko-fi` });
-if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${book.paperbackPrice} on Amazon` });
+const actions: { href: string; label: string; store: string }[] = [];
+if (book.kofiUrl) actions.push({ href: book.kofiUrl, label: `PDF · ${book.pdfPrice} on Ko-fi`, store: 'kofi' });
+if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${book.paperbackPrice} on Amazon`, store: 'amazon' });
 ---
 
 <div class="book-offer">
-  <a class="book-offer-cover" href={book.amazonUrl} target="_blank" rel="noopener noreferrer">
+  <a class="book-offer-cover" href={book.amazonUrl} target="_blank" rel="noopener noreferrer" data-book-store="amazon" data-book-id={book.id} data-book-place="theme">
     <img
       src={book.cover}
       alt={book.coverAlt}
@@ -26,7 +26,7 @@ if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${
   <p>{book.body}</p>
   <div class="book-offer-actions">
     {actions.map((action, index) => (
-      <a class:list={['btn', { 'btn-ghost': index > 0 }]} href={action.href} target="_blank" rel="noopener noreferrer">{action.label}</a>
+      <a class:list={['btn', { 'btn-ghost': index > 0 }]} href={action.href} target="_blank" rel="noopener noreferrer" data-book-store={action.store} data-book-id={book.id} data-book-place="theme">{action.label}</a>
     ))}
   </div>
 </div>
