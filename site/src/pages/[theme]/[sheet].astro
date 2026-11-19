@@ -113,8 +113,7 @@ const jsonLd = {
               </a>
               <div>
                 <p>{book.pages} more {bookThemeLabel} pages, ready to print</p>
-                <p class="sheet-book-price">{book.price}</p>
-                <a class="btn" href={book.kofiUrl} target="_blank" rel="noopener">PDF on Ko-fi</a>
+                <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener">Get the PDF · {book.pdfPrice}</a>
               </div>
             </aside>
           )}
