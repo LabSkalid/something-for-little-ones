@@ -111,6 +111,93 @@ const PLAIN_SCENES: { match: RegExp; scene: string }[] = [
 const PLAIN =
   'Plain original storybook coloring page. Ordinary clothes and ordinary faces. Do not copy a character, costume, hair bow, pose, or prop from a film, series, doll, or theme park.';
 
+/**
+ * Shorter than PLAIN_SCENES. A bare tale name otherwise expands into a room,
+ * and the image model draws every listed object, which lands on ages 6–8.
+ * 4–5 is a group on white. 5–6 is one or two figures plus one simple backdrop.
+ */
+const YOUNG_SCENES: Record<string, { match: RegExp; scene: string }[]> = {
+  '4-5': [
+    {
+      match: /goldilocks|three bears/i,
+      scene: 'A girl with long hair stands in front of three friendly bears of different sizes. Empty background. No table, no bowls, no chairs, no room.',
+    },
+    {
+      match: /three little pigs/i,
+      scene: 'Three friendly pigs stand together. One holds a bundle of sticks. One holds a few bricks. Empty background. No houses and no wolf.',
+    },
+    {
+      match: /red riding hood/i,
+      scene: 'A girl in a plain hooded cape holds a small basket. Empty background. No wolf, no tree, no cottage.',
+    },
+    {
+      match: /gingerbread/i,
+      scene: 'One large smiling gingerbread cookie with three buttons and arms out. Empty background.',
+    },
+    {
+      match: /cinderella/i,
+      scene: 'A young woman in a plain long dress holds a broom. Empty background. No room, no floor, no cupboard, no fireplace.',
+    },
+    {
+      match: /puss in boots/i,
+      scene: 'An upright cat wearing plain boots, a short cape, and a simple hat. Empty background. No castle and no carriage.',
+    },
+  ],
+  '5-6': [
+    {
+      match: /rapunzel/i,
+      scene: 'One young woman with very long loose hair leans from one plain window. The tower is a single tall rectangle with no bricks. No second person and no forest.',
+    },
+    {
+      match: /beanstalk/i,
+      scene: 'One boy looks up at one tall beanstalk with a few big leaves. No castle, no giant, and no house.',
+    },
+    {
+      match: /pinocchio|wooden puppet/i,
+      scene: 'One wooden puppet with a long nose and a few visible joints stands beside one plain workbench block. No second person, no tools, and no workshop full of objects.',
+    },
+    {
+      match: /red riding hood/i,
+      scene: 'One girl in a plain hooded cape holds a basket. One tree with a few big leaves stands behind her. No wolf, no cottage, and no path of stones.',
+    },
+    {
+      match: /cinderella/i,
+      scene: 'One young woman in a plain long dress holds a broom beside one large pumpkin. No room, no floor, no cupboard, and no second person.',
+    },
+    {
+      match: /puss in boots/i,
+      scene: 'One upright cat wears plain boots, a short cape, and a hat with one feather. One simple door shape is behind him. No castle wall, no carriage, and no crowd.',
+    },
+    {
+      match: /hansel|gretel/i,
+      scene: 'One boy and one girl stand side by side. Behind them is one plain house shape with three big candy circles on the roof. No forest, no bricks, and no witch.',
+    },
+    {
+      match: /snow white/i,
+      scene: 'One young woman with long loose hair holds one apple. One small bearded figure in a pointed cap stands beside her, and one tree with a few big leaves is behind them. No cottage and no extra dwarfs.',
+    },
+    {
+      match: /mermaid/i,
+      scene: 'One mermaid with long loose hair and a plain fish tail sits on one rock. Two fish are in the water. No crab, no seaweed field, and no castle.',
+    },
+    {
+      match: /goldilocks|three bears/i,
+      scene: 'One girl with long hair stands beside one friendly bear. Two bowls of different sizes sit in front of them. No table, no chairs, no room, and no other bears.',
+    },
+    {
+      match: /three little pigs/i,
+      scene: 'One friendly pig holds three bricks. One simple house shape with a door is behind the pig. No other pigs, no straw, and no wolf.',
+    },
+  ],
+};
+
+const AGE_CAP: Record<string, string> = {
+  '4-5':
+    'Draw only this age: the named figures and one or two big props on an empty white background. Leave out any room, floor, trees, and furniture.',
+  '5-6':
+    'Draw only this age: one or two large characters, one action, and one backdrop of a few big shapes. Leave out any room, floor, furniture row, brick courses, and crowd, even if the description mentions them.',
+};
+
 export function stripModelNotes(text: string) {
   return text
     .replace(MODEL_NOTE, '')
@@ -139,19 +226,23 @@ export function sceneDescription(title: string, prompt: string) {
   return text;
 }
 
-export function plainScene(title: string, prompt: string) {
+export function plainScene(title: string, prompt: string, age = '') {
   const blob = `${title}\n${prompt}`;
+  const young = YOUNG_SCENES[age];
+  const shorter = young?.find((item) => item.match.test(blob))?.scene;
+  if (shorter) return shorter;
   return PLAIN_SCENES.find((item) => item.match.test(blob))?.scene ?? '';
 }
 
 /** What the image model should draw. A missing scene becomes a plain storybook moment, never the tale's film title. */
-export function imageSubject(title: string, prompt: string, retry = false) {
-  const scene = sceneDescription(title, prompt) || plainScene(title, prompt);
+export function imageSubject(title: string, prompt: string, retry = false, age = '') {
+  const scene = sceneDescription(title, prompt) || plainScene(title, prompt, age);
   const moment = scene
     ? scene
     : 'One plain original storybook moment with ordinary clothes. You choose a simple cheerful scene.';
+  const cap = AGE_CAP[age] ?? '';
   if (retry) {
-    return `${moment} Cheerful coloring page. No famous names, no film costumes, no distress.`;
+    return `${moment} ${cap} Cheerful coloring page. No famous names, no film costumes, no distress.`.replace(/\s{2,}/g, ' ').trim();
   }
-  return `${moment} ${PLAIN}`;
+  return `${moment} ${cap} ${PLAIN}`.replace(/\s{2,}/g, ' ').trim();
 }

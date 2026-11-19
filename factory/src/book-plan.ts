@@ -1,4 +1,4 @@
-import { chat, type LineDifficulty } from './openrouter.ts';
+import { ageBudget, chat, type LineDifficulty } from './openrouter.ts';
 import { type TaleCharacter } from './tale-cast.ts';
 
 export type BookPlanIdea = {
@@ -176,6 +176,7 @@ Rules:
 - prompt: one colorable scene. Call characters by role. No famous character names. No film-only names. An animal stays that animal in the costume from the character list. Do not redraw a cat, wolf, pig, or bird as a girl or a round mascot.
 - cast: an array of character ids who are actually visible in this picture, chosen only from the character list in the request. Use the costume id that matches the clothes worn in this moment. Leave cast empty when the picture has none of those characters. Do not include a character who is only mentioned, not shown.
 - The image model rejects child distress. Never write child, little girl, girl, rags, ashes, cinders, dirt, crying, tears, cruel, poor, humble, servant, hunger, or punishment. The heroine is a young woman in a clean simple dress. Chores are calm. The cottage is neat.
+- The request names an age budget. The prompt may mention only the characters, the action, and the backdrop that budget allows. Do not describe a room, a floor, furniture, brick courses, or a crowd when the budget forbids them.
 - No text inside the picture. difficulty is medium, or easy when the scene is a single large object.`;
 
 async function expandSlice(options: {
@@ -192,6 +193,7 @@ async function expandSlice(options: {
   const ask = (problems?: string[]) => chat(
     expandSystem,
     `Tale: ${options.theme}. Source, the only allowed plot: ${options.source}. Ages ${options.age}.
+Visual budget for every page: ${ageBudget(options.age)}
 Write ideas for pages ${slice.fromPage}–${slice.toPage} only (${count} ideas).
 Cover beats ${slice.fromBeat}–${slice.toBeat} in order:
 ${listed}

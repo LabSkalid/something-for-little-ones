@@ -340,10 +340,10 @@ function drawStyle(age: string) {
     return `Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.`;
   }
   if (age === '4-5') {
-    return `One main subject with only two or three large extra parts. Not a scene. Simpler than a page for ages 5 to 6. ${plain}`;
+    return `A few large figures or one figure with two or three big props, on an empty white background. No room and no scenery. Simpler than a page for ages 5 to 6. ${plain}`;
   }
   if (age === '5-6') {
-    return `A small scene, busier than one centered object and simpler than a dense pattern. ${plain}`;
+    return `One or two large characters, one action, and one simple backdrop of a few big shapes. No furnished room, no floorboards, no brick courses, no crowd. ${plain}`;
   }
   if (age === '6-8') {
     return `A fuller scene with many colorable regions. Bolder and busier than a small scene for ages 5 to 6. ${plain}`;

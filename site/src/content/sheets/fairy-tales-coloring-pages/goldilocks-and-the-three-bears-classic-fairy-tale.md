@@ -7,5 +7,5 @@ alt: "Line drawing of a smiling girl with a bow, standing in front of three bear
 parentNote: "The three bears can each be a different brown. The dress and the bow are the other big areas."
 order: 2
 difficulty: easy
-age: "3-4"
+age: "4-5"
 ---

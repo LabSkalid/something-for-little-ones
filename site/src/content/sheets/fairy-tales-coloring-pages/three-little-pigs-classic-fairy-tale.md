@@ -7,5 +7,5 @@ alt: "Line drawing of three smiling pigs. One wears a cap, one holds a bundle of
 parentNote: "Each pig can be a different color. The sticks and the bricks are the extra parts to color."
 order: 3
 difficulty: easy
-age: "3-4"
+age: "4-5"
 ---

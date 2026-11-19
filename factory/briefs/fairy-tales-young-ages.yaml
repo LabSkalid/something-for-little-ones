@@ -1,0 +1,47 @@
+slug: fairy-tales-coloring-pages
+title: Fairy Tales
+tagline: Goldilocks and the Three Bears, Puss in Boots, Hansel and Gretel at the Gingerbread House, and Sleeping Beauty. Grouped by age, ages 3 to 8.
+description: Fairy Tales for ages 3 to 8.
+kind: evergreen
+ageBand: "6-8"
+order: 14
+accent: "#1D7AD6"
+ink: "#243038"
+keywords:
+  - fairy tales coloring pages
+related:
+  - princess-coloring-pages
+  - animal-coloring-pages
+audience: parents of children ages 2 to 8
+style: Plain original storybook line art. Ordinary clothes and ordinary faces. Thick closed outlines, white background, no film costumes, no famous characters, no text.
+ideas:
+  - slug: rapunzel-at-the-window
+    title: Rapunzel at the Window Coloring Page
+    prompt: classic fairy tale
+    difficulty: medium
+    age: "5-6"
+  - slug: jack-and-the-beanstalk-looking-up
+    title: Jack and the Beanstalk Looking Up Coloring Page
+    prompt: classic fairy tale
+    difficulty: medium
+    age: "5-6"
+  - slug: pinocchio-at-the-workbench
+    title: Pinocchio at the Workbench Coloring Page
+    prompt: One wooden puppet with a long nose and three round joint dots, wearing a plain shirt and plain trousers. He stands beside one plain rectangle block. White background. No hat, no feather, no tree, no wood grain, no tools, no second person.
+    difficulty: medium
+    age: "5-6"
+  - slug: huge-magic-lamp
+    title: Magic Lamp Coloring Page
+    prompt: One huge simple magic lamp with a curved handle, a short spout, and a lid. Empty white background. No person, no smoke, no palace, no genie.
+    difficulty: toddler
+    age: "2-3"
+  - slug: huge-pumpkin
+    title: Pumpkin Coloring Page
+    prompt: One huge round pumpkin with a short stem. Empty white background. No person, no carriage, no vines, no leaves, no room.
+    difficulty: toddler
+    age: "2-3"
+  - slug: puss-in-boots-standing
+    title: Puss in Boots Standing Coloring Page
+    prompt: One upright cat wearing plain boots, a short cape, and a simple hat with no feather. Empty white background. No sword, no castle, no carriage, no second person.
+    difficulty: easy
+    age: "4-5"

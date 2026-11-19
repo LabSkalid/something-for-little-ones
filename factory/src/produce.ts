@@ -249,14 +249,14 @@ export async function produce(briefPath: string, dryRun: boolean) {
   const created: { title: string; slug: string }[] = [];
   for (const idea of pending) {
     console.log(`рисую ${idea.slug}...`);
-    const subject = imageSubject(idea.title, idea.prompt);
+    const subject = imageSubject(idea.title, idea.prompt, false, idea.age);
     let raw: Buffer;
     try {
       raw = await generateColoringPage(coloringPrompt(brief.style, subject, idea.difficulty, idea.age));
     } catch (error) {
       if (!isSafetyRejection(error)) throw error;
       console.log(`Фильтр отклонил «${idea.title}». Повторяю ту же сказку без знаменитого имени.`);
-      const softer = imageSubject(idea.title, idea.prompt, true);
+      const softer = imageSubject(idea.title, idea.prompt, true, idea.age);
       raw = await generateColoringPage(coloringPrompt(brief.style, softer, idea.difficulty, idea.age));
     }
     const print = await stampSite(await fitPortrait(raw));

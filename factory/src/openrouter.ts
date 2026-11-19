@@ -212,14 +212,18 @@ const ageLayouts: Record<string, string> = {
   '2-3': layouts.toddler,
   '3-4': layouts.easy,
   '4-5':
-    'One main subject, large and centered, plus only two or three big extra parts. Fewer regions than a scene. Do not add a second character, a room full of objects, or a busy background. This page must be simpler than a small scene for ages 5 to 6. Thick closed outlines.',
+    'AGE BUDGET, this overrides the subject. A few large figures on an empty white background, or one figure plus two or three big props. No room, no floor, no trees, no furniture, no brick pattern. Simpler than a small scene for ages 5 to 6. Thick closed outlines.',
   '5-6':
-    'A small scene: the main subject plus a few nearby objects that belong together. More separate regions than one centered object, fewer than a full patterned page. This page must be busier than a single subject for ages 4 to 5. Keep every region large enough to color. Outlines thick and closed.',
+    'AGE BUDGET, this overrides the subject. One or two large characters, one action, and one backdrop of a few big shapes such as one tree, one window, one tower block, or one plant. Busier than a group standing on white, much simpler than a furnished room. If the subject lists a room, a floor, furniture, brick courses, a crowd, or extra people, leave those out. Thick closed outlines. Every region stays large enough to color.',
   '6-8':
-    `${layouts.detailed} Make this busier than a simple scene: more objects, a repeating pattern, and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
+    `${layouts.detailed} Make this busier than a small scene: a room or a full setting is allowed, with more objects and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
   '4-8':
     'A storybook subject in its costume, large enough to color, with the hat, feather, cape, boots, ears, muzzle, and tail kept as separate closed shapes when the subject has them. A few nearby props are fine. Thick closed outlines. Not a toddler scribble of one round head, and not a hairline engraving.',
 };
+
+export function ageBudget(age: string) {
+  return ageLayouts[age] ?? ageLayouts['4-8'];
+}
 
 export function coloringPrompt(
   style: string,
@@ -234,9 +238,9 @@ export function coloringPrompt(
     `Subject: ${subject}.`,
     style,
     'Draw it the way a coloring book is printed: pure white background, solid black outlines only, even line weight, smooth closed shapes, clean corners, no stray sketch lines.',
-    layout,
     'No shading, no gray, no hatching, no gradients, no color, no texture, no paper grain, no shadow, no frame, no border.',
     'No letters, numbers, captions, logos, or watermarks anywhere in the picture. Leave the drawing itself untitled.',
     'Original subject only. Do not imitate a character from a film, series, game, or toy line.',
+    layout,
   ].join(' ');
 }
