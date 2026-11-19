@@ -1,6 +1,6 @@
 ---
 title: "Alice in Wonderland Coloring Page"
-theme: fairy-tails-coloring-pages
+theme: fairy-tales-coloring-pages
 slug: alice-in-wonderland
 description: "A whimsical coloring page featuring a girl with a curious expression, a grinning cat, and a teacup, perfect for a fantastical adventure."
 alt: "A girl with a bow in her hair, looking inquisitively at a large, Cheshire-like cat with a wide grin. Next to them is an oversized teacup with steam rising from it. The background suggests a garden with large flowers and a path."

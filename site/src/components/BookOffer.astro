@@ -9,10 +9,16 @@ const { book } = Astro.props;
 const actions: { href: string; label: string; store: string }[] = [];
 if (book.kofiUrl) actions.push({ href: book.kofiUrl, label: `PDF · ${book.pdfPrice} on Ko-fi`, store: 'kofi' });
 if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${book.paperbackPrice} on Amazon`, store: 'amazon' });
+const cover = book.amazonUrl
+  ? { href: book.amazonUrl, store: 'amazon' }
+  : book.kofiUrl
+    ? { href: book.kofiUrl, store: 'kofi' }
+    : undefined;
 ---
 
 <div class="book-offer">
-  <a class="book-offer-cover" href={book.amazonUrl} target="_blank" rel="noopener noreferrer" data-book-store="amazon" data-book-id={book.id} data-book-place="theme">
+  {cover && (
+  <a class="book-offer-cover" href={cover.href} target="_blank" rel="noopener noreferrer" data-book-store={cover.store} data-book-id={book.id} data-book-place="theme">
     <img
       src={book.cover}
       alt={book.coverAlt}
@@ -22,6 +28,7 @@ if (book.amazonUrl) actions.push({ href: book.amazonUrl, label: `Paperback · ${
       decoding="async"
     />
   </a>
+  )}
   <h2>{book.title}</h2>
   <p>{book.body}</p>
   <div class="book-offer-actions">

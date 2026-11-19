@@ -75,6 +75,20 @@ export const books: BookOffer[] = [
     paperbackPrice: '$9.99',
     themes: ['fall-coloring-pages', 'thanksgiving-coloring-pages'],
   },
+  {
+    id: 'cinderella',
+    title: 'A ready coloring book',
+    body: 'More Cinderella pages that aren’t free on the site: inspired by the classic Perrault fairy tale. Already in one stack, ready to color. A PDF to print at home.',
+    cover: '/books/cinderella-book.jpg',
+    coverAlt: 'Cover of Cinderella Coloring Book: Cinderella by the fire, and the ball before the clock strikes midnight',
+    amazonUrl: '',
+    kofiUrl: 'https://ko-fi.com/s/452102199d',
+    pages: 50,
+    price: '$5.99',
+    pdfPrice: '$5.99',
+    paperbackPrice: '',
+    themes: ['fairy-tales-coloring-pages', 'princess-coloring-pages'],
+  },
 ];
 
 export function bookForTheme(themeId: string) {

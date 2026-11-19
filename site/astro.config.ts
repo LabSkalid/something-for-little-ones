@@ -6,9 +6,47 @@ import { contentLastmods } from './src/lib/sitemap-lastmod';
 
 const lastmods = contentLastmods();
 
+const oldFairyTales = '/fairy-tails-coloring-pages';
+const newFairyTales = '/fairy-tales-coloring-pages';
+const fairyTaleSlugs = [
+  'beauty-and-the-beast',
+  'aladdin-and-the-magic-lamp',
+  'snow-white-and-the-seven-dwarfs',
+  'goldilocks-and-the-three-bears',
+  'the-nutcracker',
+  'alice-in-wonderland',
+  'cinderella-sweeping-floor',
+  'cinderella-by-fireplace',
+];
+const fairyTaleRenames: [string, string][] = [
+  ['snow-white-classic-fairy-tail', 'snow-white-classic-fairy-tale'],
+  ['pinocchio-classic-fairy-tail', 'pinocchio-classic-fairy-tale'],
+  ['gingerbread-man-classic-fairy-tail', 'gingerbread-man-classic-fairy-tale'],
+  ['the-ugly-duckling-classic-fairy-tail', 'the-ugly-duckling-classic-fairy-tale'],
+  ['goldilocks-and-the-three-bears-classic-fairy-tai', 'goldilocks-and-the-three-bears-classic-fairy-tale'],
+  ['three-little-pigs-classic-fairy-tail', 'three-little-pigs-classic-fairy-tale'],
+  ['little-red-riding-hood-classic-fairy-tail', 'little-red-riding-hood-classic-fairy-tale'],
+  ['puss-in-boots-classic-fairy-tail', 'puss-in-boots-classic-fairy-tale'],
+  ['hansel-and-gretel-classic-fairy-tail', 'hansel-and-gretel-classic-fairy-tale'],
+  ['sleeping-beauty-classic-fairy-tail', 'sleeping-beauty-classic-fairy-tale'],
+  ['rapunzel-classic-fairy-tail', 'rapunzel-classic-fairy-tale'],
+  ['jack-and-the-beanstalk-classic-fairy-tail', 'jack-and-the-beanstalk-classic-fairy-tale'],
+  ['the-little-mermaid-classic-fairy-tail', 'the-little-mermaid-classic-fairy-tale'],
+];
+const fairyTaleRedirects: Record<string, string> = {
+  [`${oldFairyTales}/`]: `${newFairyTales}/`,
+};
+for (const slug of fairyTaleSlugs) {
+  fairyTaleRedirects[`${oldFairyTales}/${slug}/`] = `${newFairyTales}/${slug}/`;
+}
+for (const [from, to] of fairyTaleRenames) {
+  fairyTaleRedirects[`${oldFairyTales}/${from}/`] = `${newFairyTales}/${to}/`;
+}
+
 export default defineConfig({
   site: site.url,
   trailingSlash: 'always',
+  redirects: fairyTaleRedirects,
   integrations: [
     sitemap({
       filter: (page) => {

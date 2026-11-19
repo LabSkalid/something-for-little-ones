@@ -1,6 +1,6 @@
 ---
 title: "Cinderella by the Fireplace Coloring Page"
-theme: fairy-tails-coloring-pages
+theme: fairy-tales-coloring-pages
 slug: cinderella-by-fireplace
 description: "Cinderella sits by a fireplace, with a broom, a bucket, and logs nearby."
 alt: "Line drawing of a girl with long hair and a patched dress sitting by a fireplace with a fire, a broom, a bucket, and logs nearby."

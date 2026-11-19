@@ -1,6 +1,6 @@
 ---
 title: "The Nutcracker Coloring Page"
-theme: fairy-tails-coloring-pages
+theme: fairy-tales-coloring-pages
 slug: the-nutcracker
 description: "A festive coloring page featuring Clara and the Nutcracker Prince, perfect for sparking imagination and holiday cheer in your child."
 alt: "A young girl in a party dress standing beside a toy soldier prince with a nutcracker jaw, both smiling. They are surrounded by snowflakes and a wrapped present."

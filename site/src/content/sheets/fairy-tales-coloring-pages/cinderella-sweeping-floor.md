@@ -1,6 +1,6 @@
 ---
 title: "Cinderella Sweeping the Floor Coloring Page"
-theme: fairy-tails-coloring-pages
+theme: fairy-tales-coloring-pages
 slug: cinderella-sweeping-floor
 description: "Cinderella sweeps a wooden floor with a broom, in a room with a window and a cupboard."
 alt: "Line drawing of a girl with long hair, wearing an apron, sweeping a wooden floor with a broom. The room has a window with curtains, a potted plant, a framed picture, and a hutch with dishes."
