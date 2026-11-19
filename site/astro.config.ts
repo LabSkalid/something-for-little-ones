@@ -42,6 +42,10 @@ for (const slug of fairyTaleSlugs) {
 for (const [from, to] of fairyTaleRenames) {
   fairyTaleRedirects[`${oldFairyTales}/${from}/`] = `${newFairyTales}/${to}/`;
 }
+const oceanMoves = ['fish-and-seaweed', 'clownfish-and-seaweed', 'two-seahorses-underwater'];
+for (const slug of oceanMoves) {
+  fairyTaleRedirects[`/animal-coloring-pages/${slug}/`] = `/ocean-scene-coloring-pages/${slug}/`;
+}
 
 export default defineConfig({
   site: site.url,

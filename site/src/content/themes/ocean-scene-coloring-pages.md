@@ -1,7 +1,7 @@
 ---
 title: Ocean Scene Coloring Pages
-description: Ocean coloring pages for about ages 5 to 6. A coral reef, a sailboat, an octopus, a lighthouse, and a sea turtle, with patterns to finish.
-tagline: A coral reef, a sailboat, an octopus, a lighthouse, and a sea turtle. Patterns, and more to finish. For about ages 5 to 6.
+description: Ocean coloring pages for about ages 5 to 6. A coral reef, fish, seahorses, a sailboat, an octopus, a lighthouse, and a sea turtle, with patterns to finish.
+tagline: A coral reef, fish, seahorses, a sailboat, an octopus, a lighthouse, and a sea turtle. Patterns, and more to finish. For about ages 5 to 6.
 kind: evergreen
 ageBand: "5-6"
 order: 1
@@ -12,9 +12,11 @@ related:
   - garden-coloring-pages
   - town-scene-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-11-19
 keywords:
   - ocean coloring pages
+  - fish coloring page
+  - seahorse coloring page
   - sea turtle coloring page
   - coloring pages for ages 5-6
 faqs:
@@ -32,6 +34,6 @@ pins:
     subtitle: Patterns for ages 5–6
 ---
 
-This collection features ocean scene coloring pages, with designs such as Coral Reef, Sailboat, and Patterned Octopus.
+This collection features ocean scene coloring pages, with designs such as Coral Reef, Fish and Seaweed, and Two Seahorses.
 
 Download the PDF, not a screenshot of this page.
