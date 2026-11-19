@@ -6,6 +6,6 @@ description: "A young woman with long loose hair leans from one plain window in 
 alt: "Line drawing of a young woman with long loose hair leaning on one plain window. The tower is one tall shape with a cone roof and no bricks."
 parentNote: "Your child can color the long hair one bright color, or a few big sections. The tower and the dress are large spaces, so thick crayons work well."
 order: 22
-difficulty: medium
-age: "5-6"
+difficulty: easy
+age: "4-5"
 ---

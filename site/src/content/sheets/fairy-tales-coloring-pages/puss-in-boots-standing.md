@@ -7,5 +7,5 @@ alt: "A line drawing of a cat standing upright, wearing plain boots, a short cap
 parentNote: "Encourage your child to imagine where this adventurous cat is going! They could use bright colors for the cape and hat, and maybe even add a colorful pattern to the boots."
 order: 27
 difficulty: easy
-age: "4-5"
+age: "3-4"
 ---
