@@ -195,7 +195,7 @@ const AGE_CAP: Record<string, string> = {
   '4-5':
     'Draw only this age: the named figures and one or two big props on an empty white background. Leave out any room, floor, trees, and furniture.',
   '5-6':
-    'Draw only this age: one or two large characters, one action, and one backdrop of a few big shapes. Leave out any room, floor, furniture row, brick courses, and crowd, even if the description mentions them.',
+    'Draw this age like a spotted dinosaur outdoors: a pattern of crayon-sized regions on the subject and several medium props. Leave out any room, floorboards, brick courses, and crowd.',
 };
 
 export function stripModelNotes(text: string) {

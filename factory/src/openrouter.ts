@@ -214,7 +214,7 @@ const ageLayouts: Record<string, string> = {
   '4-5':
     'AGE BUDGET, this overrides the subject. A few large figures on an empty white background, or one figure plus two or three big props. No room, no floor, no trees, no furniture, no brick pattern. Simpler than a small scene for ages 5 to 6. Thick closed outlines.',
   '5-6':
-    'AGE BUDGET, this overrides the subject. One or two large characters, one action, and one backdrop of a few big shapes such as one tree, one window, one tower block, or one plant. Busier than a group standing on white, much simpler than a furnished room. If the subject lists a room, a floor, furniture, brick courses, a crowd, or extra people, leave those out. Thick closed outlines. Every region stays large enough to color.',
+    'AGE BUDGET for ages 5 to 6. One large subject covered in separate crayon-sized regions such as spots, petals, patches, stripes, or feathers, plus several medium props and a simple outdoor backdrop of plants, clouds, or one landmark. Busier than one animal with a few flowers on white. Much simpler than a furnished room. No room, no floorboards, no brick courses, no crowd, and no tiny engraving. Thick closed outlines. Draw the medium regions the subject names.',
   '6-8':
     `${layouts.detailed} Make this busier than a small scene: a room or a full setting is allowed, with more objects and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
   '4-8':
