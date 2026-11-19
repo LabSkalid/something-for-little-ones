@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SheetCard from '../../components/SheetCard.astro';
+import { bookForTheme } from '../../lib/books';
 import { sheetAssets, sheetPath, themePath } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, sheetPng, site } from '../../site';
@@ -29,6 +30,8 @@ const previous = index > 0 ? siblings[index - 1] : undefined;
 const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
 const more = siblings.filter((item) => item.data.slug !== sheet.data.slug);
 const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
+const book = bookForTheme(theme.id);
+const bookThemeLabel = theme.data.title.replace(/ coloring pages$/i, '');
 const crumbs = [
   { name: 'Home', path: '/' },
   { name: theme.data.title, path: themePath(theme.id) },
@@ -103,6 +106,18 @@ const jsonLd = {
             <a class="btn" href={assets.letter} download={`${sheet.data.title} - US Letter.pdf`}>Download US Letter</a>
             <a class="btn btn-ghost" href={assets.a4} download={`${sheet.data.title} - A4.pdf`}>Download A4</a>
           </div>
+          {book && (
+            <aside class="sheet-book">
+              <a class="sheet-book-cover" href={book.amazonUrl} target="_blank" rel="noopener">
+                <img src={book.cover} alt={book.coverAlt} width="88" height="132" loading="lazy" decoding="async" />
+              </a>
+              <div>
+                <p>{book.pages} more {bookThemeLabel} pages, ready to print</p>
+                <p class="sheet-book-price">{book.price}</p>
+                <a class="btn" href={book.amazonUrl} target="_blank" rel="noopener">Get the book</a>
+              </div>
+            </aside>
+          )}
           <div class="note">
             <p>{sheet.data.parentNote}</p>
             <Content />

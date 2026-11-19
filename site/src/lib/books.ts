@@ -6,6 +6,10 @@ export type BookOffer = {
   coverAlt: string;
   amazonUrl: string;
   kofiUrl: string;
+  /** Pages in the printed book, used by the single-picture promo line. */
+  pages: number;
+  /** Paperback price, used by the single-picture promo. */
+  price: string;
   /** Theme pages where this offer appears in the rail. */
   themes: string[];
 };
@@ -19,6 +23,8 @@ export const books: BookOffer[] = [
     coverAlt: 'Cover of Adorable Winter Coloring Book: two children ice skating in the snow',
     amazonUrl: 'https://www.amazon.com/dp/B0HMMBW1F6',
     kofiUrl: 'https://ko-fi.com/s/53304342a5',
+    pages: 50,
+    price: '$5.99',
     themes: ['winter-coloring-pages', 'christmas-coloring-pages'],
   },
   {
@@ -29,6 +35,8 @@ export const books: BookOffer[] = [
     coverAlt: 'Cover of Cristian Christmass Coloring Book: from the Nativity story to the family traditions',
     amazonUrl: 'https://www.amazon.com/dp/B0HP9YGF6H',
     kofiUrl: 'https://ko-fi.com/s/0d6b5ac6dc',
+    pages: 35,
+    price: '$3.99',
     themes: ['christian-christmas-coloring-pages'],
   },
   {
@@ -39,6 +47,8 @@ export const books: BookOffer[] = [
     coverAlt: 'Cover of Cute Garden Animals Coloring Book: a snail on a watering can and a chick with a rake',
     amazonUrl: 'https://www.amazon.com/dp/B0HMJPQXPT',
     kofiUrl: 'https://ko-fi.com/s/b535114e98',
+    pages: 60,
+    price: '$5.99',
     themes: ['garden-coloring-pages', 'animal-coloring-pages'],
   },
    {
@@ -49,6 +59,8 @@ export const books: BookOffer[] = [
     coverAlt: 'Cover of Thanksgiving Coloring Book: a funny turkey and pumpkins',
     amazonUrl: 'https://www.amazon.com/dp/B0HNT32W6L',
     kofiUrl: 'https://ko-fi.com/s/4c5ffb1795',
+    pages: 50,
+    price: '$5.99',
     themes: ['fall-coloring-pages', 'thanksgiving-coloring-pages'],
   },
 ];

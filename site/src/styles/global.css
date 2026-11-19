@@ -363,6 +363,54 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
   padding: 0.55rem 0.7rem;
 }
 
+.sheet-book {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  column-gap: 0.75rem;
+  align-items: center;
+  max-width: 26rem;
+  margin-top: 0.85rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.sheet-book-cover {
+  display: block;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  line-height: 0;
+}
+
+.sheet-book-cover img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.sheet-book p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.sheet-book p.sheet-book-price {
+  margin: 0.15rem 0 0.4rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.sheet-book .btn {
+  min-height: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
 .ad-slot {
   display: grid;
   place-items: center;
@@ -534,9 +582,10 @@ h2 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); margin: 0 0 0.35rem; }
 }
 
 
-/* Mobile-only book promotion. Desktop keeps the original sidebar markup and styling. */
+/* Below the right-rail breakpoint the banner sits after the whole page.
+   Show the copy under the intro instead. At 1040px and up the sidebar stays as it is. */
 .book-offer-mobile { display: none; }
-@media (max-width: 640px) {
+@media (max-width: 1039px) {
   .book-offer-mobile { display: block; margin: 0 0 1rem; }
   .rail > .book-offer { display: none; }
   .book-offer-mobile .book-offer {
