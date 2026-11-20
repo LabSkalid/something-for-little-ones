@@ -936,5 +936,79 @@
         "autumn-barn"
       ]
     }
+  ],
+  "valentine-s-day-coloring-pages": [
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-1.png",
+      "slugs": [
+        "valentine-bakery-display",
+        "valentine-bunnies-picnic",
+        "bunny-mail-carrier",
+        "bunny-with-present"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-2.png",
+      "slugs": [
+        "flower-bouquet-with-bow",
+        "cupid-with-bow-and-arrow",
+        "love-letter-envelope",
+        "candy-castle"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-3.png",
+      "slugs": [
+        "valentines-flower-shop",
+        "bunny-bear-gifts",
+        "woodland-birthday-party",
+        "gift-box-with-heart"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-4.png",
+      "slugs": [
+        "heart-balloon",
+        "simple-heart",
+        "heart-lollipop",
+        "flowers-in-heart-pot"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-5.png",
+      "slugs": [
+        "heart-hot-air-balloon",
+        "kitty-heart-balloon",
+        "ladybug-on-leaf",
+        "love-birds-on-branch"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-6.png",
+      "slugs": [
+        "underwater-friends",
+        "penguins-on-ice-floe",
+        "puppy-kitten-valentines-day",
+        "puppy-love-letter"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-7.png",
+      "slugs": [
+        "puppy-and-heart",
+        "raccoon-crafting-cards",
+        "teddy-bear-heart",
+        "two-bears-heart"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-bundle-8.png",
+      "slugs": [
+        "cupcakes-on-tray",
+        "love-basket",
+        "love-garden",
+        "love-letter-mailbox"
+      ]
+    }
   ]
 }

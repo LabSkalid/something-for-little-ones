@@ -604,5 +604,49 @@
         "sunflower"
       ]
     }
+  ],
+  "valentine-s-day-coloring-pages": [
+    {
+      "filename": "valentine-s-day-coloring-pages-collection-1.png",
+      "slugs": [
+        "valentine-bakery-display",
+        "valentine-bunnies-picnic",
+        "bunny-mail-carrier",
+        "bunny-with-present",
+        "flower-bouquet-with-bow",
+        "cupid-with-bow-and-arrow",
+        "love-letter-envelope",
+        "candy-castle",
+        "valentines-flower-shop"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-collection-2.png",
+      "slugs": [
+        "bunny-bear-gifts",
+        "woodland-birthday-party",
+        "gift-box-with-heart",
+        "heart-balloon",
+        "simple-heart",
+        "heart-lollipop",
+        "flowers-in-heart-pot",
+        "heart-hot-air-balloon",
+        "kitty-heart-balloon"
+      ]
+    },
+    {
+      "filename": "valentine-s-day-coloring-pages-collection-3.png",
+      "slugs": [
+        "ladybug-on-leaf",
+        "love-birds-on-branch",
+        "underwater-friends",
+        "penguins-on-ice-floe",
+        "puppy-kitten-valentines-day",
+        "puppy-love-letter",
+        "puppy-and-heart",
+        "raccoon-crafting-cards",
+        "teddy-bear-heart"
+      ]
+    }
   ]
 }

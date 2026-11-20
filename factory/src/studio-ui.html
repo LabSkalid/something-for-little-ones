@@ -209,7 +209,7 @@
 
     <div class="row">
       <button id="scan" type="button" title="Открывает папку. На сайт ничего не пишет.">Показать картинки</button>
-      <button id="name-vision" class="quiet" type="button" title="Даёт имена отмеченным листам. На сайт не кладёт.">Назвать по картинке</button>
+      <button id="name-vision" class="quiet" type="button" title="Даёт имена и ставит возраст по тем же полкам, что на сайте. В название возраст не пишет. На сайт не кладёт.">Назвать по картинке</button>
       <button id="commit-import" type="button" title="Пишет отмеченные листы, обновляет текст подборки и отправляет картинки в хранилище.">Записать на сайт</button>
       <button id="rewrite-theme" class="quiet" type="button" title="Только шапка подборки по листам, которые уже на сайте. Новые картинки не добавляет.">Обновить текст подборки</button>
       <button id="upload-print" class="quiet" type="button" title="Повторяет отправку уже записанных картинок в хранилище. Новые страницы не создаёт.">Выложить картинки в интернет</button>
@@ -217,7 +217,7 @@
     </div>
     <ul class="hint">
       <li><strong>Показать картинки</strong> — открывает папку. Ничего не записывает.</li>
-      <li><strong>Назвать по картинке</strong> — имена для отмеченных «Взять». На сайт не кладёт.</li>
+      <li><strong>Назвать по картинке</strong> — имена и возраст для отмеченных «Взять», по тем же полкам, что на сайте. В название и описание возраст не пишет. На сайт не кладёт.</li>
       <li><strong>Записать на сайт</strong> — главная кнопка. Только галочки «Взять». Новые страницы, текст подборки и отправка картинок в хранилище.</li>
       <li><strong>Обновить текст подборки</strong> — шапка уже лежащих листов. Новые картинки не добавляет. Перед записью новых не нажимать.</li>
       <li><strong>Выложить картинки в интернет</strong> — повтор отправки в хранилище, если в логе она оборвалась. Страницы не создаёт.</li>
@@ -1035,7 +1035,7 @@
         <img src="/api/import/thumb?id=${encodeURIComponent(draft.id)}" alt="">
         <div class="fields">
           <div class="top">
-            <label class="check"><input data-field="include" type="checkbox"> Взять</label>
+            <label class="check"><input data-field="include" type="checkbox" ${draft.include ? 'checked' : ''}> Взять</label>
             <select data-field="age">
               ${['2-3','3-4','4-5','5-6','6-8'].map((age) =>
                 `<option value="${age}" ${draft.age === age ? 'selected' : ''}>${age}</option>`
@@ -1060,7 +1060,11 @@
   }
 
   function paintDrafts(list) {
-    drafts = (list || []).map((draft) => ({ ...draft, include: false, stripFrame: false }));
+    drafts = (list || []).map((draft) => ({
+      ...draft,
+      include: Boolean(draft.include),
+      stripFrame: Boolean(draft.stripFrame),
+    }));
     const ages = ['2-3','3-4','4-5','5-6','6-8'];
     const chunks = ages
       .map((age) => ({ age, items: list.filter((draft) => draft.age === age) }))

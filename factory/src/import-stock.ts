@@ -415,6 +415,32 @@ function extractJson(text: string) {
   return JSON.parse(raw.slice(start, end + 1)) as Record<string, string>;
 }
 
+/**
+ * Same shelves as the live site. Count colorable regions, not characters.
+ * Three big animals on white can be 4–5. One figure in a detailed room can be 6–8.
+ */
+const SITE_AGE_RULES = [
+  'Set age to match coloring pages already on the site. Judge how many separate regions a child colors and how small they are. Do not rank a page higher because it has more characters.',
+  '2-3: one huge object, a few giant closed shapes, lots of empty paper. A lamp, a heart, a pumpkin.',
+  '3-4: one character and at most one or two big props, empty background, thick lines, large empty areas. A girl in a cape with a basket. A cat in plain boots on white. A puppet beside one plain block.',
+  '4-5: a few big figures, or one figure plus a few large parts such as one window, a few big leaves, or a bundle of sticks. Regions stay large. No brick courses, no floorboards, no field of tiny spots. Three pigs with sticks and bricks. A girl and three bears. A girl in one plain tower window. A boy beside one beanstalk.',
+  '5-6: more regions than 4-5, and each region is still easy to color. Spots, patches, petals, an outfit in several pieces, several medium props, a simple outdoor setting. A spotted dinosaur. A cat in boots, cape, and hat. A girl sweeping beside a fireplace with a few big objects. A puppet at a workbench with a few tools. A boy on a beanstalk with a giant and a simple castle. Not a brick grid, not a crowd, not tiny feathers filling the body.',
+  '6-8: the page is full. Brick-by-brick walls, floorboards, many tiny repeated shapes, a furnished room, or a crowd. A tower drawn as a brick grid with a detailed braid. A candy cottage in a forest. A body covered in small overlapping feathers.',
+  'If two ages both fit, pick the younger one.',
+].join(' ');
+
+/** Age stays in the age field. Titles and descriptions stay free of "ages 4-5". */
+function withoutAgeMention(text: string) {
+  return text
+    .replace(/,?\s*\b(?:perfect\s+for|for)\s+(?:children|kids|little ones|ages?)?\s*(?:aged|ages?)?\s*\d\s*(?:-|–|to)\s*\d\b/gi, '')
+    .replace(/\b(?:about\s+)?ages?\s+\d\s*(?:-|–|to)\s*\d\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([,.])/g, '$1')
+    .replace(/,\s*,/g, ',')
+    .replace(/\s+\./g, '.')
+    .trim();
+}
+
 export async function nameDraftWithVision(draft: DraftSheet): Promise<DraftSheet> {
   loadEnv();
   const source =
@@ -428,29 +454,30 @@ export async function nameDraftWithVision(draft: DraftSheet): Promise<DraftSheet
   const system = [
     'You name free printable coloring pages for an American parents website called Something for Little Ones.',
     'Reply with JSON only. Keys: slug, title, description, alt, parentNote, age.',
-    'slug: 2-5 English words, kebab-case, no numbers unless needed, no "coloring-page" suffix.',
-    'title: short Title Case ending with "Coloring Page".',
-    'description: one short sentence for parents, mention the age band lightly, no marketing fluff.',
-    'alt: one short sentence starting with "Line drawing of".',
-    'parentNote: one short tip for a parent, kitchen-table tone.',
-    'age: one of 2-3, 3-4, 4-5, 5-6, 6-8 from how detailed the drawing is (big empty shapes = younger).',
+    'slug: 2-5 English words, kebab-case, no numbers unless needed, no "coloring-page" suffix. No age numbers.',
+    'title: short Title Case ending with "Coloring Page". The subject only. No age, no "ages", no numbers like 3-4 or 5-6.',
+    'description: one short sentence for parents about what is in the picture. No age and no "ages 4-5" style phrase.',
+    'alt: one short sentence starting with "Line drawing of". No age.',
+    'parentNote: one short tip for a parent, kitchen-table tone. No age.',
+    SITE_AGE_RULES,
+    'age is only the JSON value. Never write the age in slug, title, description, alt, or parentNote.',
     'Do not say the site owner drew the picture. Do not invent brand names or movie characters.',
     'No markdown outside the JSON object.',
   ].join(' ');
-  const user = `Current age guess: ${draft.age}. Look at this coloring page, name it, and set age from the drawing.`;
+  const user = 'Look at this coloring page. Name it, and set age with the site rules. Do not mention an age in the words.';
   const reply = await visionChat(system, user, small);
   const json = extractJson(reply);
-  const slug = slugify(json.slug || draft.slug) || draft.slug;
-  const title = (json.title || draft.title).trim();
+  const slug = slugify(withoutAgeMention(json.slug || draft.slug)) || draft.slug;
+  const title = withoutAgeMention((json.title || draft.title).trim());
   const age = AGE_BANDS.includes(json.age as AgeBand) ? (json.age as AgeBand) : draft.age;
   return {
     ...draft,
     age,
     slug,
     title: /coloring page/i.test(title) ? title : `${title} Coloring Page`,
-    description: (json.description || draft.description).trim(),
-    alt: (json.alt || draft.alt).trim(),
-    parentNote: (json.parentNote || draft.parentNote).trim(),
+    description: withoutAgeMention((json.description || draft.description).trim()),
+    alt: withoutAgeMention((json.alt || draft.alt).trim()),
+    parentNote: withoutAgeMention((json.parentNote || draft.parentNote).trim()),
   };
 }
 
