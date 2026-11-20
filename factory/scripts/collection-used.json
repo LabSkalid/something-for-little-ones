@@ -648,5 +648,49 @@
         "teddy-bear-heart"
       ]
     }
+  ],
+  "st-patrick-s-day-coloring-pages": [
+    {
+      "filename": "st-patrick-s-day-coloring-pages-collection-1.png",
+      "slugs": [
+        "leprechaun-hat",
+        "rainbow-pot-of-gold",
+        "mushroom-house",
+        "horseshoe-shamrock",
+        "leprechaun-cozy-cottage",
+        "leprechaun-pot-of-gold",
+        "dancing-leprechaun",
+        "leprechaun-rainbow",
+        "leprechaun-boots-shamrocks"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-collection-2.png",
+      "slugs": [
+        "frog-on-mushroom-pot-of-gold",
+        "bear-in-leprechaun-hat",
+        "pot-of-gold",
+        "leprechaun-village",
+        "shamrock-hot-air-balloon",
+        "leprechaun-shoemaker",
+        "shamrock-coin-pot-of-gold",
+        "st-patricks-day-animals",
+        "leprechaun-face"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-collection-3.png",
+      "slugs": [
+        "baby-dragon-pot-of-gold",
+        "st-patricks-day-drum",
+        "little-cottage-garden",
+        "fairies-and-flowers",
+        "frog-with-clover",
+        "cottage-garden",
+        "shamrock-fairy",
+        "leprechaun-and-fairy",
+        "leprechaun-trap"
+      ]
+    }
   ]
 }

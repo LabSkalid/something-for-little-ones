@@ -1010,5 +1010,79 @@
         "love-letter-mailbox"
       ]
     }
+  ],
+  "st-patrick-s-day-coloring-pages": [
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-1.png",
+      "slugs": [
+        "leprechaun-hat",
+        "rainbow-pot-of-gold",
+        "mushroom-house",
+        "horseshoe-shamrock"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-2.png",
+      "slugs": [
+        "leprechaun-cozy-cottage",
+        "leprechaun-pot-of-gold",
+        "dancing-leprechaun",
+        "leprechaun-rainbow"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-3.png",
+      "slugs": [
+        "leprechaun-boots-shamrocks",
+        "frog-on-mushroom-pot-of-gold",
+        "bear-in-leprechaun-hat",
+        "pot-of-gold"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-4.png",
+      "slugs": [
+        "leprechaun-village",
+        "shamrock-hot-air-balloon",
+        "leprechaun-shoemaker",
+        "shamrock-coin-pot-of-gold"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-5.png",
+      "slugs": [
+        "st-patricks-day-animals",
+        "leprechaun-face",
+        "baby-dragon-pot-of-gold",
+        "st-patricks-day-drum"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-6.png",
+      "slugs": [
+        "little-cottage-garden",
+        "fairies-and-flowers",
+        "frog-with-clover",
+        "cottage-garden"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-7.png",
+      "slugs": [
+        "shamrock-fairy",
+        "leprechaun-and-fairy",
+        "leprechaun-trap",
+        "st-patricks-day-parade"
+      ]
+    },
+    {
+      "filename": "st-patrick-s-day-coloring-pages-bundle-8.png",
+      "slugs": [
+        "fairy-on-mushroom",
+        "rainbow-pot-of-gold-2",
+        "leprechaun-puppy",
+        "snail-with-clover"
+      ]
+    }
   ]
 }
