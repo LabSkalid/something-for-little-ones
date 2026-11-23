@@ -1,6 +1,6 @@
 ---
 title: Spring Coloring Pages
-description: Spring Coloring Pages for ages 3 to 8. Spring Sunshine, Watering Flowers, Spring Cottage, and Secret Spring Garden. Pick a page and print the PDF.
+description: Spring Coloring Pages for ages 3 to 8. Seasonal flowers, blooming trees, gardens, spring weather, and outdoor landscapes. Pick a page and print the PDF.
 tagline: Spring Sunshine, Watering Flowers, Spring Cottage, and Secret Spring Garden. Grouped by age, ages 3 to 8.
 kind: seasonal
 ageBand: "3-4"
