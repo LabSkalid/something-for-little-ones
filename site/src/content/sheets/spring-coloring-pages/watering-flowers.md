@@ -7,5 +7,5 @@ alt: "A watering can with a spout pouring water onto a small flower bed with a f
 parentNote: "Encourage your child to use bright colors for the flowers and perhaps a fun, unexpected color for the watering can. They might also enjoy adding some sunshine or a friendly bumblebee in the background."
 order: 5
 difficulty: easy
-age: "3-4"
+age: "4-5"
 ---
