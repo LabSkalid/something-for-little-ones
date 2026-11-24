@@ -78,7 +78,7 @@ const holidayNames: Record<string, string> = {
 };
 const shortThemeTitle = (title: string) => title.replace(/ Coloring Pages$/i, '');
 
-const season = getCurrentSeason(new Date(), themes.map((theme) => theme.id));
+const season = getCurrentSeason();
 const seasonIds = new Set<string>(season?.themeIds ?? []);
 
 // Holiday grid: in-season holidays first, the rest in their normal order.
