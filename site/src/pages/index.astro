@@ -78,7 +78,7 @@ const holidayNames: Record<string, string> = {
 };
 const shortThemeTitle = (title: string) => title.replace(/ Coloring Pages$/i, '');
 
-const season = getCurrentSeason();
+const season = getCurrentSeason(new Date(), themes.map((theme) => theme.id));
 const seasonIds = new Set<string>(season?.themeIds ?? []);
 
 // Holiday grid: in-season holidays first, the rest in their normal order.
@@ -92,10 +92,10 @@ const holidayTiles = holidays
     theme,
     title: holidayNames[theme.id] ?? shortThemeTitle(theme.data.title),
   }));
-const holidaysById = new Map(holidays.map((theme) => [theme.id, theme]));
+const themesById = new Map(themes.map((theme) => [theme.id, theme]));
 const seasonThemes = season
   ? season.themeIds.flatMap((id) => {
-      const theme = holidaysById.get(id);
+      const theme = themesById.get(id);
       return theme ? [theme] : [];
     })
   : [];
