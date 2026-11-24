@@ -84,10 +84,7 @@ const seasonIds = new Set<string>(season?.themeIds ?? []);
 // Holiday grid: in-season holidays first, the rest in their normal order.
 const holidayTiles = holidays
   .slice()
-  .sort(
-    (a, b) =>
-      Number(seasonIds.has(b.id)) - Number(seasonIds.has(a.id)) || a.data.order - b.data.order,
-  )
+  .sort((a, b) => a.data.order - b.data.order)
   .map((theme) => ({
     theme,
     title: holidayNames[theme.id] ?? shortThemeTitle(theme.data.title),
