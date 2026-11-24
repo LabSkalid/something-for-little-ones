@@ -66,7 +66,7 @@ export const seasonWindows: SeasonWindow[] = [
       'christmas-coloring-pages',
       'christian-christmas-coloring-pages',
     ],
-    start: { month: 12, day: 1 },
+    start: { month: 11, day: 24 },
     end: { month: 1, day: 31 },
   },
 ];
