@@ -21,14 +21,6 @@ export type SeasonWindow = {
  */
 export const seasonWindows: SeasonWindow[] = [
   {
-    id: 'valentine',
-    label: 'Valentine’s Day',
-    blurb: 'Sweet printable pages for February.',
-    themeIds: [],
-    start: { month: 2, day: 1 },
-    end: { month: 2, day: 16 },
-  },
-  {
     id: 'spring',
     label: 'This spring',
     blurb: 'Spring and Easter pages when you want something fresh to print.',
@@ -57,17 +49,28 @@ export const seasonWindows: SeasonWindow[] = [
     start: { month: 9, day: 1 },
     end: { month: 11, day: 23 },
   },
-  {
+    {
     id: 'winter',
     label: 'This winter',
-    blurb: 'Snowy days, Christmas, and Christian Christmas pages for the season.',
+    blurb: '',
     themeIds: [
       'winter-coloring-pages',
       'christmas-coloring-pages',
       'christian-christmas-coloring-pages',
     ],
     start: { month: 11, day: 24 },
-    end: { month: 1, day: 31 },
+    end: { month: 1, day: 1 },
+  },
+  {
+    id: 'late-winter',
+    label: 'This winter',
+    blurb: '',
+    themeIds: [
+      'winter-coloring-pages',
+      'valentine-s-day-coloring-pages',
+    ],
+    start: { month: 1, day: 2 },
+    end: { month: 2, day: 16 },
   },
 ];
 

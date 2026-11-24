@@ -5,7 +5,7 @@ interface Props {
   image: string;
   imageAlt: string;
   count: number;
-  eyebrow: string;
+  eyebrow?: string;
   id?: string;
   eyebrowAfterTitle?: boolean;
 }
@@ -28,11 +28,11 @@ const {
     {eyebrowAfterTitle ? (
       <>
         <h3>{title}</h3>
-        <p class="eyebrow">{eyebrow}</p>
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
       </>
     ) : (
       <>
-        <p class="eyebrow">{eyebrow}</p>
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
         <h3>{title}</h3>
       </>
     )}
