@@ -21,15 +21,16 @@ const sheetAges = (themeId: string) =>
 const spansAges = (themeId: string) => new Set(sheetAges(themeId)).size > 1;
 const themeHasAge = (themeId: string, age: string) =>
   sheets.some((sheet) => sheet.data.theme === themeId && sheet.data.age === age);
+
 const grouped = ageBands.map((band) => ({
   ...band,
   hint:
     {
       '2-3': 'Huge shapes',
       '3-4': 'Animals, dinosaurs, cars, princesses',
-      '4-5': 'Garden and simple vehicles',
-      '5-6': 'Ocean and dinosaur scenes',
-      '6-8': 'Town and woodland',
+      '4-5': 'Chunky animals, garden, vehicles',
+      '5-6': 'Patterns, ocean, dinosaur scenes',
+      '6-8': 'Town, farm, woodland, fairy tales',
     }[band.id] ?? band.label,
   // Single-age sets plus multi-age sets (e.g. rockets) that have pages for this band.
   themes: everyday.filter(
@@ -39,59 +40,32 @@ const grouped = ageBands.map((band) => ({
   ),
 }));
 
-const subjectChoices: { id: string; title: string; hint: string; note?: string; ids: string[] }[] = [
+// Subject chips on the homepage. The FIRST id in each list is the main page the chip links to.
+// The other sets are still reachable from the age shelves below.
+const subjectChoices: { id: string; title: string; hint: string; ids: string[] }[] = [
   {
     id: 'animals',
     title: 'Animals',
-    hint: 'Ages 2–3, 3–6, and 6–8',
-    note: 'Three sets: first animals, everyday animals by how busy the page is, then woodland scenes.',
-    ids: ['first-animal-coloring-pages', 'animal-coloring-pages', 'woodland-animal-coloring-pages'],
+    hint: 'Ages 2–8',
+    ids: ['animal-coloring-pages', 'first-animal-coloring-pages', 'woodland-animal-coloring-pages'],
   },
   {
     id: 'dinosaurs',
     title: 'Dinosaurs',
-    hint: 'Ages 3–4 and 5–6',
-    note: 'Two ages. Open one and those pictures show up below.',
+    hint: 'Ages 3–6',
     ids: ['dinosaur-coloring-pages', 'dinosaur-scene-coloring-pages'],
   },
   {
     id: 'cars',
     title: 'Cars and trucks',
-    hint: 'Ages 3–4 and 4–5',
-    note: 'Two ages. Open one and those pictures show up below.',
+    hint: 'Ages 3–5',
     ids: ['car-coloring-pages', 'simple-vehicle-coloring-pages'],
   },
-  {
-    id: 'rockets',
-    title: 'Rockets',
-    hint: 'Ages 2–8',
-    note: 'Several ages. Open one and those pictures show up below.',
-    ids: ['rocket-coloring-pages'],
-  },
-  {
-    id: 'princesses',
-    title: 'Princesses',
-    hint: 'Ages 3–4',
-    ids: ['princess-coloring-pages'],
-  },
-  {
-    id: 'garden',
-    title: 'Garden',
-    hint: 'Ages 4–5',
-    ids: ['garden-coloring-pages'],
-  },
-  {
-    id: 'ocean',
-    title: 'Ocean',
-    hint: 'Ages 5–6',
-    ids: ['ocean-scene-coloring-pages'],
-  },
-  {
-    id: 'town',
-    title: 'Town',
-    hint: 'Ages 6–8',
-    ids: ['town-scene-coloring-pages'],
-  },
+  { id: 'rockets', title: 'Rockets', hint: 'Ages 2–8', ids: ['rocket-coloring-pages'] },
+  { id: 'princesses', title: 'Princesses', hint: 'Ages 3–4', ids: ['princess-coloring-pages'] },
+  { id: 'garden', title: 'Garden', hint: 'Ages 4–5', ids: ['garden-coloring-pages'] },
+  { id: 'ocean', title: 'Ocean', hint: 'Ages 5–6', ids: ['ocean-scene-coloring-pages'] },
+  { id: 'town', title: 'Town', hint: 'Ages 6–8', ids: ['town-scene-coloring-pages'] },
 ];
 
 const holidayNames: Record<string, string> = {
@@ -103,15 +77,22 @@ const holidayNames: Record<string, string> = {
   'christian-christmas-coloring-pages': 'Christian Christmas',
 };
 const shortThemeTitle = (title: string) => title.replace(/ Coloring Pages$/i, '');
+
+const season = getCurrentSeason();
+const seasonIds = new Set<string>(season?.themeIds ?? []);
+
+// Holiday grid: in-season holidays first, the rest in their normal order.
 const holidayTiles = holidays
   .slice()
-  .sort((a, b) => a.data.order - b.data.order)
+  .sort(
+    (a, b) =>
+      Number(seasonIds.has(b.id)) - Number(seasonIds.has(a.id)) || a.data.order - b.data.order,
+  )
   .map((theme) => ({
     theme,
     title: holidayNames[theme.id] ?? shortThemeTitle(theme.data.title),
   }));
 const holidaysById = new Map(holidays.map((theme) => [theme.id, theme]));
-const season = getCurrentSeason();
 const seasonThemes = season
   ? season.themeIds.flatMap((id) => {
       const theme = holidaysById.get(id);
@@ -119,6 +100,7 @@ const seasonThemes = season
     })
   : [];
 
+// Any everyday theme not listed above (e.g. new themes) gets its own chip automatically.
 const claimedThemeIds = new Set(subjectChoices.flatMap((choice) => choice.ids));
 const extraThemeChoices = everyday
   .filter((theme) => !claimedThemeIds.has(theme.id))
@@ -138,9 +120,6 @@ const themeChoices = [...subjectChoices, ...extraThemeChoices]
     }),
   }))
   .filter((choice) => choice.themes.length > 0);
-const needsThemePanel = (choice: (typeof themeChoices)[number]) =>
-  choice.themes.length > 1 || (choice.themes.length === 1 && spansAges(choice.themes[0].id));
-const themePanels = themeChoices.filter(needsThemePanel);
 
 function cover(themeId: string, age?: string) {
   const inTheme = sheets.filter((sheet) => sheet.data.theme === themeId);
@@ -156,8 +135,14 @@ function cover(themeId: string, age?: string) {
 }
 
 const pageTitle = 'Free printable coloring pages for kids';
+
+// Visible intro text (can be long).
 const pageIntro =
   'Looking for something simple to print and color? Something for Little Ones has free coloring pages for toddlers, preschoolers, and older kids, with easy pictures, animals, dinosaurs, vehicles, princesses, nature scenes, and holiday coloring pages.';
+
+// Meta description: keep under ~155 characters so Google doesn't cut it.
+const metaDescription =
+  'Free printable coloring pages for kids ages 2–8. Download PDFs by age or theme: animals, dinosaurs, cars, princesses, holidays and more.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -167,13 +152,14 @@ const jsonLd = {
       '@id': websiteId,
       name: site.name,
       url: absoluteUrl('/'),
-      description: pageIntro,
+      description: metaDescription,
       inLanguage: site.locale,
       publisher: publisherRef(),
     },
     {
       '@type': 'ItemList',
-      name: 'Coloring page sets by age',
+      name: 'Free printable coloring page sets',
+      numberOfItems: themes.length,
       itemListElement: themes.map((theme, index) => ({
         '@type': 'ListItem',
         position: index + 1,
@@ -187,18 +173,19 @@ const jsonLd = {
 
 <Base
   title={pageTitle}
-  description={pageIntro}
+  description={metaDescription}
   path="/"
   ogImage={pinPath('animal-coloring-pages', 'collection-1')}
   ogAlt="Animal coloring pages, starting with a puppy"
   jsonLd={jsonLd}
 >
+  {/* TODO: replace ogImage with a landscape 1200x630 branded image, e.g. ogImage="/og-home.png" */}
   <div class="wrap">
     <section class="page-intro">
       <h1>{pageTitle}</h1>
       <p class="lede">{pageIntro}</p>
       <p class="lede">
-        Choose pages by age or by theme, then download and print the PDF at home. The sets range from big, simple shapes for ages 2–3 to fuller scenes and patterns for ages 6–8.
+        Pick a set by age or theme, then download the PDF and print it at home. Sets range from big, simple shapes for ages 2–3 to fuller scenes and patterns for ages 6–8.
       </p>
       <div class="hero-actions">
         <a class="btn" href="#ages">Choose by age</a>
@@ -222,7 +209,7 @@ const jsonLd = {
                 image={art.src}
                 imageAlt={art.alt}
                 count={art.count}
-                eyebrow={holidayNames[theme.id] ?? 'Season'}
+                eyebrow={holidayNames[theme.id] ?? shortThemeTitle(theme.data.title)}
               />
             );
           })}
@@ -253,72 +240,31 @@ const jsonLd = {
       <div class="section-head">
         <h2>Find a coloring page by theme</h2>
         <p>
-          Pick a favorite subject, from animals and dinosaurs to cars, rockets, princesses, gardens, and ocean scenes. Seasonal pages are collected separately for fall, Halloween, Thanksgiving, Christmas, and Christian Christmas.
+          Pick a favorite subject, from animals and dinosaurs to cars, rockets, princesses, gardens, and ocean scenes. Holiday and seasonal pages are in the Holidays section below.
         </p>
       </div>
       <ul class="age-choices">
         {themeChoices.map((choice) => (
           <li>
-            <a class="age-choice" href={needsThemePanel(choice) ? `#theme-${choice.id}` : `#${choice.themes[0].id}`}>
+            <a class="age-choice" href={themePath(choice.themes[0].id)}>
               <strong>{choice.title}</strong>
               <span>{choice.hint}</span>
             </a>
           </li>
         ))}
-        {holidayTiles.map(({ theme, title }) => (
-          <li>
-            <a class="age-choice" href={themePath(theme.id)}>
-              <strong>{title}</strong>
-              <span>Holiday</span>
-            </a>
-          </li>
-        ))}
+        <li>
+          <a class="age-choice" href="#holidays">
+            <strong>Holidays</strong>
+            <span>Seasonal pages</span>
+          </a>
+        </li>
       </ul>
     </section>
-
-    {themePanels.map((choice) => {
-      const agePicks = choice.themes.flatMap((theme) => {
-        const ages = ageBands.filter((band) => themeHasAge(theme.id, band.id));
-        const multi = ages.length > 1;
-        if (!multi) {
-          return [
-            {
-              href: themePath(theme.id),
-              label: ageBandLabel(theme.data.ageBand),
-              title: theme.data.title,
-            },
-          ];
-        }
-        return ages.map((band) => ({
-          href: `${themePath(theme.id)}#ages-${band.id}`,
-          label: band.label,
-          title: theme.data.title,
-        }));
-      });
-      return (
-        <section class="section theme-panel" id={`theme-${choice.id}`}>
-          <div class="section-head">
-            <h2>{choice.title}</h2>
-            {choice.note && <p>{choice.note}</p>}
-          </div>
-          <ul class="age-choices">
-            {agePicks.map((pick) => (
-              <li>
-                <a class="age-choice" href={pick.href}>
-                  <strong>{pick.label}</strong>
-                  <span>{pick.title}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      );
-    })}
 
     {grouped.map((band) => (
       <section class="section age-shelf" id={`age-${band.id}`}>
         <div class="section-head">
-          <h2>{band.label}</h2>
+          <h2>Coloring pages for {band.label.toLowerCase()}</h2>
           <p>{band.blurb}</p>
         </div>
         <div class="theme-grid">
@@ -341,23 +287,10 @@ const jsonLd = {
       </section>
     ))}
 
-    <AdSlot name="top" />
-    <section class="section">
-      <div class="section-head">
-        <h2>Simple coloring pages to print at home</h2>
-        <p>
-          I make these coloring pages for families who want something easy to print and use without a lot of preparation. Some pages are deliberately very simple for toddlers, while others have more details for children who enjoy spending longer with a picture.
-        </p>
-        <p>
-          Every set includes printable PDF pages you can use at home or in the classroom. Choose a theme or an age group, download a set, and print the pages you need.
-        </p>
-      </div>
-    </section>
-
     <section class="section" id="holidays">
       <div class="section-head">
-        <h2>Holidays</h2>
-        <p>Fall, Halloween, Thanksgiving, Christmas, and Christian Christmas. Open a holiday, then pick an age.</p>
+        <h2>Holiday and seasonal coloring pages</h2>
+        <p>Seasonal coloring pages for every time of year. Open a holiday, then pick an age.</p>
       </div>
       <div class="theme-grid">
         {holidayTiles.map(({ theme }) => {
@@ -374,6 +307,20 @@ const jsonLd = {
             />
           );
         })}
+      </div>
+    </section>
+
+    <AdSlot name="top" />
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Simple coloring pages to print at home</h2>
+        <p>
+          I make these coloring pages for families who want something easy to print and use without a lot of preparation. Some pages are deliberately very simple for toddlers, while others have more details for children who enjoy spending longer with a picture.
+        </p>
+        <p>
+          Every set includes printable PDF pages you can use at home or in the classroom. Choose a theme or an age group, download a set, and print the pages you need.
+        </p>
       </div>
     </section>
 
