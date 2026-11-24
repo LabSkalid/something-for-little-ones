@@ -41,7 +41,7 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'early-spring',
-    label: 'Spring and St. Patrick’s Day coloring pages',
+    label: 'St. Patrick’s Day coloring pages',
     blurb: 'Shamrocks, spring flowers, and early Easter pages.',
     themeIds: ['st-patrick-s-day-coloring-pages', 'easter-coloring-pages', 'spring-coloring-pages'],
     start: { month: 2, day: 16 },
@@ -49,7 +49,7 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'easter',
-    label: 'Easter and spring coloring pages',
+    label: 'Easter coloring pages',
     blurb: 'Bunnies, eggs, and spring pictures to print and color.',
     themeIds: ['easter-coloring-pages', 'spring-coloring-pages', 'earth-day-coloring-pages'],
     start: { month: 3, day: 18 },
@@ -81,7 +81,7 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'back-to-school',
-    label: 'Back to school and summer coloring pages',
+    label: 'Back to school coloring pages',
     blurb: 'Pages for the first days of school and the last days of summer.',
     themeIds: ['back-to-school-coloring-pages', 'summer-coloring-pages', 'ocean-scene-coloring-pages'],
     start: { month: 7, day: 6 },
@@ -89,7 +89,7 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'fall',
-    label: 'Fall and Halloween coloring pages',
+    label: 'Fall coloring pages',
     blurb: 'Leaves and friendly Halloween pages. Pick a set, then an age.',
     themeIds: ['fall-coloring-pages', 'halloween-coloring-pages'],
     start: { month: 9, day: 1 },
@@ -113,8 +113,8 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'thanksgiving-christmas',
-    label: 'Thanksgiving and Christmas coloring pages',
-    blurb: 'Something for the Thanksgiving table, and the first Christmas pages.',
+    label: 'Thanksgiving coloring pages',
+    blurb: 'Thanksgiving pages for the kids’ table, plus the first Christmas sets.',
     themeIds: [
       'thanksgiving-coloring-pages',
       'christmas-coloring-pages',
