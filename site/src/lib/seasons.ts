@@ -55,7 +55,7 @@ export const seasonWindows: SeasonWindow[] = [
       'thanksgiving-coloring-pages',
     ],
     start: { month: 9, day: 1 },
-    end: { month: 11, day: 30 },
+    end: { month: 11, day: 23 },
   },
   {
     id: 'winter',
