@@ -12,7 +12,10 @@ import { getCurrentSeason } from '../lib/seasons';
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
 const sheets = await getCollection('sheets');
 const guides = (await getCollection('guides'))
-  .sort((x, y) => x.data.order - y.data.order)
+  .sort(
+    (x, y) =>
+      y.data.pubDate.getTime() - x.data.pubDate.getTime() || x.data.order - y.data.order,
+  )
   .slice(0, 3);
 const everyday = themes.filter((theme) => theme.data.kind !== 'seasonal');
 const holidays = themes.filter((theme) => theme.data.kind === 'seasonal');
