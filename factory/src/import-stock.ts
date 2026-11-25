@@ -5,7 +5,7 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { parse, stringify } from 'yaml';
 import { readSite } from './brand.ts';
-import { footerHeight, stampSite, stripSiteFooter } from './footer.ts';
+import { footerHeight, hasSiteFooter, stampSite, stripSiteFooter } from './footer.ts';
 import { loadEnv } from './env.ts';
 import { visionChat } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
@@ -583,20 +583,63 @@ async function preview(printPng: Buffer) {
   return sharp(printPng).resize({ width, withoutEnlargement: true }).png({ compressionLevel: 9 }).toBuffer();
 }
 
+async function sidecarPdfs(sourceFile: string) {
+  const ext = path.extname(sourceFile);
+  const stem = path.join(path.dirname(sourceFile), path.basename(sourceFile, ext));
+  const letter = `${stem}-us-letter.pdf`;
+  const a4 = `${stem}-a4.pdf`;
+  let hasLetter = false;
+  let hasA4 = false;
+  try {
+    await fs.access(letter);
+    hasLetter = true;
+  } catch {
+    // no letter pdf beside source
+  }
+  try {
+    await fs.access(a4);
+    hasA4 = true;
+  } catch {
+    // no a4 pdf beside source
+  }
+  return { letter, a4, hasLetter, hasA4 };
+}
+
 /** Rebuild preview + PDFs only. Does not touch markdown or theme text. */
 export async function publishPrintAssets(
   theme: string,
   sheet: Pick<DraftSheet, 'file' | 'slug' | 'title' | 'stripFrame'>,
 ) {
   const site = readSite();
-  const master = await loadSourceImage(sheet.file, { stripFrame: Boolean(sheet.stripFrame) });
-  const print = await stampSite(master);
-  // pdf-lib is picky; re-encode a plain RGB PNG before embedding.
-  const printForPdf = await sharp(print).removeAlpha().png({ compressionLevel: 9, force: true }).toBuffer();
-  const web = await preview(print);
   const dir = path.join(printRoot, theme);
   await fs.mkdir(dir, { recursive: true });
+
+  const ext = path.extname(sheet.file).toLowerCase();
+  const raw =
+    ext === '.svg' ? await renderSvg(sheet.file) : await loadRaster(sheet.file);
+  const readyStamped = await hasSiteFooter(raw);
+  const sidecars = await sidecarPdfs(sheet.file);
+
+  let print: Buffer;
+  if (readyStamped) {
+    // Factory-ready download: one site band already on the page — never stamp again.
+    print = raw;
+  } else {
+    const master = await loadSourceImage(sheet.file, { stripFrame: Boolean(sheet.stripFrame) });
+    print = await stampSite(master);
+  }
+
+  const web = await preview(print);
   await writeFileSafe(path.join(dir, `${sheet.slug}.png`), web);
+
+  if (readyStamped && sidecars.hasLetter && sidecars.hasA4) {
+    await fs.copyFile(sidecars.letter, path.join(dir, `${sheet.slug}-us-letter.pdf`));
+    await fs.copyFile(sidecars.a4, path.join(dir, `${sheet.slug}-a4.pdf`));
+    return;
+  }
+
+  // pdf-lib is picky; re-encode a plain RGB PNG before embedding.
+  const printForPdf = await sharp(print).removeAlpha().png({ compressionLevel: 9, force: true }).toBuffer();
   const letterPdf = Buffer.from(await pngToPdf(printForPdf, 'letter', sheet.title, site.name));
   const a4Pdf = Buffer.from(await pngToPdf(printForPdf, 'a4', sheet.title, site.name));
   await writeFileSafe(path.join(dir, `${sheet.slug}-us-letter.pdf`), letterPdf);

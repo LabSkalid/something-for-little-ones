@@ -136,6 +136,20 @@ async function detectSiteFooterHeight(image: Buffer): Promise<number | null> {
   return null;
 }
 
+/** True when the page already has the site print band at the bottom (do not stamp again). */
+export async function hasSiteFooter(image: Buffer): Promise<boolean> {
+  return (await detectSiteFooterHeight(image)) !== null;
+}
+
+/** Remove repeated site bands (double-stamp bug) and leave exactly one stamp. */
+export async function ensureSingleSiteStamp(png: Buffer): Promise<Buffer> {
+  let img = png;
+  for (let i = 0; i < 4 && (await hasSiteFooter(img)); i += 1) {
+    img = await stripSiteFooter(img);
+  }
+  return stampSite(img);
+}
+
 /** Remove Something for Little Ones print stamp from the bottom of a page PNG. */
 export async function stripSiteFooter(image: Buffer): Promise<Buffer> {
   const crop = await detectSiteFooterHeight(image);
