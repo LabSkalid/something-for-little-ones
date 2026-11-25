@@ -22,6 +22,7 @@ import {
 } from './build-assets.ts';
 import { loadEnv } from './env.ts';
 import {
+  AGE_BANDS,
   type AgeBand,
   type DraftSheet,
   commitImport,
@@ -32,6 +33,7 @@ import {
   scanImportFolder,
   listThemeSheets,
   publishPrintAssets,
+  setSheetAges,
   themeSlug,
 } from './import-stock.ts';
 import {
@@ -1227,6 +1229,24 @@ const server = http.createServer(async (req, res) => {
         );
       });
       return send(res, 202, { ok: true });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/theme/ages') {
+      const body = await readBody(req);
+      const theme = String(body.theme ?? '').trim();
+      const age = String(body.age ?? '').trim();
+      if (!theme || theme === '__new__') throw new Error('Выберите подборку на сайте.');
+      if (!AGE_BANDS.includes(age as AgeBand)) throw new Error('Выберите возраст.');
+      const all = body.all === true;
+      const listed = Array.isArray(body.slugs) ? body.slugs.map(String) : [];
+      const slugs = all ? (await listThemeSheets(theme)).map((sheet) => sheet.slug) : listed;
+      const result = await setSheetAges(theme, slugs, age as AgeBand);
+      const missed = result.missing.length ? ` Не найдены: ${result.missing.join(', ')}.` : '';
+      console.log(
+        result.updated
+          ? `Возраст ${age} записан у ${result.updated} лист(ов) в ${theme}. Картинки не менялись.${missed}`
+          : `В ${theme} этот возраст уже стоял.${missed}`,
+      );
+      return send(res, 200, { ok: true, ...result });
     }
     if (req.method === 'POST' && url.pathname === '/api/theme/rewrite') {
       const body = await readBody(req);

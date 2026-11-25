@@ -648,6 +648,45 @@ export async function listThemeSheets(theme: string): Promise<ExistingSheet[]> {
   return sheets.sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
 }
 
+/** Display age on sheets already on the site. Pictures stay as they are. */
+export function withSheetAge(raw: string, age: AgeBand) {
+  if (!AGE_BANDS.includes(age)) throw new Error('Неизвестный возраст.');
+  let next = raw;
+  if (!/^age:/m.test(next)) throw new Error('В листе нет поля age.');
+  next = next.replace(/^age:.*$/m, `age: "${age}"`);
+  if (/^difficulty:/m.test(next)) next = next.replace(/^difficulty:.*$/m, `difficulty: ${difficulty[age]}`);
+  return next;
+}
+
+export async function setSheetAges(theme: string, slugs: string[], age: AgeBand) {
+  const wanted = new Set(slugs.map((slug) => slug.trim()).filter(Boolean));
+  if (!wanted.size) throw new Error('Не выбрано ни одного листа.');
+  const dir = path.join(sheetContentRoot, theme);
+  let files: string[] = [];
+  try {
+    files = (await fs.readdir(dir)).filter((name) => name.endsWith('.md'));
+  } catch {
+    throw new Error('Подборка не найдена.');
+  }
+  let updated = 0;
+  const missing = new Set(wanted);
+  for (const file of files) {
+    const full = path.join(dir, file);
+    const raw = await fs.readFile(full, 'utf8');
+    const data = frontmatter(raw);
+    const slug = String(data.slug ?? file.replace(/\.md$/, ''));
+    if (!wanted.has(slug)) continue;
+    missing.delete(slug);
+    const next = withSheetAge(raw, age);
+    if (next === raw) continue;
+    await fs.writeFile(full, next, 'utf8');
+    updated += 1;
+  }
+  if (missing.size === wanted.size) throw new Error('Эти листы в подборке не найдены.');
+  if (updated) await rewriteThemeBody(theme);
+  return { updated, skipped: wanted.size - updated - missing.size, missing: [...missing] };
+}
+
 const FINGER_SIZE = 48;
 
 /** Tiny grayscale fingerprint of the drawing (ignores page margins / footer). */

@@ -19,9 +19,9 @@ keywords:
   - bow easter egg coloring page
   - bunny with easter eggs coloring page
   - easter egg hunt adventure coloring page
-  - bunny and easter basket coloring page
-  - bunny with buns coloring page
   - bunny village easter coloring page
+  - bunny with buns coloring page
+  - bunny and easter basket coloring page
   - easter basket with eggs coloring page
 faqs:
   - question: What ages are these easter coloring pages for?

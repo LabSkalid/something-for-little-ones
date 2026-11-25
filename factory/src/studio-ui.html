@@ -241,6 +241,19 @@
       <button id="load-site-fix" class="quiet" type="button" title="Показывает листы этой подборки. Ничего не записывает.">Показать листы подборки</button>
       <button id="site-fix-run" type="button" title="Пересобирает только отмеченные листы. Тексты не трогает.">Пересобрать выбранные</button>
     </div>
+    <div class="row">
+      <label for="site-age" style="margin:0">Возраст на сайте</label>
+      <select id="site-age" style="width:auto;min-width:7rem">
+        <option value="2-3">2–3</option>
+        <option value="3-4" selected>3–4</option>
+        <option value="4-5">4–5</option>
+        <option value="5-6">5–6</option>
+        <option value="6-8">6–8</option>
+      </select>
+      <button id="site-age-checked" class="quiet" type="button">Поставить отмеченным</button>
+      <button id="site-age-all" class="quiet" type="button">Поставить всем листам</button>
+    </div>
+    <p class="hint">Меняет полку возраста у уже записанных листов. Рисунок не перерисовывается. Галочка «Взять» выбирает, кому ставить возраст. Шапка подборки подстроится под новый диапазон. На живой сайт это попадёт после обычной выкладки.</p>
     <div id="site-fix" class="grid" style="margin-top:1rem"></div>
   </section>
 
@@ -1375,6 +1388,42 @@
     }
     logEl.textContent = 'Пересобираю выбранные с сайта. Слева будет 1/N…';
   });
+
+  async function saveSiteAges(all) {
+    const theme = importTheme.value;
+    const age = document.querySelector('#site-age').value;
+    if (!theme || theme === '__new__') {
+      logEl.textContent = 'Выберите подборку, которая уже на сайте.';
+      return;
+    }
+    const slugs = all
+      ? []
+      : [...siteFixEl.querySelectorAll('.card')].flatMap((card) =>
+          card.querySelector('[data-field="include"]')?.checked ? [card.dataset.slug] : [],
+        );
+    if (!all && !slugs.length) {
+      logEl.textContent = 'Отметьте листы галочкой «Взять» или нажмите «Поставить всем листам».';
+      return;
+    }
+    const countLabel = all ? 'всем листам' : `${slugs.length} лист(ам)`;
+    if (!confirm(`Поставить возраст ${age} ${countLabel}? Рисунки не изменятся.`)) return;
+    const response = await fetch('/api/theme/ages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme, age, all, slugs }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      logEl.textContent = data.error || 'Не удалось записать возраст.';
+      return;
+    }
+    logEl.textContent = data.updated
+      ? `Возраст ${age} записан у ${data.updated} лист(ов). Картинки те же. Чтобы это увидели на сайте, нужна обычная выкладка.`
+      : `Этот возраст уже стоял. Ничего не меняла.`;
+    await loadSiteFixSheets();
+  }
+  document.querySelector('#site-age-checked')?.addEventListener('click', () => saveSiteAges(false));
+  document.querySelector('#site-age-all')?.addEventListener('click', () => saveSiteAges(true));
   document.querySelector('#strip-frames')?.addEventListener('change', () => {
     const on = document.querySelector('#strip-frames').checked;
     draftsEl.querySelectorAll('[data-field="stripFrame"]').forEach((box) => { box.checked = on; });
