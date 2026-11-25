@@ -67,7 +67,7 @@ export const seasonWindows: SeasonWindow[] = [
     blurb: '',
     themeIds: [
       'winter-coloring-pages',
-      'valentine-s-day-coloring-pages',
+      'valentines-day-coloring-pages',
     ],
     start: { month: 1, day: 2 },
     end: { month: 2, day: 16 },

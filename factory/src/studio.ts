@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
 import { createTalePlan, isSafetyRejection, parseStoryboard, softenTaleSubject } from './book-plan.ts';
-import { sceneDescription, stripModelNotes } from './tale-prompt.ts';
+import { imageSubject, sceneDescription, stripModelNotes } from './tale-prompt.ts';
 import { ensureTaleCast, loadTaleCast, missingTaleCast, normalizeCharacters, redrawTaleCast, referenceNote, TALE_IMAGE_MODEL } from './tale-cast.ts';
 import { chat, coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
 import { fitPortrait } from './lineart.ts';
@@ -32,7 +32,16 @@ import {
   scanImportFolder,
   listThemeSheets,
   publishPrintAssets,
+  themeSlug,
 } from './import-stock.ts';
+import {
+  ageStyle,
+  currentDrawPrompts,
+  defaultDrawPrompts,
+  drawPromptFile,
+  resetDrawPrompts,
+  saveDrawPrompts,
+} from './draw-prompts.ts';
 import {
   applyImportCaptions,
   buildKdpBook,
@@ -134,6 +143,7 @@ function frontmatter(raw: string) {
 function slugify(value: string) {
   return value
     .toLowerCase()
+    .replace(/['’]/g, '')
     .replace(/&/g, ' and ')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
@@ -265,6 +275,7 @@ function startJob(label: string, task: () => Promise<void>) {
 async function createPages(body: {
   theme?: string;
   title?: string;
+  slug?: string;
   kind?: string;
   ideas?: string;
   age?: string;
@@ -285,8 +296,9 @@ async function createPages(body: {
   if (!existing) {
     title = (body.title ?? '').trim();
     if (title.length < 3) throw new Error('Напишите название новой подборки.');
-    slug = /coloring-pages$/.test(slugify(title)) ? slugify(title) : `${slugify(title)}-coloring-pages`;
-    if (themes.some((theme) => theme.slug === slug)) throw new Error('Такая подборка уже есть. Выберите её в списке.');
+    slug = themeSlug((body.slug ?? '').trim() || title);
+    if (!slug) throw new Error('Адрес подборки пустой. Напишите латиницей, например valentines-day.');
+    if (themes.some((theme) => theme.slug === slug)) throw new Error('Такая подборка уже есть. Выберите её в списке или поправьте адрес.');
     const sameKind = themes.filter((theme) => theme.kind === kind);
     order = sameKind.length + 1;
   } else {
@@ -335,20 +347,23 @@ async function createPages(body: {
 }
 
 function drawStyle(age: string) {
-  const plain = 'Thick black outlines, pure white background, no shading, no text, no trademarked characters.';
-  if (age === '2-3') {
-    return `Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.`;
-  }
-  if (age === '4-5') {
-    return `A few large figures or one figure with two or three big props, on an empty white background. No room and no scenery. Simpler than a page for ages 5 to 6. ${plain}`;
-  }
-  if (age === '5-6') {
-    return `One or two large characters, one action, and one simple backdrop of a few big shapes. No furnished room, no floorboards, no brick courses, no crowd. ${plain}`;
-  }
-  if (age === '6-8') {
-    return `A fuller scene with many colorable regions. Bolder and busier than a small scene for ages 5 to 6. ${plain}`;
-  }
-  return `One large subject, centered, with a handful of big regions. ${plain}`;
+  return ageStyle(age);
+}
+
+function previewDraw(body: {
+  age?: string;
+  scene?: string;
+  ageCap?: string;
+  layout?: string;
+  style?: string;
+}) {
+  const age = String(body.age ?? '5-6');
+  const scene = String(body.scene ?? '').trim() || 'one heart with a ribbon';
+  const subject = imageSubject('Preview', scene, false, age, body.ageCap !== undefined ? String(body.ageCap) : undefined);
+  const style = String(body.style ?? '').trim() || ageStyle(age);
+  const prompt = coloringPrompt(style, subject, 'easy', age, body.layout !== undefined ? String(body.layout) : undefined);
+  const warning = /dinosaur|динозавр/i.test(prompt) ? 'В этом тексте есть динозавр. Уберите слово, потом сохраните.' : '';
+  return { prompt, warning };
 }
 
 function send(res: http.ServerResponse, status: number, body: unknown, type = 'application/json') {
@@ -1167,6 +1182,7 @@ const server = http.createServer(async (req, res) => {
         const result = await commitImport({
           theme: String(body.theme ?? ''),
           title: body.title ? String(body.title) : undefined,
+          slug: body.slug ? String(body.slug) : undefined,
           kind: body.kind === 'seasonal' ? 'seasonal' : 'evergreen',
           ageBand: (String(body.ageBand ?? '3-4') as AgeBand) || '3-4',
           sheets,
@@ -1387,11 +1403,32 @@ const server = http.createServer(async (req, res) => {
       });
       return send(res, 202, { ok: true });
     }
+    if (req.method === 'GET' && url.pathname === '/api/draw-prompts') {
+      return send(res, 200, {
+        file: drawPromptFile,
+        prompts: currentDrawPrompts(),
+        defaults: defaultDrawPrompts,
+      });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/draw-prompts') {
+      const body = await readBody(req);
+      if (body.reset === true) {
+        const prompts = resetDrawPrompts();
+        return send(res, 200, { ok: true, file: drawPromptFile, prompts });
+      }
+      const prompts = saveDrawPrompts(body.prompts ?? body);
+      return send(res, 200, { ok: true, file: drawPromptFile, prompts });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/draw-prompts/preview') {
+      const body = await readBody(req);
+      return send(res, 200, previewDraw(body));
+    }
     if (req.method === 'POST' && url.pathname === '/api/create') {
       const body = await readBody(req);
       await createPages({
         theme: body.theme ? String(body.theme) : undefined,
         title: body.title ? String(body.title) : undefined,
+        slug: body.slug ? String(body.slug) : undefined,
         kind: body.kind ? String(body.kind) : undefined,
         ideas: body.ideas ? String(body.ideas) : undefined,
         age: body.age ? String(body.age) : undefined,

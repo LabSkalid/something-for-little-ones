@@ -72,11 +72,19 @@ function q(value: string) {
 export function slugify(value: string) {
   return value
     .toLowerCase()
+    .replace(/['’]/g, '')
     .replace(/&/g, ' and ')
     .replace(/coloring pages?/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
+}
+
+/** Page address for a new collection. Apostrophes drop, so Valentine's Day becomes valentines-day. */
+export function themeSlug(value: string) {
+  const base = slugify(value);
+  if (!base) return '';
+  return /coloring-pages$/.test(base) ? base : `${base}-coloring-pages`;
 }
 
 function titleCase(slug: string) {
@@ -990,6 +998,7 @@ export async function rewriteThemeBody(theme: string) {
 export async function commitImport(options: {
   theme: string;
   title?: string;
+  slug?: string;
   kind?: 'evergreen' | 'seasonal';
   ageBand?: AgeBand;
   sheets: DraftSheet[];
@@ -1060,8 +1069,9 @@ export async function commitImport(options: {
   if (!theme || theme === '__new__') {
     const title = (options.title ?? '').trim();
     if (title.length < 3) throw new Error('Напишите название новой подборки.');
-    theme = /coloring-pages$/.test(slugify(title)) ? slugify(title) : `${slugify(title)}-coloring-pages`;
-    if (themes.includes(theme)) throw new Error('Такая подборка уже есть. Выберите её в списке.');
+    theme = themeSlug((options.slug ?? '').trim() || title);
+    if (!theme) throw new Error('Адрес подборки пустой. Напишите латиницей, например valentines-day.');
+    if (themes.includes(theme)) throw new Error('Такая подборка уже есть. Выберите её в списке или поправьте адрес.');
     await ensureTheme({
       slug: theme,
       title: /coloring pages$/i.test(title) ? title : `${title} Coloring Pages`,

@@ -1,4 +1,5 @@
 import { readSite } from './brand.ts';
+import { ageLayout } from './draw-prompts.ts';
 
 type ImagePayload = {
   data?: { b64_json?: string; url?: string }[];
@@ -207,22 +208,9 @@ const layouts: Record<LineDifficulty, string> = {
     'A fuller scene or a repeating pattern with many separate regions to color. The picture can use more of the page. Outlines stay bold and closed, clearly thick enough to print and color with a crayon, never hairline engraving, never crosshatching, never gray fill.',
 };
 
-/** Age picks the density. 4–5 must stay simpler than 5–6; the old shared "medium" layout did not. */
-const ageLayouts: Record<string, string> = {
-  '2-3': layouts.toddler,
-  '3-4': layouts.easy,
-  '4-5':
-    'AGE BUDGET, this overrides the subject. A few large figures on an empty white background, or one figure plus two or three big props. No room, no floor, no trees, no furniture, no brick pattern. Simpler than a small scene for ages 5 to 6. Thick closed outlines.',
-  '5-6':
-    'AGE BUDGET for ages 5 to 6. One large subject covered in separate crayon-sized regions such as spots, petals, patches, stripes, or feathers, plus several medium props and a simple outdoor backdrop of plants, clouds, or one landmark. Busier than one animal with a few flowers on white. Much simpler than a furnished room. No room, no floorboards, no brick courses, no crowd, and no tiny engraving. Thick closed outlines. Draw the medium regions the subject names.',
-  '6-8':
-    `${layouts.detailed} Make this busier than a small scene: a room or a full setting is allowed, with more objects and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.`,
-  '4-8':
-    'A storybook subject in its costume, large enough to color, with the hat, feather, cape, boots, ears, muzzle, and tail kept as separate closed shapes when the subject has them. A few nearby props are fine. Thick closed outlines. Not a toddler scribble of one round head, and not a hairline engraving.',
-};
-
+/** Age picks the density. The text lives in factory/scripts/draw-prompts.json. */
 export function ageBudget(age: string) {
-  return ageLayouts[age] ?? ageLayouts['4-8'];
+  return ageLayout(age) || layouts.easy;
 }
 
 export function coloringPrompt(
@@ -230,9 +218,10 @@ export function coloringPrompt(
   subject: string,
   difficulty: LineDifficulty = 'easy',
   age = '3-4',
+  layoutText?: string,
 ) {
   const ages = age.replace('-', ' to ');
-  const layout = ageLayouts[age] ?? layouts[difficulty] ?? layouts.easy;
+  const layout = (layoutText !== undefined ? layoutText : ageLayout(age)).trim() || layouts[difficulty] || layouts.easy;
   return [
     `A finished coloring-book page for children ages ${ages}, portrait composition.`,
     `Subject: ${subject}.`,

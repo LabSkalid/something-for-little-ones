@@ -1,5 +1,7 @@
 /** Page titles stay searchable. The image model gets a plain scene, not a film name. */
 
+import { ageCap } from './draw-prompts.ts';
+
 const MODEL_NOTE =
   /,?\s*\b(?:classic|traditional|original|public[- ]domain)\s+fairy\s+ta(?:il|le)s?(?:\s+episode)?\b|\b(?:not|no|without)\s+disney\b|\bpublic[- ]domain\b/gi;
 
@@ -191,13 +193,6 @@ const YOUNG_SCENES: Record<string, { match: RegExp; scene: string }[]> = {
   ],
 };
 
-const AGE_CAP: Record<string, string> = {
-  '4-5':
-    'Draw only this age: the named figures and one or two big props on an empty white background. Leave out any room, floor, trees, and furniture.',
-  '5-6':
-    'Draw this age like a spotted dinosaur outdoors: a pattern of crayon-sized regions on the subject and several medium props. Leave out any room, floorboards, brick courses, and crowd.',
-};
-
 export function stripModelNotes(text: string) {
   return text
     .replace(MODEL_NOTE, '')
@@ -235,12 +230,12 @@ export function plainScene(title: string, prompt: string, age = '') {
 }
 
 /** What the image model should draw. A missing scene becomes a plain storybook moment, never the tale's film title. */
-export function imageSubject(title: string, prompt: string, retry = false, age = '') {
+export function imageSubject(title: string, prompt: string, retry = false, age = '', capText?: string) {
   const scene = sceneDescription(title, prompt) || plainScene(title, prompt, age);
   const moment = scene
     ? scene
     : 'One plain original storybook moment with ordinary clothes. You choose a simple cheerful scene.';
-  const cap = AGE_CAP[age] ?? '';
+  const cap = (capText !== undefined ? capText : ageCap(age)).trim();
   if (retry) {
     return `${moment} ${cap} Cheerful coloring page. No famous names, no film costumes, no distress.`.replace(/\s{2,}/g, ' ').trim();
   }

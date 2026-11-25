@@ -1,6 +1,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { site } from './src/site';
 import { contentLastmods } from './src/lib/sitemap-lastmod';
 
@@ -45,6 +48,40 @@ for (const [from, to] of fairyTaleRenames) {
 const oceanMoves = ['fish-and-seaweed', 'clownfish-and-seaweed', 'two-seahorses-underwater'];
 for (const slug of oceanMoves) {
   fairyTaleRedirects[`/animal-coloring-pages/${slug}/`] = `/ocean-scene-coloring-pages/${slug}/`;
+}
+
+const themeRenames: [string, string][] = [
+  ['valentine-s-day-coloring-pages', 'valentines-day-coloring-pages'],
+  ['st-patrick-s-day-coloring-pages', 'st-patricks-day-coloring-pages'],
+];
+const sheetRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), 'src', 'content', 'sheets');
+for (const [from, to] of themeRenames) {
+  fairyTaleRedirects[`/${from}/`] = `/${to}/`;
+  let names: string[] = [];
+  try {
+    names = fsSync.readdirSync(path.join(sheetRoot, to));
+  } catch {
+    names = [];
+  }
+  for (const name of names) {
+    if (!name.endsWith('.md')) continue;
+    const sheet = name.slice(0, -3);
+    fairyTaleRedirects[`/${from}/${sheet}/`] = `/${to}/${sheet}/`;
+  }
+}
+const pinDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public', 'pins');
+let pinNames: string[] = [];
+try {
+  pinNames = fsSync.readdirSync(pinDir);
+} catch {
+  pinNames = [];
+}
+for (const [from, to] of themeRenames) {
+  for (const name of pinNames) {
+    if (!name.startsWith(`${to}-`) && !name.startsWith(`${to}.`)) continue;
+    const oldName = `${from}${name.slice(to.length)}`;
+    fairyTaleRedirects[`/pins/${oldName}`] = `/pins/${name}`;
+  }
 }
 
 export default defineConfig({

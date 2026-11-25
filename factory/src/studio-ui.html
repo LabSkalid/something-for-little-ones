@@ -175,7 +175,10 @@
 
     <div id="import-new-fields" class="hidden">
       <label for="import-title">Название новой подборки</label>
-      <input id="import-title" placeholder="Winter Coloring Pages">
+      <input id="import-title" placeholder="Valentine's Day Coloring Pages">
+      <label for="import-slug">Адрес страницы</label>
+      <input id="import-slug" placeholder="valentines-day-coloring-pages" spellcheck="false">
+      <p class="hint">Можно поправить до записи. Апостроф сам не становится отдельной буквой: Valentine's Day → valentines-day.</p>
       <div class="two">
         <div>
           <label for="import-kind">Тип</label>
@@ -262,6 +265,7 @@
     <select id="book-style-preset"><option value="">Свой стиль ниже</option></select>
     <label for="book-style">Визуальный стиль (можно уточнить)</label>
     <textarea id="book-style" style="min-height:5rem">Storybook coloring-page line art. Characters in their story clothes, bold smooth closed black outlines, pure white background, large enclosed coloring areas, clean composition for children ages 4–8. An animal stays that animal, with its ears, muzzle, and tail. No color, gray, shading, gradients, hatching, texture, text, logos, watermark, border, or page number.</textarea>
+    <p class="hint">Бюджет возраста (сколько деталей просить у модели) правится на вкладке «Рисовать», блок «Промпт модели». Книга берёт тот же текст.</p>
     <div class="row" style="margin-top:.8rem">
       <button id="book-plan" type="button">1. Создать план сюжетов</button>
       <button id="book-parse" class="quiet" type="button">Разобрать таблицу</button>
@@ -444,7 +448,10 @@
     <select id="theme"></select>
     <div id="new-fields" class="hidden">
       <label for="title">Название новой подборки</label>
-      <input id="title" placeholder="Ocean Coloring Pages">
+      <input id="title" placeholder="Valentine's Day Coloring Pages">
+      <label for="theme-slug">Адрес страницы</label>
+      <input id="theme-slug" placeholder="valentines-day-coloring-pages" spellcheck="false">
+      <p class="hint">Этот адрес будет в ссылке. Его можно поправить, пока подборки ещё нет на сайте. Апостроф в название пишите как хотите: в адрес попадёт valentines-day, не valentine-s-day.</p>
       <label for="kind">Тип</label>
       <select id="kind">
         <option value="evergreen">На любой день</option>
@@ -469,6 +476,31 @@
       <button id="redraw-all" class="quiet" type="button">Перерисовать все листы</button>
     </div>
     <p class="hint">После рисования, замены и перерисовки PNG и PDF сами уходят в хранилище. «Выложить в хранилище» — повтор, если этот шаг оборвался. Текст страниц записывается в сайт; чтобы Cloudflare его увидел, нужен обычный деплой. «Перерисовать все» — платно и по всем подборкам. Пины здесь не собираются.</p>
+    <h2>Промпт модели</h2>
+    <p class="hint">Сюда дописывается возраст к любому сюжету. Если снова всплывёт динозавр или другая чужая фраза — сотрите её здесь и сохраните. Следующий рисунок уже возьмёт новый текст. Файл можно открыть и самой.</p>
+    <p id="prompt-file" class="hint"></p>
+    <label for="prompt-age">Возраст, чей текст правим</label>
+    <select id="prompt-age">
+      <option value="2-3">2–3</option>
+      <option value="3-4">3–4</option>
+      <option value="4-5">4–5</option>
+      <option value="5-6" selected>5–6</option>
+      <option value="6-8">6–8</option>
+      <option value="4-8">4–8 · книга</option>
+    </select>
+    <label for="prompt-cap">Добавка к сюжету</label>
+    <textarea id="prompt-cap" style="min-height:4.5rem"></textarea>
+    <label for="prompt-style">Стиль</label>
+    <textarea id="prompt-style" style="min-height:4.5rem"></textarea>
+    <label for="prompt-layout">Бюджет возраста — эта строка уходит и в картинку, и в план книги</label>
+    <textarea id="prompt-layout" style="min-height:6rem"></textarea>
+    <div class="row">
+      <button id="prompt-preview" class="quiet" type="button">Показать весь промпт</button>
+      <button id="prompt-save" type="button">Сохранить промпт</button>
+      <button id="prompt-reset" class="quiet" type="button">Вернуть исходный текст</button>
+    </div>
+    <p id="prompt-warning" class="hint"></p>
+    <textarea id="prompt-full" readonly style="min-height:8rem" placeholder="Здесь появится текст, который уйдёт в модель."></textarea>
   </section>
 
   <section id="panel-pins" class="panel">
@@ -704,6 +736,120 @@
   const kdpPagesEl = document.querySelector('#kdp-pages');
   const kdpPagesMeta = document.querySelector('#kdp-pages-meta');
   let lastKdpPaint = '';
+  let themeSlugEdited = false;
+  let importSlugEdited = false;
+  let drawPromptState = null;
+  let promptAge = '5-6';
+
+  function themeSlugFromTitle(value) {
+    const base = String(value || '')
+      .toLowerCase()
+      .replace(/['’]/g, '')
+      .replace(/&/g, ' and ')
+      .replace(/coloring pages?/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 48);
+    if (!base) return '';
+    return base.endsWith('coloring-pages') ? base : `${base}-coloring-pages`;
+  }
+
+  document.querySelector('#title').addEventListener('input', (event) => {
+    if (!themeSlugEdited) document.querySelector('#theme-slug').value = themeSlugFromTitle(event.target.value);
+  });
+  document.querySelector('#theme-slug').addEventListener('input', () => { themeSlugEdited = true; });
+  document.querySelector('#import-title').addEventListener('input', (event) => {
+    if (!importSlugEdited) document.querySelector('#import-slug').value = themeSlugFromTitle(event.target.value);
+  });
+  document.querySelector('#import-slug').addEventListener('input', () => { importSlugEdited = true; });
+
+  function readPromptFields() {
+    if (!drawPromptState) return;
+    drawPromptState.ageCap[promptAge] = document.querySelector('#prompt-cap').value;
+    drawPromptState.layout[promptAge] = document.querySelector('#prompt-layout').value;
+    drawPromptState.style[promptAge] = document.querySelector('#prompt-style').value;
+  }
+
+  function showPromptAge(age) {
+    promptAge = age;
+    document.querySelector('#prompt-age').value = age;
+    document.querySelector('#prompt-cap').value = drawPromptState?.ageCap?.[age] || '';
+    document.querySelector('#prompt-layout').value = drawPromptState?.layout?.[age] || '';
+    document.querySelector('#prompt-style').value = drawPromptState?.style?.[age] || '';
+  }
+
+  async function loadDrawPrompts() {
+    const data = await fetch('/api/draw-prompts').then((res) => res.json());
+    drawPromptState = data.prompts;
+    const file = document.querySelector('#prompt-file');
+    if (file) file.textContent = data.file ? `Файл: ${data.file}` : '';
+    showPromptAge(document.querySelector('#prompt-age').value || '5-6');
+  }
+
+  document.querySelector('#prompt-age').addEventListener('change', (event) => {
+    readPromptFields();
+    showPromptAge(event.target.value);
+    document.querySelector('#prompt-full').value = '';
+    document.querySelector('#prompt-warning').textContent = '';
+  });
+
+  document.querySelector('#prompt-preview').addEventListener('click', async () => {
+    readPromptFields();
+    const first = document.querySelector('#ideas').value.split(/\r?\n/).map((line) => line.trim()).find(Boolean) || '';
+    const scene = first.includes(':') ? first.slice(first.indexOf(':') + 1).trim() : first;
+    const response = await fetch('/api/draw-prompts/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        age: promptAge,
+        scene,
+        ageCap: document.querySelector('#prompt-cap').value,
+        layout: document.querySelector('#prompt-layout').value,
+        style: document.querySelector('#prompt-style').value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      document.querySelector('#prompt-warning').textContent = data.error || 'Не удалось собрать промпт.';
+      return;
+    }
+    document.querySelector('#prompt-full').value = data.prompt || '';
+    document.querySelector('#prompt-warning').textContent = data.warning || 'Это текст выбранного возраста. Сохраните, если правили поля.';
+  });
+
+  document.querySelector('#prompt-save').addEventListener('click', async () => {
+    readPromptFields();
+    const response = await fetch('/api/draw-prompts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompts: drawPromptState }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      document.querySelector('#prompt-warning').textContent = data.error || 'Не сохранилось.';
+      return;
+    }
+    drawPromptState = data.prompts;
+    document.querySelector('#prompt-warning').textContent = 'Сохранено. Следующий рисунок и план книги возьмут этот текст.';
+  });
+
+  document.querySelector('#prompt-reset').addEventListener('click', async () => {
+    if (!confirm('Вернуть промпт всех возрастов к тексту из программы? Ваши правки в файле сотрутся.')) return;
+    const response = await fetch('/api/draw-prompts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reset: true }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      document.querySelector('#prompt-warning').textContent = data.error || 'Не удалось вернуть текст.';
+      return;
+    }
+    drawPromptState = data.prompts;
+    showPromptAge(promptAge);
+    document.querySelector('#prompt-full').value = '';
+    document.querySelector('#prompt-warning').textContent = 'Вернула исходный текст и сохранила его в файл.';
+  });
 
   function paintKdpPages(list) {
     const next = JSON.stringify(list || []);
@@ -1495,6 +1641,7 @@
         body: JSON.stringify({
           theme: themeSelect.value,
           title: document.querySelector('#title').value,
+          slug: document.querySelector('#theme-slug').value,
           kind: document.querySelector('#kind').value,
           age: document.querySelector('#draw-age').value,
           ideas,
@@ -1918,6 +2065,7 @@
       body: JSON.stringify({
         theme: importTheme.value,
         title: document.querySelector('#import-title').value,
+        slug: document.querySelector('#import-slug').value,
         kind: document.querySelector('#import-kind').value,
         ageBand: document.querySelector('#import-ageband').value,
         sheets,
@@ -2248,6 +2396,7 @@
   }
 
   loadThemes().then(() => poll());
+  loadDrawPrompts();
   setInterval(poll, 1500);
 </script>
 </html>
