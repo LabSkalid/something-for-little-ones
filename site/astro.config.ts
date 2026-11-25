@@ -50,6 +50,15 @@ for (const slug of oceanMoves) {
   fairyTaleRedirects[`/animal-coloring-pages/${slug}/`] = `/ocean-scene-coloring-pages/${slug}/`;
 }
 
+const dinosaurSceneSheetRenames: [string, string][] = [
+  ['dinosaur-watering-flower', 'dinosaur-sunny-mountain-garden'],
+  ['dinosaur-watering-flowers', 'dinosaur-woodland-garden'],
+  ['dinosaur-watering-flowers-2', 'dinosaur-hillside-garden'],
+];
+for (const [from, to] of dinosaurSceneSheetRenames) {
+  fairyTaleRedirects[`/dinosaur-scene-coloring-pages/${from}/`] = `/dinosaur-scene-coloring-pages/${to}/`;
+}
+
 const themeRenames: [string, string][] = [
   ['valentine-s-day-coloring-pages', 'valentines-day-coloring-pages'],
   ['st-patrick-s-day-coloring-pages', 'st-patricks-day-coloring-pages'],

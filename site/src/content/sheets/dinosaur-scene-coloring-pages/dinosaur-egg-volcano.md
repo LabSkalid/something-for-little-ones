@@ -1,10 +1,10 @@
 ---
-title: "Dinosaur with Egg and Volcano Coloring Page"
+title: "Spotted Dinosaur Egg Volcano Coloring Page"
 theme: dinosaur-scene-coloring-pages
 slug: dinosaur-egg-volcano
-description: "A happy spotted dinosaur holds a large egg, with a volcano, trees, and flowers in the background."
-alt: "Line drawing of a smiling dinosaur holding a spotted egg, with a volcano, a tree, clouds, and flowers in the background."
-parentNote: "Talk about dinosaurs and volcanoes while your little one colors this fun scene. What color do they think the lava is?"
+description: "A spotted dinosaur cradles a large speckled egg in a prehistoric meadow, with a cone volcano, a leafy tree, stones, and three flowers."
+alt: "Line drawing of a smiling spotted dinosaur holding a dotted egg. A volcano, a large tree, clouds, pebbles, and three five-petal flowers surround the scene."
+parentNote: "This page is about the egg and the volcano—not a garden hose! Ask what might hatch from the egg while your child colors the mountain."
 order: 7
 difficulty: medium
 age: "5-6"

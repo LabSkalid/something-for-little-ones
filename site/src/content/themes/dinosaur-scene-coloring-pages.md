@@ -21,9 +21,9 @@ keywords:
   - patterned triceratops coloring page
   - patterned stegosaurus coloring page
   - flying reptile coloring page
-  - dinosaur watering flower coloring page
-  - dinosaur with egg and volcano coloring page
-  - dinosaur watering flowers coloring page
+  - dinosaur sunny mountain garden coloring page
+  - spotted dinosaur egg volcano coloring page
+  - dinosaur woodland garden coloring page
 faqs:
   - question: What ages are these dinosaur scene coloring pages for?
     answer: They are drawn for about ages 5 to 6.
