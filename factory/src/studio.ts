@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse, stringify } from 'yaml';
 import { createTalePlan, isSafetyRejection, parseStoryboard, softenTaleSubject } from './book-plan.ts';
+import { fixPageNameSpelling, padDrawPrompt } from './page-names.ts';
 import { imageSubject, sceneDescription, stripModelNotes } from './tale-prompt.ts';
 import { ensureTaleCast, loadTaleCast, missingTaleCast, normalizeCharacters, redrawTaleCast, referenceNote, TALE_IMAGE_MODEL } from './tale-cast.ts';
 import { chat, coloringPrompt, generateColoringPage, type LineDifficulty } from './openrouter.ts';
@@ -219,20 +220,30 @@ function parseIdeas(text: string, age = '3-4') {
   const difficulty = ageDifficulty[band];
   const used = new Set<string>();
   const ideas = [];
+  const spellingFixes: string[] = [];
   for (const rawLine of text.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line || line.startsWith('#')) continue;
-    const splitAt = line.indexOf(':');
-    const name = stripModelNotes((splitAt === -1 ? line : line.slice(0, splitAt)).trim());
-    let prompt = stripModelNotes((splitAt === -1 ? line : line.slice(splitAt + 1)).trim());
+    const pipeAt = line.indexOf('|');
+    let slugFromLine = '';
+    let body = line;
+    if (pipeAt !== -1) {
+      slugFromLine = slugify(line.slice(0, pipeAt).trim());
+      body = line.slice(pipeAt + 1).trim();
+    }
+    const splitAt = body.indexOf(':');
+    const nameRaw = stripModelNotes((splitAt === -1 ? body : body.slice(0, splitAt)).trim());
+    const fixed = fixPageNameSpelling(nameRaw);
+    const name = fixed.name;
+    if (fixed.changed) spellingFixes.push(`${nameRaw} → ${name}`);
+    let prompt = stripModelNotes((splitAt === -1 ? body : body.slice(splitAt + 1)).trim());
     // A bare title, or only a note such as "classic fairy tale", means the image model picks the scene.
     if (!sceneDescription(name, prompt || name)) prompt = name;
-    // produce() requires prompt length >= 8
-    if (prompt.length < 8) prompt = `${prompt} fairy tale`;
+    prompt = padDrawPrompt(prompt, name);
     if (band === '2-3') {
       prompt = `${prompt}. One huge simple shape only, extra-thick outlines, almost no small parts, toddler coloring page`;
     }
-    let slug = slugify(name.replace(/coloring page/i, ''));
+    let slug = slugFromLine || slugify(name.replace(/coloring page/i, ''));
     if (!slug) continue;
     if (band === '2-3' && !slug.startsWith('huge-')) slug = `huge-${slug}`;
     while (used.has(slug)) slug = `${slug}-2`;
@@ -240,7 +251,7 @@ function parseIdeas(text: string, age = '3-4') {
     const title = /coloring page/i.test(name) ? name : `${name} Coloring Page`;
     ideas.push({ slug, title, prompt, difficulty, age: band });
   }
-  return ideas;
+  return { ideas, spellingFixes };
 }
 
 function startJob(label: string, task: () => Promise<void>) {
@@ -283,8 +294,12 @@ async function createPages(body: {
   age?: string;
 }) {
   const age = ageDifficulty[body.age ?? ''] ? String(body.age) : '3-4';
-  const ideas = parseIdeas(body.ideas ?? '', age);
+  const parsed = parseIdeas(body.ideas ?? '', age);
+  const ideas = parsed.ideas;
   if (!ideas.length) throw new Error('Добавьте хотя бы один рисунок, каждый с новой строки.');
+  if (parsed.spellingFixes.length) {
+    console.log(`Исправила опечатку в названии: ${parsed.spellingFixes.join('; ')}`);
+  }
   const themes = await listThemes();
   const existing = themes.find((theme) => theme.slug === body.theme);
   let slug = existing?.slug ?? '';

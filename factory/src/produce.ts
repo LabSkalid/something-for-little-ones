@@ -1,12 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import sharp from 'sharp';
 import { parse } from 'yaml';
 import { z } from 'zod';
 import { readSite } from './brand.ts';
 import { stampSite } from './footer.ts';
 import { fitPortrait, webPreview } from './lineart.ts';
 import { isSafetyRejection } from './book-plan.ts';
-import { chat, coloringPrompt, generateColoringPage } from './openrouter.ts';
+import { chat, coloringPrompt, generateColoringPage, visionChat } from './openrouter.ts';
 import { imageSubject } from './tale-prompt.ts';
 import { pngToPdf } from './pdf.ts';
 import { loadEnv } from './env.ts';
@@ -100,24 +101,46 @@ function shortAlt(idea: Idea) {
   return `Line drawing of ${lower}.`;
 }
 
-async function describeSheet(brief: Brief, idea: Idea) {
-  if (idea.parentNote) {
+function extractJson(text: string) {
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const raw = (fenced?.[1] ?? text).trim();
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start === -1 || end === -1) throw new Error('Модель не вернула JSON.');
+  return JSON.parse(raw.slice(start, end + 1)) as Record<string, string>;
+}
+
+async function describeSheet(brief: Brief, idea: Idea, previewPng: Buffer) {
+  if (idea.parentNote && idea.description && idea.alt) {
     return {
       parentNote: idea.parentNote,
-      description: idea.description ?? `${idea.title} to print for kids.`,
-      alt: idea.alt ?? shortAlt(idea),
+      description: idea.description,
+      alt: idea.alt,
     };
   }
-  const raw = await chat(
-    'You write for American parents. Reply with JSON only: {"description":"","alt":"","parentNote":""}. description is under 160 characters. alt describes the line drawing. parentNote is 2 sentences about how a child might color the page. No trademarked characters. No mention of AI.',
-    `Theme: ${brief.title}. Audience: ${brief.audience}. Page title: ${idea.title}. Subject: ${idea.prompt}.`,
+  const small = await sharp(previewPng)
+    .resize(768, 1024, { fit: 'inside', withoutEnlargement: true })
+    .png()
+    .toBuffer();
+  const raw = await visionChat(
+    [
+      'You write for American parents about printable coloring pages.',
+      'Look at the line drawing. Reply with JSON only: {"description":"","alt":"","parentNote":""}.',
+      'description: one short sentence under 160 characters about what is actually visible.',
+      'alt: starts with "Line drawing of" and names only what is drawn.',
+      'parentNote: one short coloring tip. No age numbers.',
+      'Do not mention baskets, eggs, people, or props that are not clearly visible.',
+      'Do not mention AI. No trademarked characters.',
+    ].join(' '),
+    `Collection: ${brief.title}. Working title: ${idea.title}. Draw request was: ${idea.prompt}.`,
+    small,
   );
-  const json = JSON.parse(raw.replace(/^```json\s*|```$/g, '')) as {
-    description: string;
-    alt: string;
-    parentNote: string;
+  const json = extractJson(raw);
+  return {
+    description: String(json.description ?? `${idea.title} to print for kids.`).trim(),
+    alt: String(json.alt ?? shortAlt(idea)).trim(),
+    parentNote: String(json.parentNote ?? 'Color the big shapes first.').trim(),
   };
-  return json;
 }
 
 async function ensureTheme(brief: Brief, sheetLinks: { title: string; slug: string }[]) {
@@ -266,7 +289,7 @@ export async function produce(briefPath: string, dryRun: boolean) {
     await fs.writeFile(path.join(dir, `${idea.slug}.png`), preview);
     await fs.writeFile(path.join(dir, `${idea.slug}-us-letter.pdf`), await pngToPdf(print, 'letter', idea.title, site.name));
     await fs.writeFile(path.join(dir, `${idea.slug}-a4.pdf`), await pngToPdf(print, 'a4', idea.title, site.name));
-    const copy = await describeSheet(brief, idea);
+    const copy = await describeSheet(brief, idea, preview);
     const sheetDir = path.join(sheetContentRoot, brief.slug);
     await fs.mkdir(sheetDir, { recursive: true });
     await fs.writeFile(
