@@ -1,7 +1,7 @@
 ---
 title: Easter Coloring Pages
-description: Easter Coloring Pages for ages 2 to 8. Egg with Bow, Bow Easter Egg, Bunny with Easter Eggs, and Easter Egg Hunt Adventure. Pick a page and print the PDF.
-tagline: Egg with Bow, Bow Easter Egg, Bunny with Easter Eggs, and Easter Egg Hunt Adventure. Grouped by age, ages 2 to 8.
+description: Easter Coloring Pages for ages 2 to 8. Egg with Bow, Bow Easter Egg, Bunny with Easter Eggs, and Lamb with Tulips. Pick a page and print the PDF.
+tagline: Egg with Bow, Bow Easter Egg, Bunny with Easter Eggs, and Lamb with Tulips. Grouped by age, ages 2 to 8.
 kind: seasonal
 ageBand: "5-6"
 order: 10
@@ -18,11 +18,11 @@ keywords:
   - egg with bow coloring page
   - bow easter egg coloring page
   - bunny with easter eggs coloring page
-  - easter egg hunt adventure coloring page
+  - lamb with tulips coloring page
   - bunny village easter coloring page
+  - easter egg hunt adventure coloring page
   - bunny with buns coloring page
   - bunny and easter basket coloring page
-  - easter basket with eggs coloring page
 faqs:
   - question: What ages are these easter coloring pages for?
     answer: They are grouped by age, ages 2 to 8. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.

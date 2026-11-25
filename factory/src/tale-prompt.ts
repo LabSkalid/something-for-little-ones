@@ -111,7 +111,7 @@ const PLAIN_SCENES: { match: RegExp; scene: string }[] = [
 ];
 
 const PLAIN =
-  'Plain original storybook coloring page. Ordinary clothes and ordinary faces. Do not copy a character, costume, hair bow, pose, or prop from a film, series, doll, or theme park.';
+  'Plain original storybook coloring page. Do not copy a character, costume, hair bow, pose, or prop from a film, series, doll, or theme park. Draw the named subject. If the subject is an animal, draw that animal with its ears, muzzle, paws, and tail. Do not replace an animal with a child or with a child in a costume. A person, only when the subject is a person, wears ordinary clothes';
 
 /**
  * Shorter than PLAIN_SCENES. A bare tale name otherwise expands into a room,
@@ -229,12 +229,12 @@ export function plainScene(title: string, prompt: string, age = '') {
   return PLAIN_SCENES.find((item) => item.match.test(blob))?.scene ?? '';
 }
 
-/** What the image model should draw. A missing scene becomes a plain storybook moment, never the tale's film title. */
+/** What the image model should draw. A known tale becomes a plain storybook moment. Any other title is drawn as that subject. */
 export function imageSubject(title: string, prompt: string, retry = false, age = '', capText?: string) {
-  const scene = sceneDescription(title, prompt) || plainScene(title, prompt, age);
-  const moment = scene
-    ? scene
-    : 'One plain original storybook moment with ordinary clothes. You choose a simple cheerful scene.';
+  const described = sceneDescription(title, prompt);
+  const known = plainScene(title, prompt, age);
+  const named = taleName(title);
+  const moment = described || known || named || 'One plain original storybook subject.';
   const cap = (capText !== undefined ? capText : ageCap(age)).trim();
   if (retry) {
     return `${moment} ${cap} Cheerful coloring page. No famous names, no film costumes, no distress.`.replace(/\s{2,}/g, ' ').trim();
