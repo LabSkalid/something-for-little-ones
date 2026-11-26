@@ -24,14 +24,26 @@ export async function getStaticPaths() {
 
 const { theme } = Astro.props;
 const { Content } = await render(theme);
-const sheets = (await getCollection('sheets'))
+const allSheets = await getCollection('sheets');
+const sheets = allSheets
   .filter((sheet) => sheet.data.theme === theme.id)
   .sort((a, b) => a.data.order - b.data.order);
+const nativeIds = new Set(sheets.map((sheet) => sheet.id));
+const featuredOnly = (theme.data.featuredSheets ?? [])
+  .map((ref) => allSheets.find((item) => item.data.theme === ref.theme && item.data.slug === ref.slug))
+  .filter((item): item is (typeof allSheets)[number] => Boolean(item))
+  .filter((item) => !nativeIds.has(item.id));
+const featuredIds = new Set(featuredOnly.map((sheet) => sheet.id));
+const listedSheets = [...sheets, ...featuredOnly];
+const sheetsForBand = (bandId: string) => [
+  ...sheets.filter((sheet) => sheet.data.age === bandId),
+  ...featuredOnly.filter((sheet) => sheet.data.age === bandId),
+];
 const seasonal = theme.data.kind === 'seasonal';
 const ageGroups = ageBands
   .map((band) => ({
     ...band,
-    sheets: sheets.filter((sheet) => sheet.data.age === band.id),
+    sheets: sheetsForBand(band.id),
   }))
   .filter((band) => band.sheets.length > 0);
 const multiAge = ageGroups.length > 1;
@@ -39,10 +51,9 @@ const groupedByAge = seasonal || multiAge;
 const themeEyebrow = seasonal
   ? 'Holiday'
   : multiAge
-    ? ageSpanLabel(sheets.map((sheet) => sheet.data.age))
+    ? ageSpanLabel(listedSheets.map((sheet) => sheet.data.age))
     : ageBandLabel(theme.data.ageBand);
 const allThemes = await getCollection('themes');
-const allSheets = await getCollection('sheets');
 const related = theme.data.related.flatMap((id) => {
   const relatedTheme = allThemes.find((item) => item.id === id);
   if (!relatedTheme) return [];
@@ -78,12 +89,12 @@ const jsonLd = {
       publisher: publisherRef(),
       mainEntity: {
         '@type': 'ItemList',
-        numberOfItems: sheets.length,
-        itemListElement: sheets.map((sheet, index) => ({
+        numberOfItems: listedSheets.length,
+        itemListElement: listedSheets.map((sheet, index) => ({
           '@type': 'ListItem',
           position: index + 1,
           name: sheet.data.title,
-          url: absoluteUrl(sheetPath(theme.id, sheet.data.slug)),
+          url: absoluteUrl(sheetPath(sheet.data.theme, sheet.data.slug)),
         })),
       },
     },
@@ -125,6 +136,11 @@ const jsonLd = {
         ageGroups.map((band) => (
           <section class="age-block" id={`ages-${band.id}`}>
             <h2>{band.label}</h2>
+            {band.sheets.some((sheet) => featuredIds.has(sheet.id)) && (
+              <p class="collection-featured-note">
+                Animal pages in this age group open on the animal collection. Same printable file.
+              </p>
+            )}
             <div class="sheet-grid">
               {band.sheets.map((sheet) => <SheetCard sheet={sheet} />)}
             </div>
@@ -132,14 +148,14 @@ const jsonLd = {
         ))
       ) : (
         <div class="sheet-grid">
-          {sheets.map((sheet) => <SheetCard sheet={sheet} />)}
+          {listedSheets.map((sheet) => <SheetCard sheet={sheet} />)}
         </div>
       )}
       <AdSlot name="top" />
       <section class="prose collection-description">
         <Content />
       </section>
-      <AgeSeoLinks sheets={sheets} themeId={theme.id} />
+      <AgeSeoLinks sheets={listedSheets} themeId={theme.id} />
       <AdSlot name="article" />
       {related.length > 0 && (
         <section class="section">

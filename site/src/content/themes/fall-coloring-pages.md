@@ -11,8 +11,15 @@ related:
   - halloween-coloring-pages
   - thanksgiving-coloring-pages
   - christmas-coloring-pages
+featuredSheets:
+  - theme: animal-coloring-pages
+    slug: mouse-and-pumpkin
+  - theme: animal-coloring-pages
+    slug: fox-and-pumpkin
+  - theme: animal-coloring-pages
+    slug: cute-squirrel-acorns
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-11-26
 keywords:
   - fall coloring pages
   - autumn coloring pages

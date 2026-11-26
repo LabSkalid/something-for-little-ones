@@ -10,8 +10,11 @@ ink: "#2A1814"
 related:
   - fall-coloring-pages
   - christmas-coloring-pages
+featuredSheets:
+  - theme: animal-coloring-pages
+    slug: cat-in-pumpkin-pie
 pubDate: 2026-10-05
-updatedDate: 2026-10-08
+updatedDate: 2026-11-26
 keywords:
   - thanksgiving coloring pages
   - turkey coloring page

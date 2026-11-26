@@ -30,6 +30,15 @@ const themes = defineCollection({
         subtitle: z.string(),
       }),
     ),
+  /** Same PDF and canonical page; shown on this collection by age. */
+    featuredSheets: z
+      .array(
+        z.object({
+          theme: z.string(),
+          slug: z.string(),
+        }),
+      )
+      .default([]),
   }),
 });
 

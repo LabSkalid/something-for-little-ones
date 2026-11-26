@@ -32,7 +32,7 @@ const printableCount = (count: number) => `${count} printable ${count === 1 ? 'p
           <ul>
             {group.sheets.map((sheet) => (
               <li>
-                <a href={sheetPath(themeId, sheet.data.slug)}>{sheet.data.title}</a>
+                <a href={sheetPath(sheet.data.theme, sheet.data.slug)}>{sheet.data.title}</a>
                 <span> — {sheet.data.description}</span>
               </li>
             ))}
