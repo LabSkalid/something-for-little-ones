@@ -1,9 +1,9 @@
 ---
-title: "Baby Giraffe with Flowers Coloring Page"
+title: "Baby Giraffe with Blossom Crown Coloring Page"
 theme: animal-coloring-pages
 slug: baby-giraffe-flowers-2
-description: "This coloring page features an adorable baby giraffe wearing a crown of flowers, perfect for children aged 5-6."
-alt: "Line drawing of a cute baby giraffe with large eyes, wearing a crown of flowers on its head and sitting among leafy branches."
+description: "A baby giraffe wears a crown of blossoms on its head while sitting among leafy branches."
+alt: "Line drawing of a baby giraffe with a flower crown on its head, sitting among leafy branches."
 parentNote: "Encourage your child to use bright, cheerful colors for the flowers and the giraffe's spots. Maybe they can even try to make the spots look like clouds!"
 order: 82
 difficulty: medium

@@ -1,9 +1,9 @@
 ---
-title: "Froggy Pond Friends Coloring Page"
+title: "Frog on Lily Pad Pond Coloring Page"
 theme: animal-coloring-pages
 slug: froggy-pond-friends
-description: "This coloring page features a happy frog on a lily pad with a butterfly and dragonfly, perfect for little ones aged 5-6."
-alt: "Line drawing of a smiling frog on a lily pad, with a butterfly flying above and a dragonfly to the side, surrounded by water lilies and ripples."
+description: "A frog rests on a lily pad in a pond with water lilies, ripples, a butterfly, and a dragonfly."
+alt: "Line drawing of a smiling frog on a lily pad with water lilies and ripples, a butterfly above, and a dragonfly to the side."
 parentNote: "Talk about the different creatures in the pond and what sounds they might make while your child colors."
 order: 88
 difficulty: medium

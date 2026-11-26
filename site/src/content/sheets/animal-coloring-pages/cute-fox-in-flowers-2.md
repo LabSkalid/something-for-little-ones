@@ -1,9 +1,9 @@
 ---
-title: "Cute Fox in Flowers Coloring Page"
+title: "Smiling Fox in Flower Patch Coloring Page"
 theme: animal-coloring-pages
 slug: cute-fox-in-flowers-2
-description: "This adorable coloring page features a cute fox surrounded by flowers, perfect for children aged 5-6."
-alt: "Line drawing of a cute, cartoon-style fox sitting among flowers and leaves, with large eyes and a happy expression."
+description: "A wide-eyed fox with a big smile rests in a flower patch, with leaves framing the cub."
+alt: "Line drawing of a smiling cartoon fox with large eyes, sitting among flowers and leaves."
 parentNote: "Encourage your child to use different shades of green for the leaves and various colors for the flowers to make the picture vibrant."
 order: 84
 difficulty: medium

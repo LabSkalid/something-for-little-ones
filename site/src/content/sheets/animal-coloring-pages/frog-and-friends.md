@@ -1,9 +1,9 @@
 ---
-title: "Frog and Friends Coloring Page"
+title: "Frog with Dragonflies Coloring Page"
 theme: animal-coloring-pages
 slug: frog-and-friends
-description: "This coloring page features a friendly frog on a lily pad with a butterfly and dragonflies, perfect for kids aged 5-6."
-alt: "Line drawing of a smiling frog on a lily pad holding a flower, with a butterfly flying above and two dragonflies on swirling plants below."
+description: "A frog on a lily pad holds a flower while a butterfly flies above and two dragonflies swirl near the water plants."
+alt: "Line drawing of a smiling frog on a lily pad holding a flower, with a butterfly above and two dragonflies near swirling plants below."
 parentNote: "Talk about the different animals and plants on the page. What colors do frogs, butterflies, and dragonflies usually have?"
 order: 91
 difficulty: medium

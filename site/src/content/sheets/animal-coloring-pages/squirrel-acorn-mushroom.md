@@ -1,12 +1,11 @@
 ---
-title: "Squirrel with Acorn Coloring Page"
+title: "Squirrel on Mushroom with Acorn Coloring Page"
 theme: animal-coloring-pages
 slug: squirrel-acorn-mushroom
-description: "This coloring page features a cute squirrel holding an acorn while sitting on a mushroom, perfect for kids aged 5-6."
-alt: "Line drawing of a smiling squirrel holding a large acorn, sitting on a spotted mushroom with a small butterfly flying nearby."
+description: "A squirrel holds a big acorn while sitting on a spotted mushroom, with a butterfly nearby."
+alt: "Line drawing of a smiling squirrel holding a large acorn on a spotted mushroom, with a butterfly flying nearby."
 parentNote: "Talk about what squirrels eat and where they live while your child colors this page."
-order: 7
+order: 89
 difficulty: medium
 age: "5-6"
-source: "Untitled-2-30.png"
 ---

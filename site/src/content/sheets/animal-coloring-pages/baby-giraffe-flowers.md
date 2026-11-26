@@ -1,9 +1,9 @@
 ---
-title: "Baby Giraffe with Flowers Coloring Page"
+title: "Baby Giraffe in Flower Wreath Coloring Page"
 theme: animal-coloring-pages
 slug: baby-giraffe-flowers
-description: "This adorable baby giraffe surrounded by a wreath of flowers is perfect for children aged 5-6 to color."
-alt: "Line drawing of a cute baby giraffe sitting, with large eyes and spots, surrounded by a circular wreath of flowers and leaves."
+description: "A sitting baby giraffe is framed by a circular wreath of flowers and leaves."
+alt: "Line drawing of a baby giraffe with large eyes and spots, sitting inside a circular wreath of flowers and leaves."
 parentNote: "Encourage your child to use a variety of colors for the flowers and leaves, maybe even some glitter for extra sparkle!"
 order: 79
 difficulty: medium
