@@ -31,7 +31,6 @@ const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : u
 const more = siblings.filter((item) => item.data.slug !== sheet.data.slug);
 const assets = sheetAssets(sheet.data.theme, sheet.data.slug);
 const book = bookForTheme(theme.id);
-const bookThemeLabel = theme.data.title.replace(/ coloring pages$/i, '');
 const crumbs = [
   { name: 'Home', path: '/' },
   { name: theme.data.title, path: themePath(theme.id) },
@@ -112,7 +111,7 @@ const jsonLd = {
                 <img src={book.cover} alt={book.coverAlt} width="88" height="132" loading="lazy" decoding="async" />
               </a>
               <div>
-                <p>{book.pages} more {bookThemeLabel} pages, ready to print</p>
+                <p>{book.sheetPromo}</p>
                 <a class="btn btn-ghost" href={book.kofiUrl} target="_blank" rel="noopener" data-book-store="kofi" data-book-id={book.id} data-book-place="sheet">Get the PDF · {book.pdfPrice}</a>
               </div>
             </aside>

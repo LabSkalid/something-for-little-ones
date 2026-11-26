@@ -2,27 +2,27 @@ export type BookOffer = {
   id: string;
   title: string;
   body: string;
+  /** Optional clearer copy on specific theme pages (same book, different free lineup). */
+  bodyByTheme?: Partial<Record<string, string>>;
+  /** Sidebar on a single free sheet page */
+  sheetPromo: string;
   cover: string;
   coverAlt: string;
   amazonUrl: string;
   kofiUrl: string;
-  /** Pages in the printed book, used by the single-picture promo line. */
   pages: number;
-  /** Price shown on the single-picture promo. */
   price: string;
-  /** Ko-fi PDF price for the theme-page banner. */
   pdfPrice: string;
-  /** Amazon paperback price for the theme-page banner. */
   paperbackPrice: string;
-  /** Theme pages where this offer appears in the rail. */
   themes: string[];
 };
 
 export const books: BookOffer[] = [
   {
     id: 'winter-christmas',
-    title: 'A ready coloring book',
-    body: 'More winter and Christmas pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    title: 'Winter & Christmas book',
+    body: 'Pick free pages here anytime. For 50 winter and Christmas pictures in one file, already in order, use the PDF or the paperback.',
+    sheetPromo: '50-page winter and Christmas book. The full stack in one PDF, not one page at a time.',
     cover: '/books/adorable-winter-christmas-coloring-book.jpg',
     coverAlt: 'Cover of Adorable Winter Coloring Book: two children ice skating in the snow',
     amazonUrl: 'https://www.amazon.com/dp/B0HMMBW1F6',
@@ -35,8 +35,9 @@ export const books: BookOffer[] = [
   },
   {
     id: 'christian-christmas',
-    title: 'A ready coloring book',
-    body: 'More Christmas pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    title: 'Christian Christmas book',
+    body: 'Print nativity and verse pages free on the site. The book is 35 pages in one PDF or paperback, from simple stars up to fuller scenes.',
+    sheetPromo: '35-page Christian Christmas book. The whole set in one file.',
     cover: '/books/cristian-christmas-coloring-book.jpg',
     coverAlt: 'Cover of Cristian Christmass Coloring Book: from the Nativity story to the family traditions',
     amazonUrl: 'https://www.amazon.com/dp/B0HP9YGF6H',
@@ -49,8 +50,15 @@ export const books: BookOffer[] = [
   },
   {
     id: 'garden-animals',
-    title: 'A ready coloring book',
-    body: 'More garden animal pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    title: 'Garden animals book (60 pages)',
+    body: 'Free pages here are samples. The book is sixty garden-animal pictures in one stack, PDF to print at home or paperback by mail, already in order.',
+    bodyByTheme: {
+      'garden-coloring-pages':
+        'Free here: garden tools, a snail, and a kitten in a pot. The book is sixty garden-animal pages in one PDF or paperback, a separate full set.',
+      'animal-coloring-pages':
+        'One animal prints free at a time. The garden animals book is sixty pages in one file, not extra copies of this page.',
+    },
+    sheetPromo: '60-page garden animals book. A full set of garden animals, not the same as the free tool pages on this site.',
     cover: '/books/cute-garden-animals-coloring-book.jpg',
     coverAlt: 'Cover of Cute Garden Animals Coloring Book: a snail on a watering can and a chick with a rake',
     amazonUrl: 'https://www.amazon.com/dp/B0HMJPQXPT',
@@ -61,10 +69,11 @@ export const books: BookOffer[] = [
     paperbackPrice: '$9.99',
     themes: ['garden-coloring-pages', 'animal-coloring-pages'],
   },
-   {
+  {
     id: 'fall-thanksgiving',
-    title: 'A ready coloring book',
-    body: 'More fall and Thanksgiving pages that aren’t free on the site: already in one stack, ready to color. A real book in the mail, or a PDF to print at home.',
+    title: 'Fall & Thanksgiving book',
+    body: 'Free harvest pages are here. For 50 fall and Thanksgiving pictures in one PDF or paperback, use the book.',
+    sheetPromo: '50-page fall and Thanksgiving book. The full set in one file.',
     cover: '/books/cover-thanksgiving.jpg',
     coverAlt: 'Cover of Thanksgiving Coloring Book: a funny turkey and pumpkins',
     amazonUrl: 'https://www.amazon.com/dp/B0HNT32W6L',
@@ -77,8 +86,15 @@ export const books: BookOffer[] = [
   },
   {
     id: 'cinderella',
-    title: 'A ready coloring book',
-    body: 'More Cinderella pages that aren’t free on the site: inspired by the classic Perrault fairy tale. Already in one stack, ready to color. A PDF to print at home.',
+    title: 'Cinderella book (50 pages)',
+    body: 'Fairy Tales has two Cinderella scenes free. The book is the full Perrault story in fifty pages, one PDF to print at home.',
+    bodyByTheme: {
+      'fairy-tales-coloring-pages':
+        'Two Cinderella scenes are free here. The book is fifty pages through the whole tale, one PDF.',
+      'princess-coloring-pages':
+        'Generic princess pages are free here. The Cinderella book is fifty story pages in one PDF, not more of this lineup.',
+    },
+    sheetPromo: '50-page Cinderella book. The whole story in order, not just the two free scenes on the site.',
     cover: '/books/cinderella-book.jpg',
     coverAlt: 'Cover of Cinderella Coloring Book: Cinderella by the fire, and the ball before the clock strikes midnight',
     amazonUrl: '',
@@ -92,5 +108,8 @@ export const books: BookOffer[] = [
 ];
 
 export function bookForTheme(themeId: string) {
-  return books.find((book) => book.themes.includes(themeId));
+  const book = books.find((item) => item.themes.includes(themeId));
+  if (!book) return undefined;
+  const body = book.bodyByTheme?.[themeId] ?? book.body;
+  return { ...book, body };
 }
