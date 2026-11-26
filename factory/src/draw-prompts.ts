@@ -33,7 +33,7 @@ export const defaultDrawPrompts: DrawPrompts = {
     '3-4':
       'One subject, large and centered, with white space around it. Thick closed outlines and a handful of big regions. Every region is large enough to color with a crayon. Draw the named subject. Do not replace it with a child.',
     '4-5':
-      'AGE BUDGET for ages 4 to 5. This limits how much to draw and does not replace the subject. A few large figures on an empty white background, or one figure plus two or three big props. No room, no floor, no trees, no furniture, no brick pattern. Simpler than a small scene for ages 5 to 6. Thick closed outlines. Draw the named subject.',
+      'AGE BUDGET for ages 4 to 5. This limits how much to draw and does not replace the subject. A few large figures on an empty white background, or one figure plus two or three big props. When the subject is only tools or plants, draw at least five separate closed regions to color—more parts than a single centered object for ages 3 to 4, still simpler than a small scene for ages 5 to 6. No room, no floor, no trees, no furniture, no brick pattern. Thick closed outlines. Draw the named subject.',
     '5-6':
       'AGE BUDGET for ages 5 to 6. One or two large characters, one action, and several medium props or a simple backdrop of a few big shapes. Crayon-sized regions: busier than one figure on empty white, much simpler than a furnished room. No room, no floorboards, no brick courses, no crowd, and no tiny engraving. Thick closed outlines. Draw the named subject. Do not add an animal, spots, or an outdoor setting the subject did not name.',
     '6-8':

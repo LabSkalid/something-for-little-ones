@@ -126,13 +126,13 @@ async function describeSheet(brief: Brief, idea: Idea, previewPng: Buffer) {
     [
       'You write for American parents about printable coloring pages.',
       'Look at the line drawing. Reply with JSON only: {"description":"","alt":"","parentNote":""}.',
-      'description: one short sentence under 160 characters about what is actually visible.',
+      'description: one short sentence under 160 characters about what is actually visible. If ages are given below, end with "for about ages X to Y" using those numbers.',
       'alt: starts with "Line drawing of" and names only what is drawn.',
-      'parentNote: one short coloring tip. No age numbers.',
+      'parentNote: which shapes to color first; name big areas vs smaller ones. Plain tone. Never start with "Encourage your child". No age numbers in parentNote.',
       'Do not mention baskets, eggs, people, or props that are not clearly visible.',
       'Do not mention AI. No trademarked characters.',
     ].join(' '),
-    `Collection: ${brief.title}. Working title: ${idea.title}. Draw request was: ${idea.prompt}.`,
+    `Collection: ${brief.title}. Working title: ${idea.title}. Target age: ${idea.age}. Draw request was: ${idea.prompt}.`,
     small,
   );
   const json = extractJson(raw);
