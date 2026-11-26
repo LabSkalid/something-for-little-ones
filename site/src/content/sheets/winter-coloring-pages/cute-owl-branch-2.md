@@ -1,9 +1,9 @@
 ---
-title: "Cute Owl on a Branch Coloring Page"
+title: "Big-Eyed Owl on Branch Coloring Page"
 theme: winter-coloring-pages
 slug: cute-owl-branch-2
-description: "This adorable owl perched on a branch is a fun and simple coloring activity for your 5-6 year old."
-alt: "Line drawing of a cute, cartoon-style owl with large eyes, sitting on a tree branch."
+description: "A big-eyed cartoon owl sits upright on a branch for a quick winter animal scene."
+alt: "Line drawing of a cartoon owl with very large eyes, perched on a tree branch."
 parentNote: "Encourage your little one to think about what colors owls are in real life, or let them get creative with imaginary colors!"
 order: 57
 difficulty: medium

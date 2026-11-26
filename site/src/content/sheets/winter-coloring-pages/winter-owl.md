@@ -1,8 +1,8 @@
 ---
-title: "Winter Owl Coloring Page"
+title: "Owl in Snowy Sky Coloring Page"
 theme: winter-coloring-pages
 slug: winter-owl
-description: "This coloring page features a cute owl perched on a branch, surrounded by snowflakes, perfect for little ones aged 4-5."
+description: "A cartoon owl on a branch with snowflakes and stars in the winter sky behind it."
 alt: "Line drawing of a cartoon owl on a tree branch with snowflakes and stars in the background."
 parentNote: "Encourage your child to use different shades of white, gray, and blue for the snow and sky to make the owl stand out."
 order: 22
