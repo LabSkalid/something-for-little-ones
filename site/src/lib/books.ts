@@ -2,9 +2,7 @@ export type BookOffer = {
   id: string;
   title: string;
   body: string;
-  /** Optional clearer copy on specific theme pages (same book, different free lineup). */
   bodyByTheme?: Partial<Record<string, string>>;
-  /** Sidebar on a single free sheet page */
   sheetPromo: string;
   cover: string;
   coverAlt: string;
@@ -20,9 +18,15 @@ export type BookOffer = {
 export const books: BookOffer[] = [
   {
     id: 'winter-christmas',
-    title: 'Winter & Christmas book',
-    body: 'Pick free pages here anytime. For 50 winter and Christmas pictures in one file, already in order, use the PDF or the paperback.',
-    sheetPromo: '50-page winter and Christmas book. The full stack in one PDF, not one page at a time.',
+    title: 'Adorable Winter & Christmas Coloring Book',
+    body: '50 cute winter and Christmas coloring pages. Snowy play, cozy scenes, trees, presents, and holiday fun.',
+    bodyByTheme: {
+      'winter-coloring-pages':
+        '50 adorable winter and Christmas coloring pages in one book. Cozy seasonal art for quiet afternoons.',
+      'christmas-coloring-pages':
+        '50 adorable winter and Christmas coloring pages in one book. Holiday trees, presents, and festive scenes.',
+    },
+    sheetPromo: '50 winter and Christmas pages in one book.',
     cover: '/books/adorable-winter-christmas-coloring-book.jpg',
     coverAlt: 'Cover of Adorable Winter Coloring Book: two children ice skating in the snow',
     amazonUrl: 'https://www.amazon.com/dp/B0HMMBW1F6',
@@ -35,9 +39,9 @@ export const books: BookOffer[] = [
   },
   {
     id: 'christian-christmas',
-    title: 'Christian Christmas book',
-    body: 'Print nativity and verse pages free on the site. The book is 35 pages in one PDF or paperback, from simple stars up to fuller scenes.',
-    sheetPromo: '35-page Christian Christmas book. The whole set in one file.',
+    title: 'Christmas Coloring Book for Kids',
+    body: 'The Nativity, family Christmas traditions, and acts of kindness, in 35 coloring pages for ages 5–8. Celebrate the meaning of Christmas one picture at a time.',
+    sheetPromo: '35-page Christmas story and traditions book.',
     cover: '/books/cristian-christmas-coloring-book.jpg',
     coverAlt: 'Cover of Cristian Christmass Coloring Book: from the Nativity story to the family traditions',
     amazonUrl: 'https://www.amazon.com/dp/B0HP9YGF6H',
@@ -50,15 +54,15 @@ export const books: BookOffer[] = [
   },
   {
     id: 'garden-animals',
-    title: 'Garden animals book (60 pages)',
-    body: 'Free pages here are samples. The book is sixty garden-animal pictures in one stack, PDF to print at home or paperback by mail, already in order.',
+    title: 'Cute Garden Animals Coloring Book',
+    body: '60 charming garden-animal scenes with flowers, plants, and outdoor fun. A screen-free treat for little animal lovers ages 4–8.',
     bodyByTheme: {
       'garden-coloring-pages':
-        'Free here: garden tools, a snail, and a kitten in a pot. The book is sixty garden-animal pages in one PDF or paperback, a separate full set.',
+        '60 garden-animal coloring pages in this book. Different art from the free garden-tool pages here.',
       'animal-coloring-pages':
-        'One animal prints free at a time. The garden animals book is sixty pages in one file, not extra copies of this page.',
+        '60 garden-animal coloring pages in this book. Charming yard scenes, not the same art as these free pages.',
     },
-    sheetPromo: '60-page garden animals book. A full set of garden animals, not the same as the free tool pages on this site.',
+    sheetPromo: '60 garden-animal pages in one book.',
     cover: '/books/cute-garden-animals-coloring-book.jpg',
     coverAlt: 'Cover of Cute Garden Animals Coloring Book: a snail on a watering can and a chick with a rake',
     amazonUrl: 'https://www.amazon.com/dp/B0HMJPQXPT',
@@ -71,9 +75,15 @@ export const books: BookOffer[] = [
   },
   {
     id: 'fall-thanksgiving',
-    title: 'Fall & Thanksgiving book',
-    body: 'Free harvest pages are here. For 50 fall and Thanksgiving pictures in one PDF or paperback, use the book.',
-    sheetPromo: '50-page fall and Thanksgiving book. The full set in one file.',
+    title: 'Thanksgiving Coloring Book for Kids',
+    body: '50 cute Thanksgiving coloring pages for ages 4–8. Turkeys, pumpkins, autumn fun, and cozy family scenes.',
+    bodyByTheme: {
+      'fall-coloring-pages':
+        '50 Thanksgiving coloring pages in one book. Cute fall and holiday art for ages 4–8.',
+      'thanksgiving-coloring-pages':
+        '50 Thanksgiving coloring pages in one book. Festive scenes for Thanksgiving break.',
+    },
+    sheetPromo: '50 Thanksgiving pages, ages 4–8.',
     cover: '/books/cover-thanksgiving.jpg',
     coverAlt: 'Cover of Thanksgiving Coloring Book: a funny turkey and pumpkins',
     amazonUrl: 'https://www.amazon.com/dp/B0HNT32W6L',
@@ -86,15 +96,15 @@ export const books: BookOffer[] = [
   },
   {
     id: 'cinderella',
-    title: 'Cinderella book (50 pages)',
-    body: 'Fairy Tales has two Cinderella scenes free. The book is the full Perrault story in fifty pages, one PDF to print at home.',
+    title: 'Cinderella Coloring Book',
+    body: '50 classic Cinderella coloring pages inspired by Perrault. Follow the fairy tale from the cottage to the ball and happily ever after. Ages 5–8.',
     bodyByTheme: {
       'fairy-tales-coloring-pages':
-        'Two Cinderella scenes are free here. The book is fifty pages through the whole tale, one PDF.',
+        '50-page Cinderella story coloring book. The full classic fairy tale, not single free scenes here.',
       'princess-coloring-pages':
-        'Generic princess pages are free here. The Cinderella book is fifty story pages in one PDF, not more of this lineup.',
+        '50-page Cinderella story coloring book. Princess art inspired by the classic fairy tale.',
     },
-    sheetPromo: '50-page Cinderella book. The whole story in order, not just the two free scenes on the site.',
+    sheetPromo: 'Cinderella fairy tale, 50 pages.',
     cover: '/books/cinderella-book.jpg',
     coverAlt: 'Cover of Cinderella Coloring Book: Cinderella by the fire, and the ball before the clock strikes midnight',
     amazonUrl: '',
