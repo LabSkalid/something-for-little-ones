@@ -1,7 +1,7 @@
 ---
 title: Fairy Tales
-description: Fairy Tales for ages 3 to 8. Goldilocks and the Three Bears, Puss in Boots, Hansel and Gretel at the Gingerbread House, and Sleeping Beauty. Pick a page and print the PDF.
-tagline: Goldilocks and the Three Bears, Puss in Boots, Hansel and Gretel at the Gingerbread House, and Sleeping Beauty. Grouped by age, ages 3 to 8.
+description: Fairy tale coloring pages for ages 3 to 8. Classic story moments, grouped by line weight—not movie characters.
+tagline: Classic story moments—Goldilocks, gingerbread house, and more—sorted by age, ages 3 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 14
@@ -11,7 +11,7 @@ related:
   - princess-coloring-pages
   - animal-coloring-pages
 pubDate: 2026-11-18
-updatedDate: 2026-11-18
+updatedDate: 2026-11-27
 keywords:
   - fairy tales coloring pages
   - fairy tales
@@ -36,6 +36,8 @@ pins:
     subtitle: Printable coloring pages for ages 3 to 8
 ---
 
-This collection features fairy tales coloring pages, with designs such as Goldilocks and the Three Bears, Puss in Boots, and Hansel and Gretel at the Gingerbread House. Pages are grouped by age, ages 3 to 8.
+Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+For a generic gown and castle without a named story, try [Princess Coloring Pages](/princess-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

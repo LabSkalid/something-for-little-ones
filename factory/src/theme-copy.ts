@@ -40,30 +40,19 @@ export function listEnglish(items: string[]) {
 }
 
 export function buildThemeBody(
-  collectionTitle: string,
-  sheetTitles: string[],
+  _collectionTitle: string,
+  _sheetTitles: string[],
   extra?: { ageSpan?: string; multiAge?: boolean },
 ): string {
-  const subject = collectionTitle
-    .replace(/\s+coloring pages?\s*$/i, '')
-    .trim()
-    .toLowerCase();
-
-  const examples = [...new Set(sheetTitles.map(cleanTitle).filter(Boolean))].slice(0, 3);
-  const exampleList = englishList(examples);
-
-  let description: string;
-  if (examples.length >= 1) {
-    description = `This collection features ${subject} coloring pages, with designs such as ${exampleList}.`;
-  } else {
-    description = `This collection features printable ${subject} coloring pages.`;
+  const lines = [
+    'Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.',
+  ];
+  if (extra?.ageSpan && extra.multiAge) {
+    lines.unshift(
+      `Pages are sorted by age (${extra.ageSpan}). Match the lines to your child, not only the birthday.`,
+    );
+  } else if (extra?.ageSpan) {
+    lines.unshift(`These pages are drawn for ${extra.ageSpan}.`);
   }
-
-  const ageLine = extra?.ageSpan
-    ? extra.multiAge
-      ? ` Pages are grouped by age, ${extra.ageSpan}.`
-      : ` They are drawn for ${extra.ageSpan}.`
-    : '';
-
-  return `${description}${ageLine}\n\nDownload the PDF, not a screenshot of this page.`;
+  return lines.join('\n\n');
 }

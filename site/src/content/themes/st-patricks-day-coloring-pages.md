@@ -1,7 +1,7 @@
 ---
 title: St. Patrick's Day Coloring Pages
-description: St. Patrick's Day Coloring Pages for ages 2 to 8. Pot of Gold, Leprechaun Hat, Rainbow and Pot of Gold, and Mushroom House. Pick a page and print the PDF.
-tagline: Pot of Gold, Leprechaun Hat, Rainbow and Pot of Gold, and Mushroom House. Grouped by age, ages 2 to 8.
+description: St. Patrick's Day coloring pages for ages 2 to 8. Rainbows, shamrocks, and leprechaun fun, grouped by line weight.
+tagline: Rainbows, shamrocks, pots of gold, and leprechaun fun—sorted by age, ages 2 to 8.
 kind: seasonal
 ageBand: "4-5"
 order: 8
@@ -11,7 +11,7 @@ related:
   - valentines-day-coloring-pages
   - winter-coloring-pages
 pubDate: 2026-11-20
-updatedDate: 2026-11-20
+updatedDate: 2026-11-27
 keywords:
   - st. patrick's day coloring pages
   - st. patrick's day
@@ -36,6 +36,6 @@ pins:
     subtitle: Printable coloring pages for ages 2 to 8
 ---
 
-This collection features st. patrick's day coloring pages, with designs such as Pot of Gold, Leprechaun Hat, and Rainbow and Pot of Gold. Pages are grouped by age, ages 2 to 8.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

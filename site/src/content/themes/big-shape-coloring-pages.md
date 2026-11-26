@@ -12,7 +12,7 @@ related:
   - animal-coloring-pages
   - garden-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-11-27
 keywords:
   - coloring pages for toddlers
   - simple coloring pages ages 2-3
@@ -32,6 +32,8 @@ pins:
     subtitle: Huge shapes for ages 2–3
 ---
 
-This collection features big shape coloring pages, with designs such as Big Ball, Whole Apple, and Simple Fish.
+These pages are drawn for about ages 2 to 3. One object, a few huge areas—a child who is still scribbling can finish quickly.
 
-Download the PDF, not a screenshot of this page.
+When they want a named animal instead of a shape, try [First Animal Coloring Pages](/first-animal-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

@@ -14,7 +14,7 @@ featuredSheets:
   - theme: animal-coloring-pages
     slug: cat-in-pumpkin-pie
 pubDate: 2026-10-05
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - thanksgiving coloring pages
   - turkey coloring page
@@ -37,6 +37,8 @@ pins:
     subtitle: A turkey, corn, and pie
 ---
 
-This collection features thanksgiving coloring pages, with designs such as Friendly Turkey, Pumpkin Pie, and Ear of Corn.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Turkeys, pie, and harvest food—not costumes or Halloween spooks. For autumn leaves without a feast, see [Fall Coloring Pages](/fall-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

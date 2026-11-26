@@ -1,7 +1,7 @@
 ---
 title: Valentine's Day Coloring Pages
-description: Valentine's Day Coloring Pages for ages 2 to 8. Love Letter Envelope, Gift Box with Heart, Bunny With Present, and Bunny Mail Carrier. Pick a page and print the PDF.
-tagline: Love Letter Envelope, Gift Box with Heart, Bunny With Present, and Bunny Mail Carrier. Grouped by age, ages 2 to 8.
+description: Valentine's Day coloring pages for ages 2 to 8. Hearts, gifts, and friendly bunnies—sorted by how busy the lines are.
+tagline: Hearts, gifts, and friendly bunnies—sorted by age, ages 2 to 8.
 kind: seasonal
 ageBand: "6-8"
 order: 7
@@ -11,7 +11,7 @@ related:
   - winter-coloring-pages
   - christian-christmas-coloring-pages
 pubDate: 2026-11-20
-updatedDate: 2026-11-20
+updatedDate: 2026-11-27
 keywords:
   - valentine's day coloring pages
   - valentine's day
@@ -36,6 +36,6 @@ pins:
     subtitle: Printable coloring pages for ages 2 to 8
 ---
 
-This collection features valentine's day coloring pages, with designs such as Love Letter Envelope, Gift Box with Heart, and Bunny With Present. Pages are grouped by age, ages 2 to 8.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

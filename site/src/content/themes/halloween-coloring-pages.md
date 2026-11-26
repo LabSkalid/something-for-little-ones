@@ -12,7 +12,7 @@ related:
   - thanksgiving-coloring-pages
   - christmas-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-08
+updatedDate: 2026-11-27
 keywords:
   - halloween coloring pages
   - pumpkin coloring page
@@ -35,6 +35,8 @@ pins:
     subtitle: Pumpkin, ghost, cat, and candy
 ---
 
-This collection features halloween coloring pages, with designs such as Smiling Pumpkin, Friendly Ghost, and Witch Hat.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Friendly faces only—no scary close-ups. For harvest leaves and apples without costumes, open [Fall Coloring Pages](/fall-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

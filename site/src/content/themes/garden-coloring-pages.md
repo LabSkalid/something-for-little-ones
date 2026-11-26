@@ -1,6 +1,6 @@
 ---
 title: Garden Coloring Pages
-description: Garden Coloring Pages for about ages 4 to 5. Watering can, wheelbarrow, trowel and seeds, gloves, and more chunky yard shapes. Pick a page and print the PDF.
+description: Garden coloring pages for about ages 4 to 5. Chunky tools and plants on white—one age band, same line weight across the set.
 tagline: Chunky garden tools and plants on white—for about ages 4 to 5, same line weight across the set.
 kind: evergreen
 ageBand: "4-5"
@@ -45,6 +45,8 @@ pins:
     subtitle: Printable coloring pages for about ages 4 to 5
 ---
 
-This collection is one age band only—about ages 4 to 5. Every page uses thick outlines and a handful of large shapes on white (tools, pots, vegetables, a gate). That matches how we label ages 4–5 site-wide: more separate areas than ages 2–3, simpler than ages 5–6.
+These pages are drawn for about ages 4 to 5 only. Thick outlines and a handful of large shapes on white—more areas than ages 2–3, simpler than ages 5–6.
 
-Download the PDF, not a screenshot of this page.
+For mixed spring weather across ages 3 to 8, see [Spring Coloring Pages](/spring-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

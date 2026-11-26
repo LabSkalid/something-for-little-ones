@@ -1,7 +1,7 @@
 ---
 title: Woodland Animal Coloring Pages
-description: Woodland Animal Coloring Pages for about ages 6 to 8. Woodland Fox, Woodland Owl, Woodland Deer, and Woodland Hedgehog. Pick a page and print the PDF.
-tagline: Woodland Fox, Woodland Owl, Woodland Deer, and Woodland Hedgehog. For about ages 6 to 8.
+description: Woodland animal coloring pages for ages 6 to 8. Forest scenes with fox, deer, owl, and more—not the huge single-animal pages for toddlers.
+tagline: Forest animals in simple woods scenes—fuller pictures with trees, mushrooms, and patterns for about ages 6 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 2
@@ -12,7 +12,7 @@ related:
   - animal-coloring-pages
   - farm-animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-28
+updatedDate: 2026-11-27
 keywords:
   - woodland animal coloring pages
   - woodland animal
@@ -36,6 +36,8 @@ pins:
     subtitle: Printable coloring pages for about ages 6 to 8
 ---
 
-This collection features woodland animal coloring pages, with designs such as Woodland Fox, Woodland Owl, and Woodland Deer. They are drawn for about ages 6 to 8.
+These pages are drawn for about ages 6 to 8. Each one is a small forest scene, not one huge animal on white.
 
-Download the PDF, not a screenshot of this page.
+For a single cute animal on thick lines, try [Animal Coloring Pages](/animal-coloring-pages/) or [First Animal Coloring Pages](/first-animal-coloring-pages/). For barn and pond scenes, try [Farm Animal Coloring Pages](/farm-animal-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

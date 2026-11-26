@@ -1037,16 +1037,18 @@ export async function rewriteThemeBody(theme: string) {
   const examplePhrase = listEnglish(examples);
   const today = new Date().toISOString().slice(0, 10);
 
-  data.description = examplePhrase
-    ? `${collectionTitle} for ${span}. ${examplePhrase}. Pick a page and print the PDF.`
-    : `${collectionTitle} for ${span}. Pick a page and print the PDF.`;
-  data.tagline = multiAge
-    ? examplePhrase
-      ? `${examplePhrase}. Grouped by age, ${span}.`
-      : `${short} coloring pages, grouped by age, ${span}.`
-    : examplePhrase
-      ? `${examplePhrase}. For ${span}.`
-      : `${short} coloring pages for ${span}.`;
+  const hadTagline = Boolean(String(data.tagline ?? '').trim());
+  const hadDescription = Boolean(String(data.description ?? '').trim());
+  if (!hadDescription) {
+    data.description = examplePhrase
+      ? `${collectionTitle} for ${span}. ${examplePhrase}. Pick a page and print the PDF.`
+      : `${collectionTitle} for ${span}. Pick a page and print the PDF.`;
+  }
+  if (!hadTagline) {
+    data.tagline = multiAge
+      ? `Printable ${short.toLowerCase()} coloring pages by age (${span}). Pick the block that matches the lines.`
+      : `Printable ${short.toLowerCase()} coloring pages for ${span}. Thick outlines, ready to download as PDF.`;
+  }
   data.ageBand = mostCommonAge(ages);
   const keptRelated = Array.isArray(data.related)
     ? data.related.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)

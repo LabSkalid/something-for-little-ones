@@ -34,6 +34,8 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-This collection features car and truck coloring pages, with designs such as Family Car, Pickup Truck, and Race Car.
+These pages are drawn for about ages 3 to 4. Side views with large wheels—not logos or street scenes.
 
-Download the PDF, not a screenshot of this page.
+When your child is ready for a train, boat, or tractor with more parts, try [Simple Vehicle Coloring Pages](/simple-vehicle-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

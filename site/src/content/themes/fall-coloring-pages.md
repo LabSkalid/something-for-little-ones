@@ -21,7 +21,7 @@ featuredSheets:
   - theme: animal-coloring-pages
     slug: cute-bear-autumn-harvest
 pubDate: 2026-10-05
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - fall coloring pages
   - autumn coloring pages
@@ -44,6 +44,8 @@ pins:
     subtitle: A leaf, an acorn, and apples
 ---
 
-This collection features fall coloring pages, with designs such as Maple Leaf, Acorn, and Scarecrow.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Harvest leaves and apples here—not Halloween costumes. For friendly pumpkins and a party table, open [Halloween Coloring Pages](/halloween-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

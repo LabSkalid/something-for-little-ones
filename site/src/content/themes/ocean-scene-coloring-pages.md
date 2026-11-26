@@ -1,6 +1,6 @@
 ---
 title: Ocean Scene Coloring Pages
-description: Ocean Scene Coloring Pages for about ages 5 to 6. Coral reef, jellyfish, tide pool, fishing boat, walrus on ice, and more. Pick a page and print the PDF.
+description: Ocean scene coloring pages for about ages 5 to 6. Reefs, boats, and patterned sea life—not single dolphins on white for toddlers.
 tagline: Coral reef, seahorses, tide pool, submarine, and more patterns—for about ages 5 to 6.
 kind: evergreen
 ageBand: "5-6"
@@ -34,6 +34,6 @@ pins:
     subtitle: Printable coloring pages for about ages 5 to 6
 ---
 
-This collection features ocean scene coloring pages, with designs such as Coral Reef, Jellyfish and Fish, and Tide Pool. They are drawn for about ages 5 to 6.
+For one friendly whale or dolphin on white, use [Animal Coloring Pages](/animal-coloring-pages/) at ages 4–5. This set keeps reef, boat, and pattern pages together.
 
-Download the PDF, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

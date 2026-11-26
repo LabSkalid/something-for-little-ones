@@ -12,7 +12,7 @@ related:
   - simple-vehicle-coloring-pages
   - car-coloring-pages
 pubDate: 2026-10-07
-updatedDate: 2026-11-10
+updatedDate: 2026-11-27
 keywords:
   - rocket coloring pages
   - space coloring pages
@@ -32,6 +32,8 @@ pins:
     subtitle: One rocket, sorted by age
 ---
 
-This collection features rocket coloring pages, with designs such as Stacked Windows, Smoke Launch, Saturn Clouds, and Chunky Rocket.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+One rocket per page—from a huge simple shape up to a fuller launch scene. For scribblers who want any object, not only rockets, try [Big Shape Coloring Pages](/big-shape-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

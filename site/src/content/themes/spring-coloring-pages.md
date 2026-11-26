@@ -1,7 +1,7 @@
 ---
 title: Spring Coloring Pages
-description: Spring Coloring Pages for ages 3 to 8. First Snowdrops, Watering Flowers, Spring Cottage, and Secret Spring Garden. Pick a page and print the PDF.
-tagline: First Snowdrops, Watering Flowers, Spring Cottage, and Secret Spring Garden. Grouped by age, ages 3 to 8.
+description: Spring coloring pages for ages 3 to 8. Weather, flowers, and cottages—not the Easter egg collection.
+tagline: Rain, flowers, cottages, and sunshine—sorted by age, ages 3 to 8. Not the Easter egg set.
 kind: seasonal
 ageBand: "3-4"
 order: 9
@@ -52,6 +52,8 @@ pins:
     subtitle: Printable coloring pages for ages 3 to 8
 ---
 
-This collection features spring coloring pages, with designs such as First Snowdrops, Watering Flowers, and Spring Cottage. Pages are grouped by age, ages 3 to 8.
+Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+These are general spring pictures—showers, gardens, and sunshine—not Easter eggs and baskets. For holiday bunnies and lambs, open [Easter Coloring Pages](/easter-coloring-pages/). For one age band of garden tools, try [Garden Coloring Pages](/garden-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

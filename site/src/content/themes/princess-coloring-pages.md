@@ -34,6 +34,8 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-This collection features princess coloring pages, with designs such as Storybook Princess, Fairy-Tale Castle, and Royal Carriage.
+These pages are drawn for about ages 3 to 4. Generic storybook shapes—no movie character.
 
-Download the PDF, not a screenshot of this page.
+For fuller fairy-tale scenes at older ages, see [Fairy Tales](/fairy-tales-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

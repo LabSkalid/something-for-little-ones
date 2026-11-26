@@ -1,7 +1,7 @@
 ---
 title: Animal Coloring Pages
-description: Animal Coloring Pages for ages 3 to 8. Puppy, Happy Panda in Bamboo, Jaguar, and Sloth Bear. Pick a page and print the PDF.
-tagline: Puppy, Happy Panda in Bamboo, Jaguar, and Sloth Bear. Grouped by age, ages 3 to 8.
+description: Animal coloring pages for ages 3 to 8. Pets and wild animals on white—not full farm or forest scenes.
+tagline: One animal per page, from thick lines up to a fuller scene—sorted by age, about ages 3 to 8.
 kind: evergreen
 ageBand: "5-6"
 order: 1
@@ -12,7 +12,7 @@ related:
   - woodland-animal-coloring-pages
   - farm-animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - animal coloring pages
   - animal
@@ -40,6 +40,8 @@ pins:
     subtitle: Printable coloring pages for ages 3 to 8
 ---
 
-This collection features animal coloring pages, with designs such as Puppy, Happy Panda in Bamboo, and Jaguar. Pages are grouped by age, ages 3 to 8.
+Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Each animal is one subject on the page—not a full farm or forest scene. For huge first animals, try [First Animal Coloring Pages](/first-animal-coloring-pages/). For busier woods or barn scenes, see [Woodland Animal Coloring Pages](/woodland-animal-coloring-pages/) or [Farm Animal Coloring Pages](/farm-animal-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

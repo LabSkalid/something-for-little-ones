@@ -1,7 +1,7 @@
 ---
 title: First Animal Coloring Pages
-description: First Animal Coloring Pages for about ages 2 to 3. Puppy, Bird, Butterfly, and Cat. Pick a page and print the PDF.
-tagline: Puppy, Bird, Butterfly, and Cat. For about ages 2 to 3.
+description: First animal coloring pages for ages 2 to 3. One huge animal per page with extra-thick outlines for toddlers.
+tagline: One huge animal per page—extra-thick lines for about ages 2 to 3.
 kind: evergreen
 ageBand: "2-3"
 order: 2
@@ -35,6 +35,6 @@ pins:
     subtitle: Printable coloring pages for about ages 2 to 3
 ---
 
-This collection features first animal coloring pages, with designs such as Puppy, Bird, and Butterfly. They are drawn for about ages 2 to 3.
+When your child is ready for more parts, move to [Animal Coloring Pages](/animal-coloring-pages/) (ages 3–8).
 
-Download the PDF, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

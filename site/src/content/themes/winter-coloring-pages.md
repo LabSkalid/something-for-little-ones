@@ -1,7 +1,7 @@
 ---
 title: Winter Coloring Pages
-description: Winter Coloring Pages for ages 2 to 8. Mitten, Snowman, Rocking Chair With Blanket, and Snow. Pick a page and print the PDF.
-tagline: Mitten, Snowman, Rocking Chair With Blanket, and Snow. Grouped by age, ages 2 to 8.
+description: Winter coloring pages for ages 2 to 8. Snow and cozy pictures without the Christmas gift-and-Santa focus.
+tagline: Mittens, snowmen, and cozy cold-weather scenes—ages 2 to 8. Not the Christmas Santa set.
 kind: seasonal
 ageBand: "5-6"
 order: 6
@@ -39,6 +39,8 @@ pins:
     subtitle: Printable coloring pages for ages 2 to 8
 ---
 
-This collection features winter coloring pages, with designs such as Mitten, Snowman, and Rocking Chair With Blanket. Pages are grouped by age, ages 2 to 8.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Cozy cold-weather scenes here—mittens, sledding, cocoa—not trees with presents and Santa. For December holiday symbols, open [Christmas Coloring Pages](/christmas-coloring-pages/). For the nativity, see [Christian Christmas Coloring Pages](/christian-christmas-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.

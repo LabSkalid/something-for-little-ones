@@ -31,6 +31,8 @@ pins:
     subtitle: Nativity, angels, and Bible verses
 ---
 
-This collection features christian christmas coloring pages, with designs such as Praying Angels, Huge Cross, and Pointed Star.
+Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Download the PDF, not a screenshot of this page.
+Nativity, angels, and verses here—not Santa and gift piles. For secular December fun, open [Christmas Coloring Pages](/christmas-coloring-pages/).
+
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
