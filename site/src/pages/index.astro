@@ -7,6 +7,7 @@ import { absoluteUrl, site } from '../site';
 import { ageBandLabel, ageBands, ageSpanLabel } from '../lib/ages';
 import { pinPath, sheetAssets, themePath } from '../lib/paths';
 import { publisherRef, websiteId } from '../lib/schema';
+import { seasonalCollectionEyebrow } from '../lib/seasonal-label';
 import { getCurrentSeason } from '../lib/seasons';
 
 const themes = (await getCollection('themes')).sort((a, b) => a.data.order - b.data.order);
@@ -208,6 +209,7 @@ const jsonLd = {
                 image={art.src}
                 imageAlt={art.alt}
                 count={art.count}
+                eyebrow={seasonalCollectionEyebrow(theme.id)}
               />
             );
           })}
@@ -238,7 +240,7 @@ const jsonLd = {
       <div class="section-head">
         <h2>Find a coloring page by theme</h2>
         <p>
-          Pick a favorite subject, from animals and dinosaurs to cars, rockets, princesses, gardens, and ocean scenes. Holiday and seasonal pages are in the Holidays section below.
+          Pick a favorite subject, from animals and dinosaurs to cars, rockets, princesses, gardens, and ocean scenes. Seasons and holiday pages are in the section below.
         </p>
       </div>
       <ul class="age-choices">
@@ -252,8 +254,8 @@ const jsonLd = {
         ))}
         <li>
           <a class="age-choice" href="#holidays">
-            <strong>Holidays</strong>
-            <span>Seasonal pages</span>
+            <strong>Seasons &amp; holidays</strong>
+            <span>Time-of-year pages</span>
           </a>
         </li>
       </ul>
@@ -287,8 +289,8 @@ const jsonLd = {
 
     <section class="section" id="holidays">
       <div class="section-head">
-        <h2>Holiday and seasonal coloring pages</h2>
-        <p>Seasonal coloring pages for every time of year. Open a holiday, then pick an age.</p>
+        <h2>Seasons and holiday coloring pages</h2>
+        <p>Fall, winter, spring, and holiday sets for every time of year. Open a collection, then pick an age.</p>
       </div>
       <div class="theme-grid">
         {holidayTiles.map(({ theme }) => {
@@ -301,7 +303,7 @@ const jsonLd = {
               image={art.src}
               imageAlt={art.alt}
               count={art.count}
-              eyebrow="Holiday"
+              eyebrow={seasonalCollectionEyebrow(theme.id)}
             />
           );
         })}

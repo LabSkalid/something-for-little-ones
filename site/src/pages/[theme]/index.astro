@@ -13,6 +13,7 @@ import { pinPath, sheetPath, themePath, sheetAssets } from '../../lib/paths';
 import { breadcrumbLd, founderId, publisherRef } from '../../lib/schema';
 import { absoluteUrl, site } from '../../site';
 import { ageBandLabel, ageBands, ageSpanLabel } from '../../lib/ages';
+import { seasonalCollectionEyebrow } from '../../lib/seasonal-label';
 
 export async function getStaticPaths() {
   const themes = await getCollection('themes');
@@ -49,7 +50,7 @@ const ageGroups = ageBands
 const multiAge = ageGroups.length > 1;
 const groupedByAge = seasonal || multiAge;
 const themeEyebrow = seasonal
-  ? 'Holiday'
+  ? seasonalCollectionEyebrow(theme.id)
   : multiAge
     ? ageSpanLabel(listedSheets.map((sheet) => sheet.data.age))
     : ageBandLabel(theme.data.ageBand);
