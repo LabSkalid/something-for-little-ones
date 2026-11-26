@@ -12,8 +12,15 @@ related:
   - simple-vehicle-coloring-pages
   - big-shape-coloring-pages
   - animal-coloring-pages
+featuredSheets:
+  - theme: spring-coloring-pages
+    slug: planting-seeds
+  - theme: spring-coloring-pages
+    slug: watering-flowers
+  - theme: spring-coloring-pages
+    slug: cherry-blossom-tree
 pubDate: 2026-10-05
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - garden coloring pages
   - coloring pages for ages 4-5
@@ -28,7 +35,9 @@ faqs:
   - question: What paper size are the files?
     answer: I made these for letter paper. There's an A4 file too if that's what you have. Same drawing.
   - question: How is this set different from spring coloring pages?
-    answer: These garden pages are year-round yard scenes and tools. The spring set is seasonal. A few pictures may look similar, but the spring pages are titled and described for spring, while these focus on the garden object or gate.
+    answer: Spring is a big seasonal set for ages 3 to 8—first flowers, rain, and holiday scenes. Garden is smaller and stays at about ages 4 to 5 year-round, with yard tools and simple garden objects. A few spring pages also show up here when the age and topic fit (like planting seeds); each opens on its own spring page with the same PDF.
+  - question: Why do I see spring pages on this garden list?
+    answer: Those cards are shortcuts. The file and description stay on the spring page. I only surface them here when they match ages 4 to 5 and real garden work, so you do not need a second copy.
 pins:
   - id: set
     title: Garden Coloring Pages
