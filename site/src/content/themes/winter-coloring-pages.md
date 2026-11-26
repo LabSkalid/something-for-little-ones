@@ -12,7 +12,7 @@ related:
   - fall-coloring-pages
   - animal-coloring-pages
 pubDate: 2026-10-08
-updatedDate: 2026-11-17
+updatedDate: 2026-11-26
 keywords:
   - winter coloring pages
   - winter
