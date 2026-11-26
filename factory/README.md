@@ -43,10 +43,10 @@
 
 Не вставляй в студию нумерованные списки с пометками вроде «skip», «optional», «или» — иначе slug станет обрезком всей строки.
 
-Примеры: `ocean-scene-expansion.yaml` (оставшийся лист `stingray-reef`), `town-scene-expansion.yaml`, `farm-animal-expansion.yaml`, `woodland-animal-expansion.yaml`.
+Дорисовки Town / Farm / Woodland / Ocean (Nov 2026) закрыты — промпты в `briefs/archive/`, повторно produce не нужен. Новые листы: студия, поле «Рисунки».
 
 ```text
-npm run produce -- briefs/town-scene-expansion.yaml
+npm run produce -- briefs/garden-coloring-pages.yaml
 ```
 
 Вкладка **Картинки на сайт**.

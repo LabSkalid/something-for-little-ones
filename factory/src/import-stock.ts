@@ -10,7 +10,15 @@ import { loadEnv } from './env.ts';
 import { visionChat } from './openrouter.ts';
 import { pngToPdf } from './pdf.ts';
 import { factoryRoot, printRoot, sheetContentRoot, themeContentRoot } from './paths.ts';
-import { buildThemeBody, exampleNames, listEnglish } from './theme-copy.ts';
+import {
+  HUB_THEME_BODIES,
+  HUB_THEME_LEDE,
+  buildThemeBody,
+  exampleNames,
+  ledeLooksLikeCatalog,
+  listEnglish,
+  themeBodyIsBoilerplate,
+} from './theme-copy.ts';
 
 /** Write through a temp file + retries — Windows often locks PDFs (Defender / preview). */
 async function writeFileSafe(dest: string, data: Buffer | string) {
@@ -1039,15 +1047,23 @@ export async function rewriteThemeBody(theme: string) {
 
   const hadTagline = Boolean(String(data.tagline ?? '').trim());
   const hadDescription = Boolean(String(data.description ?? '').trim());
-  if (!hadDescription) {
-    data.description = examplePhrase
-      ? `${collectionTitle} for ${span}. ${examplePhrase}. Pick a page and print the PDF.`
-      : `${collectionTitle} for ${span}. Pick a page and print the PDF.`;
-  }
-  if (!hadTagline) {
-    data.tagline = multiAge
-      ? `Printable ${short.toLowerCase()} coloring pages by age (${span}). Pick the block that matches the lines.`
-      : `Printable ${short.toLowerCase()} coloring pages for ${span}. Thick outlines, ready to download as PDF.`;
+  const taglineText = String(data.tagline ?? '');
+  const descriptionText = String(data.description ?? '');
+  const hubLede = HUB_THEME_LEDE[theme];
+  const staleLede = ledeLooksLikeCatalog(taglineText, descriptionText);
+
+  if (hubLede && staleLede) {
+    data.tagline = hubLede.tagline;
+    data.description = hubLede.description;
+  } else {
+    if (!hadDescription) {
+      data.description = `${collectionTitle} for ${span}. Bold outlines and print-ready PDFs for home or classroom.`;
+    }
+    if (!hadTagline) {
+      data.tagline = multiAge
+        ? `${short} coloring pages by age (${span}). Match the lines to your child, not only the birthday.`
+        : `${short} coloring pages for ${span}. Printable PDFs with bold outlines.`;
+    }
   }
   data.ageBand = mostCommonAge(ages);
   const keptRelated = Array.isArray(data.related)
@@ -1067,11 +1083,14 @@ export async function rewriteThemeBody(theme: string) {
     });
   }
 
-  const body = buildThemeBody(
-    collectionTitle,
-    examples.length ? examples : sheets.map((sheet) => sheet.title),
-    { ageSpan: span, multiAge },
-  );
+  const oldBody = (match[2] ?? '').trim();
+  const body = themeBodyIsBoilerplate(oldBody)
+    ? HUB_THEME_BODIES[theme] ??
+      buildThemeBody(collectionTitle, sheets.map((sheet) => sheet.title), {
+        ageSpan: span,
+        multiAge,
+      })
+    : oldBody;
   const yamlText = stringify(data, { lineWidth: 0 })
     .trim()
     .replace(/^ageBand:\s*["']?([^"'\n]+)["']?\s*$/m, 'ageBand: "$1"');

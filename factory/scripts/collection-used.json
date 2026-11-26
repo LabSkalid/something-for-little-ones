@@ -495,10 +495,30 @@
   ],
   "town-scene-coloring-pages": [
     "bakery-window",
+    "bus-stop-shelter",
+    "fire-station",
+    "flower-cart",
     "greenhouse",
     "hot-air-balloon",
+    "library-front",
     "passenger-train",
+    "pizza-shop-window",
+    "playground-equipment",
+    "town-park-fountain",
+    "train-platform",
     "treehouse"
+  ],
+  "farm-animal-coloring-pages": [
+    "barn-interior",
+    "bunny-by-the-cottage-pond",
+    "cat-by-the-cottage-pond",
+    "chicken-coop",
+    "cow-hen-and-ducks",
+    "farm-cottage-and-duck",
+    "horse-cow-and-sheep",
+    "pig-pen",
+    "sheep-pasture",
+    "tractor-in-field"
   ],
   "winter-coloring-pages": [
     "bakery-cafe-winter",
@@ -595,11 +615,16 @@
     "wise-owl-branch"
   ],
   "woodland-animal-coloring-pages": [
+    "bear-cub-berries",
+    "woodland-badger",
     "woodland-deer",
     "woodland-fox",
     "woodland-hedgehog",
     "woodland-owl",
-    "woodland-squirrel"
+    "woodland-rabbit",
+    "woodland-raccoon",
+    "woodland-squirrel",
+    "woodland-woodpecker"
   ],
   "fall-coloring-pages": [
     {
