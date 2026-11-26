@@ -11,6 +11,17 @@ related:
   - garden-coloring-pages
   - st-patricks-day-coloring-pages
   - valentines-day-coloring-pages
+featuredSheets:
+  - theme: animal-coloring-pages
+    slug: bunny-and-butterfly
+  - theme: animal-coloring-pages
+    slug: cute-fox-cherry-blossom
+  - theme: animal-coloring-pages
+    slug: baby-giraffe-flowers-2
+  - theme: animal-coloring-pages
+    slug: baby-birds-nest
+  - theme: animal-coloring-pages
+    slug: ladybug-on-flower
 pubDate: 2026-11-23
 updatedDate: 2026-11-26
 keywords:

@@ -10,8 +10,11 @@ ink: "#243038"
 related:
   - spring-coloring-pages
   - st-patricks-day-coloring-pages
+featuredSheets:
+  - theme: animal-coloring-pages
+    slug: bunny-painting-flowers
 pubDate: 2026-11-25
-updatedDate: 2026-11-25
+updatedDate: 2026-11-26
 keywords:
   - easter coloring pages
   - easter

@@ -18,6 +18,8 @@ featuredSheets:
     slug: fox-and-pumpkin
   - theme: animal-coloring-pages
     slug: cute-squirrel-acorns
+  - theme: animal-coloring-pages
+    slug: cute-bear-autumn-harvest
 pubDate: 2026-10-05
 updatedDate: 2026-11-26
 keywords:
