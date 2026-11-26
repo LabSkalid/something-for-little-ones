@@ -12,7 +12,7 @@ related:
   - animal-coloring-pages
   - farm-animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-11-27
+updatedDate: 2026-11-28
 keywords:
   - woodland animal coloring pages
   - woodland animal
@@ -29,6 +29,8 @@ faqs:
     answer: They are drawn for about ages 6 to 8. Each page is a simple forest scene, not one huge shape.
   - question: Where are the simpler animal pages?
     answer: Huge first animals for about ages 2 to 3 are a separate set. Everyday animals for ages 3 to 8 are a separate set too.
+  - question: Are gorillas and tapirs in this woodland set?
+    answer: No. Gorillas and tapirs are in the big Animal coloring pages set, not here. This collection is temperate forest animals like fox, deer, and owl.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?

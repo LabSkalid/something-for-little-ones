@@ -13,6 +13,8 @@ related:
   - big-shape-coloring-pages
   - animal-coloring-pages
 featuredSheets:
+  - theme: animal-coloring-pages
+    slug: kitten-flower-pot
   - theme: spring-coloring-pages
     slug: planting-seeds
   - theme: spring-coloring-pages
@@ -20,7 +22,7 @@ featuredSheets:
   - theme: spring-coloring-pages
     slug: cherry-blossom-tree
 pubDate: 2026-10-05
-updatedDate: 2026-11-26
+updatedDate: 2026-11-28
 keywords:
   - garden coloring pages
   - garden

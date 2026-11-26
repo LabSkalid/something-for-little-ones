@@ -2,9 +2,9 @@
 title: "Hippopotamus Coloring Page"
 theme: animal-coloring-pages
 slug: hippopotamus
-description: "A cute hippopotamus stands in shallow water, ready for your child to bring it to life with vibrant colors and creative flair."
+description: "A hippopotamus standing in shallow water. African rivers and lakes, not temperate forest animals."
 alt: "A friendly hippopotamus with a wide snout and small ears stands in shallow water. Its body is large and round."
-parentNote: "Encourage your child to think about where a hippopotamus lives and what colors they might see in that environment. They could use shades of gray, brown, or even purple for the hippo, and blues and greens for the water and surrounding plants."
+parentNote: "Hippo body first, then the water line. River plants are optional after the face is done."
 order: 7
 difficulty: medium
 age: "5-6"

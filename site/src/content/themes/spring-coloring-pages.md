@@ -22,8 +22,18 @@ featuredSheets:
     slug: baby-birds-nest
   - theme: animal-coloring-pages
     slug: ladybug-on-flower
+  - theme: animal-coloring-pages
+    slug: bear-in-teacup
+  - theme: animal-coloring-pages
+    slug: hen-and-chicks-mushrooms
+  - theme: animal-coloring-pages
+    slug: bunny-and-carrots
+  - theme: animal-coloring-pages
+    slug: duckling-and-dragonfly
+  - theme: animal-coloring-pages
+    slug: cute-turtle-pond
 pubDate: 2026-11-23
-updatedDate: 2026-11-27
+updatedDate: 2026-11-28
 keywords:
   - spring coloring pages
   - spring

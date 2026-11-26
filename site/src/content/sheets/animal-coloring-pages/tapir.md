@@ -2,9 +2,9 @@
 title: "Tapir Coloring Page"
 theme: animal-coloring-pages
 slug: tapir
-description: "A simple coloring page featuring a tapir, perfect for young children to express their creativity and learn about this unique animal."
+description: "A tapir in profile, a jungle animal from Central and South America and parts of Asia, with its short trunk-like snout."
 alt: "A simple line drawing of a tapir standing in profile, with a short, thick body, four legs, and a distinctive long snout."
-parentNote: "Your child might enjoy coloring the tapir's body in shades of brown or black, paying attention to the unique white or cream markings some tapirs have. Encourage them to imagine what the tapir might be doing in its habitat, perhaps adding some green leaves or a muddy puddle around its feet."
+parentNote: "Body and legs first, then the snout and ears. Tapirs live in tropical rainforest and wetland edges, not the woodland animal hub. They are in this big Animals set only."
 order: 112
 difficulty: detailed
 age: "6-8"

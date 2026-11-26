@@ -13,6 +13,10 @@ related:
   - christmas-coloring-pages
 featuredSheets:
   - theme: animal-coloring-pages
+    slug: hedgehog-and-apple
+  - theme: animal-coloring-pages
+    slug: raccoon-apple-stump
+  - theme: animal-coloring-pages
     slug: mouse-and-pumpkin
   - theme: animal-coloring-pages
     slug: fox-and-pumpkin
@@ -21,7 +25,7 @@ featuredSheets:
   - theme: animal-coloring-pages
     slug: cute-bear-autumn-harvest
 pubDate: 2026-10-05
-updatedDate: 2026-11-27
+updatedDate: 2026-11-28
 keywords:
   - fall coloring pages
   - autumn coloring pages
