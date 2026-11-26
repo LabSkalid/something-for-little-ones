@@ -8,6 +8,7 @@ order: 9
 accent: "#1D7AD6"
 ink: "#243038"
 related:
+  - garden-coloring-pages
   - st-patricks-day-coloring-pages
   - valentines-day-coloring-pages
 pubDate: 2026-11-23

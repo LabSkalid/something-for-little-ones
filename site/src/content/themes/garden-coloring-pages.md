@@ -8,12 +8,12 @@ order: 1
 accent: "#1D7AD6"
 ink: "#241C18"
 related:
+  - spring-coloring-pages
   - simple-vehicle-coloring-pages
   - big-shape-coloring-pages
-  - ocean-scene-coloring-pages
   - animal-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-11-26
 keywords:
   - garden coloring pages
   - coloring pages for ages 4-5
@@ -27,6 +27,8 @@ faqs:
     answer: Yes. The animal, dinosaur, car, and princess sets are for ages 3 to 4, with thicker areas and fewer pieces. These garden pages add a second object and a few medium details.
   - question: What paper size are the files?
     answer: I made these for letter paper. There's an A4 file too if that's what you have. Same drawing.
+  - question: How is this set different from spring coloring pages?
+    answer: These garden pages are year-round yard scenes and tools. The spring set is seasonal. A few pictures may look similar, but the spring pages are titled and described for spring, while these focus on the garden object or gate.
 pins:
   - id: set
     title: Garden Coloring Pages
