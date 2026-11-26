@@ -1,7 +1,7 @@
 ---
 title: Spring Coloring Pages
-description: Spring Coloring Pages for ages 3 to 8. Seasonal flowers, blooming trees, gardens, spring weather, and outdoor landscapes. Pick a page and print the PDF.
-tagline: Spring Sunshine, Watering Flowers, Spring Cottage, and Secret Spring Garden. Grouped by age, ages 3 to 8.
+description: Spring Coloring Pages for ages 3 to 8. First Snowdrops, Watering Flowers, Spring Cottage, and Secret Spring Garden. Pick a page and print the PDF.
+tagline: First Snowdrops, Watering Flowers, Spring Cottage, and Secret Spring Garden. Grouped by age, ages 3 to 8.
 kind: seasonal
 ageBand: "3-4"
 order: 9
@@ -11,18 +11,18 @@ related:
   - st-patricks-day-coloring-pages
   - valentines-day-coloring-pages
 pubDate: 2026-11-23
-updatedDate: 2026-11-23
+updatedDate: 2026-11-26
 keywords:
   - spring coloring pages
   - spring
-  - spring sunshine coloring page
+  - first snowdrops coloring page
   - watering flowers coloring page
   - spring cottage coloring page
   - secret spring garden coloring page
+  - spring sunshine coloring page
   - first spring flower coloring page
   - rainy day coloring page
   - rainbow in the sky coloring page
-  - first snowdrops coloring page
 faqs:
   - question: What ages are these spring coloring pages for?
     answer: They are grouped by age, ages 3 to 8. Match the lines, not the birthday. ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
@@ -36,6 +36,6 @@ pins:
     subtitle: Printable coloring pages for ages 3 to 8
 ---
 
-This collection features spring coloring pages, with designs such as Spring Sunshine, Watering Flowers, and Spring Cottage. Pages are grouped by age, ages 3 to 8.
+This collection features spring coloring pages, with designs such as First Snowdrops, Watering Flowers, and Spring Cottage. Pages are grouped by age, ages 3 to 8.
 
 Download the PDF, not a screenshot of this page.
