@@ -1,7 +1,7 @@
 ---
 title: Fairy Tales
-description: Fairy tale coloring pages for ages 3 to 8. Classic story moments, grouped by line weight—not movie characters.
-tagline: Classic story moments—Goldilocks, gingerbread house, and more—sorted by age, ages 3 to 8.
+description: Fairy tale coloring pages for ages 3 to 8. Classic story moments, grouped by line weight, not movie characters.
+tagline: Classic story moments from Goldilocks, gingerbread house, and more. Sorted by age, ages 3 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 14
@@ -40,4 +40,4 @@ Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only t
 
 For a generic gown and castle without a named story, try [Princess Coloring Pages](/princess-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

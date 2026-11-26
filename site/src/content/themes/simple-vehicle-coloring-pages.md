@@ -36,4 +36,4 @@ These pages are drawn for about ages 4 to 5. One vehicle per page with a few mor
 
 For fewer pieces and ages 3 to 4, open [Car Coloring Pages](/car-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

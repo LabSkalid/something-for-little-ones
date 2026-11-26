@@ -34,8 +34,8 @@ pins:
     subtitle: Fire truck, dump truck, and pickup
 ---
 
-These pages are drawn for about ages 3 to 4. Side views with large wheels—not logos or street scenes.
+These pages are drawn for about ages 3 to 4. Side views with large wheels, not logos or street scenes.
 
 When your child is ready for a train, boat, or tractor with more parts, try [Simple Vehicle Coloring Pages](/simple-vehicle-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

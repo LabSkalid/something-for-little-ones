@@ -1,7 +1,7 @@
 ---
 title: Valentine's Day Coloring Pages
-description: Valentine's Day coloring pages for ages 2 to 8. Hearts, gifts, and friendly bunnies—sorted by how busy the lines are.
-tagline: Hearts, gifts, and friendly bunnies—sorted by age, ages 2 to 8.
+description: Valentine's Day coloring pages for ages 2 to 8. Hearts, gifts, and friendly bunnies, sorted by how busy the lines are.
+tagline: Hearts, gifts, and friendly bunnies, sorted by age, ages 2 to 8.
 kind: seasonal
 ageBand: "6-8"
 order: 7
@@ -38,4 +38,4 @@ pins:
 
 Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

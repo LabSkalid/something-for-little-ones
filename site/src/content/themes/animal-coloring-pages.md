@@ -1,7 +1,7 @@
 ---
 title: Animal Coloring Pages
-description: Animal coloring pages for ages 3 to 8. Pets and wild animals on white—not full farm or forest scenes.
-tagline: One animal per page, from thick lines up to a fuller scene—sorted by age, about ages 3 to 8.
+description: Animal coloring pages for ages 3 to 8. Pets and wild animals on white, not full farm or forest scenes.
+tagline: One animal per page, from thick lines up to a fuller scene, sorted by age, about ages 3 to 8.
 kind: evergreen
 ageBand: "5-6"
 order: 1
@@ -42,6 +42,6 @@ pins:
 
 Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only the birthday.
 
-Each animal is one subject on the page—not a full farm or forest scene. For huge first animals, try [First Animal Coloring Pages](/first-animal-coloring-pages/). For busier woods or barn scenes, see [Woodland Animal Coloring Pages](/woodland-animal-coloring-pages/) or [Farm Animal Coloring Pages](/farm-animal-coloring-pages/).
+Each animal is one subject on the page, not a full farm or forest scene. For huge first animals, try [First Animal Coloring Pages](/first-animal-coloring-pages/). For busier woods or barn scenes, see [Woodland Animal Coloring Pages](/woodland-animal-coloring-pages/) or [Farm Animal Coloring Pages](/farm-animal-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

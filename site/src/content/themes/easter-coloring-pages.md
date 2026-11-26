@@ -1,7 +1,7 @@
 ---
 title: Easter Coloring Pages
-description: Easter coloring pages for ages 2 to 8. Eggs, bunnies, lambs, and baskets—not general spring weather pages.
-tagline: Eggs, bunnies, lambs, and baskets—sorted by age, ages 2 to 8.
+description: Easter coloring pages for ages 2 to 8. Eggs, bunnies, lambs, and baskets, not general spring weather pages.
+tagline: Eggs, bunnies, lambs, and baskets, sorted by age, ages 2 to 8.
 kind: seasonal
 ageBand: "5-6"
 order: 10
@@ -45,4 +45,4 @@ Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only t
 
 For rain, flowers, and cottages without Easter symbols, use [Spring Coloring Pages](/spring-coloring-pages/) instead.
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

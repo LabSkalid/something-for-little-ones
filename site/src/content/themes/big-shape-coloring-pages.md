@@ -32,8 +32,8 @@ pins:
     subtitle: Huge shapes for ages 2–3
 ---
 
-These pages are drawn for about ages 2 to 3. One object, a few huge areas—a child who is still scribbling can finish quickly.
+These pages are drawn for about ages 2 to 3. One object, a few huge areas. A child who is still scribbling can finish quickly.
 
 When they want a named animal instead of a shape, try [First Animal Coloring Pages](/first-animal-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

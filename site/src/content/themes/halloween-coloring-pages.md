@@ -37,6 +37,6 @@ pins:
 
 Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Friendly faces only—no scary close-ups. For harvest leaves and apples without costumes, open [Fall Coloring Pages](/fall-coloring-pages/).
+Friendly faces only, no scary close-ups. For harvest leaves and apples without costumes, open [Fall Coloring Pages](/fall-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

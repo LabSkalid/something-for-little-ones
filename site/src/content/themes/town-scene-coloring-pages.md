@@ -1,7 +1,7 @@
 ---
 title: Town Scene Coloring Pages
 description: Town and village coloring pages for ages 6 to 8. Bakery windows, trains, parks, and street scenes with many areas to color.
-tagline: Town and village scenes with patterns and extra detail—for a longer coloring sit, about ages 6 to 8.
+tagline: Town and village scenes with patterns and extra detail, for a longer coloring sit, about ages 6 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 1
@@ -39,4 +39,4 @@ pins:
 
 For simpler vehicles and one big object per page, try [Simple Vehicle Coloring Pages](/simple-vehicle-coloring-pages/) (ages 4–5) or [Car Coloring Pages](/car-coloring-pages/) (ages 3–4).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

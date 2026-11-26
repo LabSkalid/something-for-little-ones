@@ -40,6 +40,6 @@ pins:
 
 Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-December trees, gifts, and Santa live here—not cozy snow without holiday symbols. For mittens and cocoa only, try [Winter Coloring Pages](/winter-coloring-pages/). For the nativity, see [Christian Christmas Coloring Pages](/christian-christmas-coloring-pages/).
+December trees, gifts, and Santa live here, not cozy snow without holiday symbols. For mittens and cocoa only, try [Winter Coloring Pages](/winter-coloring-pages/). For the nativity, see [Christian Christmas Coloring Pages](/christian-christmas-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

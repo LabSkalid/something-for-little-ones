@@ -1,7 +1,7 @@
 ---
 title: Spring Coloring Pages
-description: Spring coloring pages for ages 3 to 8. Weather, flowers, and cottages—not the Easter egg collection.
-tagline: Rain, flowers, cottages, and sunshine—sorted by age, ages 3 to 8. Not the Easter egg set.
+description: Spring coloring pages for ages 3 to 8. Weather, flowers, and cottages, not the Easter egg collection.
+tagline: Rain, flowers, cottages, and sunshine, sorted by age, ages 3 to 8. Not the Easter egg set.
 kind: seasonal
 ageBand: "3-4"
 order: 9
@@ -39,7 +39,7 @@ faqs:
   - question: What ages are these spring coloring pages for?
     answer: They are grouped by age, ages 3 to 8. Match the lines, not the birthday. ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
   - question: Are these the same as the Easter coloring pages?
-    answer: No. Spring here means weather and gardens—rain, flowers, cottages, and longer outdoor scenes. Easter coloring pages are eggs, bunnies, and church-season symbols. Both can fit March and April, but the subjects are different.
+    answer: No. Spring here means weather and gardens with rain, flowers, cottages, and longer outdoor scenes. Easter coloring pages are eggs, bunnies, and church-season symbols. Both can fit March and April, but the subjects are different.
   - question: How is this different from Garden coloring pages?
     answer: Garden is one age band only, ages 4 to 5, with chunky tools and plants on white. Spring is wider ages 3 to 8, with full scenes such as cottages and secret gardens. Use Garden when you want a short tool-or-pot picture; use Spring when you want a bigger seasonal scene.
   - question: Which file should I print?
@@ -54,6 +54,6 @@ pins:
 
 Pages are sorted by age (ages 3 to 8). Match the lines to your child, not only the birthday.
 
-These are general spring pictures—showers, gardens, and sunshine—not Easter eggs and baskets. For holiday bunnies and lambs, open [Easter Coloring Pages](/easter-coloring-pages/). For one age band of garden tools, try [Garden Coloring Pages](/garden-coloring-pages/).
+These are general spring pictures with showers, gardens, and sunshine. Not Easter eggs and baskets. For holiday bunnies and lambs, open [Easter Coloring Pages](/easter-coloring-pages/). For one age band of garden tools, try [Garden Coloring Pages](/garden-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

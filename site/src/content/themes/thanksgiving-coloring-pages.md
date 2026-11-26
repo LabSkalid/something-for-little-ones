@@ -39,6 +39,6 @@ pins:
 
 Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Turkeys, pie, and harvest food—not costumes or Halloween spooks. For autumn leaves without a feast, see [Fall Coloring Pages](/fall-coloring-pages/).
+Turkeys, pie, and harvest food, not costumes or Halloween spooks. For autumn leaves without a feast, see [Fall Coloring Pages](/fall-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

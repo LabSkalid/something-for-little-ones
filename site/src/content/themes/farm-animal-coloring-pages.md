@@ -1,7 +1,7 @@
 ---
 title: Farm Animal Coloring Pages
-description: Farm animal coloring pages for ages 6 to 8. Barn and pond scenes—not one huge animal on white.
-tagline: Farmyard scenes with several animals, a cottage, and a pond—busier lines for about ages 6 to 8.
+description: Farm animal coloring pages for ages 6 to 8. Barn and pond scenes, not one huge animal on white.
+tagline: Farmyard scenes with several animals, a cottage, and a pond, busier lines for about ages 6 to 8.
 kind: evergreen
 ageBand: "6-8"
 order: 2
@@ -36,8 +36,8 @@ pins:
     subtitle: Printable coloring pages for about ages 6 to 8
 ---
 
-These pages are drawn for about ages 6 to 8. Barnyard scenes with several animals—not one huge shape on white.
+These pages are drawn for about ages 6 to 8. Barnyard scenes with several animals, not one huge shape on white.
 
 For a single animal on thick lines, try [Animal Coloring Pages](/animal-coloring-pages/) or [First Animal Coloring Pages](/first-animal-coloring-pages/). For forest scenes, see [Woodland Animal Coloring Pages](/woodland-animal-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

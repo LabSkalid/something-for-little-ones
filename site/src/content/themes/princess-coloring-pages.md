@@ -34,8 +34,8 @@ pins:
     subtitle: Easy printables with no movie characters
 ---
 
-These pages are drawn for about ages 3 to 4. Generic storybook shapes—no movie character.
+These pages are drawn for about ages 3 to 4. Generic storybook shapes. No movie character.
 
 For fuller fairy-tale scenes at older ages, see [Fairy Tales](/fairy-tales-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

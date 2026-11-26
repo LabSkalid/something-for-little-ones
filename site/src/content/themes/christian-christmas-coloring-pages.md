@@ -33,6 +33,6 @@ pins:
 
 Pages are sorted by age (ages 2 to 8). Match the lines to your child, not only the birthday.
 
-Nativity, angels, and verses here—not Santa and gift piles. For secular December fun, open [Christmas Coloring Pages](/christmas-coloring-pages/).
+Nativity, angels, and verses here, not Santa and gift piles. For secular December fun, open [Christmas Coloring Pages](/christmas-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

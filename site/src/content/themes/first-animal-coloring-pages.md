@@ -1,7 +1,7 @@
 ---
 title: First Animal Coloring Pages
 description: First animal coloring pages for ages 2 to 3. One huge animal per page with extra-thick outlines for toddlers.
-tagline: One huge animal per page—extra-thick lines for about ages 2 to 3.
+tagline: One huge animal per page, extra-thick lines for about ages 2 to 3.
 kind: evergreen
 ageBand: "2-3"
 order: 2
@@ -37,4 +37,4 @@ pins:
 
 When your child is ready for more parts, move to [Animal Coloring Pages](/animal-coloring-pages/) (ages 3–8).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

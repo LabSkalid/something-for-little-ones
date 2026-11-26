@@ -34,8 +34,8 @@ pins:
     subtitle: Cute dinosaurs to print for kids
 ---
 
-These pages are drawn for about ages 3 to 4. Smiling dinos with thick lines—not a scary poster.
+These pages are drawn for about ages 3 to 4. Smiling dinos with thick lines, not a scary poster.
 
 For spots, patterns, and small scenes at about ages 5 to 6, open [Dinosaur Scene Coloring Pages](/dinosaur-scene-coloring-pages/).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.

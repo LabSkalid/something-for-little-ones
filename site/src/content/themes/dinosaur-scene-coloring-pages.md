@@ -1,7 +1,7 @@
 ---
 title: Dinosaur Scene Coloring Pages
-description: Dinosaur scene coloring pages for ages 5 to 6. Patterns and outdoor scenes—not the five huge dinos for ages 3–4.
-tagline: Dinosaurs with spots, patterns, and small scenes—for about ages 5 to 6, busier than the toddler dino set.
+description: Dinosaur scene coloring pages for ages 5 to 6. Patterns and outdoor scenes, not the five huge dinos for ages 3–4.
+tagline: Dinosaurs with spots, patterns, and small scenes, for about ages 5 to 6, busier than the toddler dino set.
 kind: evergreen
 ageBand: "5-6"
 order: 2
@@ -39,4 +39,4 @@ pins:
 
 For one smiling dino with thick lines, open [Dinosaur Coloring Pages](/dinosaur-coloring-pages/) (ages 3–4).
 
-Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF—same drawing, not a screenshot of this page.
+Each page above opens to a print-ready file. Use the Letter PDF or the A4 PDF. Same drawing, not a screenshot of this page.
