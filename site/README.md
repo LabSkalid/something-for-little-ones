@@ -35,11 +35,11 @@ Windows are checked **in array order**; the first match with a **non-empty** `th
 
 | Window | Dates | Themes |
 | --- | --- | --- |
-| Valentine’s | Feb 1–16 | *(empty — add when ready)* |
-| Spring | Mar 1 – May 15 | *(empty — Easter etc.)* |
-| Summer | Jun 1 – Aug 20 | *(empty — beach/ocean seasonal if needed)* |
-| Fall | Sep 1 – Nov 30 | Fall, Halloween, Thanksgiving |
-| Winter | Dec 1 – Jan 31 | Winter, Christmas, Christian Christmas |
+| Spring | Mar 1 – May 15 | Spring, Easter, Garden, St. Patrick’s |
+| Summer | Jun 1 – Aug 20 | Ocean (evergreen until a summer set exists) |
+| Fall | Sep 1 – Nov 23 | Fall, Halloween, Thanksgiving |
+| Winter | Nov 24 – Jan 1 | Winter, Christmas, Christian Christmas |
+| Late winter | Jan 2 – Feb 16 | Valentine’s, Winter |
 
 ### When a new holiday set is ready
 

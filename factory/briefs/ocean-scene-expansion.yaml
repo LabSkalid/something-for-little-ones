@@ -1,0 +1,25 @@
+# Only for pages not yet on the site. The nine ideas below are live under these slugs (Nov 2026).
+# Do not paste numbered notes into the studio — use slug + prompt per idea.
+slug: ocean-scene-coloring-pages
+title: Ocean Scene Coloring Pages
+tagline: Ocean scenes with patterns and several regions—for about ages 5 to 6.
+description: Ocean coloring pages for about ages 5 to 6. Coral reef, fish, seahorses, jellyfish, tide pool, and more.
+kind: evergreen
+ageBand: "5-6"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - ocean coloring pages
+  - ocean scene coloring pages
+related:
+  - dinosaur-scene-coloring-pages
+  - town-scene-coloring-pages
+audience: parents of children ages 5 to 6
+style: Underwater or coast coloring-book scene with thick closed black outlines and several medium-size regions to color. Not a single animal portrait on white. No shading, no text, no trademark characters.
+ideas:
+  - slug: stingray-reef
+    title: Stingray and Reef Coloring Page
+    age: "5-6"
+    difficulty: medium
+    prompt: One stingray gliding over sand, two small fish, two coral shapes, and kelp. Not an anglerfish. No mermaid. More separate closed regions than a single cartoon fish on white.

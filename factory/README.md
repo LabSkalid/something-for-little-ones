@@ -37,6 +37,18 @@
 
 ## Запуск по шагам: картинки на сайт
 
+### Новые листы из YAML (produce)
+
+Готовые задания лежат в `factory/briefs/`. У каждой идеи **обязателен** свой `slug:` и короткий `prompt:` (только сцена для рисования).
+
+Не вставляй в студию нумерованные списки с пометками вроде «skip», «optional», «или» — иначе slug станет обрезком всей строки.
+
+Примеры: `ocean-scene-expansion.yaml` (оставшийся лист `stingray-reef`), `town-scene-expansion.yaml`, `farm-animal-expansion.yaml`, `woodland-animal-expansion.yaml`.
+
+```text
+npm run produce -- briefs/town-scene-expansion.yaml
+```
+
 Вкладка **Картинки на сайт**.
 
 1. Подборка из списка или «Новая подборка» (тогда название, тип, основной возраст).

@@ -23,17 +23,21 @@ export const seasonWindows: SeasonWindow[] = [
   {
     id: 'spring',
     label: 'This spring',
-    blurb: 'Spring and Easter pages when you want something fresh to print.',
-    themeIds: [],
+    blurb: 'Spring weather, Easter, and chunky garden tools. Pick a set, then an age.',
+    themeIds: [
+      'spring-coloring-pages',
+      'easter-coloring-pages',
+      'garden-coloring-pages',
+      'st-patricks-day-coloring-pages',
+    ],
     start: { month: 3, day: 1 },
     end: { month: 5, day: 15 },
   },
   {
     id: 'summer',
     label: 'This summer',
-    blurb: 'Beach, ocean, and warm-weather pages for long afternoons.',
-    themeIds: [],
-    // ocean-scene is evergreen for now; swap in seasonal summer ids when ready
+    blurb: 'Ocean and warm-weather scenes for long afternoons. A summer set can join this strip later.',
+    themeIds: ['ocean-scene-coloring-pages'],
     start: { month: 6, day: 1 },
     end: { month: 8, day: 20 },
   },
@@ -49,10 +53,10 @@ export const seasonWindows: SeasonWindow[] = [
     start: { month: 9, day: 1 },
     end: { month: 11, day: 23 },
   },
-    {
+  {
     id: 'winter',
     label: 'This winter',
-    blurb: '',
+    blurb: 'Snow and cozy pages first, then Christmas. Pick a set, then an age.',
     themeIds: [
       'winter-coloring-pages',
       'christmas-coloring-pages',
@@ -63,12 +67,9 @@ export const seasonWindows: SeasonWindow[] = [
   },
   {
     id: 'late-winter',
-    label: 'This winter',
-    blurb: '',
-    themeIds: [
-      'winter-coloring-pages',
-      'valentines-day-coloring-pages',
-    ],
+    label: "Valentine's and winter",
+    blurb: 'Sweet February pages and a few more snowy pictures. Pick a set, then an age.',
+    themeIds: ['valentines-day-coloring-pages', 'winter-coloring-pages'],
     start: { month: 1, day: 2 },
     end: { month: 2, day: 16 },
   },

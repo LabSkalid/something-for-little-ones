@@ -1,0 +1,58 @@
+# New town pages only — run produce with this file. Slug + prompt per idea (no notes in the prompt line).
+slug: town-scene-coloring-pages
+title: Town Scene Coloring Pages
+tagline: Fuller town scenes for about ages 6 to 8.
+description: Town coloring pages for ages 6 to 8. Park, library, fire station, and more bold scenes.
+kind: evergreen
+ageBand: "6-8"
+order: 1
+accent: "#1D7AD6"
+ink: "#241C18"
+keywords:
+  - town coloring pages
+  - coloring pages for ages 6-8
+related:
+  - ocean-scene-coloring-pages
+audience: parents of children ages 6 to 8
+style: A fuller coloring-book scene with many colorable regions. Bold closed outlines, white background, no shading, no text, no logos.
+ideas:
+  - slug: town-park-fountain
+    title: Town Park Fountain Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A town park with one fountain, one bench, two trees, and a curved path. No people, no signs, no letters.
+  - slug: fire-station
+    title: Fire Station Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A fire station garage with one fire truck, an open bay door, and a coiled hose. No station name, no numbers.
+  - slug: library-front
+    title: Library Front Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A library building with steps, an arched door, and three windows showing books as rectangles. No lettering.
+  - slug: bus-stop-shelter
+    title: Bus Stop Shelter Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A bus stop shelter, one bus shape, a street lamp, and one tree. No route numbers, no signs with words.
+  - slug: flower-cart
+    title: Flower Cart Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A flower cart with buckets, bouquets, striped awning, and cobblestones. No price tags, no shop name.
+  - slug: playground-equipment
+    title: Playground Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A playground with a slide, swing frame, and sandbox edge. No children, no signs.
+  - slug: pizza-shop-window
+    title: Pizza Shop Window Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A pizza shop window with round pies on shelves and a striped awning. No shop name, no prices.
+  - slug: train-platform
+    title: Train Platform Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A train platform with one passenger car, a bench, and a clock face as a plain circle without numbers. No station name.

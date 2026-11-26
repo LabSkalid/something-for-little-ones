@@ -14,7 +14,7 @@ featuredSheets:
   - theme: animal-coloring-pages
     slug: bunny-painting-flowers
 pubDate: 2026-11-25
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - easter coloring pages
   - easter
@@ -29,6 +29,8 @@ keywords:
 faqs:
   - question: What ages are these easter coloring pages for?
     answer: They are grouped by age, ages 2 to 8. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
+  - question: Should I use these or the Spring coloring pages?
+    answer: Easter is for eggs, baskets, lambs, and bunny traditions. Spring is for rain, flowers, and general outdoor scenes without Easter symbols. For a classroom or church egg hunt, stay in this set. For “first flowers” or April showers, open Spring coloring pages.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?

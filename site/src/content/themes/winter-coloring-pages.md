@@ -12,7 +12,7 @@ related:
   - fall-coloring-pages
   - animal-coloring-pages
 pubDate: 2026-10-08
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - winter coloring pages
   - winter
@@ -27,6 +27,8 @@ keywords:
 faqs:
   - question: What ages are these winter coloring pages for?
     answer: They are grouped by age, ages 2 to 8. Match the lines, not the birthday. Ages 2–3 are one huge object; ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
+  - question: Are these the same as the Christmas coloring pages?
+    answer: No. This set is winter weather and cozy pictures—mittens, snowmen, sledding, hot cocoa, and similar scenes. It is not the December gift-and-Santa pile. Open Christmas coloring pages for trees and Santa, or Christian Christmas coloring pages for the nativity.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?

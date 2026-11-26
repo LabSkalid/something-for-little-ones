@@ -1,0 +1,43 @@
+# New farm scene pages only — ages 6-8 multi-animal scenes (not single animals from animal-coloring-pages).
+slug: farm-animal-coloring-pages
+title: Farm Animal Coloring Pages
+tagline: Farm scenes for about ages 6 to 8.
+description: Farm animal coloring pages for ages 6 to 8. Barn, pasture, tractor, and several animals together.
+kind: evergreen
+ageBand: "6-8"
+order: 2
+accent: "#C4783A"
+ink: "#241C18"
+keywords:
+  - farm animal coloring pages
+related:
+  - animal-coloring-pages
+  - woodland-animal-coloring-pages
+audience: parents of children ages 6 to 8
+style: A full farm scene with several animals and buildings. Bold closed outlines, white background, no text.
+ideas:
+  - slug: barn-interior
+    title: Barn Interior Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: Inside a barn with one horse, two hay bales, and a pitchfork leaning on the wall. Open door with sun stripes. No farmer, no signs.
+  - slug: pig-pen
+    title: Pig Pen Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A pig pen with two pigs, a trough, wooden fence, and one apple on the ground. No text.
+  - slug: tractor-in-field
+    title: Tractor in Field Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A tractor in a field with crop rows, one bird in the sky, and a distant barn shape. No brand logos, no numbers.
+  - slug: chicken-coop
+    title: Chicken Coop Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A chicken coop with one rooster, three hens, and a nest with eggs. No signs on the coop.
+  - slug: sheep-pasture
+    title: Sheep Pasture Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A pasture with fence, three sheep, one tree, and small puddles. Open sky, no farmhouse text.

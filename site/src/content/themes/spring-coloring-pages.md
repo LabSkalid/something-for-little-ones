@@ -23,7 +23,7 @@ featuredSheets:
   - theme: animal-coloring-pages
     slug: ladybug-on-flower
 pubDate: 2026-11-23
-updatedDate: 2026-11-26
+updatedDate: 2026-11-27
 keywords:
   - spring coloring pages
   - spring
@@ -38,6 +38,10 @@ keywords:
 faqs:
   - question: What ages are these spring coloring pages for?
     answer: They are grouped by age, ages 3 to 8. Match the lines, not the birthday. ages 3–4 are thick lines and big spaces; ages 4–5 add a few parts; ages 5–6 are a small scene; ages 6–8 are a fuller scene.
+  - question: Are these the same as the Easter coloring pages?
+    answer: No. Spring here means weather and gardens—rain, flowers, cottages, and longer outdoor scenes. Easter coloring pages are eggs, bunnies, and church-season symbols. Both can fit March and April, but the subjects are different.
+  - question: How is this different from Garden coloring pages?
+    answer: Garden is one age band only, ages 4 to 5, with chunky tools and plants on white. Spring is wider ages 3 to 8, with full scenes such as cottages and secret gardens. Use Garden when you want a short tool-or-pot picture; use Spring when you want a bigger seasonal scene.
   - question: Which file should I print?
     answer: Letter paper if that's what's in the printer. A4 if the pack says A4. Same drawing either way.
   - question: Can a classroom print the whole set?

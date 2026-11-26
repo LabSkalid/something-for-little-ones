@@ -13,7 +13,7 @@ related:
   - thanksgiving-coloring-pages
   - christian-christmas-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-22
+updatedDate: 2026-11-27
 keywords:
   - christmas coloring pages
   - santa coloring page
@@ -21,6 +21,8 @@ keywords:
 faqs:
   - question: Are these religious Christmas pages or general holiday pictures?
     answer: This set is the general December pile. Trees, gifts, a snowman, a reindeer, and Santa. It does not include a nativity scene. That set is the Christian Christmas coloring pages.
+  - question: What if we only want snow and mittens, not Santa?
+    answer: Open Winter coloring pages. That collection is cozy cold-weather pictures without the Christmas gift-and-Santa focus. You can still print a few pages from here when you want December symbols.
   - question: How do I pick an age?
     answer: Ages 2–3 are one huge tree, ornament, or present. Ages 3–4 are thick lines and big spaces. Ages 4–5 add a few parts. Ages 5–6 are a small scene. Ages 6–8 are a fuller scene with a pattern.
   - question: Which page works for a younger child?

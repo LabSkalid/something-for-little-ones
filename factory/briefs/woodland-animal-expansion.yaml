@@ -1,0 +1,43 @@
+# Temperate woodland only — no gorillas or jungle animals (those stay in animal-coloring-pages).
+slug: woodland-animal-coloring-pages
+title: Woodland Animal Coloring Pages
+tagline: Forest animals for about ages 6 to 8.
+description: Woodland animal coloring pages for ages 6 to 8. Fox, deer, badger, and simple forest scenes.
+kind: evergreen
+ageBand: "6-8"
+order: 2
+accent: "#2E6B4F"
+ink: "#241C18"
+keywords:
+  - woodland animal coloring pages
+related:
+  - animal-coloring-pages
+  - farm-animal-coloring-pages
+audience: parents of children ages 6 to 8
+style: A simple temperate forest scene with woodland animals. Bold closed outlines, no text.
+ideas:
+  - slug: woodland-badger
+    title: Woodland Badger Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A badger among fallen leaves and a log. Temperate forest, no tropical plants. No text.
+  - slug: woodland-raccoon
+    title: Woodland Raccoon Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A raccoon beside a stream with stones, ferns, and one tree trunk. No trash cans with labels.
+  - slug: woodland-rabbit
+    title: Woodland Rabbit Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A rabbit in brambles with berries and leaves. European-style woodland, not a farm garden.
+  - slug: woodland-woodpecker
+    title: Woodland Woodpecker Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A woodpecker on a birch tree trunk with a few holes and branches. No text.
+  - slug: bear-cub-berries
+    title: Bear Cub and Berries Coloring Page
+    age: "6-8"
+    difficulty: detailed
+    prompt: A bear cub reaching for berries on a bush, with pine trees in the background. Not a circus bear, no text.
