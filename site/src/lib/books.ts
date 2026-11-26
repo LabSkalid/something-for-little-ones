@@ -19,14 +19,15 @@ export const books: BookOffer[] = [
   {
     id: 'winter-christmas',
     title: 'Adorable Winter & Christmas Coloring Book',
-    body: '50 cute winter and Christmas coloring pages. Snowy play, cozy scenes, trees, presents, and holiday fun.',
+    body:
+      '50 adorable winter and Christmas coloring pages in one book. Cozy seasonal art for quiet afternoons.',
     bodyByTheme: {
       'winter-coloring-pages':
         '50 adorable winter and Christmas coloring pages in one book. Cozy seasonal art for quiet afternoons.',
       'christmas-coloring-pages':
         '50 adorable winter and Christmas coloring pages in one book. Holiday trees, presents, and festive scenes.',
     },
-    sheetPromo: '50 winter and Christmas pages in one book.',
+    sheetPromo: 'Adorable Winter & Christmas Coloring Book, 50 pages.',
     cover: '/books/adorable-winter-christmas-coloring-book.jpg',
     coverAlt: 'Cover of Adorable Winter Coloring Book: two children ice skating in the snow',
     amazonUrl: 'https://www.amazon.com/dp/B0HMMBW1F6',
@@ -41,9 +42,10 @@ export const books: BookOffer[] = [
     id: 'christian-christmas',
     title: 'Christmas Coloring Book for Kids',
     body: 'The Nativity, family Christmas traditions, and acts of kindness, in 35 coloring pages for ages 5–8. Celebrate the meaning of Christmas one picture at a time.',
-    sheetPromo: '35-page Christmas story and traditions book.',
+    sheetPromo: 'Christmas Coloring Book for Kids, 35 pages.',
     cover: '/books/cristian-christmas-coloring-book.jpg',
-    coverAlt: 'Cover of Cristian Christmass Coloring Book: from the Nativity story to the family traditions',
+    coverAlt:
+      'Cover of Christmas Coloring Book for Kids: the Nativity, traditions, and acts of kindness',
     amazonUrl: 'https://www.amazon.com/dp/B0HP9YGF6H',
     kofiUrl: 'https://ko-fi.com/s/0d6b5ac6dc',
     pages: 35,
@@ -55,14 +57,15 @@ export const books: BookOffer[] = [
   {
     id: 'garden-animals',
     title: 'Cute Garden Animals Coloring Book',
-    body: '60 charming garden-animal scenes with flowers, plants, and outdoor fun. A screen-free treat for little animal lovers ages 4–8.',
+    body:
+      '60 charming garden-animal coloring pages in one book. Flowers, plants, pumpkins, and playful outdoor scenes for ages 4–8.',
     bodyByTheme: {
       'garden-coloring-pages':
-        '60 garden-animal coloring pages in this book. Different art from the free garden-tool pages here.',
+        '60 charming garden-animal coloring pages in one book. Flowers, plants, and playful outdoor scenes for ages 4–8.',
       'animal-coloring-pages':
-        '60 garden-animal coloring pages in this book. Charming yard scenes, not the same art as these free pages.',
+        '60 charming garden-animal coloring pages in one book. Adorable yard animals, flowers, and garden fun for ages 4–8.',
     },
-    sheetPromo: '60 garden-animal pages in one book.',
+    sheetPromo: 'Cute Garden Animals Coloring Book, 60 pages.',
     cover: '/books/cute-garden-animals-coloring-book.jpg',
     coverAlt: 'Cover of Cute Garden Animals Coloring Book: a snail on a watering can and a chick with a rake',
     amazonUrl: 'https://www.amazon.com/dp/B0HMJPQXPT',
@@ -76,14 +79,14 @@ export const books: BookOffer[] = [
   {
     id: 'fall-thanksgiving',
     title: 'Thanksgiving Coloring Book for Kids',
-    body: '50 cute Thanksgiving coloring pages for ages 4–8. Turkeys, pumpkins, autumn fun, and cozy family scenes.',
+    body: '50 Thanksgiving coloring pages in one book. Festive scenes for Thanksgiving break.',
     bodyByTheme: {
       'fall-coloring-pages':
-        '50 Thanksgiving coloring pages in one book. Cute fall and holiday art for ages 4–8.',
+        '50 Thanksgiving coloring pages in one book. Cute turkeys, pumpkins, and autumn scenes for ages 4–8.',
       'thanksgiving-coloring-pages':
         '50 Thanksgiving coloring pages in one book. Festive scenes for Thanksgiving break.',
     },
-    sheetPromo: '50 Thanksgiving pages, ages 4–8.',
+    sheetPromo: 'Thanksgiving Coloring Book for Kids, 50 pages.',
     cover: '/books/cover-thanksgiving.jpg',
     coverAlt: 'Cover of Thanksgiving Coloring Book: a funny turkey and pumpkins',
     amazonUrl: 'https://www.amazon.com/dp/B0HNT32W6L',
@@ -97,14 +100,15 @@ export const books: BookOffer[] = [
   {
     id: 'cinderella',
     title: 'Cinderella Coloring Book',
-    body: '50 classic Cinderella coloring pages inspired by Perrault. Follow the fairy tale from the cottage to the ball and happily ever after. Ages 5–8.',
+    body:
+      '50 classic Cinderella coloring pages in one book. Perrault's fairy tale from the cottage to the ball and happily ever after. Ages 5–8.',
     bodyByTheme: {
       'fairy-tales-coloring-pages':
-        '50-page Cinderella story coloring book. The full classic fairy tale, not single free scenes here.',
+        '50 classic Cinderella coloring pages in one book. Follow Perrault's fairy tale from cottage to ball. Ages 5–8.',
       'princess-coloring-pages':
-        '50-page Cinderella story coloring book. Princess art inspired by the classic fairy tale.',
+        '50 classic Cinderella coloring pages in one book. Princess art from Perrault's beloved fairy tale. Ages 5–8.',
     },
-    sheetPromo: 'Cinderella fairy tale, 50 pages.',
+    sheetPromo: 'Cinderella Coloring Book, 50 pages.',
     cover: '/books/cinderella-book.jpg',
     coverAlt: 'Cover of Cinderella Coloring Book: Cinderella by the fire, and the ball before the clock strikes midnight',
     amazonUrl: '',
