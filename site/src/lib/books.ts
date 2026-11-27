@@ -101,12 +101,12 @@ export const books: BookOffer[] = [
     id: 'cinderella',
     title: 'Cinderella Coloring Book',
     body:
-      '50 classic Cinderella coloring pages in one book. Perrault's fairy tale from the cottage to the ball and happily ever after. Ages 5–8.',
+      "50 classic Cinderella coloring pages in one book. Perrault's fairy tale from the cottage to the ball and happily ever after. Ages 5–8.",
     bodyByTheme: {
       'fairy-tales-coloring-pages':
-        '50 classic Cinderella coloring pages in one book. Follow Perrault's fairy tale from cottage to ball. Ages 5–8.',
+        "50 classic Cinderella coloring pages in one book. Follow Perrault's fairy tale from cottage to ball. Ages 5–8.",
       'princess-coloring-pages':
-        '50 classic Cinderella coloring pages in one book. Princess art from Perrault's beloved fairy tale. Ages 5–8.',
+        "50 classic Cinderella coloring pages in one book. Princess art from Perrault's beloved fairy tale. Ages 5–8.",
     },
     sheetPromo: 'Cinderella Coloring Book, 50 pages.',
     cover: '/books/cinderella-book.jpg',
