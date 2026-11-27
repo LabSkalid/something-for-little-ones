@@ -161,6 +161,36 @@ function interleave(groups) {
 
 const byName = (a, b) => a.filename.localeCompare(b.filename, 'en', { numeric: true });
 
+/** single | collection | bundle — keeps queue from listing every bundle N in a row. */
+function pinKind(filename) {
+  const base = String(filename ?? '').toLowerCase();
+  if (/-bundle-\d+\.png$/i.test(base)) return 'bundle';
+  if (/-collection-\d+\.png$/i.test(base)) return 'collection';
+  return 'single';
+}
+
+const PIN_KIND_ORDER = ['single', 'collection', 'bundle'];
+
+/** Mix pin types within one theme before tier-wide interleave. */
+function interleaveByPinKind(rows) {
+  const buckets = new Map(PIN_KIND_ORDER.map((k) => [k, []]));
+  for (const row of rows) {
+    const kind = pinKind(row.filename);
+    if (!buckets.has(kind)) buckets.set(kind, []);
+    buckets.get(kind).push(row);
+  }
+  for (const list of buckets.values()) list.sort(byName);
+  const order = PIN_KIND_ORDER.filter((k) => (buckets.get(k) ?? []).length);
+  const out = [];
+  while (order.some((k) => buckets.get(k).length)) {
+    for (const k of order) {
+      const q = buckets.get(k);
+      if (q?.length) out.push(q.shift());
+    }
+  }
+  return out;
+}
+
 const themeOf = (baseLower) => themes.find((t) => baseLower.startsWith(t.prefix));
 const guessTheme = (baseLower) =>
   baseLower.includes('-coloring-pages-') ? baseLower.split('-coloring-pages-')[0] : '(no theme)';
@@ -276,7 +306,7 @@ const outRows = [];
 for (const tier of tiers) {
   const groups = themes
     .filter((t) => t.tier === tier)
-    .map((t) => ({ rows: (rowsByTheme.get(t.key) ?? []).sort(byName), weight: t.weight }));
+    .map((t) => ({ rows: interleaveByPinKind(rowsByTheme.get(t.key) ?? []), weight: t.weight }));
   outRows.push(...interleave(groups));
 }
 

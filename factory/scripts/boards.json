@@ -64,6 +64,20 @@
       "boardId": "1086000966335595575",
       "tier": 2,
       "weight": 1
+    },
+    {
+      "key": "fairy-tales",
+      "board": "fairy-tales",
+      "boardId": "1086000966335765992",
+      "tier": 2,
+      "weight": 1
+    },
+    {
+      "key": "princess",
+      "board": "princess",
+      "boardId": "1086000966335765992",
+      "tier": 2,
+      "weight": 1
     }
   ]
 }

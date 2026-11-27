@@ -1084,5 +1084,81 @@
         "snail-with-clover"
       ]
     }
+  ],
+  "fairy-tales-coloring-pages": [
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-1.png",
+      "slugs": [
+        "goldilocks-and-the-three-bears-classic-fairy-tale",
+        "three-little-pigs-classic-fairy-tale",
+        "little-red-riding-hood-classic-fairy-tale",
+        "gingerbread-man-classic-fairy-tale"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-2.png",
+      "slugs": [
+        "the-ugly-duckling-classic-fairy-tale",
+        "sleeping-beauty-classic-fairy-tale",
+        "the-little-mermaid-classic-fairy-tale",
+        "puss-in-boots-classic-fairy-tale"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-3.png",
+      "slugs": [
+        "cinderella-by-fireplace",
+        "cinderella-sweeping-floor",
+        "snow-white-and-the-seven-dwarfs",
+        "aladdin-and-the-magic-lamp"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-4.png",
+      "slugs": [
+        "hansel-and-gretel-classic-fairy-tale",
+        "jack-and-the-beanstalk-classic-fairy-tale",
+        "alice-in-wonderland",
+        "pinocchio-classic-fairy-tale"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-5.png",
+      "slugs": [
+        "snow-white-classic-fairy-tale",
+        "rapunzel-classic-fairy-tale",
+        "the-nutcracker",
+        "beauty-and-the-beast"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-6.png",
+      "slugs": [
+        "goldilocks-and-the-three-bears",
+        "rapunzel-at-the-window",
+        "jack-and-the-beanstalk-looking-up",
+        "pinocchio-at-the-workbench"
+      ]
+    },
+    {
+      "filename": "fairy-tales-coloring-pages-bundle-7.png",
+      "slugs": [
+        "huge-magic-lamp",
+        "huge-pumpkin",
+        "puss-in-boots-standing",
+        "thumbelina-on-a-lily"
+      ]
+    }
+  ],
+  "princess-coloring-pages": [
+    {
+      "filename": "princess-coloring-pages-bundle-1.png",
+      "slugs": [
+        "storybook-princess",
+        "fairy-tale-castle",
+        "royal-carriage",
+        "pony-with-ribbon"
+      ]
+    }
   ]
 }

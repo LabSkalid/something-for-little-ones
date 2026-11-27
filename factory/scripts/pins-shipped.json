@@ -5818,5 +5818,644 @@
     "slugs": [
       "collection-2-9"
     ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-aladdin-and-the-magic-lamp-badge.png",
+    "kind": "single",
+    "slugs": [
+      "aladdin-and-the-magic-lamp"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-collection-1.png",
+    "kind": "classic",
+    "slugs": [
+      "goldilocks-and-the-three-bears-classic-fairy-tale",
+      "three-little-pigs-classic-fairy-tale",
+      "little-red-riding-hood-classic-fairy-tale",
+      "gingerbread-man-classic-fairy-tale",
+      "the-ugly-duckling-classic-fairy-tale",
+      "sleeping-beauty-classic-fairy-tale",
+      "the-little-mermaid-classic-fairy-tale",
+      "puss-in-boots-classic-fairy-tale",
+      "cinderella-by-fireplace"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-1.png",
+    "kind": "overlay",
+    "slugs": [
+      "goldilocks-and-the-three-bears-classic-fairy-tale",
+      "three-little-pigs-classic-fairy-tale",
+      "little-red-riding-hood-classic-fairy-tale",
+      "gingerbread-man-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-aladdin-and-the-magic-lamp.png",
+    "kind": "single",
+    "slugs": [
+      "aladdin-and-the-magic-lamp"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-collection-2.png",
+    "kind": "classic",
+    "slugs": [
+      "cinderella-sweeping-floor",
+      "snow-white-and-the-seven-dwarfs",
+      "aladdin-and-the-magic-lamp",
+      "hansel-and-gretel-classic-fairy-tale",
+      "jack-and-the-beanstalk-classic-fairy-tale",
+      "alice-in-wonderland",
+      "pinocchio-classic-fairy-tale",
+      "snow-white-classic-fairy-tale",
+      "rapunzel-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-2.png",
+    "kind": "overlay",
+    "slugs": [
+      "the-ugly-duckling-classic-fairy-tale",
+      "sleeping-beauty-classic-fairy-tale",
+      "the-little-mermaid-classic-fairy-tale",
+      "puss-in-boots-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-alice-in-wonderland-badge.png",
+    "kind": "single",
+    "slugs": [
+      "alice-in-wonderland"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-collection-3.png",
+    "kind": "classic",
+    "slugs": [
+      "the-nutcracker",
+      "beauty-and-the-beast",
+      "goldilocks-and-the-three-bears",
+      "rapunzel-at-the-window",
+      "jack-and-the-beanstalk-looking-up",
+      "pinocchio-at-the-workbench",
+      "huge-magic-lamp",
+      "huge-pumpkin",
+      "puss-in-boots-standing"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-3.png",
+    "kind": "overlay",
+    "slugs": [
+      "cinderella-by-fireplace",
+      "cinderella-sweeping-floor",
+      "snow-white-and-the-seven-dwarfs",
+      "aladdin-and-the-magic-lamp"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-alice-in-wonderland.png",
+    "kind": "single",
+    "slugs": [
+      "alice-in-wonderland"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-4.png",
+    "kind": "overlay",
+    "slugs": [
+      "hansel-and-gretel-classic-fairy-tale",
+      "jack-and-the-beanstalk-classic-fairy-tale",
+      "alice-in-wonderland",
+      "pinocchio-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-beauty-and-the-beast-badge.png",
+    "kind": "single",
+    "slugs": [
+      "beauty-and-the-beast"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-5.png",
+    "kind": "overlay",
+    "slugs": [
+      "snow-white-classic-fairy-tale",
+      "rapunzel-classic-fairy-tale",
+      "the-nutcracker",
+      "beauty-and-the-beast"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-beauty-and-the-beast.png",
+    "kind": "single",
+    "slugs": [
+      "beauty-and-the-beast"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-6.png",
+    "kind": "overlay",
+    "slugs": [
+      "goldilocks-and-the-three-bears",
+      "rapunzel-at-the-window",
+      "jack-and-the-beanstalk-looking-up",
+      "pinocchio-at-the-workbench"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-billy-goats-gruff-on-the-bridge-badge.png",
+    "kind": "single",
+    "slugs": [
+      "billy-goats-gruff-on-the-bridge"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-bundle-7.png",
+    "kind": "overlay",
+    "slugs": [
+      "huge-magic-lamp",
+      "huge-pumpkin",
+      "puss-in-boots-standing",
+      "thumbelina-on-a-lily"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-billy-goats-gruff-on-the-bridge.png",
+    "kind": "single",
+    "slugs": [
+      "billy-goats-gruff-on-the-bridge"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-cinderella-by-fireplace-badge.png",
+    "kind": "single",
+    "slugs": [
+      "cinderella-by-fireplace"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-cinderella-by-fireplace.png",
+    "kind": "single",
+    "slugs": [
+      "cinderella-by-fireplace"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-cinderella-sweeping-floor-badge.png",
+    "kind": "single",
+    "slugs": [
+      "cinderella-sweeping-floor"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-cinderella-sweeping-floor.png",
+    "kind": "single",
+    "slugs": [
+      "cinderella-sweeping-floor"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-frog-prince-and-the-ball-badge.png",
+    "kind": "single",
+    "slugs": [
+      "frog-prince-and-the-ball"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-frog-prince-and-the-ball.png",
+    "kind": "single",
+    "slugs": [
+      "frog-prince-and-the-ball"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-gingerbread-man-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "gingerbread-man-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-gingerbread-man-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "gingerbread-man-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-goldilocks-and-the-three-bears-badge.png",
+    "kind": "single",
+    "slugs": [
+      "goldilocks-and-the-three-bears"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-goldilocks-and-the-three-bears-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "goldilocks-and-the-three-bears-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-goldilocks-and-the-three-bears-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "goldilocks-and-the-three-bears-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-goldilocks-and-the-three-bears.png",
+    "kind": "single",
+    "slugs": [
+      "goldilocks-and-the-three-bears"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-hansel-and-gretel-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "hansel-and-gretel-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-hansel-and-gretel-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "hansel-and-gretel-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-huge-magic-lamp-badge.png",
+    "kind": "single",
+    "slugs": [
+      "huge-magic-lamp"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-huge-magic-lamp.png",
+    "kind": "single",
+    "slugs": [
+      "huge-magic-lamp"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-huge-pumpkin-badge.png",
+    "kind": "single",
+    "slugs": [
+      "huge-pumpkin"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-huge-pumpkin.png",
+    "kind": "single",
+    "slugs": [
+      "huge-pumpkin"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-jack-and-the-beanstalk-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "jack-and-the-beanstalk-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-jack-and-the-beanstalk-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "jack-and-the-beanstalk-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-jack-and-the-beanstalk-looking-up-badge.png",
+    "kind": "single",
+    "slugs": [
+      "jack-and-the-beanstalk-looking-up"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-jack-and-the-beanstalk-looking-up.png",
+    "kind": "single",
+    "slugs": [
+      "jack-and-the-beanstalk-looking-up"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-little-red-riding-hood-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "little-red-riding-hood-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-little-red-riding-hood-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "little-red-riding-hood-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-pinocchio-at-the-workbench-badge.png",
+    "kind": "single",
+    "slugs": [
+      "pinocchio-at-the-workbench"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-pinocchio-at-the-workbench.png",
+    "kind": "single",
+    "slugs": [
+      "pinocchio-at-the-workbench"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-pinocchio-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "pinocchio-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-pinocchio-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "pinocchio-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-puss-in-boots-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "puss-in-boots-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-puss-in-boots-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "puss-in-boots-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-puss-in-boots-standing-badge.png",
+    "kind": "single",
+    "slugs": [
+      "puss-in-boots-standing"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-puss-in-boots-standing.png",
+    "kind": "single",
+    "slugs": [
+      "puss-in-boots-standing"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-rapunzel-at-the-window-badge.png",
+    "kind": "single",
+    "slugs": [
+      "rapunzel-at-the-window"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-rapunzel-at-the-window.png",
+    "kind": "single",
+    "slugs": [
+      "rapunzel-at-the-window"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-rapunzel-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "rapunzel-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-rapunzel-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "rapunzel-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-sleeping-beauty-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "sleeping-beauty-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-sleeping-beauty-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "sleeping-beauty-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-snow-white-and-the-seven-dwarfs-badge.png",
+    "kind": "single",
+    "slugs": [
+      "snow-white-and-the-seven-dwarfs"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-snow-white-and-the-seven-dwarfs.png",
+    "kind": "single",
+    "slugs": [
+      "snow-white-and-the-seven-dwarfs"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-snow-white-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "snow-white-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-snow-white-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "snow-white-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-golden-goose-badge.png",
+    "kind": "single",
+    "slugs": [
+      "the-golden-goose"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-golden-goose.png",
+    "kind": "single",
+    "slugs": [
+      "the-golden-goose"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-little-mermaid-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "the-little-mermaid-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-little-mermaid-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "the-little-mermaid-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-nutcracker-badge.png",
+    "kind": "single",
+    "slugs": [
+      "the-nutcracker"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-nutcracker.png",
+    "kind": "single",
+    "slugs": [
+      "the-nutcracker"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-ugly-duckling-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "the-ugly-duckling-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-the-ugly-duckling-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "the-ugly-duckling-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-three-little-pigs-classic-fairy-tale-badge.png",
+    "kind": "single",
+    "slugs": [
+      "three-little-pigs-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-three-little-pigs-classic-fairy-tale.png",
+    "kind": "single",
+    "slugs": [
+      "three-little-pigs-classic-fairy-tale"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-thumbelina-on-a-lily-badge.png",
+    "kind": "single",
+    "slugs": [
+      "thumbelina-on-a-lily"
+    ]
+  },
+  {
+    "filename": "fairy-tales-coloring-pages-thumbelina-on-a-lily.png",
+    "kind": "single",
+    "slugs": [
+      "thumbelina-on-a-lily"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-crown-and-wand-badge.png",
+    "kind": "single",
+    "slugs": [
+      "crown-and-wand"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-collection-1.png",
+    "kind": "classic",
+    "slugs": []
+  },
+  {
+    "filename": "princess-coloring-pages-bundle-1.png",
+    "kind": "overlay",
+    "slugs": [
+      "storybook-princess",
+      "fairy-tale-castle",
+      "royal-carriage",
+      "pony-with-ribbon"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-crown-and-wand.png",
+    "kind": "single",
+    "slugs": [
+      "crown-and-wand"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-collection-2.png",
+    "kind": "classic",
+    "slugs": []
+  },
+  {
+    "filename": "princess-coloring-pages-fairy-tale-castle-badge.png",
+    "kind": "single",
+    "slugs": [
+      "fairy-tale-castle"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-fairy-tale-castle.png",
+    "kind": "single",
+    "slugs": [
+      "fairy-tale-castle"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-pony-with-ribbon-badge.png",
+    "kind": "single",
+    "slugs": [
+      "pony-with-ribbon"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-pony-with-ribbon.png",
+    "kind": "single",
+    "slugs": [
+      "pony-with-ribbon"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-royal-carriage-badge.png",
+    "kind": "single",
+    "slugs": [
+      "royal-carriage"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-royal-carriage.png",
+    "kind": "single",
+    "slugs": [
+      "royal-carriage"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-storybook-princess-badge.png",
+    "kind": "single",
+    "slugs": [
+      "storybook-princess"
+    ]
+  },
+  {
+    "filename": "princess-coloring-pages-storybook-princess.png",
+    "kind": "single",
+    "slugs": [
+      "storybook-princess"
+    ]
   }
 ]
