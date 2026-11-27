@@ -201,7 +201,7 @@ const layouts: Record<LineDifficulty, string> = {
   toddler:
     'One object only, made of very few huge closed shapes. Extra-thick outlines. Almost no small parts and no background scene. Leave lots of white space. A toddler should be able to scribble across each shape.',
   easy:
-    'One subject, large and centered, with white space around it. Thick closed outlines and a handful of big regions. Every region is large enough to color with a crayon. Draw the named subject. Do not replace it with a child.',
+    'One subject, large and centered, with white space around it. Thick closed outlines. Draw each part that subject names as its own closed shape. Do not collapse the subject into one empty sack. Do not add clothes, animals, or props the subject did not name. Every region is large enough to color with a crayon.',
   medium:
     'A simple scene with more separate regions than a single centered object. Include medium-size details a child can color one at a time. Keep outlines thick, closed, and even. Do not fill the background with tiny hairline marks.',
   detailed:

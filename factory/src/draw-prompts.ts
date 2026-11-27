@@ -31,7 +31,7 @@ export const defaultDrawPrompts: DrawPrompts = {
     '2-3':
       'One object only, made of very few huge closed shapes. Extra-thick outlines. Almost no small parts and no background scene. Leave lots of white space. A toddler should be able to scribble across each shape.',
     '3-4':
-      'One subject, large and centered, with white space around it. Thick closed outlines and a handful of big regions. Every region is large enough to color with a crayon. Draw the named subject. Do not replace it with a child.',
+      'One subject, large and centered, with white space around it. Thick closed outlines. Draw each part that subject names as its own closed shape. Do not collapse the subject into one empty sack. Do not add clothes, animals, or props the subject did not name. Do not add a room, a crowd, or a background scene. Every region stays large enough to color with a crayon.',
     '4-5':
       'AGE BUDGET for ages 4 to 5. This limits how much to draw and does not replace the subject. A few large figures on an empty white background, or one figure plus two or three big props. When the subject is only tools or plants, draw at least five separate closed regions to color—more parts than a single centered object for ages 3 to 4, still simpler than a small scene for ages 5 to 6. No room, no floor, no trees, no furniture, no brick pattern. Thick closed outlines. Draw the named subject.',
     '5-6':
@@ -39,12 +39,12 @@ export const defaultDrawPrompts: DrawPrompts = {
     '6-8':
       'A fuller scene or a repeating pattern with many separate regions to color. The picture can use more of the page. Outlines stay bold and closed, clearly thick enough to print and color with a crayon, never hairline engraving, never crosshatching, never gray fill. Make this busier than a small scene: a room or a full setting is allowed, with more objects and smaller regions that are still easy to see on paper. Do not switch to hairline pen work.',
     '4-8':
-      'A storybook subject in its costume, large enough to color, with the hat, feather, cape, boots, ears, muzzle, and tail kept as separate closed shapes when the subject has them. A few nearby props are fine. Thick closed outlines. Not a toddler scribble of one round head, and not a hairline engraving.',
+      'The named subject, large enough to color, with each part that subject has kept as its own closed shape. A few nearby props are fine only when the subject names them. Thick closed outlines. Do not add a costume the subject did not name. Not a toddler scribble of one round shape, and not a hairline engraving.',
   },
   style: {
     '2-3':
       'Toddler coloring page, one huge simple object, extra-thick black outlines, almost no small parts, pure white background, no shading, no text, no trademarked characters.',
-    '3-4': `One large subject, centered, with a handful of big regions. ${plain}`,
+    '3-4': `One large subject, centered. Each part that subject names stays its own closed shape. ${plain} No room and no crowd.`,
     '4-5': `A few large figures or one figure with two or three big props, on an empty white background. No room and no scenery. Simpler than a page for ages 5 to 6. ${plain}`,
     '5-6': `One or two large characters, one action, and one simple backdrop of a few big shapes. No furnished room, no floorboards, no brick courses, no crowd. ${plain}`,
     '6-8': `A fuller scene with many colorable regions. Bolder and busier than a small scene for ages 5 to 6. ${plain}`,

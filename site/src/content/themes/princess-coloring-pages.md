@@ -1,6 +1,6 @@
 ---
 title: Princess Coloring Pages
-description: Princess coloring pages for about ages 3 to 4. A gown, a castle, a carriage, a pony, and a crown. Not from a movie.
+description: Princess coloring pages for about ages 3 to 4. A gown, a rose, a bird, a throne, a tea set, a castle, a carriage, a pony, and a crown. Not from a movie.
 tagline: A gown, a castle, a carriage, a pony, and a crown. Not a movie character. Thick lines, for about ages 3 to 4.
 kind: evergreen
 ageBand: "3-4"
@@ -11,7 +11,7 @@ related:
   - animal-coloring-pages
   - christmas-coloring-pages
 pubDate: 2026-10-05
-updatedDate: 2026-10-05
+updatedDate: 2026-11-27
 keywords:
   - princess coloring pages
   - castle coloring page
